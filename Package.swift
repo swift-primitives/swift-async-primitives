@@ -18,6 +18,7 @@ let package = Package(
         ),
     ],
     dependencies: [
+        .package(path: "../swift-buffer-primitives"),
         .package(path: "../swift-container-primitives"),
         .package(path: "../swift-identity-primitives"),
         .package(path: "../swift-test-support-primitives"),
@@ -26,6 +27,7 @@ let package = Package(
         .target(
             name: "Async Primitives",
             dependencies: [
+                .product(name: "Buffer Primitives", package: "swift-buffer-primitives"),
                 .product(name: "Container Primitives", package: "swift-container-primitives"),
                 .product(name: "Identity Primitives", package: "swift-identity-primitives"),
             ]
