@@ -18,7 +18,7 @@ extension Async.Waiter.Queue {
     ///
     /// ## Design
     ///
-    /// - Backing storage: `Buffer.Ring.Growable` (~Copyable growable ring buffer)
+    /// - Backing storage: `Buffer.Ring.Unbounded` (~Copyable unbounded ring buffer)
     /// - Unbounded: push always succeeds (grows when needed)
     /// - No closures: operations return raw data, callers compute outcomes outside locks
     /// - ~Copyable: prevents accidental duplication of entries
@@ -42,14 +42,14 @@ extension Async.Waiter.Queue {
         public typealias Flagged = Async.Waiter.Queue.Flagged<Outcome, Metadata>
 
         @usableFromInline
-        var _storage: Buffer.Ring.Growable<Entry>
+        var _storage: Buffer.Ring.Unbounded<Entry>
 
         /// Creates an unbounded queue.
         ///
         /// - Parameter minimumCapacity: Initial capacity hint (default: 8).
         @inlinable
         public init(minimumCapacity: Int = 8) {
-            self._storage = Buffer.Ring.Growable<Entry>(minimumCapacity: minimumCapacity)
+            self._storage = Buffer.Ring.Unbounded<Entry>(minimumCapacity: minimumCapacity)
         }
 
         /// The current number of waiters in the queue.

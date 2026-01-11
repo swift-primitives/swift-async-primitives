@@ -18,13 +18,14 @@ extension Async {
     /// Useful for bridging sync/async boundaries with timeout/cancellation support.
     ///
     /// ## CAS Discipline
-    /// - `tryStart()`: pending → running
-    /// - `tryComplete(_:)`: running → completed
-    /// - `tryTimeout()`: running → timedOut
-    /// - `tryCancel()`: pending/running → cancelled
-    /// - `tryFail(_:)`: pending → failed
+    /// - `start()`: pending → running
+    /// - `complete(_:)`: running → completed
+    /// - `timeout()`: running → timedOut
+    /// - `cancel()`: pending/running → cancelled
+    /// - `fail(_:)`: pending → failed
     ///
     /// Only one of these transitions wins - guaranteeing exactly-once resume.
+    /// Failed transitions throw `Transition.Error.alreadyDone`.
     ///
     /// ## Usage
     /// ```swift
@@ -36,8 +37,11 @@ extension Async {
     /// }
     ///
     /// // Sync side - complete (exactly one wins)
-    /// if completion.tryStart() {
-    ///     completion.tryComplete(42)
+    /// do {
+    ///     try completion.start()
+    ///     try completion.complete(42)
+    /// } catch {
+    ///     // Another path already completed
     /// }
     /// ```
     ///
@@ -103,6 +107,19 @@ extension Async {
     }
 }
 
+// MARK: - Transition
+
+extension Async.Completion {
+    /// State transition namespace.
+    public enum Transition {
+        /// Error thrown when a state transition fails.
+        public enum Error: Swift.Error, Sendable {
+            /// The completion has already transitioned to a terminal state.
+            case alreadyDone
+        }
+    }
+}
+
 // MARK: - Continuation
 
 extension Async.Completion {
@@ -121,71 +138,67 @@ extension Async.Completion {
 // MARK: - State Transitions
 
 extension Async.Completion {
-    /// Attempt to start running. Returns true if successful.
+    /// Transition to running state.
     ///
     /// Transitions: pending → running
     ///
-    /// - Returns: `true` if transitioned to running, `false` if already in another state.
-    public func tryStart() -> Bool {
+    /// - Throws: `Transition.Error.alreadyDone` if not in pending state.
+    public func start() throws(Transition.Error) {
         let (exchanged, _) = state.compareExchange(
             expected: .pending,
             desired: .running,
             ordering: .acquiringAndReleasing
         )
-        return exchanged
+        guard exchanged else { throw .alreadyDone }
     }
 
-    /// Attempt to complete successfully. Returns true if successful.
+    /// Complete successfully with a value.
     ///
     /// Transitions: running → completed
     ///
     /// - Parameter value: The success value.
-    /// - Returns: `true` if completed successfully, `false` if not in running state.
-    public func tryComplete(_ value: Success) -> Bool {
+    /// - Throws: `Transition.Error.alreadyDone` if not in running state.
+    public func complete(_ value: Success) throws(Transition.Error) {
         let (exchanged, _) = state.compareExchange(
             expected: .running,
             desired: .completed,
             ordering: .acquiringAndReleasing
         )
-        if exchanged {
-            let cont = _continuation.withLock { cont in
-                let captured = cont
-                cont = nil
-                return captured
-            }
-            cont?.resume(returning: .success(value))
+        guard exchanged else { throw .alreadyDone }
+        let cont = _continuation.withLock { cont in
+            let captured = cont
+            cont = nil
+            return captured
         }
-        return exchanged
+        cont?.resume(returning: .success(value))
     }
 
-    /// Attempt to mark as timed out. Returns true if successful.
+    /// Mark as timed out.
     ///
     /// Transitions: running → timedOut
     ///
-    /// - Returns: `true` if timed out successfully, `false` if not in running state.
-    public func tryTimeout() -> Bool {
+    /// - Throws: `Transition.Error.alreadyDone` if not in running state.
+    public func timeout() throws(Transition.Error) {
         let (exchanged, _) = state.compareExchange(
             expected: .running,
             desired: .timedOut,
             ordering: .acquiringAndReleasing
         )
-        if exchanged {
-            let cont = _continuation.withLock { cont in
-                let captured = cont
-                cont = nil
-                return captured
-            }
-            cont?.resume(returning: .failure(.timeout))
+        guard exchanged else { throw .alreadyDone }
+        let cont = _continuation.withLock { cont in
+            let captured = cont
+            cont = nil
+            return captured
         }
-        return exchanged
+        cont?.resume(returning: .failure(.timeout))
     }
 
-    /// Attempt to cancel. Returns true if successful.
+    /// Cancel the operation.
     ///
     /// Transitions: pending → cancelled, or running → cancelled
     ///
-    /// - Returns: `true` if cancelled successfully, `false` if already complete/timed out/failed.
-    public func tryCancel() -> Bool {
+    /// - Throws: `Transition.Error.alreadyDone` if already complete/timed out/failed.
+    public func cancel() throws(Transition.Error) {
         // Can cancel from pending or running
         var (exchanged, original) = state.compareExchange(
             expected: .pending,
@@ -199,39 +212,35 @@ extension Async.Completion {
                 ordering: .acquiringAndReleasing
             )
         }
-        if exchanged {
-            let cont = _continuation.withLock { cont in
-                let captured = cont
-                cont = nil
-                return captured
-            }
-            cont?.resume(returning: .failure(.cancellation))
+        guard exchanged else { throw .alreadyDone }
+        let cont = _continuation.withLock { cont in
+            let captured = cont
+            cont = nil
+            return captured
         }
-        return exchanged
+        cont?.resume(returning: .failure(.cancellation))
     }
 
-    /// Attempt to fail with error. Returns true if successful.
+    /// Fail with a domain error.
     ///
     /// Transitions: pending → failed
     ///
     /// - Parameter error: The domain failure error.
-    /// - Returns: `true` if failed successfully, `false` if not in pending state.
-    public func tryFail(_ error: Failure) -> Bool {
+    /// - Throws: `Transition.Error.alreadyDone` if not in pending state.
+    public func fail(_ error: Failure) throws(Transition.Error) {
         // Can fail from pending only
         let (exchanged, _) = state.compareExchange(
             expected: .pending,
             desired: .failed,
             ordering: .acquiringAndReleasing
         )
-        if exchanged {
-            let cont = _continuation.withLock { cont in
-                let captured = cont
-                cont = nil
-                return captured
-            }
-            cont?.resume(returning: .failure(.failure(error)))
+        guard exchanged else { throw .alreadyDone }
+        let cont = _continuation.withLock { cont in
+            let captured = cont
+            cont = nil
+            return captured
         }
-        return exchanged
+        cont?.resume(returning: .failure(.failure(error)))
     }
 }
 
@@ -244,13 +253,13 @@ extension Async.Completion where Failure == Never {
     /// timeout and cancellation without domain errors.
     ///
     /// - Parameter error: The error (must be timeout or cancellation).
-    /// - Returns: `true` if failed successfully.
-    public func tryFail(_ error: Error) -> Bool {
+    /// - Throws: `Transition.Error.alreadyDone` if transition fails.
+    public func fail(_ error: Error) throws(Transition.Error) {
         switch error {
         case .timeout:
-            return tryTimeout()
+            try timeout()
         case .cancellation:
-            return tryCancel()
+            try cancel()
         case .failure:
             // Never type - can't construct this case
             fatalError("Cannot fail with Never error type")

@@ -434,7 +434,7 @@ struct BroadcastStressTests {
         let elementCount = 500
         let broadcast = Async.Broadcast<Int>(bufferCapacity: elementCount)
 
-        var results = Async.Channel<(id: Int, elements: [Int], terminatedViaCancellation: Bool)>.Unbounded().take().ends()
+        let results = Async.Channel<(id: Int, elements: [Int], terminatedViaCancellation: Bool)>.Unbounded().take().ends()
 
         var subscriberTasks: [(id: Int, task: Task<Void, Never>)] = []
 

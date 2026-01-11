@@ -19,7 +19,7 @@ extension Async.Waiter.Queue {
     ///
     /// ## Design
     ///
-    /// - Backing storage: `Buffer.Ring.Fixed` (~Copyable ring buffer)
+    /// - Backing storage: `Buffer.Ring.Bounded` (~Copyable ring buffer)
     /// - Fixed capacity: push returns rejected element when full
     /// - No closures: operations return raw data, callers compute outcomes outside locks
     /// - ~Copyable: prevents accidental duplication of entries
@@ -43,14 +43,14 @@ extension Async.Waiter.Queue {
         public typealias Flagged = Async.Waiter.Queue.Flagged<Outcome, Metadata>
 
         @usableFromInline
-        var _storage: Buffer.Ring.Fixed<Entry>
+        var _storage: Buffer.Ring.Bounded<Entry>
 
         /// Creates a bounded queue with the specified capacity.
         ///
         /// - Parameter capacity: Maximum number of waiters. Must be at least 1.
         @inlinable
         public init(capacity: Int) {
-            self._storage = Buffer.Ring.Fixed<Entry>(capacity: capacity)
+            self._storage = Buffer.Ring.Bounded<Entry>(capacity: capacity)
         }
 
         /// The fixed capacity of the queue.
@@ -84,7 +84,7 @@ extension Async.Waiter.Queue.Bounded {
     /// - On failure: entry is returned to caller, caller retains ownership
     @inlinable
     public mutating func push(_ entry: consuming Entry) -> Entry? {
-        // Buffer.Ring.Fixed.push returns nil on success, element on failure
+        // Buffer.Ring.Bounded.push returns nil on success, element on failure
         // This preserves ownership: rejected entry goes back to caller
         _storage.push(entry)
     }

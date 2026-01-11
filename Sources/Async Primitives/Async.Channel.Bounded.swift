@@ -17,53 +17,159 @@ extension Async.Channel {
     ///
     /// ## Usage
     /// ```swift
-    /// let (sender, receiver) = Async.Channel<Int>.Bounded.create(capacity: 10)
+    /// var channel = Async.Channel<Int>.Bounded(capacity: 10)
     ///
     /// // Producer task (Sender is Copyable, Sendable)
     /// Task {
-    ///     try await sender.send(1)
-    ///     try await sender.send(2)
-    ///     sender.close()
+    ///     try await channel.sender.send(1)
+    ///     try await channel.sender.send(2)
+    ///     channel.close()
     /// }
     ///
     /// // Consumer (single task, Receiver enforces single-consumer)
-    /// for try await value in receiver.elements {
+    /// for try await value in channel.receiver.elements {
     ///     print(value)
     /// }
     /// ```
     ///
     /// ## Design
-    /// - `Sender`: Copyable, Sendable - can be shared across tasks
-    /// - `Receiver`: Single-consumer (runtime precondition) - at most one
-    ///   task may be suspended in `receive()` at a time
+    /// - `Bounded` is `~Copyable` - channel identity cannot be duplicated
+    /// - `sender` is `Copyable` - can be shared across tasks
+    /// - `receiver` is `~Copyable` - exactly one receiver per channel
     /// - Auto-close: Channel closes when last Sender drops
     ///
     /// ## Error Handling
     /// Operations use typed throws for exhaustive error handling:
     /// ```swift
     /// do {
-    ///     try await sender.send(value)
+    ///     try await channel.sender.send(value)
     /// } catch .closed {
     ///     // Channel was closed
     /// } catch .cancelled {
     ///     // Task was cancelled
     /// }
     /// ```
-    public enum Bounded {
-        /// Creates a bounded channel with separate sender and receiver handles.
+    public struct Bounded: ~Copyable, @unchecked Sendable {
+        @usableFromInline
+        let storage: Storage
+
+        /// View for sending elements to this channel.
         ///
-        /// The returned `Sender` is Copyable and Sendable (can be shared across tasks),
-        /// while `Receiver` enforces single-consumer semantics.
+        /// `Sender` is `Copyable` - multiple sender views can exist,
+        /// and they all share the same underlying channel.
+        /// Channel auto-closes when the last Sender reference drops.
+        public let sender: Sender
+
+        /// View for receiving elements from this channel.
         ///
-        /// The channel automatically closes when all `Sender` copies are dropped.
+        /// `Receiver` is `~Copyable` - exactly one receiver exists per channel.
+        /// This enforces single-receiver semantics at the type level.
+        public var receiver: Receiver
+
+        /// Creates a new bounded channel with the specified capacity.
         ///
         /// - Parameter capacity: The maximum number of elements that can be buffered.
         ///   Must be greater than zero.
-        /// - Returns: A tuple of `(Sender, Receiver)` handles.
-        public static func create(capacity: Int) -> (Sender, Receiver) {
+        public init(capacity: Int) {
             precondition(capacity > 0, "Bounded channel capacity must be greater than zero")
             let storage = Storage(capacity: capacity)
-            return (Sender(storage: storage), Receiver(storage: storage))
+            self.storage = storage
+            self.sender = Sender(storage: storage)
+            self.receiver = Receiver(storage: storage)
+        }
+
+        /// Close the channel, signaling no more elements will be sent.
+        ///
+        /// After close:
+        /// - `send()` throws `.closed`
+        /// - `receive()` drains buffer then returns `nil`
+        public func close() {
+            sender.close()
+        }
+
+        /// Whether the channel has been closed.
+        public var isClosed: Bool {
+            storage.withLock { $0.isClosed }
+        }
+    }
+}
+
+// MARK: - Take (consuming accessors)
+
+extension Async.Channel.Bounded {
+    /// Consuming accessor for moving endpoints out of the channel.
+    ///
+    /// ```swift
+    /// let ends = channel.take().ends()
+    /// try await ends.sender.send(42)
+    /// let value = try await ends.receiver.receive()
+    /// ```
+    public consuming func take() -> Take {
+        Take(channel: consume self)
+    }
+
+    /// Consuming accessor namespace.
+    public struct Take: ~Copyable, @unchecked Sendable {
+        @usableFromInline
+        var channel: Async.Channel<Element>.Bounded
+
+        @usableFromInline
+        init(channel: consuming Async.Channel<Element>.Bounded) {
+            self.channel = channel
+        }
+
+        /// Consume the channel and return both endpoints as a bundle.
+        public consuming func ends() -> Ends {
+            let storage = channel.storage
+            let receiver = consume channel.receiver
+            return Ends(storage: storage, receiver: receiver)
+        }
+    }
+}
+
+// MARK: - Ends
+
+extension Async.Channel.Bounded {
+    /// Bundle containing both sender and receiver.
+    ///
+    /// `Ends` is `~Copyable` because it contains the `~Copyable` receiver.
+    /// Use `channel.take().ends()` to consume the channel and obtain this bundle.
+    public struct Ends: ~Copyable, @unchecked Sendable {
+        @usableFromInline
+        let storage: Storage
+
+        @usableFromInline
+        var _receiver: Receiver
+
+        /// View for receiving elements.
+        public var receiver: Receiver {
+            _read {
+                yield _receiver
+            }
+            _modify {
+                yield &_receiver
+            }
+        }
+
+        /// View for sending elements.
+        public var sender: Sender {
+            Sender(storage: storage)
+        }
+
+        @usableFromInline
+        init(storage: Storage, receiver: consuming Receiver) {
+            self.storage = storage
+            self._receiver = receiver
+        }
+
+        /// Close the channel.
+        public func close() {
+            sender.close()
+        }
+
+        /// Whether the channel has been closed.
+        public var isClosed: Bool {
+            sender.isClosed
         }
     }
 }

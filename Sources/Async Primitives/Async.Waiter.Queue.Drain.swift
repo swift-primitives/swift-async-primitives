@@ -19,7 +19,7 @@ extension Async.Waiter.Queue {
     ///
     /// ## Design
     ///
-    /// - Backed by `Buffer.Ring.Growable` for efficient FIFO access
+    /// - Backed by `Buffer.Ring.Unbounded` for efficient FIFO access
     /// - ~Copyable to prevent accidental duplication
     /// - No indexed access - elements must be consumed in order
     ///
@@ -37,12 +37,12 @@ extension Async.Waiter.Queue {
     /// ```
     public struct Drain<Element: ~Copyable>: ~Copyable {
         @usableFromInline
-        var _storage: Buffer.Ring.Growable<Element>
+        var _storage: Buffer.Ring.Unbounded<Element>
 
         /// Creates an empty drain.
         @inlinable
         public init() {
-            self._storage = Buffer.Ring.Growable<Element>(minimumCapacity: 4)
+            self._storage = Buffer.Ring.Unbounded<Element>(minimumCapacity: 4)
         }
 
         /// The number of elements in the drain.

@@ -23,16 +23,16 @@ extension Async.Channel.Bounded {
     ///
     /// ## Usage
     /// ```swift
-    /// let (sender, receiver) = Async.Channel<Int>.Bounded.create(capacity: 10)
+    /// var channel = Async.Channel<Int>.Bounded(capacity: 10)
     ///
     /// // Send elements (may suspend if buffer full)
-    /// try await sender.send(42)
+    /// try await channel.sender.send(42)
     ///
     /// // Clone sender for another producer (ARC increments)
-    /// let sender2 = sender
+    /// let sender2 = channel.sender
     ///
     /// // Close explicitly (or let auto-close on last drop)
-    /// sender.close()
+    /// channel.close()
     /// ```
     ///
     /// ## Thread Safety
@@ -155,25 +155,46 @@ extension Async.Channel.Bounded.Sender {
         if let error { throw error }
     }
 
-    /// Try to send an element without suspending.
-    ///
-    /// - Parameter element: The element to send.
-    /// - Returns: `true` if the element was sent, `false` if the buffer is full or channel is closed.
-    @inlinable
-    @discardableResult
-    public func trySend(_ element: Element) -> Bool {
-        let action = handle.storage.withLock { state in
-            state.trySend(element)
+    /// Accessor for send operation variants.
+    public var send: Send { Send(handle: handle) }
+}
+
+// MARK: - Send Accessor
+
+extension Async.Channel.Bounded.Sender {
+    /// Send operation accessor with variants.
+    public struct Send: Sendable {
+        @usableFromInline
+        let handle: Handle
+
+        @usableFromInline
+        init(handle: Handle) {
+            self.handle = handle
         }
 
-        switch action {
-        case .deliverToReceiver(let receiverCont, let element):
-            receiverCont.resume(returning: (element, nil))
-            return true
-        case .buffered:
-            return true
-        case .rejectClosed, .rejectCancelled, .suspend:
-            return false
+        /// Send an element without suspending.
+        ///
+        /// - Parameter element: The element to send.
+        /// - Throws: `.full` if the buffer is full, `.closed` if the channel is closed,
+        ///           `.cancelled` if the task was cancelled.
+        @inlinable
+        public func immediate(_ element: Element) throws(Async.Channel<Element>.Error) {
+            let action = handle.storage.withLock { state in
+                state.trySend(element)
+            }
+
+            switch action {
+            case .deliverToReceiver(let receiverCont, let element):
+                receiverCont.resume(returning: (element, nil))
+            case .buffered:
+                break
+            case .rejectClosed:
+                throw .closed
+            case .rejectCancelled:
+                throw .cancelled
+            case .suspend:
+                throw .full
+            }
         }
     }
 }

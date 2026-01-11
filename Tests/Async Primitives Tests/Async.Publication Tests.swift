@@ -10,8 +10,8 @@
 // ===----------------------------------------------------------------------===//
 
 import Async_Primitives
-import Test_Support_Primitives
-import Testing
+import Test_Primitives
+import Testing_Extras
 
 /// Test namespace for Async.Publication (generic type requires wrapper for #TestSuites).
 enum Publication {
@@ -200,7 +200,7 @@ extension Publication.Test.Performance {
         let iterations = 1_000
         let range = 0..<iterations
 
-        var ends = Async.Channel<Int>.Unbounded().take().ends()
+        let ends = Async.Channel<Int>.Unbounded().take().ends()
 
         await withTaskGroup(of: Void.self) { group in
             // Publisher
@@ -251,7 +251,7 @@ extension Publication.Test.Performance {
         let iterationsPerActor = 100
         let totalRange = 0..<(publisherCount * iterationsPerActor)
 
-        var ends = Async.Channel<Int>.Unbounded().take().ends()
+        let ends = Async.Channel<Int>.Unbounded().take().ends()
 
         await withTaskGroup(of: Void.self) { group in
             // Multiple publishers

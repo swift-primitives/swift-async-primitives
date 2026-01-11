@@ -25,5 +25,17 @@ extension Async {
         ///
         /// Thrown when the task is cancelled while waiting.
         case cancelled
+
+        /// The channel buffer is full.
+        ///
+        /// Thrown by immediate send when the buffer is full and the operation
+        /// would need to suspend.
+        case full
+
+        /// The channel buffer is empty.
+        ///
+        /// Thrown by immediate receive when the buffer is empty and the operation
+        /// would need to suspend.
+        case empty
     }
 }

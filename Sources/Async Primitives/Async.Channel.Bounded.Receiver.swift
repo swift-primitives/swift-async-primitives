@@ -20,31 +20,27 @@ extension Async.Channel.Bounded {
     ///
     /// ## Usage
     /// ```swift
-    /// let (sender, receiver) = Async.Channel<Int>.Bounded.create(capacity: 10)
+    /// var channel = Async.Channel<Int>.Bounded(capacity: 10)
     ///
     /// // Receive elements (may suspend if buffer empty)
-    /// while let value = try await receiver.receive() {
+    /// while let value = try await channel.receiver.receive() {
     ///     process(value)
     /// }
     ///
     /// // Or iterate via AsyncSequence view
-    /// for try await value in receiver.elements {
+    /// for try await value in channel.receiver.elements {
     ///     process(value)
     /// }
     /// ```
     ///
     /// ## Thread Safety
-    /// `Receiver` is `@unchecked Sendable` due to Swift limitations (tuples
-    /// cannot contain `~Copyable` types). The single-consumer invariant is
-    /// enforced via runtime precondition, not compile-time constraints.
-    /// Violating this invariant is a programmer error.
-    public struct Receiver: @unchecked Sendable {
+    /// `Receiver` is `@unchecked Sendable` - it may be moved to another task
+    /// for the canonical "handoff to consumer task" pattern. The mutex guards
+    /// all state access. Concurrent suspension is caught by precondition.
+    public struct Receiver: ~Copyable, @unchecked Sendable {
         @usableFromInline
         let storage: Storage
 
-        /// Marker to make this type non-Sendable in practice.
-        /// The @unchecked Sendable is only to allow tuple returns;
-        /// users should treat this as non-Sendable.
         @usableFromInline
         init(storage: Storage) {
             self.storage = storage
@@ -125,25 +121,48 @@ extension Async.Channel.Bounded.Receiver {
         return element
     }
 
-    /// Try to receive an element without suspending.
-    ///
-    /// - Returns: The next element if available, `nil` if the buffer is empty.
-    @inlinable
-    public func tryReceive() -> Element? {
-        let action = storage.withLock { state in
-            state.tryReceive()
+    /// Accessor for receive operation variants.
+    public var receive: Receive { Receive(storage: storage) }
+}
+
+// MARK: - Receive Accessor
+
+extension Async.Channel.Bounded.Receiver {
+    /// Receive operation accessor with variants.
+    public struct Receive: @unchecked Sendable {
+        @usableFromInline
+        let storage: Async.Channel<Element>.Bounded.Storage
+
+        @usableFromInline
+        init(storage: Async.Channel<Element>.Bounded.Storage) {
+            self.storage = storage
         }
 
-        switch action {
-        case .returnElement(let element, let resumeSender, var cancelled):
-            // Resume cancelled senders first (minimizes stuck time)
-            while let c = cancelled.take.front {
-                c.resume(returning: .cancelled)
+        /// Receive an element without suspending.
+        ///
+        /// - Returns: The next element if available, `nil` if the channel is closed and drained.
+        /// - Throws: `.empty` if the buffer is empty, `.cancelled` if the task was cancelled.
+        @inlinable
+        public func immediate() throws(Async.Channel<Element>.Error) -> Element? {
+            let action = storage.withLock { state in
+                state.tryReceive()
             }
-            resumeSender?.resume(returning: nil)
-            return element
-        case .returnNil, .rejectCancelled, .suspend:
-            return nil
+
+            switch action {
+            case .returnElement(let element, let resumeSender, var cancelled):
+                // Resume cancelled senders first (minimizes stuck time)
+                while let c = cancelled.take.front {
+                    c.resume(returning: .cancelled)
+                }
+                resumeSender?.resume(returning: nil)
+                return element
+            case .returnNil:
+                return nil
+            case .rejectCancelled:
+                throw .cancelled
+            case .suspend:
+                throw .empty
+            }
         }
     }
 }
