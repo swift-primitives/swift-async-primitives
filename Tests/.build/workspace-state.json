@@ -1,0 +1,820 @@
+{
+  "object" : {
+    "artifacts" : [
+
+    ],
+    "dependencies" : [
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-arm-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-arm-primitives",
+          "name" : "swift-arm-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-arm-primitives"
+        },
+        "subpath" : "swift-arm-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-ascii",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-foundations/swift-ascii",
+          "name" : "swift-ascii"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-foundations/swift-ascii"
+        },
+        "subpath" : "swift-ascii"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-async",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-foundations/swift-async",
+          "name" : "swift-async"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-foundations/swift-async"
+        },
+        "subpath" : "swift-async"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-async-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-async-primitives",
+          "name" : "swift-async-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-async-primitives"
+        },
+        "subpath" : "swift-async-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-binary-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-binary-primitives",
+          "name" : "swift-binary-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-binary-primitives"
+        },
+        "subpath" : "swift-binary-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-buffer-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-buffer-primitives",
+          "name" : "swift-buffer-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-buffer-primitives"
+        },
+        "subpath" : "swift-buffer-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-clock-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-clock-primitives",
+          "name" : "swift-clock-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-clock-primitives"
+        },
+        "subpath" : "swift-clock-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-console",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-foundations/swift-console",
+          "name" : "swift-console"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-foundations/swift-console"
+        },
+        "subpath" : "swift-console"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-container-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-container-primitives",
+          "name" : "swift-container-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-container-primitives"
+        },
+        "subpath" : "swift-container-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-cpu-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-cpu-primitives",
+          "name" : "swift-cpu-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-cpu-primitives"
+        },
+        "subpath" : "swift-cpu-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-darwin",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-foundations/swift-darwin",
+          "name" : "swift-darwin"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-foundations/swift-darwin"
+        },
+        "subpath" : "swift-darwin"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-darwin-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-darwin-primitives",
+          "name" : "swift-darwin-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-darwin-primitives"
+        },
+        "subpath" : "swift-darwin-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-dimension-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-dimension-primitives",
+          "name" : "swift-dimension-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-dimension-primitives"
+        },
+        "subpath" : "swift-dimension-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-ecma-48",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-standards/swift-ecma-48",
+          "name" : "swift-ecma-48"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-standards/swift-ecma-48"
+        },
+        "subpath" : "swift-ecma-48"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-environment",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-foundations/swift-environment",
+          "name" : "swift-environment"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-foundations/swift-environment"
+        },
+        "subpath" : "swift-environment"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-error-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-error-primitives",
+          "name" : "swift-error-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-error-primitives"
+        },
+        "subpath" : "swift-error-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-file-system",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-foundations/swift-file-system",
+          "name" : "swift-file-system"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-foundations/swift-file-system"
+        },
+        "subpath" : "swift-file-system"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-formatting-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-formatting-primitives",
+          "name" : "swift-formatting-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-formatting-primitives"
+        },
+        "subpath" : "swift-formatting-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-identity-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-identity-primitives",
+          "name" : "swift-identity-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-identity-primitives"
+        },
+        "subpath" : "swift-identity-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-incits-4-1986",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-standards/swift-incits-4-1986",
+          "name" : "swift-incits-4-1986"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-standards/swift-incits-4-1986"
+        },
+        "subpath" : "swift-incits-4-1986"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-io",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-foundations/swift-io",
+          "name" : "swift-io"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-foundations/swift-io"
+        },
+        "subpath" : "swift-io"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-json",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-foundations/swift-json",
+          "name" : "swift-json"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-foundations/swift-json"
+        },
+        "subpath" : "swift-json"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-kernel",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-foundations/swift-kernel",
+          "name" : "swift-kernel"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-foundations/swift-kernel"
+        },
+        "subpath" : "swift-kernel"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-kernel-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-kernel-primitives",
+          "name" : "swift-kernel-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-kernel-primitives"
+        },
+        "subpath" : "swift-kernel-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-linux",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-foundations/swift-linux",
+          "name" : "swift-linux"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-foundations/swift-linux"
+        },
+        "subpath" : "swift-linux"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-linux-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-linux-primitives",
+          "name" : "swift-linux-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-linux-primitives"
+        },
+        "subpath" : "swift-linux-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-loader",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-foundations/swift-loader",
+          "name" : "swift-loader"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-foundations/swift-loader"
+        },
+        "subpath" : "swift-loader"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-loader-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-loader-primitives",
+          "name" : "swift-loader-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-loader-primitives"
+        },
+        "subpath" : "swift-loader-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-memory",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-foundations/swift-memory",
+          "name" : "swift-memory"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-foundations/swift-memory"
+        },
+        "subpath" : "swift-memory"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-memory-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-memory-primitives",
+          "name" : "swift-memory-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-memory-primitives"
+        },
+        "subpath" : "swift-memory-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-numeric-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-numeric-primitives",
+          "name" : "swift-numeric-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-numeric-primitives"
+        },
+        "subpath" : "swift-numeric-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-parsing-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-parsing-primitives",
+          "name" : "swift-parsing-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-parsing-primitives"
+        },
+        "subpath" : "swift-parsing-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-paths",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-foundations/swift-paths",
+          "name" : "swift-paths"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-foundations/swift-paths"
+        },
+        "subpath" : "swift-paths"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-pool-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-pool-primitives",
+          "name" : "swift-pool-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-pool-primitives"
+        },
+        "subpath" : "swift-pool-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-pools",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-foundations/swift-pools",
+          "name" : "swift-pools"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-foundations/swift-pools"
+        },
+        "subpath" : "swift-pools"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-posix",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-foundations/swift-posix",
+          "name" : "swift-posix"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-foundations/swift-posix"
+        },
+        "subpath" : "swift-posix"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-posix-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-posix-primitives",
+          "name" : "swift-posix-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-posix-primitives"
+        },
+        "subpath" : "swift-posix-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-rfc-4648",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-standards/swift-rfc-4648",
+          "name" : "swift-rfc-4648"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-standards/swift-rfc-4648"
+        },
+        "subpath" : "swift-rfc-4648"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-rfc-8259",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-standards/swift-rfc-8259",
+          "name" : "swift-rfc-8259"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-standards/swift-rfc-8259"
+        },
+        "subpath" : "swift-rfc-8259"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-serialization-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-serialization-primitives",
+          "name" : "swift-serialization-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-serialization-primitives"
+        },
+        "subpath" : "swift-serialization-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-standard-library-extensions",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-standard-library-extensions",
+          "name" : "swift-standard-library-extensions"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-standard-library-extensions"
+        },
+        "subpath" : "swift-standard-library-extensions"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-storage-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-storage-primitives",
+          "name" : "swift-storage-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-storage-primitives"
+        },
+        "subpath" : "swift-storage-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-string-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-string-primitives",
+          "name" : "swift-string-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-string-primitives"
+        },
+        "subpath" : "swift-string-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-syntax",
+          "kind" : "remoteSourceControl",
+          "location" : "https://github.com/swiftlang/swift-syntax",
+          "name" : "swift-syntax"
+        },
+        "state" : {
+          "checkoutState" : {
+            "revision" : "4799286537280063c85a32f09884cfbca301b1a1",
+            "version" : "602.0.0"
+          },
+          "name" : "sourceControlCheckout"
+        },
+        "subpath" : "swift-syntax"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-system-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-system-primitives",
+          "name" : "swift-system-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-system-primitives"
+        },
+        "subpath" : "swift-system-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-systems",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-foundations/swift-systems",
+          "name" : "swift-systems"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-foundations/swift-systems"
+        },
+        "subpath" : "swift-systems"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-terminal-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-terminal-primitives",
+          "name" : "swift-terminal-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-terminal-primitives"
+        },
+        "subpath" : "swift-terminal-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-test-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-test-primitives",
+          "name" : "swift-test-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-test-primitives"
+        },
+        "subpath" : "swift-test-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-testing",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-foundations/swift-testing",
+          "name" : "swift-testing"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-foundations/swift-testing"
+        },
+        "subpath" : "swift-testing"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-testing-extras",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-foundations/swift-testing-extras",
+          "name" : "swift-testing-extras"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-foundations/swift-testing-extras"
+        },
+        "subpath" : "swift-testing-extras"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-tests",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-foundations/swift-tests",
+          "name" : "swift-tests"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-foundations/swift-tests"
+        },
+        "subpath" : "swift-tests"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-time-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-time-primitives",
+          "name" : "swift-time-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-time-primitives"
+        },
+        "subpath" : "swift-time-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-windows",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-foundations/swift-windows",
+          "name" : "swift-windows"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-foundations/swift-windows"
+        },
+        "subpath" : "swift-windows"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-windows-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-windows-primitives",
+          "name" : "swift-windows-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-windows-primitives"
+        },
+        "subpath" : "swift-windows-primitives"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-x86-primitives",
+          "kind" : "fileSystem",
+          "location" : "/Users/coen/Developer/swift-primitives/swift-x86-primitives",
+          "name" : "swift-x86-primitives"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/coen/Developer/swift-primitives/swift-x86-primitives"
+        },
+        "subpath" : "swift-x86-primitives"
+      }
+    ],
+    "prebuilts" : [
+      {
+        "cModules" : [
+
+        ],
+        "checkoutPath" : "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/checkouts/swift-syntax",
+        "identity" : "swift-syntax",
+        "includePath" : [
+          "Sources/_SwiftSyntaxCShims/include",
+          "Sources/_SwiftLibraryPluginProviderCShims/include"
+        ],
+        "libraryName" : "MacroSupport",
+        "path" : "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/prebuilts/swift-syntax/602.0.0/swiftlang-6.2.3.3.21-MacroSupport-macos_aarch64",
+        "products" : [
+          "swift-syntaxPackageTests",
+          "SwiftBasicFormat",
+          "SwiftCompilerPlugin",
+          "SwiftDiagnostics",
+          "SwiftIDEUtils",
+          "SwiftIfConfig",
+          "SwiftLexicalLookup",
+          "SwiftOperators",
+          "SwiftParser",
+          "SwiftParserDiagnostics",
+          "SwiftRefactor",
+          "SwiftSyntax",
+          "SwiftSyntaxBuilder",
+          "SwiftSyntaxMacros",
+          "SwiftSyntaxMacroExpansion",
+          "SwiftSyntaxMacrosTestSupport",
+          "SwiftSyntaxMacrosGenericTestSupport",
+          "_SwiftCompilerPluginMessageHandling",
+          "_SwiftLibraryPluginProvider"
+        ],
+        "version" : "602.0.0"
+      }
+    ]
+  },
+  "version" : 7
+}

@@ -1,0 +1,103 @@
+{
+  "": {
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/master.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-4648/Sources/RFC 4648/Collection+RFC4648.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/Collection+RFC4648.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/Collection+RFC4648.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/Collection+RFC4648~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/Collection+RFC4648.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/Collection+RFC4648.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-4648/Sources/RFC 4648/FixedWidthInteger+RFC4648.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/FixedWidthInteger+RFC4648.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/FixedWidthInteger+RFC4648.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/FixedWidthInteger+RFC4648~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/FixedWidthInteger+RFC4648.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/FixedWidthInteger+RFC4648.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-4648/Sources/RFC 4648/RFC_4648+Validation.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/RFC_4648+Validation.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/RFC_4648+Validation.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/RFC_4648+Validation~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/RFC_4648+Validation.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/RFC_4648+Validation.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-4648/Sources/RFC 4648/RFC_4648.Base16.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/RFC_4648.Base16.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/RFC_4648.Base16.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/RFC_4648.Base16~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/RFC_4648.Base16.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/RFC_4648.Base16.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-4648/Sources/RFC 4648/RFC_4648.Base32.Hex.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/RFC_4648.Base32.Hex.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/RFC_4648.Base32.Hex.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/RFC_4648.Base32.Hex~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/RFC_4648.Base32.Hex.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/RFC_4648.Base32.Hex.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-4648/Sources/RFC 4648/RFC_4648.Base32.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/RFC_4648.Base32.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/RFC_4648.Base32.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/RFC_4648.Base32~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/RFC_4648.Base32.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/RFC_4648.Base32.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-4648/Sources/RFC 4648/RFC_4648.Base64.URL.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/RFC_4648.Base64.URL.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/RFC_4648.Base64.URL.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/RFC_4648.Base64.URL~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/RFC_4648.Base64.URL.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/RFC_4648.Base64.URL.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-4648/Sources/RFC 4648/RFC_4648.Base64.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/RFC_4648.Base64.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/RFC_4648.Base64.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/RFC_4648.Base64~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/RFC_4648.Base64.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/RFC_4648.Base64.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-4648/Sources/RFC 4648/RFC_4648.EncodingTable.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/RFC_4648.EncodingTable.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/RFC_4648.EncodingTable.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/RFC_4648.EncodingTable~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/RFC_4648.EncodingTable.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/RFC_4648.EncodingTable.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-4648/Sources/RFC 4648/RFC_4648.Internal.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/RFC_4648.Internal.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/RFC_4648.Internal.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/RFC_4648.Internal~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/RFC_4648.Internal.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/RFC_4648.Internal.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-4648/Sources/RFC 4648/RFC_4648.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/RFC_4648.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/RFC_4648.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/RFC_4648~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/RFC_4648.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/RFC_4648.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-4648/Sources/RFC 4648/Span+RFC4648.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/Span+RFC4648.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/Span+RFC4648.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/Span+RFC4648~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/Span+RFC4648.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/Span+RFC4648.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-4648/Sources/RFC 4648/String+RFC4648.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/String+RFC4648.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/String+RFC4648.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/String+RFC4648~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/String+RFC4648.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/String+RFC4648.dia"
+  },
+  "/Users/coen/Developer/swift-standards/swift-rfc-4648/Sources/RFC 4648/exports.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/exports.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/exports.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/exports~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/exports.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_4648.build/exports.dia"
+  }
+}

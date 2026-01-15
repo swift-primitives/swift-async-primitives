@@ -1,0 +1,3 @@
+module Darwin_Kernel {
+    header "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel.build/include/Darwin Kernel-Swift.h"
+}

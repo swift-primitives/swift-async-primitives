@@ -1,0 +1,159 @@
+{
+  "": {
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/master.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/Binary.ASCII.Access+prefix.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Binary.ASCII.Access+prefix.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Binary.ASCII.Access+prefix.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Binary.ASCII.Access+prefix~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Binary.ASCII.Access+prefix.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Binary.ASCII.Access+prefix.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/Binary.ASCII.Access+whole.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Binary.ASCII.Access+whole.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Binary.ASCII.Access+whole.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Binary.ASCII.Access+whole~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Binary.ASCII.Access+whole.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Binary.ASCII.Access+whole.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/Binary.ASCII.Access.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Binary.ASCII.Access.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Binary.ASCII.Access.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Binary.ASCII.Access~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Binary.ASCII.Access.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Binary.ASCII.Access.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/Binary.ASCII.Parsing.Error.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Binary.ASCII.Parsing.Error.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Binary.ASCII.Parsing.Error.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Binary.ASCII.Parsing.Error~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Binary.ASCII.Parsing.Error.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Binary.ASCII.Parsing.Error.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/Binary.ASCII.Parsing.Prefix+call.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Binary.ASCII.Parsing.Prefix+call.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Binary.ASCII.Parsing.Prefix+call.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Binary.ASCII.Parsing.Prefix+call~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Binary.ASCII.Parsing.Prefix+call.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Binary.ASCII.Parsing.Prefix+call.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/Binary.ASCII.Parsing.Prefix.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Binary.ASCII.Parsing.Prefix.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Binary.ASCII.Parsing.Prefix.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Binary.ASCII.Parsing.Prefix~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Binary.ASCII.Parsing.Prefix.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Binary.ASCII.Parsing.Prefix.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/Binary.ASCII.Parsing.Whole+call.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Binary.ASCII.Parsing.Whole+call.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Binary.ASCII.Parsing.Whole+call.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Binary.ASCII.Parsing.Whole+call~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Binary.ASCII.Parsing.Whole+call.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Binary.ASCII.Parsing.Whole+call.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/Binary.ASCII.Parsing.Whole.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Binary.ASCII.Parsing.Whole.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Binary.ASCII.Parsing.Whole.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Binary.ASCII.Parsing.Whole~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Binary.ASCII.Parsing.Whole.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Binary.ASCII.Parsing.Whole.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/Binary.ASCII.Parsing.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Binary.ASCII.Parsing.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Binary.ASCII.Parsing.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Binary.ASCII.Parsing~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Binary.ASCII.Parsing.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Binary.ASCII.Parsing.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/Character+INCITS_4_1986.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Character+INCITS_4_1986.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Character+INCITS_4_1986.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Character+INCITS_4_1986~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Character+INCITS_4_1986.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Character+INCITS_4_1986.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/Collection+INCITS_4_1986.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Collection+INCITS_4_1986.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Collection+INCITS_4_1986.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Collection+INCITS_4_1986~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Collection+INCITS_4_1986.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Collection+INCITS_4_1986.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/Int+ASCII.Serializable.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Int+ASCII.Serializable.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Int+ASCII.Serializable.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Int+ASCII.Serializable~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Int+ASCII.Serializable.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Int+ASCII.Serializable.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/Parsing.Parser+ascii.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Parsing.Parser+ascii.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Parsing.Parser+ascii.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Parsing.Parser+ascii~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Parsing.Parser+ascii.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Parsing.Parser+ascii.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/Set Character+INCITS_4_1986.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Set Character+INCITS_4_1986.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Set Character+INCITS_4_1986.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Set Character+INCITS_4_1986~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Set Character+INCITS_4_1986.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Set Character+INCITS_4_1986.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/Set UInt8+INCITS_4_1986.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Set UInt8+INCITS_4_1986.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Set UInt8+INCITS_4_1986.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Set UInt8+INCITS_4_1986~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Set UInt8+INCITS_4_1986.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/Set UInt8+INCITS_4_1986.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/StringProtocol+INCITS_4_1986.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/StringProtocol+INCITS_4_1986.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/StringProtocol+INCITS_4_1986.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/StringProtocol+INCITS_4_1986~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/StringProtocol+INCITS_4_1986.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/StringProtocol+INCITS_4_1986.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/UInt8+INCITS_4_1986.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/UInt8+INCITS_4_1986.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/UInt8+INCITS_4_1986.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/UInt8+INCITS_4_1986~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/UInt8+INCITS_4_1986.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/UInt8+INCITS_4_1986.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/UInt8.ASCII.RawRepresentable.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/UInt8.ASCII.RawRepresentable.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/UInt8.ASCII.RawRepresentable.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/UInt8.ASCII.RawRepresentable~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/UInt8.ASCII.RawRepresentable.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/UInt8.ASCII.RawRepresentable.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/UInt8.ASCII.Serializable.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/UInt8.ASCII.Serializable.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/UInt8.ASCII.Serializable.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/UInt8.ASCII.Serializable~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/UInt8.ASCII.Serializable.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/UInt8.ASCII.Serializable.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/UInt8.ASCII.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/UInt8.ASCII.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/UInt8.ASCII.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/UInt8.ASCII~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/UInt8.ASCII.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/UInt8.ASCII.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/[UInt8]+INCITS_4_1986.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/[UInt8]+INCITS_4_1986.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/[UInt8]+INCITS_4_1986.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/[UInt8]+INCITS_4_1986~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/[UInt8]+INCITS_4_1986.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/[UInt8]+INCITS_4_1986.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/exports.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/exports.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/exports.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/exports~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/exports.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/exports.dia"
+  }
+}

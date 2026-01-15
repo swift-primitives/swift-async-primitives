@@ -9,7 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-import Buffer_Primitives
+public import Buffer_Primitives
 
 extension Async.Waiter.Queue {
     /// Unbounded FIFO queue with automatic growth.

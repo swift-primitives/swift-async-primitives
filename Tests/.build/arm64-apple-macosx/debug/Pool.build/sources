@@ -1,0 +1,11 @@
+/Users/coen/Developer/swift-foundations/swift-pools/Sources/Pool/Pool.Blocking.Cancellation.swift
+/Users/coen/Developer/swift-foundations/swift-pools/Sources/Pool/Pool.Blocking.Condition.swift
+/Users/coen/Developer/swift-foundations/swift-pools/Sources/Pool/Pool.Blocking.Effect.swift
+/Users/coen/Developer/swift-foundations/swift-pools/Sources/Pool/Pool.Blocking.Metrics.swift
+/Users/coen/Developer/swift-foundations/swift-pools/Sources/Pool/Pool.Blocking.Run.Cancellable.swift
+/Users/coen/Developer/swift-foundations/swift-pools/Sources/Pool/Pool.Blocking.Run.Timeout.swift
+/Users/coen/Developer/swift-foundations/swift-pools/Sources/Pool/Pool.Blocking.Run.swift
+/Users/coen/Developer/swift-foundations/swift-pools/Sources/Pool/Pool.Blocking.Shutdown.swift
+/Users/coen/Developer/swift-foundations/swift-pools/Sources/Pool/Pool.Blocking.State.swift
+/Users/coen/Developer/swift-foundations/swift-pools/Sources/Pool/Pool.Blocking.swift
+/Users/coen/Developer/swift-foundations/swift-pools/Sources/Pool/exports.swift

@@ -9,6 +9,11 @@
 //
 // ===----------------------------------------------------------------------===//
 
+// Async.Completion requires Atomic from Synchronization and is designed for
+// the withCheckedContinuation + cancellation pattern. Neither is available
+// on embedded Swift.
+#if !hasFeature(Embedded)
+
 public import Synchronization
 
 extension Async {
@@ -285,3 +290,5 @@ extension Async.Completion {
         }
     }
 }
+
+#endif  // !hasFeature(Embedded)

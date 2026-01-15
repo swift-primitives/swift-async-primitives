@@ -1,0 +1,3 @@
+module Linux_Loader {
+    header "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Linux_Loader.build/include/Linux Loader-Swift.h"
+}

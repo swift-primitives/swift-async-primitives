@@ -9,6 +9,9 @@
 //
 // ===----------------------------------------------------------------------===//
 
+// Async channels require task suspension which is not available on embedded Swift.
+#if !hasFeature(Embedded)
+
 extension Async.Channel.Unbounded {
     /// A sender view for an unbounded channel.
     ///
@@ -124,3 +127,5 @@ extension Async.Channel.Unbounded.Sender {
         storage.withLock { $0.closed }
     }
 }
+
+#endif  // !hasFeature(Embedded)

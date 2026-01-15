@@ -9,7 +9,9 @@
 //
 // ===----------------------------------------------------------------------===//
 
+#if !hasFeature(Embedded)
 import Synchronization
+#endif
 
 extension Async {
     /// A single-value async primitive that can be fulfilled once and awaited many times.
@@ -20,7 +22,7 @@ extension Async {
     ///
     /// ## Pattern
     /// - Producer calls `fulfill(_:)` (sync, delivers value)
-    /// - Consumers call `value` (async, suspends until fulfilled)
+    /// - Consumers call `value` (async, suspends until fulfilled) or `wait(_:)` (callback-based)
     ///
     /// ## Single-Fulfillment Semantics
     /// A promise can only be fulfilled once. `fulfill(_:)` returns `true` on
@@ -31,9 +33,14 @@ extension Async {
     /// ```swift
     /// let result = Async.Promise<Config>()
     ///
-    /// // Consumer tasks
+    /// // Consumer tasks (async)
     /// Task {
     ///     let config = await result.value
+    ///     // Use config
+    /// }
+    ///
+    /// // Consumer (callback-based, works on embedded)
+    /// result.wait { config in
     ///     // Use config
     /// }
     ///
@@ -47,30 +54,34 @@ extension Async {
     /// All operations are protected by an internal mutex.
     /// Uses `@unchecked Sendable` because internal state is protected
     /// by mutex synchronization.
+    ///
+    /// ## Embedded Swift Support
+    /// On embedded platforms, use the callback-based `wait(_:)` method.
+    /// The async `value` property is only available on non-embedded platforms.
     public final class Promise<Value: Sendable>: @unchecked Sendable {
-        private let _state: Mutex<State>
+        private let _state: Async.Mutex<State>
 
-        private struct State {
-            var waiters: [CheckedContinuation<Value, Never>] = []
+        private struct State: Sendable {
+            var waiters: [Async.Continuation<Value>] = []
             var fulfilled: Value? = nil
         }
 
         /// Creates a new unfulfilled promise.
         public init() {
-            self._state = Mutex(State())
+            self._state = Async.Mutex(State())
         }
 
         /// Fulfills the promise with a value, releasing all waiting tasks.
         ///
         /// After this call:
-        /// - All currently waiting tasks resume with the value
-        /// - All future `value` accesses return immediately
+        /// - All currently waiting tasks/callbacks resume with the value
+        /// - All future `value` accesses or `wait(_:)` calls return immediately
         ///
         /// - Parameter value: The value to fulfill the promise with.
         /// - Returns: `true` if the promise was fulfilled, `false` if already fulfilled.
         @discardableResult
         public func fulfill(_ value: Value) -> Bool {
-            let waitersToResume: [CheckedContinuation<Value, Never>]? = _state.withLock { state in
+            let waitersToResume: [Async.Continuation<Value>]? = _state.withLock { state in
                 guard state.fulfilled == nil else { return nil }
                 state.fulfilled = value
                 let waiters = state.waiters
@@ -84,26 +95,24 @@ extension Async {
             return true
         }
 
-        /// The promised value, suspending until fulfilled.
+        /// Waits for the promise to be fulfilled, calling the callback with the value.
         ///
-        /// If the promise is already fulfilled, returns the value immediately.
-        /// Otherwise, suspends until another task calls `fulfill(_:)`.
+        /// If the promise is already fulfilled, the callback is invoked immediately.
+        /// Otherwise, the callback is stored and invoked when `fulfill(_:)` is called.
         ///
-        /// Multiple tasks can await concurrently - all will receive the same value.
-        public var value: Value {
-            get async {
-                await withCheckedContinuation { continuation in
-                    let immediateValue: Value? = _state.withLock { state in
-                        if let value = state.fulfilled {
-                            return value
-                        }
-                        state.waiters.append(continuation)
-                        return nil
-                    }
-                    if let value = immediateValue {
-                        continuation.resume(returning: value)
-                    }
+        /// This method works on all platforms including embedded Swift.
+        ///
+        /// - Parameter callback: The callback to invoke with the fulfilled value.
+        public func wait(_ callback: @escaping @Sendable (Value) -> Void) {
+            let immediateValue: Value? = _state.withLock { state in
+                if let value = state.fulfilled {
+                    return value
                 }
+                state.waiters.append(Async.Continuation(callback))
+                return nil
+            }
+            if let value = immediateValue {
+                callback(value)
             }
         }
 
@@ -122,6 +131,38 @@ extension Async {
     }
 }
 
+// MARK: - Async Value Getter (Non-Embedded Only)
+
+#if !hasFeature(Embedded)
+extension Async.Promise {
+    /// The promised value, suspending until fulfilled.
+    ///
+    /// If the promise is already fulfilled, returns the value immediately.
+    /// Otherwise, suspends until another task calls `fulfill(_:)`.
+    ///
+    /// Multiple tasks can await concurrently - all will receive the same value.
+    ///
+    /// - Note: This property is only available on non-embedded platforms.
+    ///   On embedded, use `wait(_:)` instead.
+    public var value: Value {
+        get async {
+            await withCheckedContinuation { continuation in
+                let immediateValue: Value? = _state.withLock { state in
+                    if let value = state.fulfilled {
+                        return value
+                    }
+                    state.waiters.append(Async.Continuation(continuation))
+                    return nil
+                }
+                if let value = immediateValue {
+                    continuation.resume(returning: value)
+                }
+            }
+        }
+    }
+}
+#endif
+
 // MARK: - Gate (Promise<Void> specialization)
 
 extension Async {
@@ -134,8 +175,11 @@ extension Async {
     /// ```swift
     /// let ready = Async.Gate()
     ///
-    /// // Waiter
+    /// // Waiter (async, non-embedded only)
     /// await ready.wait()
+    ///
+    /// // Waiter (callback, works everywhere)
+    /// ready.wait { }
     ///
     /// // Signaler
     /// ready.open()
@@ -154,11 +198,16 @@ extension Async.Promise where Value == Void {
         fulfill(())
     }
 
-    /// Waits until the gate is opened.
+    /// Waits until the gate is opened (callback-based).
     ///
-    /// Equivalent to `await value`.
-    public func wait() async {
-        _ = await value
+    /// If the gate is already open, the callback is invoked immediately.
+    /// Otherwise, the callback is stored and invoked when `open()` is called.
+    ///
+    /// This method works on all platforms including embedded Swift.
+    ///
+    /// - Parameter callback: The callback to invoke when the gate opens.
+    public func wait(_ callback: @escaping @Sendable () -> Void) {
+        (self as Async.Promise<Void>).wait { _ in callback() }
     }
 
     /// Whether the gate is currently open.
@@ -168,3 +217,19 @@ extension Async.Promise where Value == Void {
         isFulfilled
     }
 }
+
+// MARK: - Async Gate Wait (Non-Embedded Only)
+
+#if !hasFeature(Embedded)
+extension Async.Promise where Value == Void {
+    /// Waits until the gate is opened (async).
+    ///
+    /// Equivalent to `await value`.
+    ///
+    /// - Note: This method is only available on non-embedded platforms.
+    ///   On embedded, use `wait(_:)` instead.
+    public func wait() async {
+        _ = await value
+    }
+}
+#endif

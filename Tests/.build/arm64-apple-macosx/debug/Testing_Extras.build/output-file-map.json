@@ -1,0 +1,26 @@
+{
+  "": {
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Testing_Extras.build/master.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-testing-extras/Sources/Testing Extras/Exclusive.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Testing_Extras.build/Exclusive.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Testing_Extras.build/Exclusive.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Testing_Extras.build/Exclusive~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Testing_Extras.build/Exclusive.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Testing_Extras.build/Exclusive.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-testing-extras/Sources/Testing Extras/Trait.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Testing_Extras.build/Trait.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Testing_Extras.build/Trait.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Testing_Extras.build/Trait~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Testing_Extras.build/Trait.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Testing_Extras.build/Trait.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-testing-extras/Sources/Testing Extras/exports.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Testing_Extras.build/exports.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Testing_Extras.build/exports.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Testing_Extras.build/exports~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Testing_Extras.build/exports.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Testing_Extras.build/exports.dia"
+  }
+}

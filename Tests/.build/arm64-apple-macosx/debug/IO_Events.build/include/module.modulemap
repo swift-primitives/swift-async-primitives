@@ -1,0 +1,3 @@
+module IO_Events {
+    header "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Events.build/include/IO Events-Swift.h"
+}

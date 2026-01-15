@@ -41,7 +41,7 @@ extension Async.Waiter {
     /// ```
     public struct Entry<Outcome: Sendable, Metadata: ~Copyable & Sendable>: ~Copyable, Sendable {
         /// Continuation to resume when outcome is determined.
-        public let continuation: CheckedContinuation<Outcome, Never>
+        public let continuation: Async.Continuation<Outcome>
 
         /// External flag for cancellation/timeout signaling.
         public let flag: Async.Waiter.Flag
@@ -60,7 +60,7 @@ extension Async.Waiter {
         ///   - metadata: Caller-defined value (ownership transferred).
         @inlinable
         public init(
-            continuation: CheckedContinuation<Outcome, Never>,
+            continuation: Async.Continuation<Outcome>,
             flag: Async.Waiter.Flag,
             metadata: consuming Metadata
         ) {
@@ -96,7 +96,7 @@ extension Async.Waiter.Entry where Metadata == Void {
     ///   - flag: The flag for external signaling.
     @inlinable
     public init(
-        continuation: CheckedContinuation<Outcome, Never>,
+        continuation: Async.Continuation<Outcome>,
         flag: Async.Waiter.Flag
     ) {
         self.continuation = continuation

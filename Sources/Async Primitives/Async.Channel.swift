@@ -9,6 +9,9 @@
 //
 // ===----------------------------------------------------------------------===//
 
+// Async channels require task suspension which is not available on embedded Swift.
+#if !hasFeature(Embedded)
+
 extension Async {
     /// Namespace for channel primitives.
     ///
@@ -18,3 +21,5 @@ extension Async {
     /// - `Bounded`: Capacity-limited buffer with backpressure
     public struct Channel<Element: Sendable> {}
 }
+
+#endif  // !hasFeature(Embedded)

@@ -9,6 +9,9 @@
 //
 // ===----------------------------------------------------------------------===//
 
+// Async broadcast requires task suspension which is not available on embedded Swift.
+#if !hasFeature(Embedded)
+
 extension Async.Broadcast {
     /// Errors that can occur in broadcast operations.
     public enum Error: Swift.Error, Sendable, Equatable {
@@ -18,3 +21,5 @@ extension Async.Broadcast {
         case cancelled
     }
 }
+
+#endif  // !hasFeature(Embedded)

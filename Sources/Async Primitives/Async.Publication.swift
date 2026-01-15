@@ -9,7 +9,9 @@
 //
 // ===----------------------------------------------------------------------===//
 
+#if !hasFeature(Embedded)
 import Synchronization
+#endif
 
 extension Async {
     /// A cancellation-safe publication slot for racing to claim a value.
@@ -68,13 +70,13 @@ extension Async {
     /// Uses `@unchecked Sendable` because internal state is protected
     /// by mutex synchronization.
     public final class Publication<Value: Sendable>: @unchecked Sendable {
-        private let _state: Mutex<Value?>
+        private let _state: Async.Mutex<Value?>
 
         /// Creates a new publication slot.
         ///
         /// - Parameter initial: Initial value, typically `nil`.
         public init(_ initial: sending Value? = nil) {
-            self._state = Mutex(initial)
+            self._state = Async.Mutex(initial)
         }
     }
 }

@@ -9,6 +9,9 @@
 //
 // ===----------------------------------------------------------------------===//
 
+// Async broadcast requires task suspension which is not available on embedded Swift.
+#if !hasFeature(Embedded)
+
 import Container_Primitives
 
 extension Async.Broadcast {
@@ -100,3 +103,5 @@ extension Async.Broadcast.State {
         return cont
     }
 }
+
+#endif  // !hasFeature(Embedded)

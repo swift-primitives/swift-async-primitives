@@ -1,0 +1,75 @@
+{
+  "": {
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/master.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-numeric-primitives/Sources/Numeric Primitives/FloatingPoint+Rounding.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/FloatingPoint+Rounding.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/FloatingPoint+Rounding.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/FloatingPoint+Rounding~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/FloatingPoint+Rounding.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/FloatingPoint+Rounding.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-numeric-primitives/Sources/Numeric Primitives/Numeric.Comparison.Equals.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/Numeric.Comparison.Equals.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/Numeric.Comparison.Equals.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/Numeric.Comparison.Equals~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/Numeric.Comparison.Equals.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/Numeric.Comparison.Equals.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-numeric-primitives/Sources/Numeric Primitives/Numeric.Comparison.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/Numeric.Comparison.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/Numeric.Comparison.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/Numeric.Comparison~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/Numeric.Comparison.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/Numeric.Comparison.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-numeric-primitives/Sources/Numeric Primitives/Numeric.Math.Accessor.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/Numeric.Math.Accessor.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/Numeric.Math.Accessor.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/Numeric.Math.Accessor~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/Numeric.Math.Accessor.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/Numeric.Math.Accessor.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-numeric-primitives/Sources/Numeric Primitives/Numeric.Math.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/Numeric.Math.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/Numeric.Math.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/Numeric.Math~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/Numeric.Math.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/Numeric.Math.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-numeric-primitives/Sources/Numeric Primitives/Numeric.Quantized.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/Numeric.Quantized.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/Numeric.Quantized.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/Numeric.Quantized~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/Numeric.Quantized.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/Numeric.Quantized.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-numeric-primitives/Sources/Numeric Primitives/Numeric.Rounding.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/Numeric.Rounding.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/Numeric.Rounding.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/Numeric.Rounding~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/Numeric.Rounding.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/Numeric.Rounding.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-numeric-primitives/Sources/Numeric Primitives/Numeric.Transcendental.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/Numeric.Transcendental.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/Numeric.Transcendental.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/Numeric.Transcendental~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/Numeric.Transcendental.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/Numeric.Transcendental.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-numeric-primitives/Sources/Numeric Primitives/Numeric.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/Numeric.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/Numeric.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/Numeric~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/Numeric.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/Numeric.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-numeric-primitives/Sources/Numeric Primitives/exports.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/exports.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/exports.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/exports~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/exports.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Numeric_Primitives.build/exports.dia"
+  }
+}

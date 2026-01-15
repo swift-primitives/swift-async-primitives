@@ -1,0 +1,3 @@
+module Console {
+    header "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Console.build/include/Console-Swift.h"
+}

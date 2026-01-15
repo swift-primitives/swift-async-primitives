@@ -1,0 +1,3 @@
+module IO_Completions {
+    header "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Completions.build/include/IO Completions-Swift.h"
+}

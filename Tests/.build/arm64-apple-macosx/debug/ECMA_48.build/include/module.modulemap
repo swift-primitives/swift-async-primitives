@@ -1,0 +1,3 @@
+module ECMA_48 {
+    header "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ECMA_48.build/include/ECMA 48-Swift.h"
+}

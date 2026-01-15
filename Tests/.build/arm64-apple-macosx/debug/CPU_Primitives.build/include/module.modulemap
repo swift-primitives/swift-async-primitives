@@ -1,0 +1,3 @@
+module CPU_Primitives {
+    header "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/include/CPU Primitives-Swift.h"
+}

@@ -1,0 +1,516 @@
+{
+  "": {
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/master.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Always.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Always.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Always.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Always~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Always.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Always.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Array+Parser.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Array+Parser.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Array+Parser.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Array+Parser~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Array+Parser.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Array+Parser.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Byte.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Byte.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Byte.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Byte~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Byte.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Byte.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Conditional.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Conditional.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Conditional.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Conditional~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Conditional.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Conditional.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Constraint.Error.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Constraint.Error.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Constraint.Error.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Constraint.Error~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Constraint.Error.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Constraint.Error.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Constraint.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Constraint.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Constraint.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Constraint~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Constraint.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Constraint.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Consume.Exactly.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Consume.Exactly.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Consume.Exactly.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Consume.Exactly~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Consume.Exactly.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Consume.Exactly.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Consume.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Consume.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Consume.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Consume~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Consume.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Consume.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Discard.Exactly.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Discard.Exactly.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Discard.Exactly.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Discard.Exactly~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Discard.Exactly.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Discard.Exactly.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Discard.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Discard.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Discard.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Discard~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Discard.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Discard.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Either.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Either.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Either.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Either~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Either.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Either.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.End.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.End.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.End.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.End~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.End.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.End.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.EndOfInput.Error.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.EndOfInput.Error.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.EndOfInput.Error.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.EndOfInput.Error~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.EndOfInput.Error.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.EndOfInput.Error.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.EndOfInput.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.EndOfInput.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.EndOfInput.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.EndOfInput~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.EndOfInput.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.EndOfInput.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Error.Located.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Error.Located.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Error.Located.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Error.Located~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Error.Located.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Error.Located.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Error.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Error.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Error.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Error~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Error.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Error.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Fail.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Fail.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Fail.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Fail~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Fail.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Fail.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Filter.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Filter.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Filter.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Filter~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Filter.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Filter.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.First.Element.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.First.Element.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.First.Element.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.First.Element~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.First.Element.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.First.Element.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.First.Where.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.First.Where.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.First.Where.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.First.Where~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.First.Where.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.First.Where.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.First.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.First.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.First.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.First~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.First.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.First.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.FlatMap.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.FlatMap.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.FlatMap.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.FlatMap~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.FlatMap.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.FlatMap.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Input.Streaming.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Input.Streaming.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Input.Streaming.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Input.Streaming~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Input.Streaming.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Input.Streaming.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Input.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Input.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Input.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Input~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Input.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Input.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Lazy.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Lazy.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Lazy.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Lazy~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Lazy.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Lazy.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Literal.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Literal.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Literal.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Literal~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Literal.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Literal.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Locate.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Locate.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Locate.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Locate~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Locate.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Locate.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Many.Error.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Many.Error.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Many.Error.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Many.Error~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Many.Error.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Many.Error.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Many.Separated.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Many.Separated.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Many.Separated.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Many.Separated~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Many.Separated.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Many.Separated.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Many.Simple.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Many.Simple.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Many.Simple.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Many.Simple~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Many.Simple.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Many.Simple.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Many.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Many.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Many.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Many~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Many.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Many.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Map.Throwing.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Map.Throwing.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Map.Throwing.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Map.Throwing~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Map.Throwing.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Map.Throwing.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Map.Transform.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Map.Transform.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Map.Transform.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Map.Transform~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Map.Transform.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Map.Transform.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Map.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Map.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Map.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Map~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Map.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Map.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Match.Error.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Match.Error.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Match.Error.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Match.Error~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Match.Error.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Match.Error.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Match.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Match.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Match.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Match~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Match.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Match.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Not.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Not.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Not.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Not~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Not.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Not.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.OneOf.Any.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.OneOf.Any.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.OneOf.Any.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.OneOf.Any~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.OneOf.Any.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.OneOf.Any.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.OneOf.Builder.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.OneOf.Builder.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.OneOf.Builder.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.OneOf.Builder~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.OneOf.Builder.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.OneOf.Builder.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.OneOf.Error.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.OneOf.Error.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.OneOf.Error.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.OneOf.Error~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.OneOf.Error.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.OneOf.Error.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.OneOf.Sequence.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.OneOf.Sequence.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.OneOf.Sequence.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.OneOf.Sequence~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.OneOf.Sequence.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.OneOf.Sequence.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.OneOf.Three.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.OneOf.Three.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.OneOf.Three.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.OneOf.Three~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.OneOf.Three.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.OneOf.Three.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.OneOf.Two.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.OneOf.Two.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.OneOf.Two.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.OneOf.Two~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.OneOf.Two.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.OneOf.Two.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.OneOf.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.OneOf.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.OneOf.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.OneOf~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.OneOf.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.OneOf.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Optional.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Optional.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Optional.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Optional~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Optional.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Optional.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Optionally.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Optionally.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Optionally.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Optionally~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Optionally.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Optionally.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Parse.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Parse.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Parse.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Parse~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Parse.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Parse.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Parser.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Parser.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Parser.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Parser~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Parser.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Parser.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.ParserPrinter.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.ParserPrinter.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.ParserPrinter.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.ParserPrinter~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.ParserPrinter.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.ParserPrinter.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Peek.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Peek.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Peek.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Peek~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Peek.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Peek.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Prefix.Through.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Prefix.Through.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Prefix.Through.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Prefix.Through~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Prefix.Through.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Prefix.Through.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Prefix.UpTo.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Prefix.UpTo.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Prefix.UpTo.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Prefix.UpTo~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Prefix.UpTo.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Prefix.UpTo.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Prefix.While.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Prefix.While.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Prefix.While.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Prefix.While~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Prefix.While.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Prefix.While.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Prefix.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Prefix.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Prefix.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Prefix~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Prefix.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Prefix.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Printer.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Printer.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Printer.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Printer~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Printer.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Printer.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Rest.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Rest.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Rest.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Rest~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Rest.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Rest.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Serializer.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Serializer.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Serializer.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Serializer~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Serializer.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Serializer.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Skip.First.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Skip.First.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Skip.First.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Skip.First~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Skip.First.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Skip.First.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Skip.Second.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Skip.Second.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Skip.Second.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Skip.Second~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Skip.Second.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Skip.Second.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Skip.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Skip.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Skip.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Skip~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Skip.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Skip.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Span.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Span.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Span.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Span~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Span.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Span.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Spanned.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Spanned.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Spanned.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Spanned~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Spanned.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Spanned.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.String+Parser.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.String+Parser.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.String+Parser.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.String+Parser~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.String+Parser.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.String+Parser.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Take.Builder.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Take.Builder.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Take.Builder.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Take.Builder~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Take.Builder.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Take.Builder.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Take.Sequence.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Take.Sequence.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Take.Sequence.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Take.Sequence~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Take.Sequence.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Take.Sequence.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Take.Transform.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Take.Transform.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Take.Transform.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Take.Transform~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Take.Transform.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Take.Transform.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Take.Two.Map.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Take.Two.Map.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Take.Two.Map.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Take.Two.Map~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Take.Two.Map.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Take.Two.Map.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Take.Two.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Take.Two.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Take.Two.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Take.Two~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Take.Two.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Take.Two.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Take.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Take.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Take.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Take~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Take.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Take.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Trace.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Trace.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Trace.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Trace~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Trace.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Trace.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.Tracked.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Tracked.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Tracked.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Tracked~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Tracked.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.Tracked.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/Parsing.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/Parsing.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-parsing-primitives/Sources/Parsing Primitives/exports.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/exports.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/exports.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/exports~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/exports.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Parsing_Primitives.build/exports.dia"
+  }
+}

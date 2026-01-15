@@ -1,0 +1,26 @@
+{
+  "": {
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/POSIX_Kernel.build/master.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-posix/Sources/POSIX Kernel/Exports.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/POSIX_Kernel.build/Exports.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/POSIX_Kernel.build/Exports.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/POSIX_Kernel.build/Exports~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/POSIX_Kernel.build/Exports.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/POSIX_Kernel.build/Exports.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-posix/Sources/POSIX Kernel/POSIX.Kernel.Glob.Match.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/POSIX_Kernel.build/POSIX.Kernel.Glob.Match.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/POSIX_Kernel.build/POSIX.Kernel.Glob.Match.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/POSIX_Kernel.build/POSIX.Kernel.Glob.Match~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/POSIX_Kernel.build/POSIX.Kernel.Glob.Match.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/POSIX_Kernel.build/POSIX.Kernel.Glob.Match.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-posix/Sources/POSIX Kernel/POSIX.Kernel.Glob.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/POSIX_Kernel.build/POSIX.Kernel.Glob.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/POSIX_Kernel.build/POSIX.Kernel.Glob.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/POSIX_Kernel.build/POSIX.Kernel.Glob~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/POSIX_Kernel.build/POSIX.Kernel.Glob.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/POSIX_Kernel.build/POSIX.Kernel.Glob.dia"
+  }
+}

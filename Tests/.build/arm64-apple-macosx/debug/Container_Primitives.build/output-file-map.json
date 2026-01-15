@@ -1,0 +1,292 @@
+{
+  "": {
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/master.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-container-primitives/Sources/Container Primitives/Array.Bounded.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Array.Bounded.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Array.Bounded.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Array.Bounded~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Array.Bounded.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Array.Bounded.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-container-primitives/Sources/Container Primitives/Array.Unbounded.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Array.Unbounded.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Array.Unbounded.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Array.Unbounded~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Array.Unbounded.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Array.Unbounded.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-container-primitives/Sources/Container Primitives/Container.Safe+Collection.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Container.Safe+Collection.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Container.Safe+Collection.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Container.Safe+Collection~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Container.Safe+Collection.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Container.Safe+Collection.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-container-primitives/Sources/Container Primitives/Container.Safe+subscript.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Container.Safe+subscript.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Container.Safe+subscript.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Container.Safe+subscript~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Container.Safe+subscript.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Container.Safe+subscript.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-container-primitives/Sources/Container Primitives/Container.Safe.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Container.Safe.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Container.Safe.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Container.Safe~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Container.Safe.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Container.Safe.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-container-primitives/Sources/Container Primitives/Container.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Container.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Container.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Container~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Container.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Container.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-container-primitives/Sources/Container Primitives/Deque.Collection.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Deque.Collection.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Deque.Collection.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Deque.Collection~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Deque.Collection.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Deque.Collection.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-container-primitives/Sources/Container Primitives/Deque.Error.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Deque.Error.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Deque.Error.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Deque.Error~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Deque.Error.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Deque.Error.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-container-primitives/Sources/Container Primitives/Deque.Peek.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Deque.Peek.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Deque.Peek.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Deque.Peek~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Deque.Peek.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Deque.Peek.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-container-primitives/Sources/Container Primitives/Deque.Pop.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Deque.Pop.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Deque.Pop.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Deque.Pop~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Deque.Pop.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Deque.Pop.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-container-primitives/Sources/Container Primitives/Deque.Push.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Deque.Push.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Deque.Push.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Deque.Push~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Deque.Push.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Deque.Push.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-container-primitives/Sources/Container Primitives/Deque.Storage.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Deque.Storage.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Deque.Storage.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Deque.Storage~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Deque.Storage.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Deque.Storage.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-container-primitives/Sources/Container Primitives/Deque.Take.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Deque.Take.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Deque.Take.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Deque.Take~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Deque.Take.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Deque.Take.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-container-primitives/Sources/Container Primitives/Deque.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Deque.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Deque.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Deque~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Deque.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Deque.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-container-primitives/Sources/Container Primitives/Dictionary.Ordered.Collection.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Dictionary.Ordered.Collection.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Dictionary.Ordered.Collection.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Dictionary.Ordered.Collection~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Dictionary.Ordered.Collection.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Dictionary.Ordered.Collection.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-container-primitives/Sources/Container Primitives/Dictionary.Ordered.Error.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Dictionary.Ordered.Error.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Dictionary.Ordered.Error.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Dictionary.Ordered.Error~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Dictionary.Ordered.Error.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Dictionary.Ordered.Error.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-container-primitives/Sources/Container Primitives/Dictionary.Ordered.Keys.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Dictionary.Ordered.Keys.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Dictionary.Ordered.Keys.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Dictionary.Ordered.Keys~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Dictionary.Ordered.Keys.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Dictionary.Ordered.Keys.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-container-primitives/Sources/Container Primitives/Dictionary.Ordered.Merge.Keep.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Dictionary.Ordered.Merge.Keep.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Dictionary.Ordered.Merge.Keep.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Dictionary.Ordered.Merge.Keep~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Dictionary.Ordered.Merge.Keep.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Dictionary.Ordered.Merge.Keep.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-container-primitives/Sources/Container Primitives/Dictionary.Ordered.Merge.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Dictionary.Ordered.Merge.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Dictionary.Ordered.Merge.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Dictionary.Ordered.Merge~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Dictionary.Ordered.Merge.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Dictionary.Ordered.Merge.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-container-primitives/Sources/Container Primitives/Dictionary.Ordered.Values.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Dictionary.Ordered.Values.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Dictionary.Ordered.Values.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Dictionary.Ordered.Values~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Dictionary.Ordered.Values.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Dictionary.Ordered.Values.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-container-primitives/Sources/Container Primitives/Dictionary.Ordered.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Dictionary.Ordered.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Dictionary.Ordered.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Dictionary.Ordered~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Dictionary.Ordered.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Dictionary.Ordered.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-container-primitives/Sources/Container Primitives/Error.Bounds.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Error.Bounds.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Error.Bounds.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Error.Bounds~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Error.Bounds.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Error.Bounds.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-container-primitives/Sources/Container Primitives/Error.Capacity.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Error.Capacity.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Error.Capacity.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Error.Capacity~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Error.Capacity.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Error.Capacity.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-container-primitives/Sources/Container Primitives/Error.Empty.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Error.Empty.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Error.Empty.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Error.Empty~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Error.Empty.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Error.Empty.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-container-primitives/Sources/Container Primitives/Heap.Error.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Heap.Error.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Heap.Error.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Heap.Error~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Heap.Error.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Heap.Error.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-container-primitives/Sources/Container Primitives/Heap.Node.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Heap.Node.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Heap.Node.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Heap.Node~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Heap.Node.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Heap.Node.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-container-primitives/Sources/Container Primitives/Heap.Peek.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Heap.Peek.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Heap.Peek.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Heap.Peek~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Heap.Peek.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Heap.Peek.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-container-primitives/Sources/Container Primitives/Heap.Pop.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Heap.Pop.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Heap.Pop.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Heap.Pop~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Heap.Pop.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Heap.Pop.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-container-primitives/Sources/Container Primitives/Heap.Push.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Heap.Push.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Heap.Push.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Heap.Push~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Heap.Push.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Heap.Push.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-container-primitives/Sources/Container Primitives/Heap.Replace.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Heap.Replace.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Heap.Replace.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Heap.Replace~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Heap.Replace.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Heap.Replace.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-container-primitives/Sources/Container Primitives/Heap.Storage.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Heap.Storage.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Heap.Storage.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Heap.Storage~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Heap.Storage.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Heap.Storage.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-container-primitives/Sources/Container Primitives/Heap.Take.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Heap.Take.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Heap.Take.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Heap.Take~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Heap.Take.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Heap.Take.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-container-primitives/Sources/Container Primitives/Heap.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Heap.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Heap.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Heap~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Heap.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Heap.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-container-primitives/Sources/Container Primitives/Set.Ordered.Algebra.Symmetric.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Set.Ordered.Algebra.Symmetric.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Set.Ordered.Algebra.Symmetric.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Set.Ordered.Algebra.Symmetric~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Set.Ordered.Algebra.Symmetric.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Set.Ordered.Algebra.Symmetric.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-container-primitives/Sources/Container Primitives/Set.Ordered.Algebra.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Set.Ordered.Algebra.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Set.Ordered.Algebra.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Set.Ordered.Algebra~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Set.Ordered.Algebra.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Set.Ordered.Algebra.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-container-primitives/Sources/Container Primitives/Set.Ordered.Collection.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Set.Ordered.Collection.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Set.Ordered.Collection.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Set.Ordered.Collection~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Set.Ordered.Collection.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Set.Ordered.Collection.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-container-primitives/Sources/Container Primitives/Set.Ordered.Error.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Set.Ordered.Error.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Set.Ordered.Error.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Set.Ordered.Error~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Set.Ordered.Error.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Set.Ordered.Error.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-container-primitives/Sources/Container Primitives/Set.Ordered.Storage.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Set.Ordered.Storage.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Set.Ordered.Storage.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Set.Ordered.Storage~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Set.Ordered.Storage.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Set.Ordered.Storage.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-container-primitives/Sources/Container Primitives/Set.Ordered.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Set.Ordered.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Set.Ordered.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Set.Ordered~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Set.Ordered.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Set.Ordered.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-container-primitives/Sources/Container Primitives/Stack.Error.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Stack.Error.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Stack.Error.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Stack.Error~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Stack.Error.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Stack.Error.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-container-primitives/Sources/Container Primitives/Stack.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Stack.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Stack.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Stack~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Stack.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Container_Primitives.build/Stack.dia"
+  }
+}

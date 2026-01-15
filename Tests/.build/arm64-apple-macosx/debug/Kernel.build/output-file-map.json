@@ -1,0 +1,215 @@
+{
+  "": {
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/master.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-kernel/Sources/Kernel/Exports.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Exports.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Exports.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Exports~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Exports.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Exports.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-kernel/Sources/Kernel/Kernel.Continuation.Context.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Continuation.Context.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Continuation.Context.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Continuation.Context~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Continuation.Context.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Continuation.Context.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-kernel/Sources/Kernel/Kernel.Continuation.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Continuation.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Continuation.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Continuation~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Continuation.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Continuation.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-kernel/Sources/Kernel/Kernel.Environment.Bridging.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Environment.Bridging.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Environment.Bridging.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Environment.Bridging~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Environment.Bridging.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Environment.Bridging.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-kernel/Sources/Kernel/Kernel.Failure.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Failure.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Failure.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Failure~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Failure.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Failure.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-kernel/Sources/Kernel/Kernel.File.Clone.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.File.Clone.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.File.Clone.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.File.Clone~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.File.Clone.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.File.Clone.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-kernel/Sources/Kernel/Kernel.File.Open.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.File.Open.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.File.Open.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.File.Open~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.File.Open.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.File.Open.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-kernel/Sources/Kernel/Kernel.Handoff.Box.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Handoff.Box.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Handoff.Box.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Handoff.Box~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Handoff.Box.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Handoff.Box.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-kernel/Sources/Kernel/Kernel.Handoff.Cell.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Handoff.Cell.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Handoff.Cell.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Handoff.Cell~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Handoff.Cell.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Handoff.Cell.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-kernel/Sources/Kernel/Kernel.Handoff.Retained.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Handoff.Retained.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Handoff.Retained.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Handoff.Retained~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Handoff.Retained.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Handoff.Retained.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-kernel/Sources/Kernel/Kernel.Handoff.Storage.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Handoff.Storage.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Handoff.Storage.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Handoff.Storage~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Handoff.Storage.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Handoff.Storage.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-kernel/Sources/Kernel/Kernel.Handoff.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Handoff.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Handoff.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Handoff~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Handoff.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Handoff.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-kernel/Sources/Kernel/Kernel.String.Bridging.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.String.Bridging.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.String.Bridging.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.String.Bridging~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.String.Bridging.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.String.Bridging.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-kernel/Sources/Kernel/Kernel.Thread.Affinity.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Affinity.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Affinity.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Affinity~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Affinity.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Affinity.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-kernel/Sources/Kernel/Kernel.Thread.Barrier.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Barrier.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Barrier.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Barrier~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Barrier.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Barrier.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-kernel/Sources/Kernel/Kernel.Thread.Count.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Count.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Count.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Count~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Count.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Count.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-kernel/Sources/Kernel/Kernel.Thread.Executor.Job.Queue.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Executor.Job.Queue.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Executor.Job.Queue.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Executor.Job.Queue~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Executor.Job.Queue.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Executor.Job.Queue.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-kernel/Sources/Kernel/Kernel.Thread.Executor.Job.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Executor.Job.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Executor.Job.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Executor.Job~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Executor.Job.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Executor.Job.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-kernel/Sources/Kernel/Kernel.Thread.Executor.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Executor.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Executor.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Executor~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Executor.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Executor.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-kernel/Sources/Kernel/Kernel.Thread.Executors.Options.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Executors.Options.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Executors.Options.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Executors.Options~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Executors.Options.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Executors.Options.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-kernel/Sources/Kernel/Kernel.Thread.Executors.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Executors.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Executors.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Executors~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Executors.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Executors.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-kernel/Sources/Kernel/Kernel.Thread.Gate.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Gate.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Gate.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Gate~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Gate.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Gate.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-kernel/Sources/Kernel/Kernel.Thread.Handle+joinChecked.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Handle+joinChecked.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Handle+joinChecked.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Handle+joinChecked~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Handle+joinChecked.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Handle+joinChecked.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-kernel/Sources/Kernel/Kernel.Thread.Handle.Reference.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Handle.Reference.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Handle.Reference.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Handle.Reference~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Handle.Reference.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Handle.Reference.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-kernel/Sources/Kernel/Kernel.Thread.Queue.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Queue.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Queue.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Queue~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Queue.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Queue.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-kernel/Sources/Kernel/Kernel.Thread.Synchronization.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Synchronization.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Synchronization.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Synchronization~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Synchronization.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Synchronization.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-kernel/Sources/Kernel/Kernel.Thread.Worker.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Worker.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Worker.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Worker~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Worker.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.Worker.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-kernel/Sources/Kernel/Kernel.Thread.spawn.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.spawn.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.spawn.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.spawn~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.spawn.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.spawn.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-kernel/Sources/Kernel/Kernel.Thread.trap.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.trap.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.trap.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.trap~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.trap.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Kernel.Thread.trap.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-kernel/Sources/Kernel/Optional+take.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Optional+take.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Optional+take.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Optional+take~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Optional+take.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/Optional+take.dia"
+  }
+}

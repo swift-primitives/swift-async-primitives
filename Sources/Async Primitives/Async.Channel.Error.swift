@@ -5,6 +5,9 @@
 //  Created by Coen ten Thije Boonkkamp on 08/01/2026.
 //
 
+// Async channels require task suspension which is not available on embedded Swift.
+#if !hasFeature(Embedded)
+
 extension Async.Channel {
     /// Errors that can occur during channel operations.
     public typealias Error = Async._ChannelError
@@ -39,3 +42,5 @@ extension Async {
         case empty
     }
 }
+
+#endif  // !hasFeature(Embedded)

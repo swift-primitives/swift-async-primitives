@@ -1,21 +1,28 @@
+// ===----------------------------------------------------------------------===//
 //
-//  Mutex+Deque.swift
-//  swift-buffer
+// This source file is part of the swift-async open source project
 //
-//  Created by Coen ten Thije Boonkkamp on 07/01/2026.
+// Copyright (c) 2025 Coen ten Thije Boonkkamp and the swift-async project authors
+// Licensed under Apache License v2.0
 //
+// See LICENSE for license information
+//
+// ===----------------------------------------------------------------------===//
 
+#if !hasFeature(Embedded)
 public import Synchronization
+#endif
 public import Container_Primitives
+public import Buffer_Primitives
 
-// MARK: - Mutex<Deque<Element>> Queue Operations
+// MARK: - Async.Mutex<Deque<Element>> Queue Operations
 
-/// Queue operations on `Mutex<Deque<Element>>`.
+/// Queue operations on `Async.Mutex<Deque<Element>>`.
 ///
 /// Provides thread-safe FIFO queue semantics over a deque.
 ///
 /// ```swift
-/// let queue = Mutex<Deque<Int>>(.init())
+/// let queue = Async.Mutex<Deque<Int>>(.init())
 ///
 /// // Producers (any thread)
 /// queue.enqueue(1)
@@ -29,7 +36,7 @@ public import Container_Primitives
 /// // Drain all at once
 /// let items = queue.drain()
 /// ```
-extension Mutex {
+extension Async.Mutex {
     /// Adds an element to the back of the queue.
     ///
     /// - Parameter element: The element to add.
@@ -80,14 +87,14 @@ extension Mutex {
     }
 }
 
-// MARK: - Shared<Mutex<Deque<Element>>> Queue Operations
+// MARK: - Shared<Async.Mutex<Deque<Element>>> Queue Operations
 
-/// Queue operations on `Shared<Mutex<Deque<Element>>>`.
+/// Queue operations on `Shared<Async.Mutex<Deque<Element>>>`.
 ///
 /// Provides thread-safe FIFO queue semantics with shared ownership.
 ///
 /// ```swift
-/// let queue: Shared<Mutex<Deque<Int>>> = .init(.init(.init()))
+/// let queue: Shared<Async.Mutex<Deque<Int>>> = .init(.init(.init()))
 ///
 /// // Producers (any thread, any owner)
 /// queue.enqueue(1)
@@ -101,25 +108,25 @@ extension Mutex {
 extension Shared where Value: ~Copyable {
     /// Adds an element to the back of the queue.
     @inlinable
-    public func enqueue<Element: Sendable>(_ element: Element) where Value == Mutex<Deque<Element>> {
-        _value.enqueue(element)
+    public func enqueue<Element: Sendable>(_ element: Element) where Value == Async.Mutex<Deque<Element>> {
+        self.withValue { $0.enqueue(element) }
     }
 
     /// Removes and returns the front element, or `nil` if empty.
     @inlinable
-    public func dequeue<Element: Sendable>() -> Element? where Value == Mutex<Deque<Element>> {
-        _value.dequeue()
+    public func dequeue<Element: Sendable>() -> Element? where Value == Async.Mutex<Deque<Element>> {
+        self.withValue { $0.dequeue() }
     }
 
     /// Removes and returns all elements.
     @inlinable
-    public func drain<Element: Sendable>() -> [Element] where Value == Mutex<Deque<Element>> {
-        _value.drain()
+    public func drain<Element: Sendable>() -> [Element] where Value == Async.Mutex<Deque<Element>> {
+        self.withValue { $0.drain() }
     }
 
     /// Drains all elements into an existing buffer.
     @inlinable
-    public func drain<Element: Sendable>(into target: inout [Element]) where Value == Mutex<Deque<Element>> {
-        _value.drain(into: &target)
+    public func drain<Element: Sendable>(into target: inout [Element]) where Value == Async.Mutex<Deque<Element>> {
+        self.withValue { $0.drain(into: &target) }
     }
 }

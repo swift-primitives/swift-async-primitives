@@ -1,0 +1,3 @@
+module IO_Blocking {
+    header "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/include/IO Blocking-Swift.h"
+}

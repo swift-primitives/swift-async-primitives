@@ -1,0 +1,215 @@
+{
+  "": {
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/master.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking/IO.Backpressure.Policy.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Backpressure.Policy.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Backpressure.Policy.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Backpressure.Policy~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Backpressure.Policy.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Backpressure.Policy.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking/IO.Blocking.Capabilities.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Capabilities.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Capabilities.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Capabilities~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Capabilities.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Capabilities.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking/IO.Blocking.Deadline.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Deadline.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Deadline.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Deadline~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Deadline.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Deadline.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking/IO.Blocking.Error.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Error.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Error.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Error~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Error.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Error.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking/IO.Blocking.Execution.Semantics.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Execution.Semantics.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Execution.Semantics.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Execution.Semantics~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Execution.Semantics.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Execution.Semantics.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking/IO.Blocking.Execution.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Execution.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Execution.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Execution~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Execution.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Execution.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking/IO.Blocking.Lane.Abandoning.Job.State.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Job.State.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Job.State.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Job.State~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Job.State.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Job.State.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking/IO.Blocking.Lane.Abandoning.Job.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Job.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Job.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Job~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Job.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Job.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking/IO.Blocking.Lane.Abandoning.Metrics.Queue.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Metrics.Queue.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Metrics.Queue.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Metrics.Queue~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Metrics.Queue.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Metrics.Queue.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking/IO.Blocking.Lane.Abandoning.Metrics.Total.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Metrics.Total.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Metrics.Total.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Metrics.Total~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Metrics.Total.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Metrics.Total.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking/IO.Blocking.Lane.Abandoning.Metrics.Workers.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Metrics.Workers.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Metrics.Workers.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Metrics.Workers~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Metrics.Workers.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Metrics.Workers.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking/IO.Blocking.Lane.Abandoning.Metrics.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Metrics.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Metrics.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Metrics~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Metrics.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Metrics.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking/IO.Blocking.Lane.Abandoning.Options.Execution.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Options.Execution.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Options.Execution.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Options.Execution~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Options.Execution.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Options.Execution.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking/IO.Blocking.Lane.Abandoning.Options.Queue.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Options.Queue.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Options.Queue.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Options.Queue~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Options.Queue.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Options.Queue.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking/IO.Blocking.Lane.Abandoning.Options.Workers.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Options.Workers.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Options.Workers.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Options.Workers~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Options.Workers.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Options.Workers.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking/IO.Blocking.Lane.Abandoning.Options.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Options.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Options.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Options~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Options.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Options.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking/IO.Blocking.Lane.Abandoning.Runtime.State.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Runtime.State.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Runtime.State.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Runtime.State~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Runtime.State.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Runtime.State.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking/IO.Blocking.Lane.Abandoning.Runtime.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Runtime.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Runtime.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Runtime~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Runtime.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Runtime.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking/IO.Blocking.Lane.Abandoning.Worker.Execution.Result.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Worker.Execution.Result.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Worker.Execution.Result.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Worker.Execution.Result~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Worker.Execution.Result.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Worker.Execution.Result.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking/IO.Blocking.Lane.Abandoning.Worker.Execution.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Worker.Execution.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Worker.Execution.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Worker.Execution~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Worker.Execution.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Worker.Execution.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking/IO.Blocking.Lane.Abandoning.Worker.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Worker.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Worker.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Worker~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Worker.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.Worker.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking/IO.Blocking.Lane.Abandoning.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Abandoning.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking/IO.Blocking.Lane.Count.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Count.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Count.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Count~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Count.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Count.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking/IO.Blocking.Lane.Error.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Error.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Error.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Error~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Error.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Error.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking/IO.Blocking.Lane.Sharded.NUMA.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Sharded.NUMA.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Sharded.NUMA.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Sharded.NUMA~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Sharded.NUMA.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Sharded.NUMA.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking/IO.Blocking.Lane.Sharded.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Sharded.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Sharded.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Sharded~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Sharded.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.Sharded.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking/IO.Blocking.Lane.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Lane.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking/IO.Blocking.Ticket.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Ticket.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Ticket.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Ticket~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Ticket.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.Ticket.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking/IO.Blocking.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/IO.Blocking.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking/exports.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/exports.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/exports.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/exports~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/exports.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking.build/exports.dia"
+  }
+}

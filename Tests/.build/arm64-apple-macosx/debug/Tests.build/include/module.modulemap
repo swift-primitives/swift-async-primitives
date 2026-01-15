@@ -1,0 +1,3 @@
+module Tests {
+    header "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Tests.build/include/Tests-Swift.h"
+}

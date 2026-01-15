@@ -1,0 +1,3 @@
+module Kernel {
+    header "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel.build/include/Kernel-Swift.h"
+}

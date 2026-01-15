@@ -102,6 +102,7 @@ extension Async {
 
 // MARK: - Swift Concurrency Bridge
 
+#if !hasFeature(Embedded)
 extension Async.Callback {
     /// Awaits the computed value using Swift concurrency.
     ///
@@ -135,6 +136,7 @@ extension Async.Callback {
         }
     }
 }
+#endif
 
 // MARK: - Composition
 

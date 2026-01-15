@@ -1,0 +1,3 @@
+module ASCII {
+    header "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/ASCII.build/include/ASCII-Swift.h"
+}

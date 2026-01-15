@@ -1,0 +1,3 @@
+module Linux_Kernel_Primitives {
+    header "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Linux_Kernel_Primitives.build/include/Linux Kernel Primitives-Swift.h"
+}

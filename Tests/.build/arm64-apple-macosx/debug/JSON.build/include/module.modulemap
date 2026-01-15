@@ -1,0 +1,3 @@
+module JSON {
+    header "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/JSON.build/include/JSON-Swift.h"
+}

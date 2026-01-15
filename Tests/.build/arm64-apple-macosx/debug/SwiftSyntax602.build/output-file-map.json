@@ -1,0 +1,12 @@
+{
+  "": {
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/SwiftSyntax602.build/master.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/checkouts/swift-syntax/Sources/VersionMarkerModules/SwiftSyntax602/Empty.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/SwiftSyntax602.build/Empty.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/SwiftSyntax602.build/Empty.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/SwiftSyntax602.build/Empty~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/SwiftSyntax602.build/Empty.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/SwiftSyntax602.build/Empty.dia"
+  }
+}

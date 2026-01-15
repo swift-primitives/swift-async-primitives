@@ -1,0 +1,33 @@
+{
+  "": {
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/File_System_Test_Support.build/master.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-file-system/Tests/Support/File.Directory.Temporary.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/File_System_Test_Support.build/File.Directory.Temporary.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/File_System_Test_Support.build/File.Directory.Temporary.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/File_System_Test_Support.build/File.Directory.Temporary~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/File_System_Test_Support.build/File.Directory.Temporary.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/File_System_Test_Support.build/File.Directory.Temporary.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-file-system/Tests/Support/File.Temporary.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/File_System_Test_Support.build/File.Temporary.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/File_System_Test_Support.build/File.Temporary.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/File_System_Test_Support.build/File.Temporary~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/File_System_Test_Support.build/File.Temporary.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/File_System_Test_Support.build/File.Temporary.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-file-system/Tests/Support/Test.Delay.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/File_System_Test_Support.build/Test.Delay.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/File_System_Test_Support.build/Test.Delay.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/File_System_Test_Support.build/Test.Delay~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/File_System_Test_Support.build/Test.Delay.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/File_System_Test_Support.build/Test.Delay.dia"
+  },
+  "/Users/coen/Developer/swift-foundations/swift-file-system/Tests/Support/Test.Glob.Fixture.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/File_System_Test_Support.build/Test.Glob.Fixture.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/File_System_Test_Support.build/Test.Glob.Fixture.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/File_System_Test_Support.build/Test.Glob.Fixture~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/File_System_Test_Support.build/Test.Glob.Fixture.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/File_System_Test_Support.build/Test.Glob.Fixture.dia"
+  }
+}

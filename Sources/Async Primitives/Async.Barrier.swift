@@ -9,7 +9,9 @@
 //
 // ===----------------------------------------------------------------------===//
 
+#if !hasFeature(Embedded)
 import Synchronization
+#endif
 
 extension Async {
     /// An N-party synchronization primitive where all parties must arrive before any proceed.
@@ -20,7 +22,7 @@ extension Async {
     ///
     /// ## Pattern
     /// - Create with expected party count
-    /// - Each party calls `arrive()` (async, suspends until all arrive)
+    /// - Each party calls `arrive()` (async, suspends until all arrive) or `arrive(_:)` (callback)
     /// - When the last party arrives, all resume together
     ///
     /// ## One-Shot Semantics
@@ -32,7 +34,7 @@ extension Async {
     /// ```swift
     /// let barrier = Async.Barrier(parties: 3)
     ///
-    /// // Three concurrent tasks
+    /// // Three concurrent tasks (async)
     /// for i in 0..<3 {
     ///     Task {
     ///         await performPhase1(i)
@@ -40,19 +42,28 @@ extension Async {
     ///         await performPhase2(i)  // All proceed together
     ///     }
     /// }
+    ///
+    /// // Or callback-based (works on embedded)
+    /// barrier.arrive {
+    ///     // Called when all parties have arrived
+    /// }
     /// ```
     ///
     /// ## Thread Safety
     /// All operations are protected by an internal mutex.
     /// Uses `@unchecked Sendable` because internal state is protected
     /// by mutex synchronization.
+    ///
+    /// ## Embedded Swift Support
+    /// On embedded platforms, use the callback-based `arrive(_:)` method.
+    /// The async `arrive()` method is only available on non-embedded platforms.
     public final class Barrier: @unchecked Sendable {
-        private let _state: Mutex<State>
+        private let _state: Async.Mutex<State>
         private let parties: Int
 
-        private struct State {
+        private struct State: Sendable {
             var arrived: Int = 0
-            var waiters: [CheckedContinuation<Void, Never>] = []
+            var waiters: [Async.Continuation<Void>] = []
             var released: Bool = false
         }
 
@@ -63,47 +74,48 @@ extension Async {
         public init(parties: Int) {
             precondition(parties >= 1, "Barrier requires at least 1 party")
             self.parties = parties
-            self._state = Mutex(State())
+            self._state = Async.Mutex(State())
         }
 
-        /// Arrives at the barrier and waits for all parties.
+        /// Arrives at the barrier and calls the callback when all parties have arrived.
         ///
-        /// Suspends until all expected parties have arrived.
-        /// When the last party arrives, all waiting parties resume.
+        /// If all parties have already arrived (barrier released), the callback
+        /// is invoked immediately. Otherwise, the callback is stored and invoked
+        /// when the last party arrives.
         ///
-        /// After the barrier has been released, subsequent calls return immediately.
-        public func arrive() async {
-            await withCheckedContinuation { continuation in
-                // Collect waiters to resume OUTSIDE lock
-                let result: (shouldResume: Bool, waitersToResume: [CheckedContinuation<Void, Never>]) = _state.withLock { state in
-                    // Already released - proceed immediately
-                    if state.released {
-                        return (true, [])
-                    }
-
-                    state.arrived += 1
-
-                    if state.arrived >= parties {
-                        // Last party - collect waiters for resumption outside lock
-                        state.released = true
-                        let waiters = state.waiters
-                        state.waiters = []
-                        return (true, waiters)
-                    } else {
-                        // Wait for remaining parties
-                        state.waiters.append(continuation)
-                        return (false, [])
-                    }
+        /// This method works on all platforms including embedded Swift.
+        ///
+        /// - Parameter callback: The callback to invoke when all parties arrive.
+        public func arrive(_ callback: @escaping @Sendable () -> Void) {
+            // Collect waiters to resume OUTSIDE lock
+            let result: (shouldResume: Bool, waitersToResume: [Async.Continuation<Void>]) = _state.withLock { state in
+                // Already released - proceed immediately
+                if state.released {
+                    return (true, [])
                 }
 
-                // Resume waiters OUTSIDE lock (FIFO order)
-                for waiter in result.waitersToResume {
-                    waiter.resume()
-                }
+                state.arrived += 1
 
-                if result.shouldResume {
-                    continuation.resume()
+                if state.arrived >= parties {
+                    // Last party - collect waiters for resumption outside lock
+                    state.released = true
+                    let waiters = state.waiters
+                    state.waiters = []
+                    return (true, waiters)
+                } else {
+                    // Wait for remaining parties
+                    state.waiters.append(Async.Continuation(callback))
+                    return (false, [])
                 }
+            }
+
+            // Resume waiters OUTSIDE lock (FIFO order)
+            for waiter in result.waitersToResume {
+                waiter.resume(returning: ())
+            }
+
+            if result.shouldResume {
+                callback()
             }
         }
 
@@ -118,3 +130,53 @@ extension Async {
         }
     }
 }
+
+// MARK: - Async Arrive (Non-Embedded Only)
+
+#if !hasFeature(Embedded)
+extension Async.Barrier {
+    /// Arrives at the barrier and waits for all parties.
+    ///
+    /// Suspends until all expected parties have arrived.
+    /// When the last party arrives, all waiting parties resume.
+    ///
+    /// After the barrier has been released, subsequent calls return immediately.
+    ///
+    /// - Note: This method is only available on non-embedded platforms.
+    ///   On embedded, use `arrive(_:)` instead.
+    public func arrive() async {
+        await withCheckedContinuation { continuation in
+            // Collect waiters to resume OUTSIDE lock
+            let result: (shouldResume: Bool, waitersToResume: [Async.Continuation<Void>]) = _state.withLock { state in
+                // Already released - proceed immediately
+                if state.released {
+                    return (true, [])
+                }
+
+                state.arrived += 1
+
+                if state.arrived >= parties {
+                    // Last party - collect waiters for resumption outside lock
+                    state.released = true
+                    let waiters = state.waiters
+                    state.waiters = []
+                    return (true, waiters)
+                } else {
+                    // Wait for remaining parties
+                    state.waiters.append(Async.Continuation(continuation))
+                    return (false, [])
+                }
+            }
+
+            // Resume waiters OUTSIDE lock (FIFO order)
+            for waiter in result.waitersToResume {
+                waiter.resume(returning: ())
+            }
+
+            if result.shouldResume {
+                continuation.resume()
+            }
+        }
+    }
+}
+#endif

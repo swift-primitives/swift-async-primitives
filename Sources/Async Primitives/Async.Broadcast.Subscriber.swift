@@ -9,6 +9,9 @@
 //
 // ===----------------------------------------------------------------------===//
 
+// Async broadcast requires task suspension which is not available on embedded Swift.
+#if !hasFeature(Embedded)
+
 extension Async.Broadcast {
     /// State for a single subscriber in the broadcast channel.
     struct Subscriber {
@@ -31,3 +34,5 @@ extension Async.Broadcast {
         var token: UInt64 = 0
     }
 }
+
+#endif  // !hasFeature(Embedded)

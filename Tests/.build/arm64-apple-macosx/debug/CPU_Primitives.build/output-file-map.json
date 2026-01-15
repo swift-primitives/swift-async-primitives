@@ -1,0 +1,124 @@
+{
+  "": {
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/master.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-cpu-primitives/Sources/CPU Primitives/CPU.Barrier.Compiler.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Barrier.Compiler.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Barrier.Compiler.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Barrier.Compiler~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Barrier.Compiler.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Barrier.Compiler.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-cpu-primitives/Sources/CPU Primitives/CPU.Barrier.Hardware.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Barrier.Hardware.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Barrier.Hardware.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Barrier.Hardware~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Barrier.Hardware.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Barrier.Hardware.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-cpu-primitives/Sources/CPU Primitives/CPU.Barrier.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Barrier.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Barrier.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Barrier~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Barrier.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Barrier.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-cpu-primitives/Sources/CPU Primitives/CPU.Cache.Prefetch.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Cache.Prefetch.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Cache.Prefetch.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Cache.Prefetch~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Cache.Prefetch.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Cache.Prefetch.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-cpu-primitives/Sources/CPU Primitives/CPU.Cache.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Cache.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Cache.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Cache~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Cache.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Cache.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-cpu-primitives/Sources/CPU Primitives/CPU.Integrity.Cyclic.Castagnoli.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Integrity.Cyclic.Castagnoli.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Integrity.Cyclic.Castagnoli.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Integrity.Cyclic.Castagnoli~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Integrity.Cyclic.Castagnoli.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Integrity.Cyclic.Castagnoli.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-cpu-primitives/Sources/CPU Primitives/CPU.Integrity.Cyclic.Checksum.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Integrity.Cyclic.Checksum.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Integrity.Cyclic.Checksum.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Integrity.Cyclic.Checksum~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Integrity.Cyclic.Checksum.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Integrity.Cyclic.Checksum.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-cpu-primitives/Sources/CPU Primitives/CPU.Integrity.Cyclic.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Integrity.Cyclic.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Integrity.Cyclic.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Integrity.Cyclic~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Integrity.Cyclic.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Integrity.Cyclic.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-cpu-primitives/Sources/CPU Primitives/CPU.Integrity.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Integrity.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Integrity.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Integrity~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Integrity.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Integrity.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-cpu-primitives/Sources/CPU Primitives/CPU.Spin.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Spin.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Spin.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Spin~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Spin.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Spin.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-cpu-primitives/Sources/CPU Primitives/CPU.Timestamp.Read.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Timestamp.Read.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Timestamp.Read.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Timestamp.Read~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Timestamp.Read.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Timestamp.Read.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-cpu-primitives/Sources/CPU Primitives/CPU.Timestamp.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Timestamp.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Timestamp.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Timestamp~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Timestamp.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Timestamp.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-cpu-primitives/Sources/CPU Primitives/CPU.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-cpu-primitives/Sources/CPU Primitives/Reserved/CPU.Crypto.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Crypto.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Crypto.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Crypto~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Crypto.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Crypto.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-cpu-primitives/Sources/CPU Primitives/Reserved/CPU.Vector.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Vector.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Vector.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Vector~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Vector.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Vector.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-cpu-primitives/Sources/CPU Primitives/Reserved/CPU.Wait.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Wait.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Wait.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Wait~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Wait.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/CPU.Wait.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-cpu-primitives/Sources/CPU Primitives/exports.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/exports.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/exports.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/exports~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/exports.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/CPU_Primitives.build/exports.dia"
+  }
+}

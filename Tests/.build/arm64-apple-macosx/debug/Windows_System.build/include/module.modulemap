@@ -1,0 +1,3 @@
+module Windows_System {
+    header "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_System.build/include/Windows System-Swift.h"
+}

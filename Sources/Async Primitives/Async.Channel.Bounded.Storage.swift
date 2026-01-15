@@ -9,6 +9,9 @@
 //
 // ===----------------------------------------------------------------------===//
 
+// Async channels require task suspension which is not available on embedded Swift.
+#if !hasFeature(Embedded)
+
 public import Synchronization
 
 extension Async.Channel.Bounded {
@@ -31,3 +34,5 @@ extension Async.Channel.Bounded {
         }
     }
 }
+
+#endif  // !hasFeature(Embedded)

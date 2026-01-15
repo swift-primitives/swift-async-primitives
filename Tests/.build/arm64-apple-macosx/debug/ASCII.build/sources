@@ -1,0 +1,22 @@
+/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/Binary.ASCII.Access+prefix.swift
+/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/Binary.ASCII.Access+whole.swift
+/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/Binary.ASCII.Access.swift
+/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/Binary.ASCII.Parsing.Error.swift
+/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/Binary.ASCII.Parsing.Prefix+call.swift
+/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/Binary.ASCII.Parsing.Prefix.swift
+/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/Binary.ASCII.Parsing.Whole+call.swift
+/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/Binary.ASCII.Parsing.Whole.swift
+/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/Binary.ASCII.Parsing.swift
+/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/Character+INCITS_4_1986.swift
+/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/Collection+INCITS_4_1986.swift
+/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/Int+ASCII.Serializable.swift
+/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/Parsing.Parser+ascii.swift
+'/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/Set Character+INCITS_4_1986.swift'
+'/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/Set UInt8+INCITS_4_1986.swift'
+/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/StringProtocol+INCITS_4_1986.swift
+/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/UInt8+INCITS_4_1986.swift
+/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/UInt8.ASCII.RawRepresentable.swift
+/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/UInt8.ASCII.Serializable.swift
+/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/UInt8.ASCII.swift
+'/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/[UInt8]+INCITS_4_1986.swift'
+/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/exports.swift

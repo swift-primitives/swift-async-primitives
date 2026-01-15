@@ -1,0 +1,3 @@
+module Darwin_Loader_Primitives {
+    header "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Loader_Primitives.build/include/Darwin Loader Primitives-Swift.h"
+}

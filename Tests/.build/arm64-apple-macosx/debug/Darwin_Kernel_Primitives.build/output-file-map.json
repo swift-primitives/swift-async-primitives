@@ -1,0 +1,89 @@
+{
+  "": {
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/master.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-darwin-primitives/Sources/Darwin Kernel Primitives/Darwin.File.Stats.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.File.Stats.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.File.Stats.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.File.Stats~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.File.Stats.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.File.Stats.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-darwin-primitives/Sources/Darwin Kernel Primitives/Darwin.File.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.File.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.File.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.File~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.File.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.File.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-darwin-primitives/Sources/Darwin Kernel Primitives/Darwin.Kernel.Event.Queue.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.Event.Queue.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.Event.Queue.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.Event.Queue~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.Event.Queue.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.Event.Queue.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-darwin-primitives/Sources/Darwin Kernel Primitives/Darwin.Kernel.Kqueue.Error.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.Kqueue.Error.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.Kqueue.Error.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.Kqueue.Error~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.Kqueue.Error.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.Kqueue.Error.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-darwin-primitives/Sources/Darwin Kernel Primitives/Darwin.Kernel.Kqueue.Event.Data.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.Kqueue.Event.Data.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.Kqueue.Event.Data.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.Kqueue.Event.Data~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.Kqueue.Event.Data.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.Kqueue.Event.Data.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-darwin-primitives/Sources/Darwin Kernel Primitives/Darwin.Kernel.Kqueue.Event.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.Kqueue.Event.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.Kqueue.Event.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.Kqueue.Event~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.Kqueue.Event.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.Kqueue.Event.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-darwin-primitives/Sources/Darwin Kernel Primitives/Darwin.Kernel.Kqueue.Filter.Data.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.Kqueue.Filter.Data.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.Kqueue.Filter.Data.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.Kqueue.Filter.Data~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.Kqueue.Filter.Data.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.Kqueue.Filter.Data.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-darwin-primitives/Sources/Darwin Kernel Primitives/Darwin.Kernel.Kqueue.Filter.Flags.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.Kqueue.Filter.Flags.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.Kqueue.Filter.Flags.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.Kqueue.Filter.Flags~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.Kqueue.Filter.Flags.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.Kqueue.Filter.Flags.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-darwin-primitives/Sources/Darwin Kernel Primitives/Darwin.Kernel.Kqueue.Filter.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.Kqueue.Filter.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.Kqueue.Filter.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.Kqueue.Filter~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.Kqueue.Filter.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.Kqueue.Filter.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-darwin-primitives/Sources/Darwin Kernel Primitives/Darwin.Kernel.Kqueue.Flags.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.Kqueue.Flags.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.Kqueue.Flags.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.Kqueue.Flags~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.Kqueue.Flags.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.Kqueue.Flags.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-darwin-primitives/Sources/Darwin Kernel Primitives/Darwin.Kernel.Kqueue.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.Kqueue.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.Kqueue.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.Kqueue~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.Kqueue.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.Kqueue.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-darwin-primitives/Sources/Darwin Kernel Primitives/Darwin.Kernel.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Darwin_Kernel_Primitives.build/Darwin.Kernel.dia"
+  }
+}

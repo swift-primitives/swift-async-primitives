@@ -1,0 +1,264 @@
+{
+  "": {
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/master.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-time-primitives/Sources/Time Primitives/Duration+Conversions.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Duration+Conversions.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Duration+Conversions.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Duration+Conversions~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Duration+Conversions.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Duration+Conversions.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-time-primitives/Sources/Time Primitives/Duration+Format.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Duration+Format.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Duration+Format.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Duration+Format~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Duration+Format.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Duration+Format.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-time-primitives/Sources/Time Primitives/Duration.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Duration.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Duration.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Duration~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Duration.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Duration.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-time-primitives/Sources/Time Primitives/Instant+Julian.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Instant+Julian.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Instant+Julian.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Instant+Julian~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Instant+Julian.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Instant+Julian.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-time-primitives/Sources/Time Primitives/Instant.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Instant.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Instant.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Instant~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Instant.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Instant.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-time-primitives/Sources/Time Primitives/Time.Attosecond.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Attosecond.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Attosecond.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Attosecond~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Attosecond.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Attosecond.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-time-primitives/Sources/Time Primitives/Time.Calendar.Gregorian.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Calendar.Gregorian.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Calendar.Gregorian.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Calendar.Gregorian~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Calendar.Gregorian.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Calendar.Gregorian.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-time-primitives/Sources/Time Primitives/Time.Calendar.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Calendar.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Calendar.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Calendar~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Calendar.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Calendar.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-time-primitives/Sources/Time Primitives/Time.Clock.Instant.Error.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Clock.Instant.Error.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Clock.Instant.Error.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Clock.Instant.Error~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Clock.Instant.Error.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Clock.Instant.Error.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-time-primitives/Sources/Time Primitives/Time.Clock.Instant.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Clock.Instant.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Clock.Instant.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Clock.Instant~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Clock.Instant.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Clock.Instant.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-time-primitives/Sources/Time Primitives/Time.Clock.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Clock.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Clock.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Clock~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Clock.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Clock.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-time-primitives/Sources/Time Primitives/Time.Epoch.Conversion.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Epoch.Conversion.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Epoch.Conversion.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Epoch.Conversion~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Epoch.Conversion.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Epoch.Conversion.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-time-primitives/Sources/Time Primitives/Time.Epoch.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Epoch.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Epoch.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Epoch~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Epoch.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Epoch.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-time-primitives/Sources/Time Primitives/Time.Femtosecond.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Femtosecond.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Femtosecond.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Femtosecond~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Femtosecond.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Femtosecond.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-time-primitives/Sources/Time Primitives/Time.Hour.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Hour.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Hour.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Hour~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Hour.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Hour.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-time-primitives/Sources/Time Primitives/Time.Julian.Day+Constants.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Julian.Day+Constants.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Julian.Day+Constants.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Julian.Day+Constants~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Julian.Day+Constants.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Julian.Day+Constants.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-time-primitives/Sources/Time Primitives/Time.Julian.Day+Properties.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Julian.Day+Properties.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Julian.Day+Properties.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Julian.Day+Properties~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Julian.Day+Properties.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Julian.Day+Properties.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-time-primitives/Sources/Time Primitives/Time.Julian.Day+Time.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Julian.Day+Time.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Julian.Day+Time.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Julian.Day+Time~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Julian.Day+Time.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Julian.Day+Time.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-time-primitives/Sources/Time Primitives/Time.Julian.Day.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Julian.Day.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Julian.Day.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Julian.Day~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Julian.Day.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Julian.Day.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-time-primitives/Sources/Time Primitives/Time.Julian.Offset+Constants.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Julian.Offset+Constants.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Julian.Offset+Constants.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Julian.Offset+Constants~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Julian.Offset+Constants.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Julian.Offset+Constants.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-time-primitives/Sources/Time Primitives/Time.Julian.Offset.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Julian.Offset.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Julian.Offset.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Julian.Offset~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Julian.Offset.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Julian.Offset.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-time-primitives/Sources/Time Primitives/Time.Julian.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Julian.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Julian.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Julian~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Julian.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Julian.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-time-primitives/Sources/Time Primitives/Time.Microsecond.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Microsecond.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Microsecond.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Microsecond~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Microsecond.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Microsecond.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-time-primitives/Sources/Time Primitives/Time.Millisecond.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Millisecond.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Millisecond.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Millisecond~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Millisecond.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Millisecond.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-time-primitives/Sources/Time Primitives/Time.Minute.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Minute.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Minute.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Minute~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Minute.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Minute.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-time-primitives/Sources/Time Primitives/Time.Month.Day.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Month.Day.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Month.Day.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Month.Day~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Month.Day.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Month.Day.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-time-primitives/Sources/Time Primitives/Time.Month.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Month.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Month.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Month~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Month.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Month.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-time-primitives/Sources/Time Primitives/Time.Nanosecond.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Nanosecond.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Nanosecond.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Nanosecond~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Nanosecond.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Nanosecond.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-time-primitives/Sources/Time Primitives/Time.Picosecond.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Picosecond.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Picosecond.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Picosecond~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Picosecond.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Picosecond.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-time-primitives/Sources/Time Primitives/Time.Second.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Second.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Second.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Second~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Second.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Second.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-time-primitives/Sources/Time Primitives/Time.TimezoneOffset.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.TimezoneOffset.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.TimezoneOffset.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.TimezoneOffset~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.TimezoneOffset.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.TimezoneOffset.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-time-primitives/Sources/Time Primitives/Time.Week.Day.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Week.Day.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Week.Day.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Week.Day~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Week.Day.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Week.Day.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-time-primitives/Sources/Time Primitives/Time.Week.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Week.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Week.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Week~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Week.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Week.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-time-primitives/Sources/Time Primitives/Time.Year.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Year.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Year.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Year~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Year.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Year.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-time-primitives/Sources/Time Primitives/Time.Yoctosecond.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Yoctosecond.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Yoctosecond.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Yoctosecond~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Yoctosecond.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Yoctosecond.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-time-primitives/Sources/Time Primitives/Time.Zeptosecond.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Zeptosecond.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Zeptosecond.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Zeptosecond~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Zeptosecond.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.Zeptosecond.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-time-primitives/Sources/Time Primitives/Time.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Time_Primitives.build/Time.dia"
+  }
+}

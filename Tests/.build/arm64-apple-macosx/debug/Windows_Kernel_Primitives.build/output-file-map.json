@@ -1,0 +1,117 @@
+{
+  "": {
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/master.swiftdeps"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-windows-primitives/Sources/Windows Kernel Primitives/Kernel.IO.Completion.Port.Cancel.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Cancel.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Cancel.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Cancel~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Cancel.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Cancel.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-windows-primitives/Sources/Windows Kernel Primitives/Kernel.IO.Completion.Port.Dequeue.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Dequeue.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Dequeue.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Dequeue~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Dequeue.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Dequeue.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-windows-primitives/Sources/Windows Kernel Primitives/Kernel.IO.Completion.Port.Entry.Bytes.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Entry.Bytes.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Entry.Bytes.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Entry.Bytes~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Entry.Bytes.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Entry.Bytes.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-windows-primitives/Sources/Windows Kernel Primitives/Kernel.IO.Completion.Port.Entry.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Entry.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Entry.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Entry~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Entry.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Entry.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-windows-primitives/Sources/Windows Kernel Primitives/Kernel.IO.Completion.Port.Error.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Error.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Error.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Error~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Error.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Error.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-windows-primitives/Sources/Windows Kernel Primitives/Kernel.IO.Completion.Port.Key.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Key.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Key.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Key~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Key.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Key.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-windows-primitives/Sources/Windows Kernel Primitives/Kernel.IO.Completion.Port.Overlapped.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Overlapped.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Overlapped.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Overlapped~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Overlapped.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Overlapped.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-windows-primitives/Sources/Windows Kernel Primitives/Kernel.IO.Completion.Port.Read.Result.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Read.Result.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Read.Result.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Read.Result~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Read.Result.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Read.Result.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-windows-primitives/Sources/Windows Kernel Primitives/Kernel.IO.Completion.Port.Read.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Read.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Read.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Read~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Read.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Read.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-windows-primitives/Sources/Windows Kernel Primitives/Kernel.IO.Completion.Port.Write.Result.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Write.Result.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Write.Result.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Write.Result~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Write.Result.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Write.Result.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-windows-primitives/Sources/Windows Kernel Primitives/Kernel.IO.Completion.Port.Write.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Write.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Write.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Write~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Write.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.Write.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-windows-primitives/Sources/Windows Kernel Primitives/Kernel.IO.Completion.Port.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.Port.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-windows-primitives/Sources/Windows Kernel Primitives/Kernel.IO.Completion.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Kernel.IO.Completion.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-windows-primitives/Sources/Windows Kernel Primitives/Windows.File.Stats.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Windows.File.Stats.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Windows.File.Stats.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Windows.File.Stats~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Windows.File.Stats.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Windows.File.Stats.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-windows-primitives/Sources/Windows Kernel Primitives/Windows.File.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Windows.File.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Windows.File.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Windows.File~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Windows.File.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Windows.File.dia"
+  },
+  "/Users/coen/Developer/swift-primitives/swift-windows-primitives/Sources/Windows Kernel Primitives/Windows.Kernel.swift": {
+    "dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Windows.Kernel.d",
+    "object": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Windows.Kernel.swift.o",
+    "swiftmodule": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Windows.Kernel~partial.swiftmodule",
+    "swift-dependencies": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Windows.Kernel.swiftdeps",
+    "diagnostics": "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/Windows.Kernel.dia"
+  }
+}

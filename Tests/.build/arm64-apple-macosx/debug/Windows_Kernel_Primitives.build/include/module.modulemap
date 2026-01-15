@@ -1,0 +1,3 @@
+module Windows_Kernel_Primitives {
+    header "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Windows_Kernel_Primitives.build/include/Windows Kernel Primitives-Swift.h"
+}

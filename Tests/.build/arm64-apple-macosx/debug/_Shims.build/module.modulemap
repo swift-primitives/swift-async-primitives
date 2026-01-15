@@ -1,0 +1,4 @@
+module _Shims {
+    umbrella "/Users/coen/Developer/swift-primitives/swift-numeric-primitives/Sources/_Shims/include"
+    export *
+}

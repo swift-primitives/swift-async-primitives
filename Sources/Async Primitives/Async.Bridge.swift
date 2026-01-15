@@ -9,6 +9,10 @@
 //
 // ===----------------------------------------------------------------------===//
 
+// Async.Bridge provides sync-to-async handoff using withCheckedContinuation.
+// This is inherently async-only and not available on embedded Swift.
+#if !hasFeature(Embedded)
+
 import Container_Primitives
 import Synchronization
 
@@ -216,3 +220,5 @@ extension Async {
         }
     }
 }
+
+#endif  // !hasFeature(Embedded)

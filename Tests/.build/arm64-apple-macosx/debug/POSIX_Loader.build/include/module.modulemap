@@ -1,0 +1,3 @@
+module POSIX_Loader {
+    header "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/POSIX_Loader.build/include/POSIX Loader-Swift.h"
+}
