@@ -21,8 +21,8 @@ let package = Package(
         .package(path: "../swift-buffer-primitives"),
         .package(path: "../swift-container-primitives"),
         .package(path: "../swift-identity-primitives"),
-        .package(path: "../swift-test-primitives"),
-        .package(path: "../../swift-foundations/swift-testing-extras"),
+        .package(path: "../swift-kernel-primitives"),
+        // Test dependencies moved to nested Tests/Package.swift
     ],
     targets: [
         .target(
@@ -31,16 +31,29 @@ let package = Package(
                 .product(name: "Buffer Primitives", package: "swift-buffer-primitives"),
                 .product(name: "Container Primitives", package: "swift-container-primitives"),
                 .product(name: "Identity Primitives", package: "swift-identity-primitives"),
+                .product(
+                    name: "Kernel Primitives",
+                    package: "swift-kernel-primitives",
+                    condition: .when(platforms: [
+                        .macOS, .iOS, .tvOS, .watchOS, .visionOS,
+                        .linux, .windows, .android, .openbsd,
+                    ])
+                ),
             ]
         ),
-        .testTarget(
-            name: "Async Primitives Tests",
-            dependencies: [
-                "Async Primitives",
-                .product(name: "Test Primitives", package: "swift-test-primitives"),
-                .product(name: "Testing Extras", package: "swift-testing-extras"),
-            ]
-        ),
+        // Tests are in a separate nested package (Tests/Package.swift)
+        // to break the circular dependency with swift-testing
     ],
     swiftLanguageModes: [.v6]
 )
+
+
+for target in package.targets where ![.system, .binary, .plugin].contains(target.type) {
+    let settings: [SwiftSetting] = [
+        .enableUpcomingFeature("ExistentialAny"),
+        .enableUpcomingFeature("InternalImportsByDefault"),
+        .enableUpcomingFeature("MemberImportVisibility"),
+        .strictMemorySafety(),
+    ]
+    target.swiftSettings = (target.swiftSettings ?? []) + settings
+}
