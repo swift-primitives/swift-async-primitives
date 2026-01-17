@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 #if !hasFeature(Embedded) && canImport(Synchronization)
-public import Synchronization
+@_exported public import Synchronization
 
 extension Async {
     /// A value-owning mutex for thread synchronization.
@@ -20,7 +20,7 @@ extension Async {
 }
 
 #elseif !hasFeature(Embedded) && canImport(Kernel_Primitives)
-public import Kernel_Primitives
+@_exported public import Kernel_Primitives
 
 extension Async {
     /// A value-owning mutex for thread synchronization.
