@@ -89,44 +89,31 @@ extension Async.Mutex {
 
 // MARK: - Shared<Async.Mutex<Deque<Element>>> Queue Operations
 
-/// Queue operations on `Shared<Async.Mutex<Deque<Element>>>`.
-///
-/// Provides thread-safe FIFO queue semantics with shared ownership.
-///
-/// ```swift
-/// let queue: Shared<Async.Mutex<Deque<Int>>> = .init(.init(.init()))
-///
-/// // Producers (any thread, any owner)
-/// queue.enqueue(1)
-/// queue.enqueue(2)
-///
-/// // Consumer (any thread)
-/// while let item = queue.dequeue() {
-///     process(item)
-/// }
-/// ```
-extension Shared where Value: ~Copyable {
-    /// Adds an element to the back of the queue.
-    @inlinable
-    public func enqueue<Element: Sendable>(_ element: Element) where Value == Async.Mutex<Deque<Element>> {
-        self.withValue { $0.enqueue(element) }
-    }
+// NOTE: Shared type extension commented out pending implementation of Shared type.
+// Once Reference.Shared is implemented, uncomment this section.
 
-    /// Removes and returns the front element, or `nil` if empty.
-    @inlinable
-    public func dequeue<Element: Sendable>() -> Element? where Value == Async.Mutex<Deque<Element>> {
-        self.withValue { $0.dequeue() }
-    }
-
-    /// Removes and returns all elements.
-    @inlinable
-    public func drain<Element: Sendable>() -> [Element] where Value == Async.Mutex<Deque<Element>> {
-        self.withValue { $0.drain() }
-    }
-
-    /// Drains all elements into an existing buffer.
-    @inlinable
-    public func drain<Element: Sendable>(into target: inout [Element]) where Value == Async.Mutex<Deque<Element>> {
-        self.withValue { $0.drain(into: &target) }
-    }
-}
+//extension Shared where Value: ~Copyable {
+//    /// Adds an element to the back of the queue.
+//    @inlinable
+//    public func enqueue<Element: Sendable>(_ element: Element) where Value == Async.Mutex<Deque<Element>> {
+//        self.withValue { $0.enqueue(element) }
+//    }
+//
+//    /// Removes and returns the front element, or `nil` if empty.
+//    @inlinable
+//    public func dequeue<Element: Sendable>() -> Element? where Value == Async.Mutex<Deque<Element>> {
+//        self.withValue { $0.dequeue() }
+//    }
+//
+//    /// Removes and returns all elements.
+//    @inlinable
+//    public func drain<Element: Sendable>() -> [Element] where Value == Async.Mutex<Deque<Element>> {
+//        self.withValue { $0.drain() }
+//    }
+//
+//    /// Drains all elements into an existing buffer.
+//    @inlinable
+//    public func drain<Element: Sendable>(into target: inout [Element]) where Value == Async.Mutex<Deque<Element>> {
+//        self.withValue { $0.drain(into: &target) }
+//    }
+//}

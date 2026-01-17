@@ -132,7 +132,7 @@ extension Async.Channel.Bounded.State {
         from senders: inout Deque<Sender>,
         resumeCancelled: (Send.Continuation) -> Void
     ) -> Sender? {
-        while let sender = senders.take.front {
+        while let sender = unsafe senders.take.front {
             if cancelledSenders.remove(sender.id) != nil {
                 resumeCancelled(sender.continuation)
                 continue
@@ -192,7 +192,7 @@ extension Async.Channel.Bounded.State {
             // If buffer has space, add to buffer
             if buffer.count < capacity {
                 phase = .modifying
-                buffer.push.back(element)
+                unsafe buffer.push.back(element)
                 phase = .open(buffer: buffer, senders: senders, receiver: nil)
                 return .buffered
             }
@@ -232,14 +232,14 @@ extension Async.Channel.Bounded.State {
             // Double-check: space might be available
             if buffer.count < capacity {
                 phase = .modifying
-                buffer.push.back(element)
+                unsafe buffer.push.back(element)
                 phase = .open(buffer: buffer, senders: senders, receiver: nil)
                 return .buffered
             }
 
             // Enqueue waiter
             phase = .modifying
-            senders.push.back(Sender(id: id, element: element, continuation: continuation))
+            unsafe senders.push.back(Sender(id: id, element: element, continuation: continuation))
             phase = .open(buffer: buffer, senders: senders, receiver: nil)
             return .suspend(id: id)
 
@@ -317,14 +317,14 @@ extension Async.Channel.Bounded.State {
 
             // Collect cancelled continuations during pop
             var cancelled = Deque<Send.Continuation>()
-            let collectCancelled: (Send.Continuation) -> Void = { cancelled.push.back($0) }
+            let collectCancelled: (Send.Continuation) -> Void = { unsafe cancelled.push.back($0) }
 
             // If buffer has elements
-            if let element = buffer.take.front {
+            if let element = unsafe buffer.take.front {
                 // Wake up a waiting sender if any (skipping cancelled)
                 if let sender = popNextSender(from: &senders, resumeCancelled: collectCancelled) {
                     phase = .modifying
-                    buffer.push.back(sender.element)
+                    unsafe buffer.push.back(sender.element)
                     phase = .open(buffer: buffer, senders: senders, receiver: nil)
                     return .returnElement(element, resumeSender: sender.continuation, cancelled: cancelled)
                 }
@@ -343,7 +343,7 @@ extension Async.Channel.Bounded.State {
             return .suspend
 
         case .closed(var buffer):
-            if let element = buffer.take.front {
+            if let element = unsafe buffer.take.front {
                 if buffer.isEmpty {
                     phase = .finished
                 } else {
@@ -379,13 +379,13 @@ extension Async.Channel.Bounded.State {
 
             // Collect cancelled continuations during pop
             var cancelled = Deque<Send.Continuation>()
-            let collectCancelled: (Send.Continuation) -> Void = { cancelled.push.back($0) }
+            let collectCancelled: (Send.Continuation) -> Void = { unsafe cancelled.push.back($0) }
 
             // Double-check: element might be available
-            if let element = buffer.take.front {
+            if let element = unsafe buffer.take.front {
                 if let sender = popNextSender(from: &senders, resumeCancelled: collectCancelled) {
                     phase = .modifying
-                    buffer.push.back(sender.element)
+                    unsafe buffer.push.back(sender.element)
                     phase = .open(buffer: buffer, senders: senders, receiver: nil)
                     return .returnElement(element, resumeSender: sender.continuation, cancelled: cancelled)
                 }
@@ -407,7 +407,7 @@ extension Async.Channel.Bounded.State {
             return .suspend
 
         case .closed(var buffer):
-            if let element = buffer.take.front {
+            if let element = unsafe buffer.take.front {
                 if buffer.isEmpty {
                     phase = .finished
                 } else {
@@ -475,8 +475,8 @@ extension Async.Channel.Bounded.State {
         case .open(let buffer, var senders, let receiver):
             // Collect senders to cancel (drain the deque)
             var sendersToCancel = Deque<Send.Continuation>()
-            while let sender = senders.take.front {
-                sendersToCancel.push.back(sender.continuation)
+            while let sender = unsafe senders.take.front {
+                unsafe sendersToCancel.push.back(sender.continuation)
             }
 
             // If buffer is empty and receiver is waiting, resume with nil

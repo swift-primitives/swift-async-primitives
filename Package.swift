@@ -22,6 +22,7 @@ let package = Package(
         .package(path: "../swift-container-primitives"),
         .package(path: "../swift-identity-primitives"),
         .package(path: "../swift-kernel-primitives"),
+        .package(path: "../swift-reference-primitives"),
         // Test dependencies moved to nested Tests/Package.swift
     ],
     targets: [
@@ -39,6 +40,7 @@ let package = Package(
                         .linux, .windows, .android, .openbsd,
                     ])
                 ),
+                .product(name: "Reference Primitives", package: "swift-reference-primitives"),
             ]
         ),
         // Tests are in a separate nested package (Tests/Package.swift)

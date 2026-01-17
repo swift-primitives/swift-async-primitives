@@ -88,7 +88,7 @@ extension Async.Channel.Unbounded.State {
             slot = .none
             return .give(cont, element)
         case .none:
-            buffer.push.back(element)
+            unsafe buffer.push.back(element)
             return .keep
         }
     }
@@ -160,12 +160,12 @@ extension Async.Channel.Unbounded.State {
 extension Async.Channel.Unbounded.State.Receive {
     @usableFromInline
     mutating func poll() -> Element? {
-        base.buffer.take.front
+        unsafe base.buffer.take.front
     }
 
     @usableFromInline
     mutating func take() -> Async.Channel<Element>.Unbounded.State.Receive.Step {
-        if let element = base.buffer.take.front {
+        if let element = unsafe base.buffer.take.front {
             return .val(element)
         }
         if base._closed {
@@ -181,7 +181,7 @@ extension Async.Channel.Unbounded.State.Receive {
             return false
         }(), "Single-suspended-receiver invariant violated")
 
-        if let element = base.buffer.take.front {
+        if let element = unsafe base.buffer.take.front {
             return .val(element)
         }
         if base._closed {

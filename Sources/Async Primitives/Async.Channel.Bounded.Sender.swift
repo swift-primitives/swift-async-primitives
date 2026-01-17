@@ -75,11 +75,11 @@ extension Async.Channel.Bounded.Sender {
             }
 
             // Resume receiver with nil (channel closed) - outside lock
-            closeAction.receiverToResume?.resume(returning: (nil, nil))
+            unsafe closeAction.receiverToResume?.resume(returning: (nil, nil))
 
             // Cancel all waiting senders - outside lock
-            while let continuation = closeAction.sendersToCancel.take.front {
-                continuation.resume(returning: .closed)
+            while let continuation = unsafe closeAction.sendersToCancel.take.front {
+                unsafe continuation.resume(returning: .closed)
             }
         }
     }
@@ -105,7 +105,7 @@ extension Async.Channel.Bounded.Sender {
 
         switch fastAction {
         case .deliverToReceiver(let receiverCont, let element):
-            receiverCont.resume(returning: (element, nil))
+            unsafe receiverCont.resume(returning: (element, nil))
             return
         case .buffered:
             return
@@ -130,14 +130,14 @@ extension Async.Channel.Bounded.Sender {
 
                 switch action {
                 case .deliverToReceiver(let receiverCont, let element):
-                    receiverCont.resume(returning: (element, nil))
-                    continuation.resume(returning: nil)
+                    unsafe receiverCont.resume(returning: (element, nil))
+                    unsafe continuation.resume(returning: nil)
                 case .buffered:
-                    continuation.resume(returning: nil)
+                    unsafe continuation.resume(returning: nil)
                 case .rejectClosed:
-                    continuation.resume(returning: .closed)
+                    unsafe continuation.resume(returning: .closed)
                 case .rejectCancelled:
-                    continuation.resume(returning: .cancelled)
+                    unsafe continuation.resume(returning: .cancelled)
                 case .suspend:
                     // Continuation stored, will be resumed later
                     break
@@ -149,7 +149,7 @@ extension Async.Channel.Bounded.Sender {
             }
             switch action {
             case .resumeWithCancellation(let continuation):
-                continuation.resume(returning: .cancelled)
+                unsafe continuation.resume(returning: .cancelled)
             case .none:
                 break
             }
@@ -188,7 +188,7 @@ extension Async.Channel.Bounded.Sender {
 
             switch action {
             case .deliverToReceiver(let receiverCont, let element):
-                receiverCont.resume(returning: (element, nil))
+                unsafe receiverCont.resume(returning: (element, nil))
             case .buffered:
                 break
             case .rejectClosed:
@@ -218,11 +218,11 @@ extension Async.Channel.Bounded.Sender {
         }
 
         // Resume receiver with nil (channel closed) - outside lock
-        closeAction.receiverToResume?.resume(returning: (nil, nil))
+        unsafe closeAction.receiverToResume?.resume(returning: (nil, nil))
 
         // Cancel all waiting senders - outside lock
-        while let continuation = closeAction.sendersToCancel.take.front {
-            continuation.resume(returning: .closed)
+        while let continuation = unsafe closeAction.sendersToCancel.take.front {
+            unsafe continuation.resume(returning: .closed)
         }
     }
 

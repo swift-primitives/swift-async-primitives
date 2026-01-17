@@ -94,9 +94,9 @@ extension Async.Channel.Unbounded.Receiver {
 
                 switch action {
                 case .val(let element):
-                    continuation.resume(returning: (element, nil))
+                    unsafe continuation.resume(returning: (element, nil))
                 case .end:
-                    continuation.resume(returning: (nil, nil))
+                    unsafe continuation.resume(returning: (nil, nil))
                 case .wait:
                     // Continuation stored, will be resumed by send/close/stop
                     break
@@ -109,7 +109,7 @@ extension Async.Channel.Unbounded.Receiver {
             }
 
             if case .stop(let cont) = stopAction {
-                cont.resume(returning: (nil, .cancelled))
+                unsafe cont.resume(returning: (nil, .cancelled))
             }
         }
 
@@ -225,9 +225,9 @@ extension Async.Channel.Unbounded.Elements {
 
                     switch action {
                     case .val(let element):
-                        continuation.resume(returning: (element, nil))
+                        unsafe continuation.resume(returning: (element, nil))
                     case .end:
-                        continuation.resume(returning: (nil, nil))
+                        unsafe continuation.resume(returning: (nil, nil))
                     case .wait:
                         break
                     }
@@ -238,7 +238,7 @@ extension Async.Channel.Unbounded.Elements {
                 }
 
                 if case .stop(let cont) = stopAction {
-                    cont.resume(returning: (nil, .cancelled))
+                    unsafe cont.resume(returning: (nil, .cancelled))
                 }
             }
 
