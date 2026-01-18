@@ -142,21 +142,24 @@ extension Async.Promise {
     ///
     /// Multiple tasks can await concurrently - all will receive the same value.
     ///
+    /// - Parameters:
+    ///   - isolation: The actor isolation context for the operation.
+    ///
     /// - Note: This property is only available on non-embedded platforms.
     ///   On embedded, use `wait(_:)` instead.
-    public var value: Value {
-        get async {
-            await withCheckedContinuation { continuation in
-                let immediateValue: Value? = _state.withLock { state in
-                    if let value = state.fulfilled {
-                        return value
-                    }
-                    state.waiters.append(Async.Continuation(continuation))
-                    return nil
+    public func value(
+        isolation: isolated (any Actor)? = #isolation
+    ) async -> Value {
+        await withCheckedContinuation { continuation in
+            let immediateValue: Value? = _state.withLock { state in
+                if let value = state.fulfilled {
+                    return value
                 }
-                if let value = immediateValue {
-                    continuation.resume(returning: value)
-                }
+                state.waiters.append(Async.Continuation(continuation))
+                return nil
+            }
+            if let value = immediateValue {
+                continuation.resume(returning: value)
             }
         }
     }
@@ -224,12 +227,17 @@ extension Async.Promise where Value == Void {
 extension Async.Promise where Value == Void {
     /// Waits until the gate is opened (async).
     ///
-    /// Equivalent to `await value`.
+    /// Equivalent to `await value()`.
+    ///
+    /// - Parameters:
+    ///   - isolation: The actor isolation context for the operation.
     ///
     /// - Note: This method is only available on non-embedded platforms.
     ///   On embedded, use `wait(_:)` instead.
-    public func wait() async {
-        _ = await value
+    public func wait(
+        isolation: isolated (any Actor)? = #isolation
+    ) async {
+        _ = await value(isolation: isolation)
     }
 }
 #endif

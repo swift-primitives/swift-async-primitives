@@ -155,11 +155,16 @@ extension Async {
 
         /// Wait for the next element (async, suspends if none available).
         ///
+        /// - Parameters:
+        ///   - isolation: The actor isolation context for the operation.
+        ///
         /// - Returns: The next element, or `nil` if finished AND drained.
         ///
         /// - Important: Only one task may call `next()` at a time.
         ///   Concurrent calls result in undefined behavior.
-        public func next() async -> Element? {
+        public func next(
+            isolation: isolated (any Actor)? = #isolation
+        ) async -> Element? {
             // Using (shouldSuspend: Bool, element: Element?) to avoid nested enum in generic
             return await withCheckedContinuation { continuation in
                 let (shouldSuspend, immediateResult): (Bool, Element??) = _state.withLock { state in

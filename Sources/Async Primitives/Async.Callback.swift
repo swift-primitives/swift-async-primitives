@@ -108,13 +108,16 @@ extension Async.Callback {
     ///
     /// Bridges the callback-based API to Swift's async/await.
     ///
+    /// - Parameters:
+    ///   - isolation: The actor isolation context for the operation.
+    ///
     /// - Returns: The computed value.
-    public var value: Value {
-        get async {
-            await withCheckedContinuation { continuation in
-                self.run { value in
-                    continuation.resume(returning: value)
-                }
+    public func value(
+        isolation: isolated (any Actor)? = #isolation
+    ) async -> Value {
+        await withCheckedContinuation { continuation in
+            self.run { value in
+                continuation.resume(returning: value)
             }
         }
     }
@@ -123,9 +126,13 @@ extension Async.Callback {
     ///
     /// The async operation is started when `run` is called.
     ///
-    /// - Parameter operation: An async operation that produces the value.
+    /// - Parameters:
+    ///   - isolation: The actor isolation context for the operation.
+    ///   - operation: An async operation that produces the value.
+    ///
     /// - Returns: A callback that bridges the async operation.
     public static func async(
+        isolation: isolated (any Actor)? = #isolation,
         _ operation: @escaping @Sendable () async -> Value
     ) -> Self {
         Self { callback in

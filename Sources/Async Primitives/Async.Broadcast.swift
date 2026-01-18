@@ -234,7 +234,9 @@ extension Async.Broadcast {
             let broadcast: Async.Broadcast<Element>
             let id: UInt64
 
-            public mutating func next() async throws(Async.Broadcast<Element>.Error) -> Element? {
+            public mutating func next(
+                isolation: isolated (any Actor)? = #isolation
+            ) async throws(Async.Broadcast<Element>.Error) -> Element? {
                 // Capture values explicitly to avoid capturing self in @Sendable closures
                 let broadcast = self.broadcast
                 let id = self.id

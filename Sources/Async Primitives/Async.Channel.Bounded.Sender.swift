@@ -93,11 +93,17 @@ extension Async.Channel.Bounded.Sender {
     /// Suspends if the buffer is full until space becomes available
     /// or the channel is closed.
     ///
-    /// - Parameter element: The element to send.
+    /// - Parameters:
+    ///   - element: The element to send.
+    ///   - isolation: The actor isolation context for the operation.
+    ///
     /// - Throws: `Async.Channel<Element>.Error.closed` if the channel is closed.
     ///           `Async.Channel<Element>.Error.cancelled` if the task is cancelled.
     @inlinable
-    public func send(_ element: Element) async throws(Async.Channel<Element>.Error) {
+    public func send(
+        _ element: Element,
+        isolation: isolated (any Actor)? = #isolation
+    ) async throws(Async.Channel<Element>.Error) {
         // Fast path: try immediate send
         let fastAction = handle.storage.withLock { state in
             state.trySend(element)

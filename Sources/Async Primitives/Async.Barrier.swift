@@ -142,9 +142,14 @@ extension Async.Barrier {
     ///
     /// After the barrier has been released, subsequent calls return immediately.
     ///
+    /// - Parameters:
+    ///   - isolation: The actor isolation context for the operation.
+    ///
     /// - Note: This method is only available on non-embedded platforms.
     ///   On embedded, use `arrive(_:)` instead.
-    public func arrive() async {
+    public func arrive(
+        isolation: isolated (any Actor)? = #isolation
+    ) async {
         await withCheckedContinuation { continuation in
             // Collect waiters to resume OUTSIDE lock
             let result: (shouldResume: Bool, waitersToResume: [Async.Continuation<Void>]) = _state.withLock { state in

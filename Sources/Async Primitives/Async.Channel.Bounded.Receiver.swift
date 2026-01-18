@@ -59,10 +59,15 @@ extension Async.Channel.Bounded.Receiver {
     /// Suspends if the buffer is empty until an element becomes available
     /// or the channel is closed and drained.
     ///
+    /// - Parameters:
+    ///   - isolation: The actor isolation context for the operation.
+    ///
     /// - Returns: The next element, or `nil` if the channel is closed and drained.
     /// - Throws: `Async.Channel<Element>.Error.cancelled` if the task is cancelled.
     @inlinable
-    public func receive() async throws(Async.Channel<Element>.Error) -> Element? {
+    public func receive(
+        isolation: isolated (any Actor)? = #isolation
+    ) async throws(Async.Channel<Element>.Error) -> Element? {
         // Fast path: try immediate receive
         let fastAction = storage.withLock { state in
             state.tryReceive()
@@ -226,7 +231,9 @@ extension Async.Channel.Bounded.Elements {
         }
 
         @inlinable
-        public mutating func next() async throws(Async.Channel<Element>.Error) -> Element? {
+        public mutating func next(
+            isolation: isolated (any Actor)? = #isolation
+        ) async throws(Async.Channel<Element>.Error) -> Element? {
             // Capture storage to avoid capturing self in @Sendable closure
             let storage = self.storage
 
