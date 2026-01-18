@@ -107,17 +107,12 @@ extension Async.Callback {
     /// Awaits the computed value using Swift concurrency.
     ///
     /// Bridges the callback-based API to Swift's async/await.
-    ///
-    /// - Parameters:
-    ///   - isolation: The actor isolation context for the operation.
-    ///
-    /// - Returns: The computed value.
-    public func value(
-        isolation: isolated (any Actor)? = #isolation
-    ) async -> Value {
-        await withCheckedContinuation { continuation in
-            self.run { value in
-                continuation.resume(returning: value)
+    public var value: Value {
+        get async {
+            await withCheckedContinuation { continuation in
+                self.run { value in
+                    continuation.resume(returning: value)
+                }
             }
         }
     }
