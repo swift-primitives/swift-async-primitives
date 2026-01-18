@@ -19,7 +19,7 @@ let package = Package(
         // Test primitives (for test utilities)
         .package(path: "../../swift-test-primitives"),
         // Testing extras (macro testing utilities)
-        .package(path: "../../../swift-foundations/swift-testing-extras"),
+        .package(path: "../../../swift-foundations/swift-testing"),
     ],
     targets: [
         .testTarget(
@@ -28,7 +28,7 @@ let package = Package(
                 .product(name: "Async Primitives", package: "swift-async-primitives"),
                 .product(name: "Testing", package: "swift-testing"),
                 .product(name: "Test Primitives", package: "swift-test-primitives"),
-                .product(name: "Testing Extras", package: "swift-testing-extras"),
+                .product(name: "Testing", package: "swift-testing"),
             ],
             path: "Sources/Async Primitives Tests"
         ),

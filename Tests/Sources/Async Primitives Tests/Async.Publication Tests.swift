@@ -11,11 +11,11 @@
 
 import Async_Primitives
 import Test_Primitives
-import Testing_Extras
+import Testing
 
-/// Test namespace for Async.Publication (generic type requires wrapper for #TestSuites).
+/// Test namespace for Async.Publication (generic type requires wrapper for #Tests).
 enum Publication {
-    #TestSuites
+    #Tests
 }
 
 // MARK: - Unit Tests
