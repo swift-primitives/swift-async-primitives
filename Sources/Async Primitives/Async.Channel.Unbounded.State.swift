@@ -12,7 +12,7 @@
 // Async channels require task suspension which is not available on embedded Swift.
 #if !hasFeature(Embedded)
 
-public import Container_Primitives
+public import Deque_Primitives
 
 extension Async.Channel.Unbounded {
     /// Pure state machine for unbounded channel operations.

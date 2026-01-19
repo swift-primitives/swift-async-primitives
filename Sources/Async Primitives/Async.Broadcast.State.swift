@@ -12,7 +12,7 @@
 // Async broadcast requires task suspension which is not available on embedded Swift.
 #if !hasFeature(Embedded)
 
-import Container_Primitives
+import Deque_Primitives
 
 extension Async.Broadcast {
     /// Internal state machine for the broadcast channel.
