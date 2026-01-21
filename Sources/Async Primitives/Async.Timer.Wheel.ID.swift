@@ -9,7 +9,16 @@
 //
 // ===----------------------------------------------------------------------===//
 
+public import Handle_Primitives
+
 extension Async.Timer.Wheel {
+    /// Phantom type tag for timer wheel handles.
+    ///
+    /// This type exists solely to distinguish `Async.Timer.Wheel.ID` handles
+    /// from other handle types at compile time.
+    @usableFromInline
+    enum _TimerWheelEntryTag {}
+
     /// Unique identifier for a scheduled timer.
     ///
     /// IDs are used to cancel timers before they fire. Each ID contains:
@@ -23,6 +32,12 @@ extension Async.Timer.Wheel {
     /// generation number. Attempts to cancel with an old ID (stale generation)
     /// will fail safely.
     ///
+    /// ## Implementation Note
+    ///
+    /// `ID` is implemented as `Handle<_TimerWheelEntryTag>` to unify handle
+    /// types across the Swift Institute primitives. The wheel's validation
+    /// semantics remain wheel-specific (global epoch, not per-slot generation).
+    ///
     /// ## Usage
     ///
     /// ```swift
@@ -30,20 +45,29 @@ extension Async.Timer.Wheel {
     /// // ...later...
     /// let wasCancelled = wheel.cancel(id)
     /// ```
-    public struct ID: Sendable, Hashable {
-        /// Index into the storage slab.
-        @usableFromInline
-        let index: UInt32
+    public typealias ID = Handle<_TimerWheelEntryTag>
+}
 
-        /// Generation counter for ABA prevention.
-        @usableFromInline
-        let generation: UInt32
+// MARK: - Construction Helpers
 
-        /// Creates an ID with the given index and generation.
-        @usableFromInline
-        init(index: UInt32, generation: UInt32) {
-            self.index = index
-            self.generation = generation
-        }
+extension Async.Timer.Wheel {
+    /// Creates an ID from the storage allocation result.
+    ///
+    /// - Parameters:
+    ///   - index: The slot index (UInt32 from storage, widened to Int).
+    ///   - generation: The generation counter.
+    /// - Returns: A handle suitable for external use.
+    @usableFromInline
+    static func _makeID(index: UInt32, generation: UInt32) -> ID {
+        ID(index: Int(index), generation: generation)
+    }
+
+    /// Extracts the storage index from an ID.
+    ///
+    /// - Parameter id: The timer ID.
+    /// - Returns: The slot index as UInt32 for storage access.
+    @usableFromInline
+    static func _storageIndex(_ id: ID) -> UInt32 {
+        UInt32(id.index)
     }
 }
