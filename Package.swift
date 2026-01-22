@@ -24,6 +24,8 @@ let package = Package(
         .package(path: "../swift-identity-primitives"),
         .package(path: "../swift-kernel-primitives"),
         .package(path: "../swift-reference-primitives"),
+        // SDG(wraps): async operations wrap task lifetimes
+        // .package(path: "../swift-lifetime-primitives"),
         // Test dependencies moved to nested Tests/Package.swift
     ],
     targets: [
