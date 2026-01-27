@@ -90,7 +90,7 @@ extension Async.Mutex {
 // MARK: - Shared<Async.Mutex<Deque<Element>>> Queue Operations
 
 // NOTE: Shared type extension commented out pending implementation of Shared type.
-// Once Reference.Shared is implemented, uncomment this section.
+// Once Ownership.Shared is implemented, uncomment this section.
 
 //extension Shared where Value: ~Copyable {
 //    /// Adds an element to the back of the queue.

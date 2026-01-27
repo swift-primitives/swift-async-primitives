@@ -23,7 +23,7 @@ let package = Package(
         .package(path: "../swift-handle-primitives"),
         .package(path: "../swift-identity-primitives"),
         .package(path: "../swift-kernel-primitives"),
-        .package(path: "../swift-reference-primitives"),
+        .package(path: "../swift-ownership-primitives"),
         // SDG(wraps): async operations wrap task lifetimes
         // .package(path: "../swift-lifetime-primitives"),
         // Test dependencies moved to nested Tests/Package.swift
@@ -44,7 +44,7 @@ let package = Package(
                         .linux, .windows, .android, .openbsd,
                     ])
                 ),
-                .product(name: "Reference Primitives", package: "swift-reference-primitives"),
+                .product(name: "Ownership Primitives", package: "swift-ownership-primitives"),
             ]
         ),
         // Tests are in a separate nested package (Tests/Package.swift)
