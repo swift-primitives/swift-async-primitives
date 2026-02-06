@@ -12,7 +12,7 @@
 #if !hasFeature(Embedded)
 public import Synchronization
 #endif
-public import Deque_Primitives
+public import Queue_Primitives
 public import Buffer_Primitives
 
 // MARK: - Async.Mutex<Deque<Element>> Queue Operations

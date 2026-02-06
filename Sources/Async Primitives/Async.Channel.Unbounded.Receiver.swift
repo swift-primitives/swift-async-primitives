@@ -12,7 +12,7 @@
 // Async channels require task suspension which is not available on embedded Swift.
 #if !hasFeature(Embedded)
 
-internal import Deque_Primitives
+internal import Queue_Primitives
 
 extension Async.Channel.Unbounded {
     /// A receiver for an unbounded channel.

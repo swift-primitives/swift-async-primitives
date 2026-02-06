@@ -13,7 +13,7 @@
 // This is inherently async-only and not available on embedded Swift.
 #if !hasFeature(Embedded)
 
-import Deque_Primitives
+import Queue_Primitives
 import Synchronization
 
 extension Async {
