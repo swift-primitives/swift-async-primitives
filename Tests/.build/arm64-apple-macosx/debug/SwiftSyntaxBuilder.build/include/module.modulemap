@@ -1,3 +1,0 @@
-module SwiftSyntaxBuilder {
-    header "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/SwiftSyntaxBuilder.build/include/SwiftSyntaxBuilder-Swift.h"
-}

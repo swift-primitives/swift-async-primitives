@@ -1,4 +1,0 @@
-module CDarwinShim {
-    umbrella "/Users/coen/Developer/swift-primitives/swift-kernel-primitives/Sources/CDarwinShim/include"
-    export *
-}

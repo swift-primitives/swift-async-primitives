@@ -1,4 +1,0 @@
-module CAllocationTracking {
-    umbrella "/Users/coen/Developer/swift-primitives/swift-memory-primitives/Sources/CAllocationTracking/include"
-    export *
-}

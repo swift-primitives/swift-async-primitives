@@ -1,3 +1,0 @@
-module Kernel_Test_Support {
-    header "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Kernel_Test_Support.build/include/Kernel Test Support-Swift.h"
-}

@@ -1,5 +1,0 @@
----
-triple:          'arm64-apple-darwin'
-binary-path:     '/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Testing Macros Implementation-tool'
-relocations:     []
-...

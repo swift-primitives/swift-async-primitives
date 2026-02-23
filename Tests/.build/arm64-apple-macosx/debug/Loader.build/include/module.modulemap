@@ -1,3 +1,0 @@
-module Loader {
-    header "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/Loader.build/include/Loader-Swift.h"
-}

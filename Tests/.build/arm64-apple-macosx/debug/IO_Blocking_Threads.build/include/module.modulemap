@@ -1,3 +1,0 @@
-module IO_Blocking_Threads {
-    header "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/IO_Blocking_Threads.build/include/IO Blocking Threads-Swift.h"
-}

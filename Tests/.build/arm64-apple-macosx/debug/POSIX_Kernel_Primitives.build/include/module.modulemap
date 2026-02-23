@@ -1,3 +1,0 @@
-module POSIX_Kernel_Primitives {
-    header "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/POSIX_Kernel_Primitives.build/include/POSIX Kernel Primitives-Swift.h"
-}

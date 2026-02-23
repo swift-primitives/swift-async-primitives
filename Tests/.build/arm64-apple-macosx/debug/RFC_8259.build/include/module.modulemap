@@ -1,3 +1,0 @@
-module RFC_8259 {
-    header "/Users/coen/Developer/swift-primitives/swift-async-primitives/Tests/.build/arm64-apple-macosx/debug/RFC_8259.build/include/RFC 8259-Swift.h"
-}
