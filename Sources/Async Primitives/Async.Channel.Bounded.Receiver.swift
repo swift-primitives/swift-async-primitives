@@ -76,7 +76,7 @@ extension Async.Channel.Bounded.Receiver {
         switch fastAction {
         case .returnElement(let element, let resumeSender, var cancelled):
             // Resume cancelled senders first (minimizes stuck time)
-            while let c = unsafe cancelled.take.front {
+            while let c = unsafe cancelled.front.take {
                 unsafe c.resume(returning: .cancelled)
             }
             unsafe resumeSender?.resume(returning: nil)
@@ -99,7 +99,7 @@ extension Async.Channel.Bounded.Receiver {
                 switch action {
                 case .returnElement(let element, let resumeSender, var cancelled):
                     // Resume cancelled senders first (minimizes stuck time)
-                    while let c = unsafe cancelled.take.front {
+                    while let c = unsafe cancelled.front.take {
                         unsafe c.resume(returning: .cancelled)
                     }
                     unsafe resumeSender?.resume(returning: nil)
@@ -159,7 +159,7 @@ extension Async.Channel.Bounded.Receiver {
             switch action {
             case .returnElement(let element, let resumeSender, var cancelled):
                 // Resume cancelled senders first (minimizes stuck time)
-                while let c = unsafe cancelled.take.front {
+                while let c = unsafe cancelled.front.take {
                     unsafe c.resume(returning: .cancelled)
                 }
                 unsafe resumeSender?.resume(returning: nil)
@@ -244,7 +244,7 @@ extension Async.Channel.Bounded.Elements {
 
             switch fastAction {
             case .returnElement(let element, let resumeSender, var cancelled):
-                while let c = unsafe cancelled.take.front {
+                while let c = unsafe cancelled.front.take {
                     unsafe c.resume(returning: .cancelled)
                 }
                 unsafe resumeSender?.resume(returning: nil)
@@ -266,7 +266,7 @@ extension Async.Channel.Bounded.Elements {
 
                     switch action {
                     case .returnElement(let element, let resumeSender, var cancelled):
-                        while let c = unsafe cancelled.take.front {
+                        while let c = unsafe cancelled.front.take {
                             unsafe c.resume(returning: .cancelled)
                         }
                         unsafe resumeSender?.resume(returning: nil)

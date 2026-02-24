@@ -88,7 +88,7 @@ extension Async.Channel.Unbounded.State {
             slot = .none
             return .give(cont, element)
         case .none:
-            unsafe buffer.push.back(element)
+            unsafe buffer.back.push(element)
             return .keep
         }
     }
@@ -141,7 +141,7 @@ extension Async.Channel.Unbounded.State {
             // This must happen before copying self to maintain CoW invariant.
             // Without this, the Deque._modify accessor receives a shared reference
             // and ensureUnique() triggers a copy with corrupted capacity.
-            buffer.reserve(0)
+            buffer.reserve(.zero)
 
             // Transfer state to wrapper (creates copy with shared buffer reference)
             var temp = Receive(self)
@@ -160,12 +160,12 @@ extension Async.Channel.Unbounded.State {
 extension Async.Channel.Unbounded.State.Receive {
     @usableFromInline
     mutating func poll() -> Element? {
-        unsafe base.buffer.take.front
+        unsafe base.buffer.front.take
     }
 
     @usableFromInline
     mutating func take() -> Async.Channel<Element>.Unbounded.State.Receive.Step {
-        if let element = unsafe base.buffer.take.front {
+        if let element = unsafe base.buffer.front.take {
             return .val(element)
         }
         if base._closed {
@@ -181,7 +181,7 @@ extension Async.Channel.Unbounded.State.Receive {
             return false
         }(), "Single-suspended-receiver invariant violated")
 
-        if let element = unsafe base.buffer.take.front {
+        if let element = unsafe base.buffer.front.take {
             return .val(element)
         }
         if base._closed {

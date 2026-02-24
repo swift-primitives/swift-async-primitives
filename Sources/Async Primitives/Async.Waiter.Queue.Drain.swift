@@ -19,7 +19,7 @@ extension Async.Waiter.Queue {
     ///
     /// ## Design
     ///
-    /// - Backed by `Buffer.Ring.Unbounded` for efficient FIFO access
+    /// - Backed by `Buffer<Element>.Ring` for efficient FIFO access
     /// - ~Copyable to prevent accidental duplication
     /// - No indexed access - elements must be consumed in order
     ///
@@ -37,17 +37,17 @@ extension Async.Waiter.Queue {
     /// ```
     public struct Drain<Element: ~Copyable>: ~Copyable {
         @usableFromInline
-        var _storage: Buffer.Ring.Unbounded<Element>
+        var _storage: Buffer<Element>.Ring
 
         /// Creates an empty drain.
         @inlinable
         public init() {
-            self._storage = Buffer.Ring.Unbounded<Element>(minimumCapacity: 4)
+            self._storage = Buffer<Element>.Ring(minimumCapacity: Index<Element>.Count(4 as UInt))
         }
 
         /// The number of elements in the drain.
         @inlinable
-        public var count: Int { _storage.count }
+        public var count: Index<Element>.Count { _storage.count }
 
         /// Whether the drain is empty.
         @inlinable
@@ -63,7 +63,7 @@ extension Async.Waiter.Queue.Drain where Element: ~Copyable {
     /// - Parameter element: The element to append (ownership transferred).
     @inlinable
     public mutating func append(_ element: consuming Element) {
-        _storage.push(element)
+        _storage.push.back(element)
     }
 }
 
@@ -75,7 +75,8 @@ extension Async.Waiter.Queue.Drain where Element: ~Copyable {
     /// - Returns: The first element, or `nil` if empty.
     @inlinable
     public mutating func popFront() -> Element? {
-        _storage.popFront()
+        guard !_storage.isEmpty else { return nil }
+        return _storage.pop.front()
     }
 }
 
@@ -89,7 +90,9 @@ extension Async.Waiter.Queue.Drain where Element: ~Copyable {
     /// - Parameter body: A closure that consumes each element.
     @inlinable
     public mutating func drain(_ body: (consuming Element) -> Void) {
-        _storage.drain(body)
+        while !_storage.isEmpty {
+            body(_storage.pop.front())
+        }
     }
 }
 

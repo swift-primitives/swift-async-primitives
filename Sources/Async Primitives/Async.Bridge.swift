@@ -91,7 +91,7 @@ extension Async {
                     #endif
                     return cont
                 } else {
-                    state.buffer.push.back(element)
+                    state.buffer.back.push(element)
                     return nil
                 }
             }
@@ -125,13 +125,13 @@ extension Async {
                         // Resume with first, queue rest
                         if count > 1 {
                             for i in 1..<count {
-                                state.buffer.push.back(elements[i])
+                                state.buffer.back.push(elements[i])
                             }
                         }
                         return (cont, first)
                     } else {
                         for i in 0..<count {
-                            state.buffer.push.back(elements[i])
+                            state.buffer.back.push(elements[i])
                         }
                         return (nil, nil)
                     }
@@ -149,7 +149,7 @@ extension Async {
         /// After `finish()`, pushes are silently ignored.
         ///
         /// - Parameter elements: The elements to deliver.
-        public func push<S: Sequence>(contentsOf elements: S) where S.Element == Element {
+        public func push<S: Swift.Sequence>(contentsOf elements: S) where S.Element == Element {
             push(Swift.Array(elements))
         }
 
@@ -175,7 +175,7 @@ extension Async {
                     )
                     #endif
 
-                    if let element = state.buffer.take.front {
+                    if let element = state.buffer.front.take {
                         return (false, .some(element))
                     }
                     if state.isFinished {

@@ -18,7 +18,7 @@ extension Async.Waiter.Queue {
     ///
     /// ## Design
     ///
-    /// - Backing storage: `Buffer.Ring.Unbounded` (~Copyable unbounded ring buffer)
+    /// - Backing storage: `Buffer<Entry>.Ring` (~Copyable growable ring buffer)
     /// - Unbounded: push always succeeds (grows when needed)
     /// - No closures: operations return raw data, callers compute outcomes outside locks
     /// - ~Copyable: prevents accidental duplication of entries
@@ -42,19 +42,19 @@ extension Async.Waiter.Queue {
         public typealias Flagged = Async.Waiter.Queue.Flagged<Outcome, Metadata>
 
         @usableFromInline
-        var _storage: Buffer.Ring.Unbounded<Entry>
+        var _storage: Buffer<Entry>.Ring
 
         /// Creates an unbounded queue.
         ///
         /// - Parameter minimumCapacity: Initial capacity hint (default: 8).
         @inlinable
-        public init(minimumCapacity: Int = 8) {
-            self._storage = Buffer.Ring.Unbounded<Entry>(minimumCapacity: minimumCapacity)
+        public init(minimumCapacity: Index<Entry>.Count = Index<Entry>.Count(8 as UInt)) {
+            self._storage = Buffer<Entry>.Ring(minimumCapacity: minimumCapacity)
         }
 
         /// The current number of waiters in the queue.
         @inlinable
-        public var count: Int { _storage.count }
+        public var count: Index<Entry>.Count { _storage.count }
 
         /// Whether the queue is empty.
         @inlinable
@@ -62,7 +62,7 @@ extension Async.Waiter.Queue {
 
         /// The current capacity of the queue.
         @inlinable
-        public var capacity: Int { _storage.capacity }
+        public var capacity: Index<Entry>.Count { _storage.capacity }
     }
 }
 
@@ -76,7 +76,7 @@ extension Async.Waiter.Queue.Unbounded {
     /// - Parameter entry: The entry to push (ownership transferred).
     @inlinable
     public mutating func push(_ entry: consuming Entry) {
-        _storage.push(entry)
+        _storage.push.back(entry)
     }
 }
 
@@ -90,7 +90,8 @@ extension Async.Waiter.Queue.Unbounded {
     /// - Returns: The oldest entry, or `nil` if empty.
     @inlinable
     public mutating func popFront() -> Entry? {
-        _storage.popFront()
+        guard !_storage.isEmpty else { return nil }
+        return _storage.pop.front()
     }
 
     /// Pops the first eligible (non-flagged) entry.
@@ -104,7 +105,8 @@ extension Async.Waiter.Queue.Unbounded {
     public mutating func popEligible(
         flaggedInto flagged: inout Async.Waiter.Queue.Drain<Flagged>
     ) -> Entry? {
-        while let entry = _storage.popFront() {
+        while !_storage.isEmpty {
+            let entry = _storage.pop.front()
             if let reason = entry.flag.reason {
                 flagged.append(Flagged(reason: reason, entry: entry))
             } else {
@@ -129,7 +131,8 @@ extension Async.Waiter.Queue.Unbounded {
         // Collect survivors in a temporary drain
         var survivors = Async.Waiter.Queue.Drain<Entry>()
 
-        _storage.drain { entry in
+        while !_storage.isEmpty {
+            let entry = _storage.pop.front()
             if let reason = entry.flag.reason {
                 flagged.append(Flagged(reason: reason, entry: entry))
             } else {
@@ -139,7 +142,7 @@ extension Async.Waiter.Queue.Unbounded {
 
         // Re-push survivors
         survivors.drain { entry in
-            _storage.push(entry)
+            _storage.push.back(entry)
         }
     }
 
@@ -150,7 +153,9 @@ extension Async.Waiter.Queue.Unbounded {
     /// - Parameter body: Closure that consumes each entry.
     @inlinable
     public mutating func drainAll(_ body: (consuming Entry) -> Void) {
-        _storage.drain(body)
+        while !_storage.isEmpty {
+            body(_storage.pop.front())
+        }
     }
 }
 

@@ -19,6 +19,7 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../swift-buffer-primitives"),
+        .package(path: "../swift-dictionary-primitives"),
         .package(path: "../swift-queue-primitives"),
         .package(path: "../swift-handle-primitives"),
         .package(path: "../swift-identity-primitives"),
@@ -33,6 +34,7 @@ let package = Package(
             name: "Async Primitives",
             dependencies: [
                 .product(name: "Buffer Primitives", package: "swift-buffer-primitives"),
+                .product(name: "Dictionary Primitives", package: "swift-dictionary-primitives"),
                 .product(name: "Queue Primitives", package: "swift-queue-primitives"),
                 .product(name: "Handle Primitives", package: "swift-handle-primitives"),
                 .product(name: "Identity Primitives", package: "swift-identity-primitives"),

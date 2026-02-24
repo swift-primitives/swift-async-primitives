@@ -16,8 +16,7 @@ extension Async.Timer.Wheel {
     ///
     /// This type exists solely to distinguish `Async.Timer.Wheel.ID` handles
     /// from other handle types at compile time.
-    @usableFromInline
-    enum _TimerWheelEntryTag {}
+    public enum _TimerWheelEntryTag {}
 
     /// Unique identifier for a scheduled timer.
     ///

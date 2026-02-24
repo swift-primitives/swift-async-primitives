@@ -12,6 +12,7 @@
 // Async broadcast requires task suspension which is not available on embedded Swift.
 #if !hasFeature(Embedded)
 
+import Dictionary_Primitives
 import Queue_Primitives
 import Synchronization
 
@@ -115,13 +116,13 @@ extension Async.Broadcast {
             state.next.index += 1
 
             // Add to buffer
-            state.buffer.push.back((index, element))
+            state.buffer.back.push((index, element))
 
             // Trim buffer if needed (keep elements that some subscriber hasn't seen yet)
             let minCursor = state.minCursor() ?? index
             while state.buffer.count > buffer.limit {
                 if let front = state.buffer.peek.front, front.index < minCursor {
-                    _ = state.buffer.take.front
+                    _ = state.buffer.front.take
                 } else {
                     break
                 }

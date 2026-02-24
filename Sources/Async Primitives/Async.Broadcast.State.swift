@@ -12,6 +12,7 @@
 // Async broadcast requires task suspension which is not available on embedded Swift.
 #if !hasFeature(Embedded)
 
+import Dictionary_Primitives
 import Queue_Primitives
 
 extension Async.Broadcast {
@@ -64,7 +65,7 @@ extension Async.Broadcast.State {
     mutating func pruneBuffer() {
         guard let min = minCursor() else { return }
         while let front = buffer.peek.front, front.index < min {
-            _ = buffer.take.front
+            _ = buffer.front.take
         }
     }
 }

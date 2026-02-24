@@ -43,7 +43,7 @@ extension Async.Mutex {
     /// - Complexity: O(1) amortized.
     @inlinable
     public func enqueue<Element: Sendable>(_ element: Element) where Value == Deque<Element> {
-        withLock { $0.push.back(element) }
+        withLock { $0.back.push(element) }
     }
 
     /// Removes and returns the front element, or `nil` if empty.
@@ -52,7 +52,7 @@ extension Async.Mutex {
     /// - Complexity: O(1) amortized.
     @inlinable
     public func dequeue<Element: Sendable>() -> Element? where Value == Deque<Element> {
-        withLock { $0.take.front }
+        withLock { $0.front.take }
     }
 
     /// Removes and returns all elements.
@@ -64,7 +64,7 @@ extension Async.Mutex {
         withLock { deque in
             var result: [Element] = []
             result.reserveCapacity(deque.count)
-            while let element = deque.take.front {
+            while let element = deque.front.take {
                 result.append(element)
             }
             return result
@@ -80,7 +80,7 @@ extension Async.Mutex {
     @inlinable
     public func drain<Element: Sendable>(into target: inout [Element]) where Value == Deque<Element> {
         withLock { deque in
-            while let element = deque.take.front {
+            while let element = deque.front.take {
                 target.append(element)
             }
         }

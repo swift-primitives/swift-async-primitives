@@ -78,7 +78,7 @@ extension Async.Channel.Bounded.Sender {
             unsafe closeAction.receiverToResume?.resume(returning: (nil, nil))
 
             // Cancel all waiting senders - outside lock
-            while let continuation = unsafe closeAction.sendersToCancel.take.front {
+            while let continuation = unsafe closeAction.sendersToCancel.front.take {
                 unsafe continuation.resume(returning: .closed)
             }
         }
@@ -227,7 +227,7 @@ extension Async.Channel.Bounded.Sender {
         unsafe closeAction.receiverToResume?.resume(returning: (nil, nil))
 
         // Cancel all waiting senders - outside lock
-        while let continuation = unsafe closeAction.sendersToCancel.take.front {
+        while let continuation = unsafe closeAction.sendersToCancel.front.take {
             unsafe continuation.resume(returning: .closed)
         }
     }

@@ -19,7 +19,7 @@ extension Async.Waiter.Queue {
     ///
     /// ## Design
     ///
-    /// - Backing storage: `Buffer.Ring.Bounded` (~Copyable ring buffer)
+    /// - Backing storage: `Buffer<Entry>.Ring.Bounded` (~Copyable ring buffer)
     /// - Fixed capacity: push returns rejected element when full
     /// - No closures: operations return raw data, callers compute outcomes outside locks
     /// - ~Copyable: prevents accidental duplication of entries
@@ -43,23 +43,23 @@ extension Async.Waiter.Queue {
         public typealias Flagged = Async.Waiter.Queue.Flagged<Outcome, Metadata>
 
         @usableFromInline
-        var _storage: Buffer.Ring.Bounded<Entry>
+        var _storage: Buffer<Entry>.Ring.Bounded
 
         /// Creates a bounded queue with the specified capacity.
         ///
         /// - Parameter capacity: Maximum number of waiters. Must be at least 1.
         @inlinable
-        public init(capacity: Int) {
-            self._storage = Buffer.Ring.Bounded<Entry>(capacity: capacity)
+        public init(capacity: Index<Entry>.Count) {
+            self._storage = Buffer<Entry>.Ring.Bounded(minimumCapacity: capacity)
         }
 
         /// The fixed capacity of the queue.
         @inlinable
-        public var capacity: Int { _storage.capacity }
+        public var capacity: Index<Entry>.Count { _storage.capacity }
 
         /// The current number of waiters in the queue.
         @inlinable
-        public var count: Int { _storage.count }
+        public var count: Index<Entry>.Count { _storage.count }
 
         /// Whether the queue is empty.
         @inlinable
@@ -84,9 +84,7 @@ extension Async.Waiter.Queue.Bounded {
     /// - On failure: entry is returned to caller, caller retains ownership
     @inlinable
     public mutating func push(_ entry: consuming Entry) -> Entry? {
-        // Buffer.Ring.Bounded.push returns nil on success, element on failure
-        // This preserves ownership: rejected entry goes back to caller
-        _storage.push(entry)
+        _storage.push.back(entry)
     }
 
     /// Pushes an entry to the back, trapping if full.
@@ -97,7 +95,8 @@ extension Async.Waiter.Queue.Bounded {
     /// - Precondition: Queue must not be full.
     @inlinable
     public mutating func push(unchecked entry: consuming Entry) {
-        _storage.push(unchecked: entry)
+        precondition(!_storage.isFull, "Queue overflow: push(unchecked:) called on full queue")
+        _storage.push.back(entry)
     }
 }
 
@@ -111,7 +110,8 @@ extension Async.Waiter.Queue.Bounded {
     /// - Returns: The oldest entry, or `nil` if empty.
     @inlinable
     public mutating func popFront() -> Entry? {
-        _storage.popFront()
+        guard !_storage.isEmpty else { return nil }
+        return _storage.pop.front()
     }
 
     /// Pops the first eligible (non-flagged) entry.
@@ -125,7 +125,8 @@ extension Async.Waiter.Queue.Bounded {
     public mutating func popEligible(
         flaggedInto flagged: inout Async.Waiter.Queue.Drain<Flagged>
     ) -> Entry? {
-        while let entry = _storage.popFront() {
+        while !_storage.isEmpty {
+            let entry = _storage.pop.front()
             if let reason = entry.flag.reason {
                 flagged.append(Flagged(reason: reason, entry: entry))
             } else {
@@ -150,7 +151,8 @@ extension Async.Waiter.Queue.Bounded {
         // Collect survivors in a temporary drain
         var survivors = Async.Waiter.Queue.Drain<Entry>()
 
-        _storage.drain { entry in
+        while !_storage.isEmpty {
+            let entry = _storage.pop.front()
             if let reason = entry.flag.reason {
                 flagged.append(Flagged(reason: reason, entry: entry))
             } else {
@@ -160,7 +162,7 @@ extension Async.Waiter.Queue.Bounded {
 
         // Re-push survivors (queue was just drained, so capacity is available)
         survivors.drain { entry in
-            _storage.push(unchecked: entry)
+            _storage.push.back(entry)
         }
     }
 
@@ -171,7 +173,9 @@ extension Async.Waiter.Queue.Bounded {
     /// - Parameter body: Closure that consumes each entry.
     @inlinable
     public mutating func drainAll(_ body: (consuming Entry) -> Void) {
-        _storage.drain(body)
+        while !_storage.isEmpty {
+            body(_storage.pop.front())
+        }
     }
 }
 
