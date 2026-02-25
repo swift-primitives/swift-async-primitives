@@ -10,11 +10,11 @@
 // ===----------------------------------------------------------------------===//
 
 extension Async {
-    /// A callback-based deferred value computation.
+    /// A deferred value computation that preserves caller isolation.
     ///
-    /// `Callback` wraps a computation that produces a value asynchronously
-    /// via a callback. This provides a lightweight, Foundation-free alternative
-    /// to Combine publishers for single-value async operations.
+    /// `Callback` wraps a computation that produces a value asynchronously.
+    /// The computation inherits the caller's isolation context — if called
+    /// from `@MainActor`, it executes on `@MainActor` with no thread hop.
     ///
     /// ## Creating Callbacks
     ///
@@ -25,139 +25,110 @@ extension Async {
     ///
     /// For deferred computation:
     /// ```swift
-    /// let callback = Async.Callback<String> { done in
-    ///     // Perform async work...
-    ///     done("Result")
-    /// }
+    /// let callback = Async.Callback<String> { "Computed result" }
     /// ```
     ///
     /// ## Running the Computation
     ///
-    /// Execute with a callback:
     /// ```swift
-    /// callback.run { value in
-    ///     print("Got: \(value)")
-    /// }
-    /// ```
-    ///
-    /// Or await using Swift concurrency:
-    /// ```swift
-    /// let value = await callback.value
+    /// let value = await callback()
     /// ```
     ///
     /// ## Transforming Values
     ///
-    /// Use ``map(_:)`` to transform the result:
     /// ```swift
     /// let lengths = strings.map { $0.count }
+    /// let value = await lengths()
     /// ```
-    ///
-    /// ## Thread Safety
-    ///
-    /// The callback may be invoked on any thread/queue depending on the
-    /// underlying computation. Callers should not assume any particular
-    /// execution context.
-    public struct Callback<Value: Sendable>: Sendable {
-        /// The underlying computation.
-        ///
-        /// Invoke this with a callback to receive the value when ready.
-        /// The callback will be invoked exactly once.
-        public let run: @Sendable (@escaping @Sendable (Value) -> Void) -> Void
+    public struct Callback<Value> {
+        @usableFromInline
+        let operation: nonisolated(nonsending) () async -> Value
 
         /// Creates a callback with a deferred computation.
         ///
-        /// - Parameter run: A function that takes a callback and invokes it
-        ///   exactly once with the computed value when ready.
-        public init(run: @escaping @Sendable (_ callback: @escaping @Sendable (Value) -> Void) -> Void) {
-            self.run = run
+        /// The operation inherits the caller's isolation context and executes
+        /// on the caller's executor. If the operation body is synchronous,
+        /// no suspension occurs.
+        ///
+        /// - Parameter operation: An async operation that produces the value.
+        @inlinable
+        public init(
+            _ operation: nonisolated(nonsending) @escaping () async -> Value
+        ) {
+            self.operation = operation
         }
 
         /// Creates a callback with an immediate value.
         ///
-        /// The callback is invoked synchronously with the value.
-        ///
         /// - Parameter value: The value to wrap.
+        @inlinable
         public init(value: Value) {
-            self.run = { callback in callback(value) }
+            self.operation = { value }
         }
 
-        /// Transforms the computed value.
+        /// Executes the computation and returns the value.
         ///
-        /// The transformation is applied when the callback runs,
-        /// after the original value is computed.
+        /// Inherits the caller's isolation context via SE-0420.
+        /// If the underlying operation is synchronous, this completes
+        /// without suspension.
+        @inlinable
+        public func callAsFunction(
+            isolation: isolated (any Actor)? = #isolation
+        ) async -> Value {
+            await operation()
+        }
+
+        /// Transforms the computed value with a synchronous closure.
+        ///
+        /// The transform executes within the caller's isolation context.
         ///
         /// - Parameter transform: A function to apply to the value.
         /// - Returns: A callback that produces the transformed value.
-        public func map<NewValue: Sendable>(
-            _ transform: @escaping @Sendable (Value) -> NewValue
-        ) -> Callback<NewValue> {
-            Callback<NewValue> { callback in
-                self.run { value in
-                    callback(transform(value))
-                }
-            }
+        @inlinable
+        public func map<NewValue>(
+            _ transform: @escaping (Value) -> NewValue
+        ) -> Async.Callback<NewValue> {
+            .init { transform(await self()) }
+        }
+
+        /// Chains a dependent computation.
+        ///
+        /// - Parameter transform: A function that takes the value and returns
+        ///   a callback for the next computation.
+        /// - Returns: A callback that runs both computations in sequence.
+        @inlinable
+        public func flatMap<NewValue>(
+            _ transform: @escaping (Value) -> Async.Callback<NewValue>
+        ) -> Async.Callback<NewValue> {
+            .init { await transform(await self())() }
         }
     }
 }
 
-// MARK: - Swift Concurrency Bridge
+// MARK: - Legacy CPS Bridge
 
 #if !hasFeature(Embedded)
-extension Async.Callback {
-    /// Awaits the computed value using Swift concurrency.
+extension Async.Callback where Value: Sendable {
+    /// Creates a callback by wrapping a CPS-style completion handler.
     ///
-    /// Bridges the callback-based API to Swift's async/await.
-    public var value: Value {
-        get async {
+    /// Use when bridging OS callbacks, network completions, or other code
+    /// that fires a completion handler on an arbitrary thread.
+    ///
+    /// - Parameter cps: A function that takes a completion callback and
+    ///   invokes it exactly once with the computed value when ready.
+    @inlinable
+    public init(
+        wrapping cps: @escaping @Sendable (
+            @escaping @Sendable (Value) -> Void
+        ) -> Void
+    ) {
+        self.init {
             await withCheckedContinuation { continuation in
-                self.run { value in
+                cps { value in
                     continuation.resume(returning: value)
                 }
             }
         }
     }
-
-    /// Creates a callback from a Swift async function.
-    ///
-    /// The async operation is started when `run` is called.
-    ///
-    /// - Parameters:
-    ///   - isolation: The actor isolation context for the operation.
-    ///   - operation: An async operation that produces the value.
-    ///
-    /// - Returns: A callback that bridges the async operation.
-    public static func async(
-        isolation: isolated (any Actor)? = #isolation,
-        _ operation: @escaping @Sendable () async -> Value
-    ) -> Self {
-        Self { callback in
-            Task {
-                let value = await operation()
-                callback(value)
-            }
-        }
-    }
 }
 #endif
-
-// MARK: - Composition
-
-extension Async.Callback {
-    /// Chains a dependent computation.
-    ///
-    /// The transform receives the computed value and returns a new callback
-    /// that produces the final result.
-    ///
-    /// - Parameter transform: A function that takes the value and returns
-    ///   a callback for the next computation.
-    /// - Returns: A callback that runs both computations in sequence.
-    public func flatMap<NewValue: Sendable>(
-        _ transform: @escaping @Sendable (Value) -> Async.Callback<NewValue>
-    ) -> Async.Callback<NewValue> {
-        Async.Callback<NewValue> { callback in
-            self.run { value in
-                transform(value).run(callback)
-            }
-        }
-    }
-}
