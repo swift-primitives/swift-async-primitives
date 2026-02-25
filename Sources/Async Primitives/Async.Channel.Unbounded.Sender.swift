@@ -63,7 +63,7 @@ extension Async.Channel.Unbounded.Sender {
     /// - Parameter element: The element to send.
     /// - Throws: `Async.Channel<Element>.Error.closed` if the channel is closed.
     @inlinable
-    public func send(_ element: Element) throws(Async.Channel<Element>.Error) {
+    public func send(_ element: sending Element) throws(Async.Channel<Element>.Error) {
         let action = storage.withLock { state in
             state.send(element)
         }

@@ -101,7 +101,7 @@ extension Async.Channel.Bounded.Sender {
     ///           `Async.Channel<Element>.Error.cancelled` if the task is cancelled.
     @inlinable
     public func send(
-        _ element: Element,
+        _ element: sending Element,
         isolation: isolated (any Actor)? = #isolation
     ) async throws(Async.Channel<Element>.Error) {
         // Fast path: try immediate send
@@ -187,7 +187,7 @@ extension Async.Channel.Bounded.Sender {
         /// - Throws: `.full` if the buffer is full, `.closed` if the channel is closed,
         ///           `.cancelled` if the task was cancelled.
         @inlinable
-        public func immediate(_ element: Element) throws(Async.Channel<Element>.Error) {
+        public func immediate(_ element: sending Element) throws(Async.Channel<Element>.Error) {
             let action = handle.storage.withLock { state in
                 state.trySend(element)
             }

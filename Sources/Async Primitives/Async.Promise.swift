@@ -80,7 +80,7 @@ extension Async {
         /// - Parameter value: The value to fulfill the promise with.
         /// - Returns: `true` if the promise was fulfilled, `false` if already fulfilled.
         @discardableResult
-        public func fulfill(_ value: Value) -> Bool {
+        public func fulfill(_ value: sending Value) -> Bool {
             let waitersToResume: [Async.Continuation<Value>]? = _state.withLock { state in
                 guard state.fulfilled == nil else { return nil }
                 state.fulfilled = value

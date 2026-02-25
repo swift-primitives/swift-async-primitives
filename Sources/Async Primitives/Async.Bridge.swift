@@ -81,7 +81,7 @@ extension Async {
         /// After `finish()`, pushes are silently ignored.
         ///
         /// - Parameter element: The element to deliver.
-        public func push(_ element: Element) {
+        public func push(_ element: sending Element) {
             let continuationToResume: CheckedContinuation<Element?, Never>? = _state.withLock { state in
                 guard !state.isFinished else { return nil }
                 if let cont = state.continuation {

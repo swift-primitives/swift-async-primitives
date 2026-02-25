@@ -22,11 +22,11 @@ extension Async.Timer.Wheel {
     struct Slot: Sendable {
         /// Index of the first node, or nil if empty.
         @usableFromInline
-        var head: UInt32?
+        var head: Storage.Index?
 
         /// Index of the last node, or nil if empty.
         @usableFromInline
-        var tail: UInt32?
+        var tail: Storage.Index?
 
         /// Number of nodes in this slot.
         @usableFromInline
@@ -72,44 +72,44 @@ extension Async.Timer.Wheel {
     /// Appends a node to the tail of a slot's list.
     ///
     /// - Parameters:
-    ///   - index: The index of the node to append.
+    ///   - index: The typed index of the node to append.
     ///   - slot: The slot to append to.
     ///
     /// - Complexity: O(1)
     /// - Precondition: `storage[index]` must exist and have nil prev/next.
     @usableFromInline
-    mutating func slotAppend(_ index: UInt32, to slot: inout Slot) {
+    mutating func slotAppend(_ index: Storage.Index, to slot: inout Slot) {
         if let tailIndex = slot.tail {
             // Link to existing tail
-            storage.nodes[Int(tailIndex)]?.next = index
-            storage.nodes[Int(index)]?.prev = tailIndex
+            storage[tailIndex]?.next = index
+            storage[index]?.prev = tailIndex
         } else {
             // First node
             slot.head = index
         }
         slot.tail = index
-        storage.nodes[Int(index)]?.next = nil
+        storage[index]?.next = nil
         slot.count += 1
     }
 
     /// Removes a node from a slot's list.
     ///
     /// - Parameters:
-    ///   - index: The index of the node to remove.
+    ///   - index: The typed index of the node to remove.
     ///   - slot: The slot to remove from.
     ///
     /// - Complexity: O(1)
     /// - Precondition: The node must be in this slot's list.
     @usableFromInline
-    mutating func slotRemove(_ index: UInt32, from slot: inout Slot) {
-        guard let node = storage.nodes[Int(index)] else { return }
+    mutating func slotRemove(_ index: Storage.Index, from slot: inout Slot) {
+        guard let node = storage[index] else { return }
 
         let prevIndex = node.prev
         let nextIndex = node.next
 
         // Update previous node's next pointer
         if let p = prevIndex {
-            storage.nodes[Int(p)]?.next = nextIndex
+            storage[p]?.next = nextIndex
         } else {
             // Removing head
             slot.head = nextIndex
@@ -117,27 +117,27 @@ extension Async.Timer.Wheel {
 
         // Update next node's prev pointer
         if let n = nextIndex {
-            storage.nodes[Int(n)]?.prev = prevIndex
+            storage[n]?.prev = prevIndex
         } else {
             // Removing tail
             slot.tail = prevIndex
         }
 
         // Clear the removed node's links
-        storage.nodes[Int(index)]?.prev = nil
-        storage.nodes[Int(index)]?.next = nil
+        storage[index]?.prev = nil
+        storage[index]?.next = nil
 
         slot.count -= 1
     }
 
-    /// Removes and returns the first node's index from a slot.
+    /// Removes and returns the first node's typed index from a slot.
     ///
     /// - Parameter slot: The slot to pop from.
-    /// - Returns: The index of the removed node, or nil if empty.
+    /// - Returns: The typed index of the removed node, or nil if empty.
     ///
     /// - Complexity: O(1)
     @usableFromInline
-    mutating func slotPopFirst(from slot: inout Slot) -> UInt32? {
+    mutating func slotPopFirst(from slot: inout Slot) -> Storage.Index? {
         guard let index = slot.head else { return nil }
         slotRemove(index, from: &slot)
         return index

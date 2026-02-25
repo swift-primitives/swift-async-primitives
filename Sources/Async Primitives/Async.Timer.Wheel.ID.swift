@@ -52,21 +52,27 @@ extension Async.Timer.Wheel {
 extension Async.Timer.Wheel {
     /// Creates an ID from the storage allocation result.
     ///
+    /// This is the boundary where the typed `Storage.Index` is widened
+    /// to `Int` for the `Handle`'s `SlotAddress`.
+    ///
     /// - Parameters:
-    ///   - index: The slot index (UInt32 from storage, widened to Int).
+    ///   - index: The typed storage index.
     ///   - generation: The generation counter.
     /// - Returns: A handle suitable for external use.
     @usableFromInline
-    static func _makeID(index: UInt32, generation: UInt32) -> ID {
-        ID(index: Int(index), generation: generation)
+    static func _makeID(index: Storage.Index, generation: UInt32) -> ID {
+        ID(index: Int(index.rawValue), generation: generation)
     }
 
     /// Extracts the storage index from an ID.
     ///
+    /// This is the boundary where the `Handle`'s `Int` index is narrowed
+    /// back to the typed `Storage.Index`.
+    ///
     /// - Parameter id: The timer ID.
-    /// - Returns: The slot index as UInt32 for storage access.
+    /// - Returns: The typed storage index.
     @usableFromInline
-    static func _storageIndex(_ id: ID) -> UInt32 {
-        UInt32(id.index)
+    static func _storageIndex(_ id: ID) -> Storage.Index {
+        Storage.Index(__unchecked: (), UInt32(id.index))
     }
 }

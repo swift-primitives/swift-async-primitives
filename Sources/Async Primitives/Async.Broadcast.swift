@@ -108,7 +108,7 @@ extension Async.Broadcast {
     /// After `finish()`, sends are silently ignored.
     ///
     /// - Parameter element: The element to broadcast.
-    public func send(_ element: Element) {
+    public func send(_ element: sending Element) {
         let continuationsToResume: [(CheckedContinuation<Next.Outcome, Never>, Element)] = _state.withLock { state in
             guard !state.is.finished else { return [] }
 

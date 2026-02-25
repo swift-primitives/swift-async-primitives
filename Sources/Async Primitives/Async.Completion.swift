@@ -163,7 +163,7 @@ extension Async.Completion {
     ///
     /// - Parameter value: The success value.
     /// - Throws: `Transition.Error.alreadyDone` if not in running state.
-    public func complete(_ value: Success) throws(Transition.Error) {
+    public func complete(_ value: sending Success) throws(Transition.Error) {
         let (exchanged, _) = state.compareExchange(
             expected: .running,
             desired: .completed,

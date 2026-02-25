@@ -10,12 +10,16 @@
 // ===----------------------------------------------------------------------===//
 
 import Async_Primitives
-import Test_Primitives
 import Testing
 
 /// Test namespace for Async.Publication (generic type requires wrapper for #Tests).
 enum Publication {
-    #Tests
+    enum Test {
+        @Suite struct Unit {}
+        @Suite struct EdgeCase {}
+        @Suite struct Integration {}
+        @Suite(.serialized) struct Performance {}
+    }
 }
 
 // MARK: - Unit Tests
