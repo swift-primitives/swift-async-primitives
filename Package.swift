@@ -12,6 +12,29 @@ let package = Package(
         .visionOS(.v26),
     ],
     products: [
+        // MARK: - Core
+        .library(
+            name: "Async Primitives Core",
+            targets: ["Async Primitives Core"]
+        ),
+        // MARK: - Variants
+        .library(
+            name: "Async Channel Primitives",
+            targets: ["Async Channel Primitives"]
+        ),
+        .library(
+            name: "Async Broadcast Primitives",
+            targets: ["Async Broadcast Primitives"]
+        ),
+        .library(
+            name: "Async Timer Primitives",
+            targets: ["Async Timer Primitives"]
+        ),
+        .library(
+            name: "Async Waiter Primitives",
+            targets: ["Async Waiter Primitives"]
+        ),
+        // MARK: - Umbrella
         .library(
             name: "Async Primitives",
             targets: ["Async Primitives"]
@@ -25,18 +48,14 @@ let package = Package(
         .package(path: "../swift-identity-primitives"),
         .package(path: "../swift-kernel-primitives"),
         .package(path: "../swift-ownership-primitives"),
-        // SDG(wraps): async operations wrap task lifetimes
-        // .package(path: "../swift-lifetime-primitives"),
-        // Test dependencies moved to nested Tests/Package.swift
     ],
     targets: [
+        // MARK: - Core
         .target(
-            name: "Async Primitives",
+            name: "Async Primitives Core",
             dependencies: [
                 .product(name: "Buffer Primitives", package: "swift-buffer-primitives"),
-                .product(name: "Dictionary Primitives", package: "swift-dictionary-primitives"),
                 .product(name: "Queue Primitives", package: "swift-queue-primitives"),
-                .product(name: "Handle Primitives", package: "swift-handle-primitives"),
                 .product(name: "Identity Primitives", package: "swift-identity-primitives"),
                 .product(
                     name: "Kernel Primitives",
@@ -46,11 +65,53 @@ let package = Package(
                         .linux, .windows, .android, .openbsd,
                     ])
                 ),
-                .product(name: "Ownership Primitives", package: "swift-ownership-primitives"),
             ]
         ),
-        // Tests are in a separate nested package (Tests/Package.swift)
-        // to break the circular dependency with swift-testing
+
+        // MARK: - Variants
+        .target(
+            name: "Async Channel Primitives",
+            dependencies: [
+                "Async Primitives Core",
+                .product(name: "Ownership Primitives", package: "swift-ownership-primitives"),
+                .product(name: "Queue Primitives", package: "swift-queue-primitives"),
+            ]
+        ),
+        .target(
+            name: "Async Broadcast Primitives",
+            dependencies: [
+                "Async Primitives Core",
+                .product(name: "Dictionary Primitives", package: "swift-dictionary-primitives"),
+                .product(name: "Queue Primitives", package: "swift-queue-primitives"),
+            ]
+        ),
+        .target(
+            name: "Async Timer Primitives",
+            dependencies: [
+                "Async Primitives Core",
+                .product(name: "Handle Primitives", package: "swift-handle-primitives"),
+            ]
+        ),
+        .target(
+            name: "Async Waiter Primitives",
+            dependencies: [
+                "Async Primitives Core",
+            ]
+        ),
+
+        // MARK: - Umbrella
+        .target(
+            name: "Async Primitives",
+            dependencies: [
+                "Async Primitives Core",
+                "Async Channel Primitives",
+                "Async Broadcast Primitives",
+                "Async Timer Primitives",
+                "Async Waiter Primitives",
+            ]
+        ),
+
+        // Tests in nested Tests/Package.swift (circular dep avoidance)
         .testTarget(
             name: "Async Primitives Tests",
             dependencies: [

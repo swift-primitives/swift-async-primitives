@@ -87,7 +87,7 @@ extension Async.Channel.Unbounded.Sender {
     /// - Throws: `Async.Channel<Element>.Error.closed` if the channel is closed.
     /// - Note: Stops on first error; some elements may have been sent.
     @inlinable
-    public func send<S: Sequence>(contentsOf elements: S) throws(Async.Channel<Element>.Error) where S.Element == Element {
+    public func send<S: Swift.Sequence>(contentsOf elements: S) throws(Async.Channel<Element>.Error) where S.Element == Element {
         for element in elements {
             try send(element)
         }
