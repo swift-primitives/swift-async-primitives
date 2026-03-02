@@ -10,11 +10,13 @@
 // ===----------------------------------------------------------------------===//
 
 public import Identity_Primitives
+public import Queue_Primitives_Core
 
 extension Async.Waiter {
     /// Namespace for waiter queue types.
     ///
-    /// Provides `Bounded` and `Unbounded` queue variants for managing waiter entries.
+    /// Queue types are backed by queue-primitives (`Queue<Entry>.Fixed` and `Queue<Entry>`),
+    /// with flag-aware operations provided as extensions.
     ///
     /// ## Design Principles
     ///
@@ -30,7 +32,7 @@ extension Async.Waiter {
     /// ## Synchronization Contract
     ///
     /// **CRITICAL:** Queue types are NOT internally synchronized.
-    /// - All queue operations (`push`, `popFront`, `drain*`) MUST be called while holding
+    /// - All queue operations (`push`, `dequeue`, `drain`) MUST be called while holding
     ///   the caller's mutex.
     /// - `Flag` bits may be set concurrently (they are atomic), but queue structure must
     ///   never be mutated concurrently.
@@ -48,18 +50,39 @@ extension Async.Waiter {
     ///     return (eligible, flagged)
     /// }
     ///
-    /// // Outside lock: compute outcomes, create resumptions, execute
-    /// var pending: [Async.Waiter.Resumption] = []
-    /// flagged.drain { entry, reason in
-    ///     let outcome = computeOutcome(reason)  // Domain logic
-    ///     pending.append(entry.resumption(with: outcome))
+    /// // Outside lock: resume inline
+    /// flagged.drain { flaggedEntry in
+    ///     flaggedEntry.entry.resumption(with: computeOutcome(flaggedEntry.reason)).resume()
     /// }
     /// if let entry = eligible {
-    ///     pending.append(entry.resumption(with: .success(resource)))
+    ///     entry.resumption(with: .success(resource)).resume()
     /// }
-    /// for p in pending { p.resume() }
     /// ```
     public enum Queue {}
+}
+
+// MARK: - Queue Type Aliases
+
+extension Async.Waiter.Queue {
+    /// A bounded waiter queue with fixed capacity.
+    ///
+    /// Backed by `Queue<Entry>.Fixed` from queue-primitives. Flag-aware operations
+    /// (`popEligible`, `reapFlagged`) are provided as extensions.
+    public typealias Bounded<Outcome: Sendable, Metadata: ~Copyable & Sendable>
+        = Queue_Primitives_Core.Queue<Async.Waiter.Entry<Outcome, Metadata>>.Fixed
+
+    /// An unbounded waiter queue with automatic growth.
+    ///
+    /// Backed by `Queue<Entry>` from queue-primitives. Flag-aware operations
+    /// (`popEligible`, `reapFlagged`) are provided as extensions.
+    public typealias Unbounded<Outcome: Sendable, Metadata: ~Copyable & Sendable>
+        = Queue_Primitives_Core.Queue<Async.Waiter.Entry<Outcome, Metadata>>
+
+    /// A drainable collection of ~Copyable elements.
+    ///
+    /// Used to collect flagged entries from queue operations.
+    /// Elements are consumed via `drain { }` or `dequeue()`.
+    public typealias Drain<Element: ~Copyable> = Queue_Primitives_Core.Queue<Element>
 }
 
 // MARK: - Metadata (Backward Compatibility)

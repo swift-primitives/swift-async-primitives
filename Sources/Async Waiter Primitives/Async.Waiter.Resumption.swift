@@ -27,26 +27,28 @@ extension Async.Waiter {
     /// ## Usage
     ///
     /// ```swift
-    /// var pending: [Async.Waiter.Resumption] = []
+    /// // Under lock: collect entry data
+    /// let (eligible, flagged) = lock.withLock { state in
+    ///     var flagged = Async.Waiter.Queue.Drain<...>()
+    ///     let eligible = state.queue.popEligible(flaggedInto: &flagged)
+    ///     return (eligible, flagged)
+    /// }
     ///
-    /// lock.lock()
-    /// // ... compute outcomes, create resumptions ...
-    /// pending.append(Async.Waiter.Resumption {
-    ///     continuation.resume(returning: outcome)
-    /// })
-    /// lock.unlock()
-    ///
-    /// // Resume AFTER lock released
-    /// for p in pending {
-    ///     p.resume()
+    /// // Outside lock: resume inline
+    /// flagged.drain { entry, reason in
+    ///     entry.resumption(with: computeOutcome(reason)).resume()
+    /// }
+    /// if let entry = eligible {
+    ///     entry.resumption(with: .success(resource)).resume()
     /// }
     /// ```
     ///
     /// ## Thread Safety
     ///
     /// `Resumption` is `Sendable`. The closure captures values, not references
-    /// to mutable state. Each resumption should be executed exactly once.
-    public struct Resumption: Sendable {
+    /// to mutable state. Each resumption is consumed exactly once (enforced
+    /// by `~Copyable`).
+    public struct Resumption: ~Copyable, Sendable {
         @usableFromInline
         let _resume: @Sendable () -> Void
 
@@ -59,11 +61,11 @@ extension Async.Waiter {
             self._resume = action
         }
 
-        /// Executes the resumption.
+        /// Consumes the resumption, executing its action.
         ///
-        /// This should be called exactly once, after releasing any locks.
+        /// Must be called after releasing any locks.
         @inlinable
-        public func resume() {
+        public consuming func resume() {
             _resume()
         }
     }
