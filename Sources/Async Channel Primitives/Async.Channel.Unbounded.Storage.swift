@@ -27,8 +27,8 @@ extension Async.Channel.Unbounded {
         }
 
         @inlinable
-        func withLock<T: Sendable>(_ body: (inout State) throws -> T) rethrows -> T {
-            try mutex.withLock { state in
+        func withLock<T: Sendable, E: Swift.Error>(_ body: (inout State) throws(E) -> T) throws(E) -> T {
+            try mutex.withLock { (state: inout State) throws(E) -> T in
                 try body(&state)
             }
         }

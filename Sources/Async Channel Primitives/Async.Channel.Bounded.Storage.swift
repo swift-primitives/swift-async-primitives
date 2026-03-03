@@ -32,8 +32,8 @@ extension Async.Channel.Bounded {
         }
 
         @inlinable
-        func withLock<T: Sendable>(_ body: (inout State) throws -> T) rethrows -> T {
-            try _storage.mutable.value.withLock { state in
+        func withLock<T: Sendable, E: Swift.Error>(_ body: (inout State) throws(E) -> T) throws(E) -> T {
+            try _storage.mutable.value.withLock { (state: inout State) throws(E) -> T in
                 try body(&state)
             }
         }
