@@ -1,4 +1,11 @@
 # On the Structural Independence of Synchronous Coalgebraic Streams and Asynchronous Channel Primitives
+<!--
+---
+version: 1.0.0
+last_updated: 2026-01-16
+status: DECISION
+---
+-->
 
 **A Formal Analysis of Type-Theoretic Finite Sets, Coinductive Streams, and Concurrent Communication Abstractions in Swift**
 
