@@ -39,6 +39,10 @@ let package = Package(
             name: "Async Primitives",
             targets: ["Async Primitives"]
         ),
+        .library(
+            name: "Async Primitives Test Support",
+            targets: ["Async Primitives Test Support"]
+        ),
     ],
     dependencies: [
         .package(path: "../swift-buffer-primitives"),
@@ -117,6 +121,19 @@ let package = Package(
             dependencies: [
                 "Async Primitives",
             ]
+        ),
+
+        // MARK: - Test Support
+        .target(
+            name: "Async Primitives Test Support",
+            dependencies: [
+                "Async Primitives",
+                .product(name: "Buffer Primitives Test Support", package: "swift-buffer-primitives"),
+                .product(name: "Queue Primitives Test Support", package: "swift-queue-primitives"),
+                .product(name: "Identity Primitives Test Support", package: "swift-identity-primitives"),
+                .product(name: "Kernel Primitives Test Support", package: "swift-kernel-primitives"),
+            ],
+            path: "Tests/Support"
         ),
     ],
     swiftLanguageModes: [.v6]
