@@ -78,7 +78,6 @@ let package = Package(
             dependencies: [
                 "Async Primitives Core",
                 .product(name: "Ownership Primitives", package: "swift-ownership-primitives"),
-                .product(name: "Queue Primitives", package: "swift-queue-primitives"),
             ]
         ),
         .target(
@@ -86,7 +85,6 @@ let package = Package(
             dependencies: [
                 "Async Primitives Core",
                 .product(name: "Dictionary Primitives", package: "swift-dictionary-primitives"),
-                .product(name: "Queue Primitives", package: "swift-queue-primitives"),
             ]
         ),
         .target(
