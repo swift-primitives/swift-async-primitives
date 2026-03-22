@@ -179,9 +179,6 @@ extension Async.Channel.Bounded.State {
     }
 
     /// Attempt a synchronous send (non-blocking).
-    // WORKAROUND: @_optimize(none) — CopyPropagation false positive on buffer Property.View chains.
-    // TRACKING: swift-buffer-primitives/Research/rawlayout-release-crash-investigation.md (Bug 2)
-    @_optimize(none)
     @usableFromInline
     mutating func trySend(_ element: Element) -> Send.Action {
         switch phase {
@@ -212,9 +209,6 @@ extension Async.Channel.Bounded.State {
     }
 
     /// Register a sender that will suspend.
-    // WORKAROUND: @_optimize(none) — CopyPropagation false positive on buffer Property.View chains.
-    // TRACKING: swift-buffer-primitives/Research/rawlayout-release-crash-investigation.md (Bug 2)
-    @_optimize(none)
     @usableFromInline
     mutating func sendSuspended(
         id: UInt64,
@@ -315,10 +309,7 @@ extension Async.Channel.Bounded.State {
     }
 
     /// Attempt a synchronous receive (non-blocking).
-    // WORKAROUND: @_optimize(none) suppresses CopyPropagation false positive
     // on Property.View accessor chains (buffer.back.push, buffer.front.take).
-    // TRACKING: swift-buffer-primitives/Research/rawlayout-release-crash-investigation.md (Bug 2)
-    @_optimize(none)
     @usableFromInline
     mutating func tryReceive() -> Receive.Action {
         switch phase {
@@ -373,9 +364,6 @@ extension Async.Channel.Bounded.State {
     }
 
     /// Register a receiver that will suspend.
-    // WORKAROUND: @_optimize(none) — CopyPropagation false positive on buffer Property.View chains.
-    // TRACKING: swift-buffer-primitives/Research/rawlayout-release-crash-investigation.md (Bug 2)
-    @_optimize(none)
     @usableFromInline
     mutating func receiveSuspended(
         continuation: Receive.Continuation
@@ -482,9 +470,6 @@ extension Async.Channel.Bounded.State {
         }
     }
 
-    // WORKAROUND: @_optimize(none) — CopyPropagation false positive on buffer Property.View chains.
-    // TRACKING: swift-buffer-primitives/Research/rawlayout-release-crash-investigation.md (Bug 2)
-    @_optimize(none)
     @usableFromInline
     mutating func close() -> Close {
         switch phase {

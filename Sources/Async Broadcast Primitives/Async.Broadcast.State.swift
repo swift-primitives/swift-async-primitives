@@ -62,9 +62,6 @@ extension Async.Broadcast.State {
     }
 
     /// Prune buffer entries that all subscribers have passed.
-    // WORKAROUND: @_optimize(none) — CopyPropagation false positive on buffer Property.View chains.
-    // TRACKING: swift-buffer-primitives/Research/rawlayout-release-crash-investigation.md (Bug 2)
-    @_optimize(none)
     mutating func pruneBuffer() {
         guard let min = minCursor() else { return }
         while let front = buffer.peek.front, front.index < min {
