@@ -79,6 +79,9 @@ extension Async.Channel.Unbounded.State {
     ///
     /// If a receiver is waiting, delivers directly to it.
     /// Otherwise, buffers the element.
+    // WORKAROUND: @_optimize(none) — CopyPropagation false positive on buffer Property.View chains.
+    // TRACKING: swift-buffer-primitives/Research/rawlayout-release-crash-investigation.md (Bug 2)
+    @_optimize(none)
     @usableFromInline
     mutating func send(_ element: Element) -> Send.Action {
         guard !_closed else { return .shut }
@@ -158,11 +161,17 @@ extension Async.Channel.Unbounded.State {
 }
 
 extension Async.Channel.Unbounded.State.Receive {
+    // WORKAROUND: @_optimize(none) — CopyPropagation false positive on buffer Property.View chains.
+    // TRACKING: swift-buffer-primitives/Research/rawlayout-release-crash-investigation.md (Bug 2)
+    @_optimize(none)
     @usableFromInline
     mutating func poll() -> Element? {
         unsafe base.buffer.front.take
     }
 
+    // WORKAROUND: @_optimize(none) — CopyPropagation false positive on buffer Property.View chains.
+    // TRACKING: swift-buffer-primitives/Research/rawlayout-release-crash-investigation.md (Bug 2)
+    @_optimize(none)
     @usableFromInline
     mutating func take() -> Async.Channel<Element>.Unbounded.State.Receive.Step {
         if let element = unsafe base.buffer.front.take {
@@ -174,6 +183,9 @@ extension Async.Channel.Unbounded.State.Receive {
         return .wait
     }
 
+    // WORKAROUND: @_optimize(none) — CopyPropagation false positive on buffer Property.View chains.
+    // TRACKING: swift-buffer-primitives/Research/rawlayout-release-crash-investigation.md (Bug 2)
+    @_optimize(none)
     @usableFromInline
     mutating func wait(_ cont: Async.Channel<Element>.Unbounded.State.Receive.Continuation) -> Async.Channel<Element>.Unbounded.State.Receive.Step {
         precondition({

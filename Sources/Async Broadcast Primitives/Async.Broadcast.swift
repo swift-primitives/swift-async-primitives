@@ -109,43 +109,58 @@ extension Async.Broadcast {
     ///
     /// - Parameter element: The element to broadcast.
     public func send(_ element: sending Element) {
+        let bufferLimit = buffer.limit
         let continuationsToResume: [(CheckedContinuation<Next.Outcome, Never>, Element)] = _state.withLock { state in
-            guard !state.is.finished else { return [] }
-
-            let index = state.next.index
-            state.next.index += 1
-
-            // Add to buffer
-            state.buffer.back.push((index, element))
-
-            // Trim buffer if needed (keep elements that some subscriber hasn't seen yet)
-            let minCursor = state.minCursor() ?? index
-            while state.buffer.count > buffer.limit {
-                if let front = state.buffer.peek.front, front.index < minCursor {
-                    _ = state.buffer.front.take
-                } else {
-                    break
-                }
-            }
-
-            // Find and wake up waiting subscribers (snapshot iteration)
-            var toResume: [(CheckedContinuation<Next.Outcome, Never>, Element)] = []
-            let ids = Array(state.subscribers.keys)
-            for id in ids {
-                guard var subscriber = state.subscribers[id] else { continue }
-                if subscriber.cursor == index, let cont = subscriber.continuation {
-                    subscriber.cursor = index + 1
-                    subscriber.continuation = nil
-                    state.subscribers[id] = subscriber
-                    toResume.append((cont, element))
-                }
-            }
-            return toResume
+            Self._sendLocked(&state, element, bufferLimit: bufferLimit)
         }
 
         for (continuation, element) in continuationsToResume {
             continuation.resume(returning: .element(element))
         }
+    }
+
+    // WORKAROUND: @_optimize(none) here because closures are separate SIL functions
+    // and cannot be annotated directly. The Property.View accessor chain
+    // (buffer.back.push, buffer.peek.front, buffer.front.take) triggers a
+    // CopyPropagation false positive inside closures.
+    // TRACKING: swift-buffer-primitives/Research/rawlayout-release-crash-investigation.md (Bug 2)
+    @_optimize(none)
+    private static func _sendLocked(
+        _ state: inout State,
+        _ element: Element,
+        bufferLimit: Int
+    ) -> [(CheckedContinuation<Next.Outcome, Never>, Element)] {
+        guard !state.is.finished else { return [] }
+
+        let index = state.next.index
+        state.next.index += 1
+
+        // Add to buffer
+        state.buffer.back.push((index, element))
+
+        // Trim buffer if needed (keep elements that some subscriber hasn't seen yet)
+        let minCursor = state.minCursor() ?? index
+        while state.buffer.count > bufferLimit {
+            if let front = state.buffer.peek.front, front.index < minCursor {
+                _ = state.buffer.front.take
+            } else {
+                break
+            }
+        }
+
+        // Find and wake up waiting subscribers (snapshot iteration)
+        var toResume: [(CheckedContinuation<Next.Outcome, Never>, Element)] = []
+        let ids = Array(state.subscribers.keys)
+        for id in ids {
+            guard var subscriber = state.subscribers[id] else { continue }
+            if subscriber.cursor == index, let cont = subscriber.continuation {
+                subscriber.cursor = index + 1
+                subscriber.continuation = nil
+                state.subscribers[id] = subscriber
+                toResume.append((cont, element))
+            }
+        }
+        return toResume
     }
 
     /// Signal that no more elements will be sent.
@@ -155,29 +170,39 @@ extension Async.Broadcast {
     /// - Future `send()` calls are silently ignored
     public func finish() {
         let continuationsToResume: [CheckedContinuation<Next.Outcome, Never>] = _state.withLock { state in
-            state.is.finished = true
-
-            // Wake up all waiting subscribers with .finished if they've consumed everything (snapshot iteration)
-            var toResume: [CheckedContinuation<Next.Outcome, Never>] = []
-            let ids = Array(state.subscribers.keys)
-            for id in ids {
-                guard var subscriber = state.subscribers[id] else { continue }
-                if let cont = subscriber.continuation {
-                    // Check if there are buffered elements for this subscriber
-                    let hasBufferedElement = state.buffer.contains { $0.index >= subscriber.cursor }
-                    if !hasBufferedElement {
-                        subscriber.continuation = nil
-                        state.subscribers[id] = subscriber
-                        toResume.append(cont)
-                    }
-                }
-            }
-            return toResume
+            Self._finishLocked(&state)
         }
 
         for continuation in continuationsToResume {
             continuation.resume(returning: .finished)
         }
+    }
+
+    // WORKAROUND: Extracted from finish() — closures can't have @_optimize(none).
+    // CopyPropagation false positive on buffer Property.View chains (buffer.contains iteration).
+    // TRACKING: swift-buffer-primitives/Research/rawlayout-release-crash-investigation.md (Bug 2)
+    @_optimize(none)
+    private static func _finishLocked(
+        _ state: inout State
+    ) -> [CheckedContinuation<Next.Outcome, Never>] {
+        state.is.finished = true
+
+        // Wake up all waiting subscribers with .finished if they've consumed everything (snapshot iteration)
+        var toResume: [CheckedContinuation<Next.Outcome, Never>] = []
+        let ids = Array(state.subscribers.keys)
+        for id in ids {
+            guard var subscriber = state.subscribers[id] else { continue }
+            if let cont = subscriber.continuation {
+                // Check if there are buffered elements for this subscriber
+                let hasBufferedElement = state.buffer.contains { $0.index >= subscriber.cursor }
+                if !hasBufferedElement {
+                    subscriber.continuation = nil
+                    state.subscribers[id] = subscriber
+                    toResume.append(cont)
+                }
+            }
+        }
+        return toResume
     }
 
     /// Whether `finish()` has been called.

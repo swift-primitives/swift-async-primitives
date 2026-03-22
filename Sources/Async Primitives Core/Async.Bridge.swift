@@ -83,19 +83,30 @@ extension Async {
         /// - Parameter element: The element to deliver.
         public func push(_ element: sending Element) {
             let continuationToResume: CheckedContinuation<Element?, Never>? = _state.withLock { state in
-                guard !state.isFinished else { return nil }
-                if let cont = state.continuation {
-                    state.continuation = nil
-                    #if DEBUG
-                    state.hasWaitingConsumer = false
-                    #endif
-                    return cont
-                } else {
-                    state.buffer.back.push(element)
-                    return nil
-                }
+                Self._pushLocked(&state, element)
             }
             continuationToResume?.resume(returning: element)
+        }
+
+        // WORKAROUND: @_optimize(none) here because closures are separate SIL functions
+        // and cannot be annotated directly. The Property.View accessor chain
+        // (buffer.back.push) triggers a CopyPropagation false positive inside closures.
+        // TRACKING: swift-buffer-primitives/Research/rawlayout-release-crash-investigation.md (Bug 2)
+        @_optimize(none)
+        private static func _pushLocked(
+            _ state: inout State, _ element: Element
+        ) -> CheckedContinuation<Element?, Never>? {
+            guard !state.isFinished else { return nil }
+            if let cont = state.continuation {
+                state.continuation = nil
+                #if DEBUG
+                state.hasWaitingConsumer = false
+                #endif
+                return cont
+            } else {
+                state.buffer.back.push(element)
+                return nil
+            }
         }
 
         /// Push multiple elements from a sync context (fast path).
@@ -116,28 +127,40 @@ extension Async {
 
             let (continuationToResume, firstElement): (CheckedContinuation<Element?, Never>?, Element?) =
                 _state.withLock { state in
-                    guard !state.isFinished else { return (nil, nil) }
-                    if let cont = state.continuation {
-                        state.continuation = nil
-                        #if DEBUG
-                        state.hasWaitingConsumer = false
-                        #endif
-                        // Resume with first, queue rest
-                        if count > 1 {
-                            for i in 1..<count {
-                                state.buffer.back.push(elements[i])
-                            }
-                        }
-                        return (cont, first)
-                    } else {
-                        for i in 0..<count {
-                            state.buffer.back.push(elements[i])
-                        }
-                        return (nil, nil)
-                    }
+                    Self._pushBatchLocked(&state, elements, count: count, first: first)
                 }
             if let cont = continuationToResume, let element = firstElement {
                 cont.resume(returning: element)
+            }
+        }
+
+        // WORKAROUND: Same as _pushLocked — closures can't have @_optimize(none).
+        // TRACKING: swift-buffer-primitives/Research/rawlayout-release-crash-investigation.md (Bug 2)
+        @_optimize(none)
+        private static func _pushBatchLocked(
+            _ state: inout State,
+            _ elements: borrowing [Element],
+            count: Int,
+            first: Element
+        ) -> (CheckedContinuation<Element?, Never>?, Element?) {
+            guard !state.isFinished else { return (nil, nil) }
+            if let cont = state.continuation {
+                state.continuation = nil
+                #if DEBUG
+                state.hasWaitingConsumer = false
+                #endif
+                // Resume with first, queue rest
+                if count > 1 {
+                    for i in 1..<count {
+                        state.buffer.back.push(elements[i])
+                    }
+                }
+                return (cont, first)
+            } else {
+                for i in 0..<count {
+                    state.buffer.back.push(elements[i])
+                }
+                return (nil, nil)
             }
         }
 
