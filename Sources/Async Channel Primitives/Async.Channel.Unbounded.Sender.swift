@@ -76,6 +76,7 @@ extension Async.Channel.Unbounded.Sender {
         case .shut:
             throw .closed
         }
+
     }
 
     /// Send multiple elements to the channel.

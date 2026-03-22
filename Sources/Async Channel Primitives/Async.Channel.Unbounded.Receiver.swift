@@ -92,16 +92,17 @@ extension Async.Channel.Unbounded.Receiver {
 
         // Slow path: need to suspend
         let (element, error): (Element?, Async.Channel<Element>.Error?) = await withTaskCancellationHandler {
-            await withUnsafeContinuation { (continuation: UnsafeContinuation<(Element?, Async.Channel<Element>.Error?), Never>) in
+            await withUnsafeContinuation { (raw: UnsafeContinuation<(Element?, Async.Channel<Element>.Error?), Never>) in
+                let continuation = unsafe Async.Continuation.Unsafe(raw)
                 let action = storage.withLock { state in
                     state.receive.wait(continuation)
                 }
 
                 switch action {
                 case .val(let element):
-                    unsafe continuation.resume(returning: (element, nil))
+                    continuation.resume(returning: (element, nil))
                 case .end:
-                    unsafe continuation.resume(returning: (nil, nil))
+                    continuation.resume(returning: (nil, nil))
                 case .wait:
                     // Continuation stored, will be resumed by send/close/stop
                     break
@@ -114,7 +115,7 @@ extension Async.Channel.Unbounded.Receiver {
             }
 
             if case .stop(let cont) = stopAction {
-                unsafe cont.resume(returning: (nil, .cancelled))
+                cont.resume(returning: (nil, .cancelled))
             }
         }
 
@@ -225,16 +226,17 @@ extension Async.Channel.Unbounded.Elements {
 
             // Slow path: need to suspend
             let (element, error): (Element?, Async.Channel<Element>.Error?) = await withTaskCancellationHandler {
-                await withUnsafeContinuation { (continuation: UnsafeContinuation<(Element?, Async.Channel<Element>.Error?), Never>) in
+                await withUnsafeContinuation { (raw: UnsafeContinuation<(Element?, Async.Channel<Element>.Error?), Never>) in
+                    let continuation = unsafe Async.Continuation.Unsafe(raw)
                     let action = storage.withLock { state in
                         state.receive.wait(continuation)
                     }
 
                     switch action {
                     case .val(let element):
-                        unsafe continuation.resume(returning: (element, nil))
+                        continuation.resume(returning: (element, nil))
                     case .end:
-                        unsafe continuation.resume(returning: (nil, nil))
+                        continuation.resume(returning: (nil, nil))
                     case .wait:
                         break
                     }
@@ -245,7 +247,7 @@ extension Async.Channel.Unbounded.Elements {
                 }
 
                 if case .stop(let cont) = stopAction {
-                    unsafe cont.resume(returning: (nil, .cancelled))
+                    cont.resume(returning: (nil, .cancelled))
                 }
             }
 

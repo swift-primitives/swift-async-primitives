@@ -76,10 +76,10 @@ extension Async.Channel.Bounded.Receiver {
         switch fastAction {
         case .returnElement(let element, let resumeSender, var cancelled):
             // Resume cancelled senders first (minimizes stuck time)
-            while let c = unsafe cancelled.front.take {
-                unsafe c.resume(returning: .cancelled)
+            while let c = cancelled.front.take {
+                c.resume(returning: .cancelled)
             }
-            unsafe resumeSender?.resume(returning: nil)
+            resumeSender?.resume(returning: nil)
             return element
         case .returnNil:
             return nil
@@ -91,7 +91,8 @@ extension Async.Channel.Bounded.Receiver {
 
         // Slow path: need to suspend
         let (element, error): (Element?, Async.Channel<Element>.Error?) = await withTaskCancellationHandler {
-            await withUnsafeContinuation { (continuation: UnsafeContinuation<(Element?, Async.Channel<Element>.Error?), Never>) in
+            await withUnsafeContinuation { (raw: UnsafeContinuation<(Element?, Async.Channel<Element>.Error?), Never>) in
+                let continuation = unsafe Async.Continuation.Unsafe(raw)
                 let action = storage.withLock { state in
                     state.receiveSuspended(continuation: continuation)
                 }
@@ -99,15 +100,15 @@ extension Async.Channel.Bounded.Receiver {
                 switch action {
                 case .returnElement(let element, let resumeSender, var cancelled):
                     // Resume cancelled senders first (minimizes stuck time)
-                    while let c = unsafe cancelled.front.take {
-                        unsafe c.resume(returning: .cancelled)
+                    while let c = cancelled.front.take {
+                        c.resume(returning: .cancelled)
                     }
-                    unsafe resumeSender?.resume(returning: nil)
-                    unsafe continuation.resume(returning: (element, nil))
+                    resumeSender?.resume(returning: nil)
+                    continuation.resume(returning: (element, nil))
                 case .returnNil:
-                    unsafe continuation.resume(returning: (nil, nil))
+                    continuation.resume(returning: (nil, nil))
                 case .rejectCancelled:
-                    unsafe continuation.resume(returning: (nil, .cancelled))
+                    continuation.resume(returning: (nil, .cancelled))
                 case .suspend:
                     // Continuation stored, will be resumed later
                     break
@@ -119,7 +120,7 @@ extension Async.Channel.Bounded.Receiver {
             }
             switch action {
             case .resumeWithCancellation(let continuation):
-                unsafe continuation.resume(returning: (nil, .cancelled))
+                continuation.resume(returning: (nil, .cancelled))
             case .none:
                 break
             }
@@ -159,10 +160,10 @@ extension Async.Channel.Bounded.Receiver {
             switch action {
             case .returnElement(let element, let resumeSender, var cancelled):
                 // Resume cancelled senders first (minimizes stuck time)
-                while let c = unsafe cancelled.front.take {
-                    unsafe c.resume(returning: .cancelled)
+                while let c = cancelled.front.take {
+                    c.resume(returning: .cancelled)
                 }
-                unsafe resumeSender?.resume(returning: nil)
+                resumeSender?.resume(returning: nil)
                 return element
             case .returnNil:
                 return nil
@@ -244,10 +245,10 @@ extension Async.Channel.Bounded.Elements {
 
             switch fastAction {
             case .returnElement(let element, let resumeSender, var cancelled):
-                while let c = unsafe cancelled.front.take {
-                    unsafe c.resume(returning: .cancelled)
+                while let c = cancelled.front.take {
+                    c.resume(returning: .cancelled)
                 }
-                unsafe resumeSender?.resume(returning: nil)
+                resumeSender?.resume(returning: nil)
                 return element
             case .returnNil:
                 return nil
@@ -259,22 +260,23 @@ extension Async.Channel.Bounded.Elements {
 
             // Slow path: need to suspend
             let (element, error): (Element?, Async.Channel<Element>.Error?) = await withTaskCancellationHandler {
-                await withUnsafeContinuation { (continuation: UnsafeContinuation<(Element?, Async.Channel<Element>.Error?), Never>) in
+                await withUnsafeContinuation { (raw: UnsafeContinuation<(Element?, Async.Channel<Element>.Error?), Never>) in
+                    let continuation = unsafe Async.Continuation.Unsafe(raw)
                     let action = storage.withLock { state in
                         state.receiveSuspended(continuation: continuation)
                     }
 
                     switch action {
                     case .returnElement(let element, let resumeSender, var cancelled):
-                        while let c = unsafe cancelled.front.take {
-                            unsafe c.resume(returning: .cancelled)
+                        while let c = cancelled.front.take {
+                            c.resume(returning: .cancelled)
                         }
-                        unsafe resumeSender?.resume(returning: nil)
-                        unsafe continuation.resume(returning: (element, nil))
+                        resumeSender?.resume(returning: nil)
+                        continuation.resume(returning: (element, nil))
                     case .returnNil:
-                        unsafe continuation.resume(returning: (nil, nil))
+                        continuation.resume(returning: (nil, nil))
                     case .rejectCancelled:
-                        unsafe continuation.resume(returning: (nil, .cancelled))
+                        continuation.resume(returning: (nil, .cancelled))
                     case .suspend:
                         break
                     }
@@ -285,7 +287,7 @@ extension Async.Channel.Bounded.Elements {
                 }
                 switch action {
                 case .resumeWithCancellation(let continuation):
-                    unsafe continuation.resume(returning: (nil, .cancelled))
+                    continuation.resume(returning: (nil, .cancelled))
                 case .none:
                     break
                 }

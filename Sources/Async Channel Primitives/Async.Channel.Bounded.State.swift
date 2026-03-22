@@ -132,7 +132,7 @@ extension Async.Channel.Bounded.State {
         from senders: inout Deque<Sender>,
         resumeCancelled: (Send.Continuation) -> Void
     ) -> Sender? {
-        while let sender = unsafe senders.front.take {
+        while let sender = senders.front.take {
             if cancelledSenders.remove(sender.id) != nil {
                 resumeCancelled(sender.continuation)
                 continue
@@ -151,7 +151,7 @@ extension Async.Channel.Bounded.State {
         /// Continuation type for send operations.
         /// Returns nil on success, Error on failure.
         @usableFromInline
-        typealias Continuation = UnsafeContinuation<Async.Channel<Element>.Error?, Never>
+        typealias Continuation = Async.Continuation<Async.Channel<Element>.Error?>.Unsafe
 
         @usableFromInline
         enum Action: Sendable {
@@ -192,7 +192,7 @@ extension Async.Channel.Bounded.State {
             // If buffer has space, add to buffer
             if buffer.count < capacity {
                 phase = .modifying
-                unsafe buffer.back.push(element)
+                buffer.back.push(element)
                 phase = .open(buffer: buffer, senders: senders, receiver: nil)
                 return .buffered
             }
@@ -232,14 +232,14 @@ extension Async.Channel.Bounded.State {
             // Double-check: space might be available
             if buffer.count < capacity {
                 phase = .modifying
-                unsafe buffer.back.push(element)
+                buffer.back.push(element)
                 phase = .open(buffer: buffer, senders: senders, receiver: nil)
                 return .buffered
             }
 
             // Enqueue waiter
             phase = .modifying
-            unsafe senders.back.push(Sender(id: id, element: element, continuation: continuation))
+            senders.back.push(Sender(id: id, element: element, continuation: continuation))
             phase = .open(buffer: buffer, senders: senders, receiver: nil)
             return .suspend(id: id)
 
@@ -278,7 +278,7 @@ extension Async.Channel.Bounded.State {
         /// Continuation type for receive operations.
         /// Returns (element, nil) on success, (nil, nil) on closed, (nil, error) on failure.
         @usableFromInline
-        typealias Continuation = UnsafeContinuation<(Element?, Async.Channel<Element>.Error?), Never>
+        typealias Continuation = Async.Continuation<(Element?, Async.Channel<Element>.Error?)>.Unsafe
 
         @usableFromInline
         enum Action: Sendable {
@@ -318,14 +318,14 @@ extension Async.Channel.Bounded.State {
 
             // Collect cancelled continuations during pop
             var cancelled = Deque<Send.Continuation>()
-            let collectCancelled: (Send.Continuation) -> Void = { unsafe cancelled.back.push($0) }
+            let collectCancelled: (Send.Continuation) -> Void = { cancelled.back.push($0) }
 
             // If buffer has elements
-            if let element = unsafe buffer.front.take {
+            if let element = buffer.front.take {
                 // Wake up a waiting sender if any (skipping cancelled)
                 if let sender = popNextSender(from: &senders, resumeCancelled: collectCancelled) {
                     phase = .modifying
-                    unsafe buffer.back.push(sender.element)
+                    buffer.back.push(sender.element)
                     phase = .open(buffer: buffer, senders: senders, receiver: nil)
                     return .returnElement(element, resumeSender: sender.continuation, cancelled: cancelled)
                 }
@@ -344,7 +344,7 @@ extension Async.Channel.Bounded.State {
             return .suspend
 
         case .closed(var buffer):
-            if let element = unsafe buffer.front.take {
+            if let element = buffer.front.take {
                 if buffer.isEmpty {
                     phase = .finished
                 } else {
@@ -380,13 +380,13 @@ extension Async.Channel.Bounded.State {
 
             // Collect cancelled continuations during pop
             var cancelled = Deque<Send.Continuation>()
-            let collectCancelled: (Send.Continuation) -> Void = { unsafe cancelled.back.push($0) }
+            let collectCancelled: (Send.Continuation) -> Void = { cancelled.back.push($0) }
 
             // Double-check: element might be available
-            if let element = unsafe buffer.front.take {
+            if let element = buffer.front.take {
                 if let sender = popNextSender(from: &senders, resumeCancelled: collectCancelled) {
                     phase = .modifying
-                    unsafe buffer.back.push(sender.element)
+                    buffer.back.push(sender.element)
                     phase = .open(buffer: buffer, senders: senders, receiver: nil)
                     return .returnElement(element, resumeSender: sender.continuation, cancelled: cancelled)
                 }
@@ -408,7 +408,7 @@ extension Async.Channel.Bounded.State {
             return .suspend
 
         case .closed(var buffer):
-            if let element = unsafe buffer.front.take {
+            if let element = buffer.front.take {
                 if buffer.isEmpty {
                     phase = .finished
                 } else {
@@ -476,8 +476,8 @@ extension Async.Channel.Bounded.State {
         case .open(let buffer, var senders, let receiver):
             // Collect senders to cancel (drain the deque)
             var sendersToCancel = Deque<Send.Continuation>()
-            while let sender = unsafe senders.front.take {
-                unsafe sendersToCancel.back.push(sender.continuation)
+            while let sender = senders.front.take {
+                sendersToCancel.back.push(sender.continuation)
             }
 
             // If buffer is empty and receiver is waiting, resume with nil
