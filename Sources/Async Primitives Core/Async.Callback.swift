@@ -68,13 +68,11 @@ extension Async {
 
         /// Executes the computation and returns the value.
         ///
-        /// Inherits the caller's isolation context via SE-0420.
-        /// If the underlying operation is synchronous, this completes
-        /// without suspension.
+        /// Inherits the caller's isolation context. If the underlying
+        /// operation is synchronous, this completes without suspension.
         @inlinable
-        public func callAsFunction(
-            isolation: isolated (any Actor)? = #isolation
-        ) async -> Value {
+        nonisolated(nonsending)
+        public func callAsFunction() async -> Value {
             await operation()
         }
 

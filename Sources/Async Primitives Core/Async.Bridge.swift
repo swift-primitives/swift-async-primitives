@@ -162,9 +162,8 @@ extension Async {
         ///
         /// - Important: Only one task may call `next()` at a time.
         ///   Concurrent calls result in undefined behavior.
-        public func next(
-            isolation: isolated (any Actor)? = #isolation
-        ) async -> Element? {
+        nonisolated(nonsending)
+        public func next() async -> Element? {
             // Using (shouldSuspend: Bool, element: Element?) to avoid nested enum in generic
             return await withCheckedContinuation { continuation in
                 let (shouldSuspend, immediateResult): (Bool, Element??) = _state.withLock { state in

@@ -100,9 +100,9 @@ extension Async.Channel.Bounded.Sender {
     /// - Throws: `Async.Channel<Element>.Error.closed` if the channel is closed.
     ///           `Async.Channel<Element>.Error.cancelled` if the task is cancelled.
     @inlinable
+    nonisolated(nonsending)
     public func send(
-        _ element: sending Element,
-        isolation: isolated (any Actor)? = #isolation
+        _ element: sending Element
     ) async throws(Async.Channel<Element>.Error) {
         // Fast path: try immediate send
         let fastAction = handle.storage.withLock { state in
