@@ -36,7 +36,7 @@ extension Async.Continuation {
 
         @inlinable
         public init(_ base: UnsafeContinuation<T, Never>) {
-            self._base = unsafe base
+            unsafe (self._base = base)
         }
 
         @inlinable

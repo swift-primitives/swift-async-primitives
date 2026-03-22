@@ -129,7 +129,7 @@ extension Async.Channel.Bounded.Sender {
         }
 
         let error: Async.Channel<Element>.Error? = await withTaskCancellationHandler {
-            await withUnsafeContinuation { (raw: UnsafeContinuation<Async.Channel<Element>.Error?, Never>) in
+            await unsafe withUnsafeContinuation { (raw: UnsafeContinuation<Async.Channel<Element>.Error?, Never>) in
                 let continuation = unsafe Async.Continuation.Unsafe(raw)
                 let action = handle.storage.withLock { state in
                     state.sendSuspended(id: id, element: element, continuation: continuation)

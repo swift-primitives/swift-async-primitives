@@ -60,8 +60,8 @@ extension Async.Timer.Wheel {
     ///   - body: A closure that receives `inout Slot`.
     @usableFromInline
     mutating func withSlot<T>(level: Int, slot: Int, _ body: (inout Slot) -> T) -> T {
-        levels[level].slots.withUnsafeMutableBufferPointer { buffer in
-            body(&buffer[slot])
+        unsafe levels[level].slots.withUnsafeMutableBufferPointer { buffer in
+            unsafe body(&buffer[slot])
         }
     }
 }

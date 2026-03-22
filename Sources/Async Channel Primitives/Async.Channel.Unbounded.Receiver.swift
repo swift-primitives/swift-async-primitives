@@ -92,7 +92,7 @@ extension Async.Channel.Unbounded.Receiver {
 
         // Slow path: need to suspend
         let (element, error): (Element?, Async.Channel<Element>.Error?) = await withTaskCancellationHandler {
-            await withUnsafeContinuation { (raw: UnsafeContinuation<(Element?, Async.Channel<Element>.Error?), Never>) in
+            await unsafe withUnsafeContinuation { (raw: UnsafeContinuation<(Element?, Async.Channel<Element>.Error?), Never>) in
                 let continuation = unsafe Async.Continuation.Unsafe(raw)
                 let action = storage.withLock { state in
                     state.receive.wait(continuation)
@@ -226,7 +226,7 @@ extension Async.Channel.Unbounded.Elements {
 
             // Slow path: need to suspend
             let (element, error): (Element?, Async.Channel<Element>.Error?) = await withTaskCancellationHandler {
-                await withUnsafeContinuation { (raw: UnsafeContinuation<(Element?, Async.Channel<Element>.Error?), Never>) in
+                await unsafe withUnsafeContinuation { (raw: UnsafeContinuation<(Element?, Async.Channel<Element>.Error?), Never>) in
                     let continuation = unsafe Async.Continuation.Unsafe(raw)
                     let action = storage.withLock { state in
                         state.receive.wait(continuation)
