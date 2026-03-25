@@ -34,7 +34,7 @@ extension Async {
     /// ## No Lifecycle Policy
     /// The bridge has minimal semantics - `finish()` signals no more values
     /// will be pushed, and `next()` returns `nil` when finished AND drained.
-    /// Higher layers compose shutdown behavior using `Kernel.Atomic.Flag`.
+    /// Higher layers compose shutdown behavior using `CPU.Atomic.Flag`.
     ///
     /// ## Usage
     /// ```swift
