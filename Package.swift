@@ -146,7 +146,6 @@ for target in package.targets where ![.system, .binary, .plugin, .macro].contain
         .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
         .enableExperimentalFeature("Lifetimes"),
         .enableExperimentalFeature("SuppressedAssociatedTypes"),
-        .enableExperimentalFeature("SuppressedAssociatedTypesWithDefaults"),
     ]
 
     let package: [SwiftSetting] = []
