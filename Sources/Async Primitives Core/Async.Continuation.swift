@@ -57,7 +57,7 @@ extension Async {
 
         /// Resumes the continuation with a value.
         @inlinable
-        public func resume(returning value: T) {
+        public func resume(returning value: consuming T) {
             switch storage {
             case .checkedContinuation(let continuation):
                 continuation.resume(returning: value)
@@ -94,7 +94,7 @@ extension Async {
 
         /// Resumes the continuation with a value.
         @inlinable
-        public func resume(returning value: T) {
+        public func resume(returning value: consuming T) {
             callback(value)
         }
     }

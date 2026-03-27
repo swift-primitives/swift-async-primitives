@@ -175,7 +175,7 @@ extension Async.Channel.Bounded.State {
     /// pre-generates the cancellation ID (returned in `.suspend(id:)`),
     /// eliminating the need for a separate lock acquisition.
     @usableFromInline
-    mutating func trySend(_ element: Element) -> Send.Action {
+    mutating func trySend(_ element: consuming Element) -> Send.Action {
         switch status {
         case .open:
             // If a receiver is waiting, deliver directly
@@ -204,7 +204,7 @@ extension Async.Channel.Bounded.State {
     @usableFromInline
     mutating func sendSuspended(
         id: UInt64,
-        element: Element,
+        element: consuming Element,
         continuation: Send.Continuation
     ) -> Send.Action {
         // Check if already cancelled
@@ -260,10 +260,20 @@ extension Async.Channel.Bounded.State {
 extension Async.Channel.Bounded.State {
     @usableFromInline
     enum Receive {
-        /// Continuation type for receive operations.
-        /// Returns (element, nil) on success, (nil, nil) on closed, (nil, error) on failure.
+        /// Tri-state outcome for receive operations.
         @usableFromInline
-        typealias Continuation = Async.Continuation<(Element?, Async.Channel<Element>.Error?)>.Unsafe
+        enum Outcome: Sendable {
+            /// An element was received.
+            case element(Element)
+            /// The channel is closed and drained.
+            case closed
+            /// The operation was cancelled.
+            case cancelled
+        }
+
+        /// Continuation type for receive operations.
+        @usableFromInline
+        typealias Continuation = Async.Continuation<Outcome>.Unsafe
 
         @usableFromInline
         enum Action: Sendable {

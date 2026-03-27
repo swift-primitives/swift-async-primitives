@@ -91,7 +91,7 @@ extension Async.Channel.Unbounded.State {
     /// If a receiver is waiting, delivers directly to it.
     /// Otherwise, buffers the element.
     @usableFromInline
-    mutating func send(_ element: Element) -> Send.Action {
+    mutating func send(_ element: consuming Element) -> Send.Action {
         guard !_closed else { return .shut }
 
         switch slot {
@@ -119,8 +119,19 @@ extension Async.Channel.Unbounded.State {
             self.base = base
         }
         
+        /// Tri-state outcome for receive operations.
         @usableFromInline
-        typealias Continuation = Async.Continuation<(Element?, Async.Channel<Element>.Error?)>.Unsafe
+        enum Outcome: Sendable {
+            /// An element was received.
+            case element(Element)
+            /// The channel is closed and drained.
+            case closed
+            /// The operation was cancelled.
+            case cancelled
+        }
+
+        @usableFromInline
+        typealias Continuation = Async.Continuation<Outcome>.Unsafe
 
         @usableFromInline
         enum Step: Sendable {

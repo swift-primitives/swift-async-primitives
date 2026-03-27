@@ -91,8 +91,8 @@ extension Async.Channel.Unbounded.Receiver {
         }
 
         // Slow path: need to suspend
-        let (element, error): (Element?, Async.Channel<Element>.Error?) = await withTaskCancellationHandler {
-            await unsafe withUnsafeContinuation { (raw: UnsafeContinuation<(Element?, Async.Channel<Element>.Error?), Never>) in
+        let outcome: Async.Channel<Element>.Unbounded.State.Receive.Outcome = await withTaskCancellationHandler {
+            await unsafe withUnsafeContinuation { (raw: UnsafeContinuation<Async.Channel<Element>.Unbounded.State.Receive.Outcome, Never>) in
                 let continuation = unsafe Async.Continuation.Unsafe(raw)
                 let action = storage.withLock { state in
                     state.receive.wait(continuation)
@@ -100,9 +100,9 @@ extension Async.Channel.Unbounded.Receiver {
 
                 switch action {
                 case .val(let element):
-                    continuation.resume(returning: (element, nil))
+                    continuation.resume(returning: .element(element))
                 case .end:
-                    continuation.resume(returning: (nil, nil))
+                    continuation.resume(returning: .closed)
                 case .wait:
                     // Continuation stored, will be resumed by send/close/stop
                     break
@@ -115,12 +115,15 @@ extension Async.Channel.Unbounded.Receiver {
             }
 
             if case .stop(let cont) = stopAction {
-                cont.resume(returning: (nil, .cancelled))
+                cont.resume(returning: .cancelled)
             }
         }
 
-        if let error { throw error }
-        return element
+        switch outcome {
+        case .element(let element): return element
+        case .closed: return nil
+        case .cancelled: throw .cancelled
+        }
     }
 
     /// Poll for an element without suspending.
@@ -225,8 +228,8 @@ extension Async.Channel.Unbounded.Elements {
             }
 
             // Slow path: need to suspend
-            let (element, error): (Element?, Async.Channel<Element>.Error?) = await withTaskCancellationHandler {
-                await unsafe withUnsafeContinuation { (raw: UnsafeContinuation<(Element?, Async.Channel<Element>.Error?), Never>) in
+            let outcome: Async.Channel<Element>.Unbounded.State.Receive.Outcome = await withTaskCancellationHandler {
+                await unsafe withUnsafeContinuation { (raw: UnsafeContinuation<Async.Channel<Element>.Unbounded.State.Receive.Outcome, Never>) in
                     let continuation = unsafe Async.Continuation.Unsafe(raw)
                     let action = storage.withLock { state in
                         state.receive.wait(continuation)
@@ -234,9 +237,9 @@ extension Async.Channel.Unbounded.Elements {
 
                     switch action {
                     case .val(let element):
-                        continuation.resume(returning: (element, nil))
+                        continuation.resume(returning: .element(element))
                     case .end:
-                        continuation.resume(returning: (nil, nil))
+                        continuation.resume(returning: .closed)
                     case .wait:
                         break
                     }
@@ -247,12 +250,15 @@ extension Async.Channel.Unbounded.Elements {
                 }
 
                 if case .stop(let cont) = stopAction {
-                    cont.resume(returning: (nil, .cancelled))
+                    cont.resume(returning: .cancelled)
                 }
             }
 
-            if let error { throw error }
-            return element
+            switch outcome {
+            case .element(let element): return element
+            case .closed: return nil
+            case .cancelled: throw .cancelled
+            }
         }
     }
 }

@@ -75,7 +75,7 @@ extension Async.Channel.Bounded.Sender {
             }
 
             // Resume receiver with nil (channel closed) - outside lock
-            closeAction.receiverToResume?.resume(returning: (nil, nil))
+            closeAction.receiverToResume?.resume(returning: .closed)
 
             // Cancel all waiting senders - outside lock
             while let continuation = closeAction.sendersToCancel.front.take {
@@ -112,7 +112,7 @@ extension Async.Channel.Bounded.Sender {
         let id: UInt64
         switch fastAction {
         case .deliverToReceiver(let receiverCont, let element):
-            receiverCont.resume(returning: (element, nil))
+            receiverCont.resume(returning: .element(element))
             return
         case .buffered:
             return
@@ -134,7 +134,7 @@ extension Async.Channel.Bounded.Sender {
 
                 switch action {
                 case .deliverToReceiver(let receiverCont, let element):
-                    receiverCont.resume(returning: (element, nil))
+                    receiverCont.resume(returning: .element(element))
                     continuation.resume(returning: nil)
                 case .buffered:
                     continuation.resume(returning: nil)
@@ -192,7 +192,7 @@ extension Async.Channel.Bounded.Sender {
 
             switch action {
             case .deliverToReceiver(let receiverCont, let element):
-                receiverCont.resume(returning: (element, nil))
+                receiverCont.resume(returning: .element(element))
             case .buffered:
                 break
             case .rejectClosed:
@@ -222,7 +222,7 @@ extension Async.Channel.Bounded.Sender {
         }
 
         // Resume receiver with nil (channel closed) - outside lock
-        closeAction.receiverToResume?.resume(returning: (nil, nil))
+        closeAction.receiverToResume?.resume(returning: .closed)
 
         // Cancel all waiting senders - outside lock
         while let continuation = closeAction.sendersToCancel.front.take {

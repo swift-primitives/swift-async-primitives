@@ -189,3 +189,344 @@ All operation paths use minimal lock acquisitions. No excessive reacquisition pa
 **Resolved — Unbounded batch send** (#4): `send(contentsOf:)` now processes all elements under a single lock acquisition. First element goes directly to a waiting receiver (if any); remaining elements buffer.
 
 The bounded and unbounded channels are in good shape after the `53c9694e` optimization — flat state, no CoW traps, minimal allocations, single lock acquisitions on fast paths.
+
+---
+
+## Zero-Copy Pipeline — 2026-03-27
+
+### Scope
+
+- **Target**: swift-async-primitives — all 6 source targets
+- **Audit points**: zero-copy element transfer, ownership annotations, ~Copyable/~Sendable feasibility, `@concurrent`/`nonisolated(nonsending)` correctness, `consuming`/`borrowing` gaps, `~Escapable` applicability
+- **Prior research consulted**: `sending-expansion-audit.md` (COMPLETE), `zero-copy-event-pipeline.md` (RECOMMENDATION), `concurrent-expansion-audit.md` (COMPLETE), `nonsending-adoption-audit.md` (COMPLETE), `witness-macro-noncopyable-support-design.md` (RECOMMENDATION), `async-pool-primitives-audit.md` (RECOMMENDATION)
+- **Files**: 55 source files (element-carrying hot paths prioritized)
+
+### Findings
+
+| # | Severity | Rule | Location | Finding | Status |
+|---|----------|------|----------|---------|--------|
+| 1 | HIGH | PERF-COPY | Async.Continuation.swift:60, Async.Continuation.Unsafe.swift:43 | `resume(returning value: T)` takes `value` by default convention (owned), not `consuming`. The stdlib `UnsafeContinuation.resume(returning: consuming sending T)` takes `consuming`. This creates a copy at the wrapper → stdlib boundary for every element delivery across all channel types. | RESOLVED 2026-03-27 |
+| 2 | HIGH | PERF-COPY | Async.Channel.Bounded.State.swift:266 | Receive continuation type is `Async.Continuation<(Element?, Error?)>.Unsafe` — every element delivery wraps in Optional then constructs a 2-element tuple. The unbounded channel has the same pattern (State.swift:123). Contrast with Broadcast's `Next.Outcome` enum which avoids Optional wrapping entirely. | RESOLVED 2026-03-27 |
+| 3 | MEDIUM | PERF-COPY | Async.Channel.Bounded.State.swift:76–94 | `State.Sender` bundles `element: Element` with `id` and `continuation` as `let` fields. When a suspended sender is popped at :316/:324, `sender.element` reads a `let` field from a live struct — this is a copy, not a move. The element cannot be consumed independently of the struct. | OPEN |
+| 4 | MEDIUM | PERF-COPY | Async.Channel.Bounded.State.swift:149, Unbounded.State.swift:83,100 | Action enum associated values carry `Element` through the lock boundary. `Send.Action.deliverToReceiver(_, Element)` and `Receive.Action.returnElement(Element, _, _)` store the element, then the caller pattern-matches it out. For Copyable types, enum extraction creates a binding copy; the optimizer should eliminate it in -O, but is not guaranteed to. | OPEN |
+| 5 | MEDIUM | PERF-COPY | Async.Broadcast.swift:133–148 | `toResume` array copies `element` once per waiting subscriber: `toResume.append((cont, element))`. For fan-out to N>1 subscribers, N-1 copies are inherent. But for the single-subscriber fast path, the copy into the array is avoidable — could deliver directly without array intermediary. | OPEN |
+| 6 | MEDIUM | [MEM-OWN-001] | Async.Channel.Bounded.State.swift:178, Unbounded.State.swift:94 | `trySend(_ element: Element)` and `send(_ element: Element)` take `element` by default owned convention, not `consuming`. Adding `consuming` would make the ownership transfer explicit and eliminate any caller-side retain for Copyable types with heap storage (arrays, strings). | RESOLVED 2026-03-27 |
+| 7 | LOW | PERF-COPY | Async.Bridge.swift:84–98 | `push(_ element: sending Element)` has a double-delivery pattern: element is captured in the `withLock` closure, but on the direct-to-continuation path, `element` is also passed to `continuationToResume?.resume(returning: element)` outside the lock. The same `element` binding is used in both the buffer path and the resume path, which is correct (only one executes) but the binding crosses the lock boundary in both cases. Not a copy — compiler can prove mutual exclusion — but the pattern is fragile. | OPEN |
+| 8 | LOW | N/A | All channel types | `Element: Sendable` constraint on `Async.Channel<Element: Sendable>` does NOT force copies at isolation boundaries. The `sending` annotation on public `send()` methods transfers ownership without requiring a Sendable-conformance-induced copy. `Sendable` is a capability constraint (allowing cross-isolation transfer), not a copy trigger. | FALSE_POSITIVE — Sendable is a static constraint, not a runtime copy mechanism |
+| 9 | LOW | N/A | All types | `~Escapable` is not applicable to channel element types. Channels transfer ownership from producer to consumer — the element must escape the channel scope. `~Escapable` enforces the opposite invariant (preventing escape). Could theoretically apply to iterator/subscription types to prevent outliving the channel, but that would conflict with `AsyncSequence` conformance requirements. | FALSE_POSITIVE — Fundamentally opposed to channel ownership semantics |
+
+### Element Pipeline Traces
+
+#### Trace 1: Bounded Channel — Direct Delivery (fast path)
+
+```
+Sender.send(_ element: sending Element)                     ← sending: ownership transferred from caller
+  └─ storage.withLock { state.trySend(element) }            ← element passed owned into closure, then into mutating func
+       └─ State.trySend(_ element: Element)                 ← default owned convention (Finding #6)
+            └─ .deliverToReceiver(receiver.continuation, element)  ← element MOVED into enum associated value
+  └─ case .deliverToReceiver(let receiverCont, let element) ← element EXTRACTED from enum (Finding #4)
+       └─ receiverCont.resume(returning: (element, nil))    ← element wrapped in Optional + tuple (Finding #2)
+            └─ _base.resume(returning: value)               ← value COPIED from wrapper to stdlib (Finding #1)
+                 └─ UnsafeContinuation resumes receiver task
+```
+
+**Copies on this path**: 2 certain (wrapper→stdlib at resume, tuple construction), 1 optimizer-dependent (enum extraction).
+
+#### Trace 2: Bounded Channel — Buffered Path
+
+```
+Sender.send → state.trySend(element)
+  └─ buffer.back.push(element)          ← Deque.push takes `consuming Element` — MOVE ✅
+... later ...
+Receiver.receive → state.tryReceive()
+  └─ buffer.front.take                  ← Deque.take destructively removes — MOVE ✅
+  └─ .returnElement(element, ...)       ← element MOVED into Action enum
+  └─ case .returnElement(let element, ...):
+       └─ return element                ← on fast path, returned directly — NO tuple wrapping ✅
+```
+
+**Copies on this path**: 0-1 (enum extraction only, optimizer-dependent). This is the cleanest path because the fast-path return in `Receiver.receive()` destructures the Action directly and returns the element without going through a continuation tuple.
+
+#### Trace 3: Bounded Channel — Sender Suspension Path
+
+```
+Sender.send → state.sendSuspended(id:, element:, continuation:)
+  └─ Sender(id: id, element: element, continuation: continuation)  ← element MOVED into struct
+  └─ senders.back.push(Sender(...))                                ← Sender struct MOVED into Deque ✅
+... later ...
+Receiver.receive → state.tryReceive()
+  └─ popNextSender(resumeCancelled:)
+       └─ senders.front.take                     ← Sender struct MOVED out of Deque ✅
+  └─ sender.element                              ← COPY — `let` field read from live struct (Finding #3)
+  └─ .returnElement(sender.element, sender.continuation, ...)
+```
+
+**Copies on this path**: 1 certain (`sender.element` read from struct that is still alive for its `.continuation` field), plus enum extraction.
+
+#### Trace 4: Unbounded Channel — Direct Delivery
+
+```
+Sender.send(_ element: sending Element)
+  └─ state.send(element)
+       └─ .give(cont, element)                         ← element MOVED into enum
+  └─ case .give(let cont, let element):
+       └─ cont.resume(returning: (element, nil))        ← Optional + tuple wrapping (Finding #2)
+            └─ _base.resume(returning: value)            ← wrapper→stdlib copy (Finding #1)
+```
+
+**Copies on this path**: Same as Bounded direct delivery — 2 certain, 1 optimizer-dependent.
+
+#### Trace 5: Unbounded Channel — Buffered + Fast Receive
+
+```
+Sender.send → state.send(element)
+  └─ buffer.back.push(element)       ← MOVE into Deque ✅
+... later ...
+Receiver.receive → state.receive.take()
+  └─ base.buffer.front.take          ← MOVE out of Deque ✅
+  └─ .val(element)                   ← MOVE into Step enum
+  └─ case .val(let element):
+       └─ return element             ← returned directly, no tuple ✅
+```
+
+**Copies on this path**: 0-1 (enum extraction only). Cleanest path in the package — the unbounded fast receive avoids the tuple entirely.
+
+#### Trace 6: Unbounded Channel — Slow Receive (Suspension)
+
+```
+Receiver.receive → withUnsafeContinuation { ... }
+  └─ state.receive.wait(continuation)
+       └─ base.slot = .wait(cont)     ← continuation stored
+... later (sender arrives) ...
+Sender.send → state.send(element)
+  └─ .give(cont, element)
+  └─ cont.resume(returning: (element, nil))    ← tuple wrapping (Finding #2), then stdlib copy (Finding #1)
+... receiver resumes ...
+  └─ let (element, error) = await ...
+       └─ return element
+```
+
+**Copies on this path**: 2 certain (tuple construction, wrapper→stdlib), 1 optimizer-dependent (enum extraction). The slow path always goes through the tuple continuation.
+
+#### Trace 7: Broadcast — Buffer + Fan-Out
+
+```
+Broadcast.send(_ element: sending Element)
+  └─ state.buffer.back.push((index, element))   ← element MOVED into (UInt64, Element) tuple in Deque ✅
+  └─ for each waiting subscriber at cursor:
+       └─ toResume.append((cont, element))       ← element COPIED from buffer into array (Finding #5)
+  └─ for (continuation, element) in continuationsToResume:
+       └─ continuation.resume(returning: .element(element))  ← element moved into Outcome enum, then stdlib delivers
+```
+
+**Copies on this path**: N copies where N = waiting subscriber count. For N=0 (all subscribers reading from buffer later), zero copies at send time. For N=1, one copy is avoidable. For N>1, N-1 copies are inherent (fan-out). Buffer-path reads via `first(where:)` also copy the element out of the buffer (the element must stay for other subscribers).
+
+#### Trace 8: Bridge — Push to Next
+
+```
+Bridge.push(_ element: sending Element)
+  └─ if cont exists: return cont outside lock, resume with element  ← element crosses lock boundary by capture, then COPIED at wrapper→stdlib
+  └─ else: state.buffer.back.push(element)                          ← MOVE into Deque ✅
+... later ...
+Bridge.next() async
+  └─ state.buffer.front.take          ← MOVE out of Deque ✅
+  └─ return (false, .some(element))   ← wrapped in (Bool, Element??) control tuple
+  └─ continuation.resume(returning: immediateResult ?? nil)  ← CheckedContinuation (stdlib) resume
+```
+
+**Copies on this path**: 1-2. The `(Bool, Element??)` double-Optional control tuple is a minor overhead on the fast path. The main cost is the CheckedContinuation resume.
+
+### Audit Point Answers
+
+**Q: `sending` parameter → buffer insertion: is the element moved or copied?**
+**A**: **Moved.** All public `send()` methods use `sending` (applied per prior `sending-expansion-audit.md`). `Deque.push(_ element: consuming Element)` takes ownership. The element flows: `sending` → owned parameter → `consuming` push. Zero copies on this segment.
+
+**Q: Buffer extraction → continuation resume: is the element moved or copied?**
+**A**: **1-2 copies.** `Deque.take` moves the element out (zero-copy). But delivery to the receiver continuation involves: (a) wrapping in `(Element?, Error?)` tuple for bounded/unbounded channels (1 copy for Optional + tuple construction), and (b) copy from `Continuation.resume(returning:)` wrapper to stdlib `UnsafeContinuation.resume(returning: consuming sending T)` (1 copy due to missing `consuming` annotation).
+
+**Q: State machine action enums with associated values: extract-reconstruct cycles?**
+**A**: **No extract-reconstruct cycles.** State is stored as flat properties (post-`53c9694e`). Action enums are constructed fresh on each operation and consumed by the caller. The enum is never stored back into state. Pattern-matching extraction creates bindings that may copy for Copyable types, but the optimizer should eliminate this in release builds since the enum is consumed.
+
+**Q: Deque push/take: does the queue primitive support move semantics?**
+**A**: **Yes.** `Deque<Element: ~Copyable>` is fully supported. `push(_ element: consuming Element)` moves in. `take(from:) -> Element?` destructively removes and returns owned. The ring buffer implementation uses pointer-based move operations internally. Zero copies in the Deque layer.
+
+**Q: Continuation.resume(returning:) → caller: any intermediate copies?**
+**A**: **Yes — 1 copy.** `Async.Continuation.resume(returning value: T)` and `Async.Continuation.Unsafe.resume(returning value: T)` both take `value` by default owned convention. The stdlib counterparts take `consuming sending`. The wrapper creates a copy at the handoff boundary. This is the single most impactful copy in the entire pipeline — it affects every element delivery across all channel types.
+
+**Q: Tuple wrapping `(Element, Error?)` for receiver continuations: forced copies?**
+**A**: **Yes — 1 copy.** The bounded and unbounded channels use `Continuation<(Element?, Async.Channel<Element>.Error?)>.Unsafe` for receiver continuations. On the success path, the element is wrapped into `.some(element)` then combined with `.none` for the error field. This tuple construction copies the element into the new composite value. The Broadcast avoids this by using `Next.Outcome` enum with `.element(Element)` — no Optional wrapping.
+
+**Q: `Element: Sendable` constraint: does this force copies at isolation boundaries?**
+**A**: **No.** `Sendable` is a static type-system constraint that enables cross-isolation transfer — it does not cause runtime copies. The `sending` annotation on `send()` parameters expresses the ownership transfer. At the implementation level, elements flow through a Mutex-protected state machine; there is no actor hop or isolation boundary crossing that would force a copy. The copies that exist are structural (tuple wrapping, enum extraction, continuation wrapper) rather than Sendable-induced.
+
+### ~Copyable Element Feasibility
+
+Can `Element` be `~Copyable`? **Not yet — blocked by 1 genuine constraint** (revised from 5 after stdlib research):
+
+| # | Claimed Blocker | Actual Status | Evidence |
+|---|----------------|---------------|----------|
+| 1 | `Async.Channel<Element: Sendable>` — Sendable implies Copyable | **FALSE** | `Sendable` does NOT imply `Copyable`. Types can be `~Copyable & Sendable` (e.g., `Async.Waiter.Resumption`, stdlib `Job`). |
+| 2 | `Async.Continuation<T: Sendable>` | **FALSE** | Under our control. Can be relaxed to `T: ~Copyable & Sendable`. |
+| 3 | `UnsafeContinuation<T>` / `CheckedContinuation<T>` — implicit `Copyable` | **GENUINE** | Stdlib `T` has implicit `Copyable` (not explicit `Sendable`). Cannot be changed without stdlib evolution. |
+| 4 | `Optional` wrapping | **FALSE** | `Optional<Wrapped: ~Copyable & ~Escapable>` fully supported in stdlib since Swift 6.0. |
+| 5 | Enum associated values | **FALSE** | Fully supported. `Optional` and `Result` both use `~Copyable` associated values in stdlib. |
+
+**1 genuine blocker**: The implicit `Copyable` constraint on `UnsafeContinuation<T>` and `CheckedContinuation<T>` generic parameters. The compiler infrastructure already supports `Continuation<T: ~Copyable>` (proven by test case at `swiftlang/swift/test/ModuleInterface/Inputs/NoncopyableGenerics_Misc.swift:142`), but the stdlib types have not been updated.
+
+**Full analysis**: See `Research/zero-copy-noncopyable-element-feasibility.md` (RECOMMENDATION). Recommends preparing internal constraints now and submitting a Swift Evolution pitch for stdlib continuation relaxation.
+
+### ~Sendable Element with `sending` Transfer
+
+Can `Element` be `~Sendable` with `sending` transfer? **No — blocked by Mutex and state machine storage.**
+
+The stdlib continuation types do NOT require explicit `T: Sendable` (contrary to the initial analysis). The `with*Continuation` functions return `sending T`, which allows non-Sendable types via region-based transfer. However:
+
+1. `Mutex<State>` requires `State: Sendable`, which requires all stored element fields (buffer, sender queue) to be `Sendable`
+2. The `@Sendable` `onCancel` closure in `withTaskCancellationHandler` requires captured values to be `Sendable` — `storage` is `Sendable` independently of `Element`, but the constraint propagates through the state
+3. `Deque<Element>: Sendable` requires `Element: Sendable`
+
+The constraint chain is: `Mutex<State: Sendable>` → `State.buffer: Deque<Element>` → `Deque: Sendable where Element: Sendable` → `Element: Sendable`.
+
+A `sending`-only approach would require restructuring the state machine to not store elements in `Sendable`-conforming types — fundamentally incompatible with the Mutex-protected shared state design. **DEFERRED** — would require a radically different architecture (e.g., actor-based rather than Mutex-based).
+
+### @concurrent / nonisolated(nonsending) Correctness
+
+All async entry points audited — **no findings**. Summary:
+
+| Method | Annotation | Correct? |
+|--------|-----------|----------|
+| `Bounded.Sender.send()` | `nonisolated(nonsending)` | ✅ Inherits caller isolation; work under Mutex, no executor hop |
+| `Bounded.Receiver.receive()` | `isolation: isolated (any Actor)? = #isolation` | ✅ SE-0421 pattern |
+| `Unbounded.Receiver.receive()` | `isolation: isolated (any Actor)? = #isolation` | ✅ SE-0421 pattern |
+| `Bridge.next()` | `nonisolated(nonsending)` | ✅ Inherits caller isolation |
+| `Promise.value()` | `nonisolated(nonsending)` | ✅ Inherits caller isolation |
+| `Broadcast...next()` | `isolation: isolated (any Actor)? = #isolation` | ✅ SE-0421 pattern |
+| All Elements.Iterator.next() | `isolation: isolated (any Actor)? = #isolation` | ✅ SE-0421 pattern |
+
+Consistent with `concurrent-expansion-audit.md` which found no `@concurrent` candidates in this package — all methods use Mutex-protected state with continuation-based suspension, never hopping to a different executor.
+
+### Proposed Fixes
+
+**Fix A — `consuming` on Continuation.resume (addresses Finding #1)**
+
+Highest-impact, lowest-risk change. Eliminates one copy on every element delivery across all types.
+
+```swift
+// Async.Continuation.swift:60
+public func resume(returning value: consuming T) {
+    switch storage {
+    case .checkedContinuation(let continuation):
+        continuation.resume(returning: value)
+    case .callback(let callback):
+        callback(value)
+    }
+}
+
+// Async.Continuation.Unsafe.swift:43
+public func resume(returning value: consuming T) {
+    unsafe _base.resume(returning: value)
+}
+```
+
+**Risk**: Low. The `consuming` annotation matches the stdlib contract. All existing call sites pass owned values that are not used after the call. `@inlinable` visibility means callers can see the consuming annotation and skip the retain.
+
+**Fix B — Tri-state receive outcome enum (addresses Findings #2 and #4 partial)**
+
+Replace `(Element?, Error?)` tuple with a dedicated enum for bounded/unbounded channel receivers.
+
+```swift
+// New type alongside existing Action enums
+extension Async.Channel.Bounded.State.Receive {
+    @usableFromInline
+    enum Outcome: Sendable {
+        case element(Element)
+        case closed
+        case cancelled
+    }
+
+    // Replace: typealias Continuation = Async.Continuation<(Element?, Error?)>.Unsafe
+    // With:    typealias Continuation = Async.Continuation<Outcome>.Unsafe
+}
+```
+
+**Risk**: Medium. Requires updating all resume sites and the receive-side destructuring. The Broadcast already uses this pattern (`Next.Outcome`), so there's prior art in the same package. The enum avoids Optional wrapping and makes the "no element + no error = closed" case explicit rather than relying on `(nil, nil)` sentinel.
+
+**Fix C — Consuming extraction from State.Sender (addresses Finding #3)**
+
+Replace `let element: Element` with consuming extraction when the sender is popped.
+
+```swift
+// Option 1: Split Sender into metadata + element for independent consumption
+@usableFromInline
+struct SuspendedSend: Sendable {
+    @usableFromInline let id: UInt64
+    @usableFromInline let continuation: Send.Continuation
+    @usableFromInline let element: Element
+}
+
+// In popNextSender, after take from Deque, the SuspendedSend is consumed:
+// let element = sender.element  // still a copy from let field
+```
+
+This is harder to fix because the sender struct contains both the element (needed by receiver) and the continuation (needed to resume the sender). Both are needed after popping but by different consumers. The current design reads `.element` and `.continuation` independently.
+
+A true zero-copy fix would require either:
+- Making Sender `~Copyable` and providing `consuming` decomposition (but Sender is stored in `Deque<Sender>` which works with ~Copyable, though the `Sendable` conformance on Sender would need `@unchecked`)
+- Separating element and continuation into parallel queues (increases complexity, risk of desynchronization)
+
+**Risk**: High. Structural change to state machine internals. **DEFERRED** until profiling shows this copy is material.
+
+**Fix D — Broadcast single-subscriber fast path (addresses Finding #5)**
+
+When only one subscriber is waiting, deliver directly without the `toResume` array.
+
+```swift
+// In Broadcast.send():
+if wakeIds.count == 1 {
+    // Single subscriber — deliver directly, skip array
+    let id = wakeIds[0]
+    if var subscriber = state.subscribers[id] {
+        if let cont = subscriber.continuation {
+            subscriber.cursor = index + 1
+            subscriber.continuation = nil
+            state.subscribers[id] = subscriber
+            // Return single pair, not array
+            return [(cont, element)]  // or use a dedicated single-vs-many return
+        }
+    }
+}
+```
+
+**Risk**: Low, but marginal benefit. The array allocation for `toResume` is already O(waking) not O(total) after the prior performance audit fix. For the common single-subscriber case, the array is size 1, which the small-buffer optimization may inline. **DEFERRED** unless profiling shows array allocation is hot.
+
+**Fix E — `consuming` on state machine send methods (addresses Finding #6)**
+
+```swift
+// Async.Channel.Bounded.State.swift:178
+mutating func trySend(_ element: consuming Element) -> Send.Action { ... }
+
+// Async.Channel.Unbounded.State.swift:94
+mutating func send(_ element: consuming Element) -> Send.Action { ... }
+```
+
+**Risk**: Low. The element is always either stored (buffer/sender) or placed in an Action enum. Adding `consuming` makes the ownership transfer explicit. However, on the paths where the element enters an Action enum associated value, the element is already passed by value, so the compiler should already optimize this. The benefit is documentation clarity and enabling future ~Copyable evolution.
+
+### Summary
+
+9 findings: 0 critical, 2 high, 4 medium, 3 low (including 2 false positives). **3 resolved**, 6 open (including 2 false positives).
+
+**Resolved — Continuation copy elimination** (#1): `Async.Continuation.resume(returning:)` and `.Unsafe.resume(returning:)` now take `consuming` parameter, matching the stdlib `UnsafeContinuation.resume(returning: consuming sending T)` contract. Eliminates 1 copy per element delivery across all channel types.
+
+**Resolved — Tri-state receive outcome** (#2): Bounded and unbounded channels now use `Receive.Outcome` enum (`.element(Element)` | `.closed` | `.cancelled`) instead of `(Element?, Error?)` tuple. Eliminates Optional wrapping and sentinel-based `(nil, nil)` closed signaling. Follows the pattern already established by Broadcast's `Next.Outcome`.
+
+**Resolved — `consuming` on state machine sends** (#6): `trySend(_ element: consuming Element)`, `sendSuspended(... element: consuming Element ...)`, and unbounded `send(_ element: consuming Element)` now explicitly transfer ownership.
+
+**Core insight**: The Deque layer is zero-copy — `consuming` push and destructive take move elements without copying. The remaining copies are:
+
+1. **Sender struct field read** (Finding #3, MEDIUM): 1 copy per suspended sender delivery. Structural fix deferred.
+2. **Action enum extraction** (Finding #4, MEDIUM): optimizer-dependent, likely 0 copies in -O.
+3. **Broadcast fan-out** (Finding #5, MEDIUM): inherent for N>1 subscribers.
+
+**~Copyable and ~Sendable Element**: Both blocked at the language level by stdlib continuation generics. DEFERRED pending Swift evolution.
+
+**Concurrency annotations**: All correct. `nonisolated(nonsending)` and `isolated (any Actor)?` applied consistently.

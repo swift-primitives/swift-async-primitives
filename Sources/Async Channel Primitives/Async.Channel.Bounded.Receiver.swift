@@ -92,8 +92,8 @@ extension Async.Channel.Bounded.Receiver {
         }
 
         // Slow path: need to suspend
-        let (element, error): (Element?, Async.Channel<Element>.Error?) = await withTaskCancellationHandler {
-            await unsafe withUnsafeContinuation { (raw: UnsafeContinuation<(Element?, Async.Channel<Element>.Error?), Never>) in
+        let outcome: Async.Channel<Element>.Bounded.State.Receive.Outcome = await withTaskCancellationHandler {
+            await unsafe withUnsafeContinuation { (raw: UnsafeContinuation<Async.Channel<Element>.Bounded.State.Receive.Outcome, Never>) in
                 let continuation = unsafe Async.Continuation.Unsafe(raw)
                 let action = storage.withLock { state in
                     state.receiveSuspended(continuation: continuation)
@@ -108,11 +108,11 @@ extension Async.Channel.Bounded.Receiver {
                         }
                     }
                     resumeSender?.resume(returning: nil)
-                    continuation.resume(returning: (element, nil))
+                    continuation.resume(returning: .element(element))
                 case .returnNil:
-                    continuation.resume(returning: (nil, nil))
+                    continuation.resume(returning: .closed)
                 case .rejectCancelled:
-                    continuation.resume(returning: (nil, .cancelled))
+                    continuation.resume(returning: .cancelled)
                 case .suspend:
                     // Continuation stored, will be resumed later
                     break
@@ -124,14 +124,17 @@ extension Async.Channel.Bounded.Receiver {
             }
             switch action {
             case .resumeWithCancellation(let continuation):
-                continuation.resume(returning: (nil, .cancelled))
+                continuation.resume(returning: .cancelled)
             case .none:
                 break
             }
         }
 
-        if let error { throw error }
-        return element
+        switch outcome {
+        case .element(let element): return element
+        case .closed: return nil
+        case .cancelled: throw .cancelled
+        }
     }
 
     /// Accessor for receive operation variants.
@@ -267,8 +270,8 @@ extension Async.Channel.Bounded.Elements {
             }
 
             // Slow path: need to suspend
-            let (element, error): (Element?, Async.Channel<Element>.Error?) = await withTaskCancellationHandler {
-                await unsafe withUnsafeContinuation { (raw: UnsafeContinuation<(Element?, Async.Channel<Element>.Error?), Never>) in
+            let outcome: Async.Channel<Element>.Bounded.State.Receive.Outcome = await withTaskCancellationHandler {
+                await unsafe withUnsafeContinuation { (raw: UnsafeContinuation<Async.Channel<Element>.Bounded.State.Receive.Outcome, Never>) in
                     let continuation = unsafe Async.Continuation.Unsafe(raw)
                     let action = storage.withLock { state in
                         state.receiveSuspended(continuation: continuation)
@@ -282,11 +285,11 @@ extension Async.Channel.Bounded.Elements {
                             }
                         }
                         resumeSender?.resume(returning: nil)
-                        continuation.resume(returning: (element, nil))
+                        continuation.resume(returning: .element(element))
                     case .returnNil:
-                        continuation.resume(returning: (nil, nil))
+                        continuation.resume(returning: .closed)
                     case .rejectCancelled:
-                        continuation.resume(returning: (nil, .cancelled))
+                        continuation.resume(returning: .cancelled)
                     case .suspend:
                         break
                     }
@@ -297,14 +300,17 @@ extension Async.Channel.Bounded.Elements {
                 }
                 switch action {
                 case .resumeWithCancellation(let continuation):
-                    continuation.resume(returning: (nil, .cancelled))
+                    continuation.resume(returning: .cancelled)
                 case .none:
                     break
                 }
             }
 
-            if let error { throw error }
-            return element
+            switch outcome {
+            case .element(let element): return element
+            case .closed: return nil
+            case .cancelled: throw .cancelled
+            }
         }
     }
 }

@@ -42,7 +42,7 @@ extension Async.Channel.Unbounded {
             case .none:
                 break
             case .end(let cont):
-                cont.resume(returning: (nil, nil))
+                cont.resume(returning: .closed)
             }
         }
     }

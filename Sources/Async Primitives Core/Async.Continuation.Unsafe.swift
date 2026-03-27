@@ -40,7 +40,7 @@ extension Async.Continuation {
         }
 
         @inlinable
-        public func resume(returning value: T) {
+        public func resume(returning value: consuming T) {
             unsafe _base.resume(returning: value)
         }
     }

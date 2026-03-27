@@ -54,6 +54,7 @@ Thumbs.db
 # Swift Package Manager
 .build/
 .swiftpm/
+.benchmarks/
 
 # ========== END CANONICAL ==========
 
