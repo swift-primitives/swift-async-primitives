@@ -60,3 +60,4 @@ Thumbs.db
 # ========== LOCAL OVERRIDES ==========
 # Package-specific rules below (managed by sync-gitignore.sh)
 
+!/Benchmarks/

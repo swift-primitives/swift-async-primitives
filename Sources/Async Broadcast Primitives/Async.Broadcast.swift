@@ -129,16 +129,24 @@ extension Async.Broadcast {
                 }
             }
 
-            // Find and wake up waiting subscribers (snapshot iteration)
+            // Find waiting subscribers (forEach avoids key snapshot heap allocation)
             var toResume: [(CheckedContinuation<Next.Outcome, Never>, Element)] = []
-            let ids = Array(state.subscribers.keys)
-            for id in ids {
-                guard var subscriber = state.subscribers[id] else { continue }
-                if subscriber.cursor == index, let cont = subscriber.continuation {
-                    subscriber.cursor = index + 1
-                    subscriber.continuation = nil
-                    state.subscribers[id] = subscriber
-                    toResume.append((cont, element))
+            var wakeIds: [UInt64] = []
+            state.subscribers.forEach { id, subscriber in
+                if subscriber.cursor == index, subscriber.continuation != nil {
+                    wakeIds.append(id)
+                }
+            }
+
+            // Update woken subscriber state (O(1) lookup per subscriber)
+            for id in wakeIds {
+                if var subscriber = state.subscribers[id] {
+                    if let cont = subscriber.continuation {
+                        subscriber.cursor = index + 1
+                        subscriber.continuation = nil
+                        state.subscribers[id] = subscriber
+                        toResume.append((cont, element))
+                    }
                 }
             }
             return toResume
@@ -158,15 +166,22 @@ extension Async.Broadcast {
         let continuationsToResume: [CheckedContinuation<Next.Outcome, Never>] = _state.withLock { state in
             state.is.finished = true
 
-            // Wake up all waiting subscribers with .finished if they've consumed everything (snapshot iteration)
+            // Find subscribers to finish (forEach avoids key snapshot heap allocation)
             var toResume: [CheckedContinuation<Next.Outcome, Never>] = []
-            let ids = Array(state.subscribers.keys)
-            for id in ids {
-                guard var subscriber = state.subscribers[id] else { continue }
-                if let cont = subscriber.continuation {
-                    // Check if there are buffered elements for this subscriber
+            var finishIds: [UInt64] = []
+            state.subscribers.forEach { id, subscriber in
+                if subscriber.continuation != nil {
                     let hasBufferedElement = state.buffer.contains { $0.index >= subscriber.cursor }
                     if !hasBufferedElement {
+                        finishIds.append(id)
+                    }
+                }
+            }
+
+            // Collect continuations and clear state
+            for id in finishIds {
+                if var subscriber = state.subscribers[id] {
+                    if let cont = subscriber.continuation {
                         subscriber.continuation = nil
                         state.subscribers[id] = subscriber
                         toResume.append(cont)
@@ -220,7 +235,7 @@ extension Async.Broadcast {
         }
 
         public func makeAsyncIterator() -> AsyncIterator {
-            AsyncIterator(broadcast: broadcast, id: id)
+            AsyncIterator(broadcast: broadcast, id: id, publication: Async.Publication<Wait>())
         }
 
         /// Unsubscribe and release resources.
@@ -235,6 +250,7 @@ extension Async.Broadcast {
         public struct AsyncIterator: AsyncIteratorProtocol {
             let broadcast: Async.Broadcast<Element>
             let id: UInt64
+            let publication: Async.Publication<Wait>
 
             public mutating func next(
                 isolation: isolated (any Actor)? = #isolation
@@ -243,8 +259,9 @@ extension Async.Broadcast {
                 let broadcast = self.broadcast
                 let id = self.id
 
-                // Publication slot for cancellation-safe token publication/claim
-                let publication = Async.Publication<Wait>()
+                // Reuse per-iterator publication slot; clear any stale value from previous call
+                let publication = self.publication
+                _ = publication.take()
 
                 let result: Next.Outcome = await withTaskCancellationHandler {
                     await withCheckedContinuation { continuation in

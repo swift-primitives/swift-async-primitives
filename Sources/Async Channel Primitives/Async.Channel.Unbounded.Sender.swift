@@ -81,17 +81,33 @@ extension Async.Channel.Unbounded.Sender {
 
     /// Send multiple elements to the channel.
     ///
-    /// Sends each element individually. If a receiver is waiting,
-    /// elements are delivered directly in order.
+    /// All elements are processed under a single lock acquisition.
+    /// If a receiver is waiting, the first element is delivered directly
+    /// and the rest are buffered.
     ///
     /// - Parameter elements: The elements to send.
     /// - Throws: `Async.Channel<Element>.Error.closed` if the channel is closed.
-    /// - Note: Stops on first error; some elements may have been sent.
     @inlinable
     public func send<S: Swift.Sequence>(contentsOf elements: S) throws(Async.Channel<Element>.Error) where S.Element == Element {
-        for element in elements {
-            try send(element)
+        let action: (receiver: (Async.Continuation<(Element?, Async.Channel<Element>.Error?)>.Unsafe, Element)?, closed: Bool) = storage.withLock { state in
+            var firstReceiver: (Async.Continuation<(Element?, Async.Channel<Element>.Error?)>.Unsafe, Element)? = nil
+            for element in elements {
+                guard !state._closed else { return (firstReceiver, true) }
+                switch state.slot {
+                case .wait(let cont) where firstReceiver == nil:
+                    state.slot = .none
+                    firstReceiver = (cont, element)
+                case .wait, .none:
+                    state.buffer.back.push(element)
+                }
+            }
+            return (firstReceiver, false)
         }
+
+        if let (cont, element) = action.receiver {
+            cont.resume(returning: (element, nil))
+        }
+        if action.closed { throw .closed }
     }
 }
 

@@ -16,7 +16,7 @@ extension Async.Timer.Wheel {
     ///
     /// This type exists solely to distinguish `Async.Timer.Wheel.ID` handles
     /// from other handle types at compile time.
-    public enum _TimerWheelEntryTag {}
+    public enum _Entry {}
 
     /// Unique identifier for a scheduled timer.
     ///
@@ -33,7 +33,7 @@ extension Async.Timer.Wheel {
     ///
     /// ## Implementation Note
     ///
-    /// `ID` is implemented as `Handle<_TimerWheelEntryTag>` to unify handle
+    /// `ID` is implemented as `Handle<_Entry>` to unify handle
     /// types across the Swift Institute primitives. The wheel's validation
     /// semantics remain wheel-specific (global epoch, not per-slot generation).
     ///
@@ -44,7 +44,7 @@ extension Async.Timer.Wheel {
     /// // ...later...
     /// let wasCancelled = wheel.cancel(id)
     /// ```
-    public typealias ID = Handle<_TimerWheelEntryTag>
+    public typealias ID = Handle<_Entry>
 }
 
 // MARK: - Construction Helpers
