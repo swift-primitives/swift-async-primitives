@@ -12,6 +12,7 @@
 // Async channels require task suspension which is not available on embedded Swift.
 #if !hasFeature(Embedded)
 
+public import Ownership_Primitives
 public import Synchronization
 
 extension Async.Channel.Unbounded where Element: ~Copyable {
@@ -21,13 +22,19 @@ extension Async.Channel.Unbounded where Element: ~Copyable {
         @usableFromInline
         let mutex: Mutex<State>
 
+        /// Slot for transferring ~Copyable elements outside the continuation.
+        /// The continuation carries a lightweight Signal; the element travels here.
+        @usableFromInline
+        let deliverySlot: Ownership.Slot<Element>
+
         @usableFromInline
         init() {
             self.mutex = Mutex(State())
+            self.deliverySlot = Ownership.Slot()
         }
 
         @inlinable
-        func withLock<T, E: Swift.Error>(_ body: (inout State) throws(E) -> T) throws(E) -> T {
+        func withLock<T: ~Copyable, E: Swift.Error>(_ body: (inout State) throws(E) -> sending T) throws(E) -> sending T {
             try mutex.withLock { (state: inout State) throws(E) -> T in
                 try body(&state)
             }

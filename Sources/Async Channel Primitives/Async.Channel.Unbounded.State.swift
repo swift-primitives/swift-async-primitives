@@ -12,6 +12,7 @@
 // Async channels require task suspension which is not available on embedded Swift.
 #if !hasFeature(Embedded)
 
+public import Ownership_Primitives
 public import Queue_Primitives
 
 extension Async.Channel.Unbounded where Element: ~Copyable {
@@ -24,21 +25,9 @@ extension Async.Channel.Unbounded where Element: ~Copyable {
     /// At most one task may be suspended in `receive()` at a time.
     /// Concurrent suspended receives trigger a precondition failure.
     @usableFromInline
-    struct State: Sendable {
-        /// Buffered elements waiting to be received.
-        /// Optional to allow releasing the reference without heap allocation
-        /// in `receive._modify` (set to nil instead of `= Deque()`).
+    struct State: ~Copyable, @unchecked Sendable {
         @usableFromInline
-        var _buffer: Deque<Element>?
-
-        /// Non-optional accessor for the buffer. The buffer is only nil
-        /// during the brief window inside `receive._modify`; all other
-        /// access is guarded by the mutex.
-        @usableFromInline
-        var buffer: Deque<Element> {
-            _read { yield _buffer.unsafelyUnwrapped }
-            _modify { yield &_buffer! }
-        }
+        var buffer: Deque<Element>
 
         @usableFromInline
         var slot: Slot
@@ -49,7 +38,7 @@ extension Async.Channel.Unbounded where Element: ~Copyable {
 
         @usableFromInline
         init() {
-            self._buffer = Deque()
+            self.buffer = Deque()
             self.slot = .none
             self._closed = false
         }
@@ -79,7 +68,7 @@ extension Async.Channel.Unbounded.State where Element: ~Copyable {
     @usableFromInline
     enum Send {
         @usableFromInline
-        enum Action: Sendable {
+        enum Action: ~Copyable, @unchecked Sendable {
             case give(Receive.Continuation, Element)
             case keep
             case shut
@@ -88,18 +77,19 @@ extension Async.Channel.Unbounded.State where Element: ~Copyable {
 
     /// Send an element to the channel.
     ///
-    /// If a receiver is waiting, delivers directly to it.
-    /// Otherwise, buffers the element.
+    /// The element is in the provided Ownership.Slot. On deliver, it is
+    /// taken and returned in the action. On buffer, it is taken and pushed.
+    /// On shut, it remains in the Slot (cleaned up by Slot deinit).
     @usableFromInline
-    mutating func send(_ element: consuming Element) -> Send.Action {
+    mutating func send(slot: Ownership.Slot<Element>) -> Send.Action {
         guard !_closed else { return .shut }
 
-        switch slot {
+        switch self.slot {
         case .wait(let cont):
-            slot = .none
-            return .give(cont, element)
+            self.slot = .none
+            return .give(cont, slot.take(__unchecked: ()))
         case .none:
-            buffer.back.push(element)
+            buffer.push(slot.take(__unchecked: ()), to: .back)
             return .keep
         }
     }
@@ -109,32 +99,26 @@ extension Async.Channel.Unbounded.State where Element: ~Copyable {
 
 extension Async.Channel.Unbounded.State where Element: ~Copyable {
     @usableFromInline
-    struct Receive {
-        
+    enum Receive {
+        /// Lightweight signal carried through the continuation.
+        /// Element delivery happens via Ownership.Slot, not through the continuation.
         @usableFromInline
-        var base: Async.Channel<Element>.Unbounded.State
-
-        @usableFromInline
-        init(_ base: Async.Channel<Element>.Unbounded.State) {
-            self.base = base
-        }
-        
-        /// Tri-state outcome for receive operations.
-        @usableFromInline
-        enum Outcome: Sendable {
-            /// An element was received.
-            case element(Element)
+        enum Signal: Sendable {
+            /// An element was delivered via the delivery slot.
+            case delivered
             /// The channel is closed and drained.
             case closed
             /// The operation was cancelled.
             case cancelled
         }
 
+        /// Continuation type for receive operations.
+        /// Carries Signal (Copyable) — element travels via Ownership.Slot.
         @usableFromInline
-        typealias Continuation = Async.Continuation<Outcome>.Unsafe
+        typealias Continuation = Async.Continuation<Signal>.Unsafe
 
         @usableFromInline
-        enum Step: Sendable {
+        enum Step: ~Copyable, @unchecked Sendable {
             case val(Element)
             case end
             case wait
@@ -147,78 +131,49 @@ extension Async.Channel.Unbounded.State where Element: ~Copyable {
         }
     }
 
-    /// Accessor for receive operations using `_read`/`_modify` to maintain
-    /// proper ownership semantics through the accessor chain.
-    ///
-    /// The `_modify` accessor ensures the buffer is uniquely referenced before
-    /// yielding, preventing CoW corruption when nested accessors (like `Deque.take`)
-    /// expect unique ownership.
+    /// Non-blocking receive: take from buffer if available.
     @usableFromInline
-    var receive: Receive {
-        _read {
-            yield Receive(self)
-        }
-        _modify {
-            // CRITICAL: Ensure buffer uniqueness BEFORE creating wrapper.
-            // This must happen before copying self to maintain CoW invariant.
-            // Without this, the Deque._modify accessor receives a shared reference
-            // and ensureUnique() triggers a copy with corrupted capacity.
-            _buffer!.reserve(.zero)
-
-            // Transfer state to wrapper (creates copy with shared buffer reference)
-            var temp = Receive(self)
-
-            // Release self's buffer reference - temp is now the unique owner.
-            // Setting to nil avoids the heap allocation that `= Deque()` incurred.
-            _buffer = nil
-
-            // Restore state from wrapper after mutation completes
-            defer { self = temp.base }
-            yield &temp
-        }
-    }
-}
-
-extension Async.Channel.Unbounded.State.Receive where Element: ~Copyable {
-    @usableFromInline
-    mutating func poll() -> Element? {
-        base.buffer.front.take
+    mutating func tryReceive() -> Element? {
+        buffer.take(from: .front)
     }
 
+    /// Synchronous receive attempt.
     @usableFromInline
-    mutating func take() -> Async.Channel<Element>.Unbounded.State.Receive.Step {
-        if let element = base.buffer.front.take {
+    mutating func receiveTake() -> Receive.Step {
+        if let element = buffer.take(from: .front) {
             return .val(element)
         }
-        if base._closed {
+        if _closed {
             return .end
         }
         return .wait
     }
 
+    /// Register a receiver that will suspend.
     @usableFromInline
-    mutating func wait(_ cont: Async.Channel<Element>.Unbounded.State.Receive.Continuation) -> Async.Channel<Element>.Unbounded.State.Receive.Step {
+    mutating func receiveWait(_ cont: Receive.Continuation) -> Receive.Step {
         precondition({
-            if case .none = base.slot { return true }
+            if case .none = slot { return true }
             return false
         }(), "Single-suspended-receiver invariant violated")
 
-        if let element = base.buffer.front.take {
+        if let element = buffer.take(from: .front) {
             return .val(element)
         }
-        if base._closed {
+        if _closed {
             return .end
         }
 
-        base.slot = .wait(cont)
+        slot = .wait(cont)
         return .wait
     }
 
+    /// Handle receiver cancellation.
     @usableFromInline
-    mutating func stop() -> Async.Channel<Element>.Unbounded.State.Receive.Stop {
-        switch base.slot {
+    mutating func receiveStop() -> Receive.Stop {
+        switch slot {
         case .wait(let cont):
-            base.slot = .none
+            slot = .none
             return .stop(cont)
         case .none:
             return .none

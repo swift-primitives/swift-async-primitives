@@ -12,6 +12,8 @@
 // Async channels require task suspension which is not available on embedded Swift.
 #if !hasFeature(Embedded)
 
+public import Ownership_Primitives
+
 extension Async.Channel.Unbounded where Element: ~Copyable {
     /// A sender view for an unbounded channel.
     ///
@@ -63,20 +65,21 @@ extension Async.Channel.Unbounded.Sender where Element: ~Copyable {
     /// - Parameter element: The element to send.
     /// - Throws: `Async.Channel<Element>.Error.closed` if the channel is closed.
     @inlinable
-    public func send(_ element: sending Element) throws(Async.Channel<Element>.Error) {
+    public func send(_ element: consuming sending Element) throws(Async.Channel<Element>.Error) {
+        let slot = Ownership.Slot(element)
         let action = storage.withLock { state in
-            state.send(element)
+            state.send(slot: slot)
         }
 
-        switch action {
+        switch consume action {
         case .give(let cont, let element):
-            cont.resume(returning: .element(element))
+            storage.deliverySlot.store(element)
+            cont.resume(returning: Async.Channel<Element>.Unbounded.State.Receive.Signal.delivered)
         case .keep:
             break
         case .shut:
             throw .closed
         }
-
     }
 
     /// Send multiple elements to the channel.
@@ -105,7 +108,8 @@ extension Async.Channel.Unbounded.Sender where Element: ~Copyable {
         }
 
         if let (cont, element) = action.receiver {
-            cont.resume(returning: .element(element))
+            storage.deliverySlot.store(element)
+            cont.resume(returning: Async.Channel<Element>.Unbounded.State.Receive.Signal.delivered)
         }
         if action.closed { throw .closed }
     }
@@ -131,6 +135,7 @@ extension Async.Channel.Unbounded.Sender where Element: ~Copyable {
         case .end(let cont):
             cont.resume(returning: .closed)
         }
+
     }
 
     /// Whether the channel has been closed.

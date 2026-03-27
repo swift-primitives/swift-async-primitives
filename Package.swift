@@ -118,6 +118,7 @@ let package = Package(
             name: "Async Primitives Tests",
             dependencies: [
                 "Async Primitives",
+                "Async Primitives Test Support",
             ]
         ),
 

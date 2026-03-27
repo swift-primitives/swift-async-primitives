@@ -12,6 +12,7 @@
 // Async channels require task suspension which is not available on embedded Swift.
 #if !hasFeature(Embedded)
 
+public import Ownership_Primitives
 internal import Queue_Primitives
 
 extension Async.Channel.Unbounded where Element: ~Copyable {
@@ -73,10 +74,10 @@ extension Async.Channel.Unbounded.Receiver where Element: ~Copyable {
     ) async throws(Async.Channel<Element>.Error) -> Element? {
         // Fast path: try immediate receive
         let fastAction = storage.withLock { state in
-            state.receive.take()
+            state.receiveTake()
         }
 
-        switch fastAction {
+        switch consume fastAction {
         case .val(let element):
             return element
         case .end:
@@ -91,16 +92,18 @@ extension Async.Channel.Unbounded.Receiver where Element: ~Copyable {
         }
 
         // Slow path: need to suspend
-        let outcome: Async.Channel<Element>.Unbounded.State.Receive.Outcome = await withTaskCancellationHandler {
-            await unsafe withUnsafeContinuation { (raw: UnsafeContinuation<Async.Channel<Element>.Unbounded.State.Receive.Outcome, Never>) in
+        // Element delivery uses Ownership.Slot — continuation carries Signal only.
+        let signal: Async.Channel<Element>.Unbounded.State.Receive.Signal = await withTaskCancellationHandler {
+            await unsafe withUnsafeContinuation { (raw: UnsafeContinuation<Async.Channel<Element>.Unbounded.State.Receive.Signal, Never>) in
                 let continuation = unsafe Async.Continuation.Unsafe(raw)
                 let action = storage.withLock { state in
-                    state.receive.wait(continuation)
+                    state.receiveWait(continuation)
                 }
 
-                switch action {
+                switch consume action {
                 case .val(let element):
-                    continuation.resume(returning: .element(element))
+                    storage.deliverySlot.store(element)
+                    continuation.resume(returning: .delivered)
                 case .end:
                     continuation.resume(returning: .closed)
                 case .wait:
@@ -111,7 +114,7 @@ extension Async.Channel.Unbounded.Receiver where Element: ~Copyable {
         } onCancel: {
             // Extract continuation under lock, resume outside
             let stopAction = storage.withLock { state in
-                state.receive.stop()
+                state.receiveStop()
             }
 
             if case .stop(let cont) = stopAction {
@@ -119,8 +122,8 @@ extension Async.Channel.Unbounded.Receiver where Element: ~Copyable {
             }
         }
 
-        switch outcome {
-        case .element(let element): return element
+        switch signal {
+        case .delivered: return storage.deliverySlot.take()
         case .closed: return nil
         case .cancelled: throw .cancelled
         }
@@ -138,7 +141,7 @@ extension Async.Channel.Unbounded.Receiver where Element: ~Copyable {
     @inlinable
     public func poll() -> Element? {
         storage.withLock { state in
-            state.receive.poll()
+            state.tryReceive()
         }
     }
 }
@@ -160,8 +163,11 @@ extension Async.Channel.Unbounded.Receiver where Element: ~Copyable {
 
 // MARK: - AsyncSequence View
 
-extension Async.Channel.Unbounded.Receiver where Element: ~Copyable {
+extension Async.Channel.Unbounded.Receiver {
     /// Returns an AsyncSequence view for iteration.
+    ///
+    /// Available only when `Element` is `Copyable` (required by `AsyncSequence`).
+    /// For `~Copyable` elements, use `receive()` directly in a while loop.
     ///
     /// ```swift
     /// for try await value in receiver.elements {
@@ -210,10 +216,10 @@ extension Async.Channel.Unbounded.Elements {
 
             // Fast path: try immediate receive
             let fastAction = storage.withLock { state in
-                state.receive.take()
+                state.receiveTake()
             }
 
-            switch fastAction {
+            switch consume fastAction {
             case .val(let element):
                 return element
             case .end:
@@ -228,16 +234,18 @@ extension Async.Channel.Unbounded.Elements {
             }
 
             // Slow path: need to suspend
-            let outcome: Async.Channel<Element>.Unbounded.State.Receive.Outcome = await withTaskCancellationHandler {
-                await unsafe withUnsafeContinuation { (raw: UnsafeContinuation<Async.Channel<Element>.Unbounded.State.Receive.Outcome, Never>) in
+            // Element delivery uses Ownership.Slot — continuation carries Signal only.
+            let signal: Async.Channel<Element>.Unbounded.State.Receive.Signal = await withTaskCancellationHandler {
+                await unsafe withUnsafeContinuation { (raw: UnsafeContinuation<Async.Channel<Element>.Unbounded.State.Receive.Signal, Never>) in
                     let continuation = unsafe Async.Continuation.Unsafe(raw)
                     let action = storage.withLock { state in
-                        state.receive.wait(continuation)
+                        state.receiveWait(continuation)
                     }
 
-                    switch action {
+                    switch consume action {
                     case .val(let element):
-                        continuation.resume(returning: .element(element))
+                        storage.deliverySlot.store(element)
+                        continuation.resume(returning: .delivered)
                     case .end:
                         continuation.resume(returning: .closed)
                     case .wait:
@@ -246,7 +254,7 @@ extension Async.Channel.Unbounded.Elements {
                 }
             } onCancel: {
                 let stopAction = storage.withLock { state in
-                    state.receive.stop()
+                    state.receiveStop()
                 }
 
                 if case .stop(let cont) = stopAction {
@@ -254,8 +262,8 @@ extension Async.Channel.Unbounded.Elements {
                 }
             }
 
-            switch outcome {
-            case .element(let element): return element
+            switch signal {
+            case .delivered: return storage.deliverySlot.take()
             case .closed: return nil
             case .cancelled: throw .cancelled
             }

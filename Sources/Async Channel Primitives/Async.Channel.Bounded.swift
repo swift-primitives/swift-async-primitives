@@ -81,6 +81,7 @@ extension Async.Channel where Element: ~Copyable {
             self.receiver = Receiver(storage: storage)
         }
 
+
         /// Close the channel, signaling no more elements will be sent.
         ///
         /// After close:

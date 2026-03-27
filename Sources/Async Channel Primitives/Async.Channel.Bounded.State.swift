@@ -12,6 +12,7 @@
 // Async channels require task suspension which is not available on embedded Swift.
 #if !hasFeature(Embedded)
 
+public import Ownership_Primitives
 public import Queue_Primitives
 
 extension Async.Channel.Bounded where Element: ~Copyable {
@@ -73,22 +74,22 @@ extension Async.Channel.Bounded.State where Element: ~Copyable {
 
 extension Async.Channel.Bounded.State where Element: ~Copyable {
     @usableFromInline
-    struct Sender: ~Copyable, @unchecked Sendable {
+    struct Sender: Sendable {
         @usableFromInline
         let id: UInt64
         @usableFromInline
-        let element: Element
+        let slot: Ownership.Slot<Element>
         @usableFromInline
         let continuation: Send.Continuation
 
         @usableFromInline
         init(
             id: UInt64,
-            element: consuming Element,
+            slot: Ownership.Slot<Element>,
             continuation: Send.Continuation
         ) {
             self.id = id
-            self.element = element
+            self.slot = slot
             self.continuation = continuation
         }
     }
@@ -143,6 +144,31 @@ extension Async.Channel.Bounded.State where Element: ~Copyable {
         @usableFromInline
         typealias Continuation = Async.Continuation<Async.Channel<Element>.Error?>.Unsafe
 
+        /// Result of `trySend` — fast-path decision.
+        /// Element is handled via the caller's Ownership.Slot: taken on
+        /// deliver/buffer paths, left in Slot on suspend/reject.
+        @usableFromInline
+        enum Decision: ~Copyable, @unchecked Sendable {
+            /// Deliver the element directly to a waiting receiver.
+            /// Element was taken from the Slot inside trySend.
+            case deliverToReceiver(Receive.Continuation, Element)
+
+            /// Element was buffered successfully (taken from Slot).
+            case buffered
+
+            /// Sender must suspend and wait. Element remains in the caller's
+            /// Slot. The id is pre-generated for cancellation tracking
+            /// (eliminates a separate lock acquisition).
+            case suspend(id: UInt64)
+
+            /// Channel is closed, reject the send.
+            /// Element remains in the caller's Slot (cleaned up by Slot deinit).
+            case rejectClosed
+        }
+
+        /// Result of `sendSuspended` — slow-path action.
+        /// Element is handled via Ownership.Slot (taken on deliver/buffer,
+        /// stored in queue on suspend, cleaned up by Slot deinit on reject).
         @usableFromInline
         enum Action: ~Copyable, @unchecked Sendable {
             /// Deliver the element directly to a waiting receiver.
@@ -151,9 +177,8 @@ extension Async.Channel.Bounded.State where Element: ~Copyable {
             /// Element was buffered successfully.
             case buffered
 
-            /// Sender must suspend and wait. The id is pre-generated for
-            /// cancellation tracking (eliminates a separate lock acquisition).
-            case suspend(id: UInt64)
+            /// Continuation stored, sender is now suspended.
+            case suspended
 
             /// Channel is closed, reject the send.
             case rejectClosed
@@ -171,26 +196,30 @@ extension Async.Channel.Bounded.State where Element: ~Copyable {
 
     /// Attempt a synchronous send (non-blocking).
     ///
-    /// When the buffer is full and suspension is required, this method
-    /// pre-generates the cancellation ID (returned in `.suspend(id:)`),
-    /// eliminating the need for a separate lock acquisition.
+    /// The element is in the provided Ownership.Slot. On deliver/buffer
+    /// paths it is taken from the Slot. On suspend/reject, the element
+    /// remains in the Slot for the caller to handle.
+    ///
+    /// Using a Slot (Copyable reference) instead of a consuming Element
+    /// avoids the ~Copyable closure capture issue: the Slot can be captured
+    /// in the non-escaping withLock closure without ownership problems.
     @usableFromInline
-    mutating func trySend(_ element: consuming Element) -> Send.Action {
+    mutating func trySend(slot: Ownership.Slot<Element>) -> Send.Decision {
         switch status {
         case .open:
             // If a receiver is waiting, deliver directly
             if let receiver = receiver {
                 self.receiver = nil
-                return .deliverToReceiver(receiver.continuation, element)
+                return .deliverToReceiver(receiver.continuation, slot.take(__unchecked: ()))
             }
 
             // If buffer has space, add to buffer
             if buffer.count < capacity {
-                buffer.push(element, to: .back)
+                buffer.push(slot.take(__unchecked: ()), to: .back)
                 return .buffered
             }
 
-            // Buffer full — pre-generate ID for cancellation tracking
+            // Buffer full — element stays in Slot for slow-path staging
             let id = nextId
             nextId &+= 1
             return .suspend(id: id)
@@ -201,10 +230,14 @@ extension Async.Channel.Bounded.State where Element: ~Copyable {
     }
 
     /// Register a sender that will suspend.
+    ///
+    /// The element is in the provided Ownership.Slot. On deliver/buffer paths
+    /// it is taken from the Slot. On suspend, the Slot reference is stored in
+    /// the sender queue. On reject, the Slot's deinit handles cleanup.
     @usableFromInline
     mutating func sendSuspended(
         id: UInt64,
-        element: consuming Element,
+        slot: Ownership.Slot<Element>,
         continuation: Send.Continuation
     ) -> Send.Action {
         // Check if already cancelled
@@ -218,18 +251,19 @@ extension Async.Channel.Bounded.State where Element: ~Copyable {
             // Double-check: receiver might have arrived
             if let receiver = receiver {
                 self.receiver = nil
+                let element = slot.take(__unchecked: ())
                 return .deliverToReceiver(receiver.continuation, element)
             }
 
             // Double-check: space might be available
             if buffer.count < capacity {
-                buffer.push(element, to: .back)
+                buffer.push(slot.take(__unchecked: ()), to: .back)
                 return .buffered
             }
 
-            // Enqueue waiter
-            senders.push(Sender(id: id, element: element, continuation: continuation), to: .back)
-            return .suspend(id: id)
+            // Enqueue waiter — Slot reference stored in Sender
+            senders.push(Sender(id: id, slot: slot, continuation: continuation), to: .back)
+            return .suspended
 
         case .closed, .finished:
             return .rejectClosed
@@ -325,7 +359,7 @@ extension Async.Channel.Bounded.State where Element: ~Copyable {
             if let element = buffer.take(from: .front) {
                 // Wake up a waiting sender if any (skipping cancelled)
                 if let sender = popNextSender(resumeCancelled: collectCancelled) {
-                    buffer.push(sender.element, to: .back)
+                    buffer.push(sender.slot.take(__unchecked: ()), to: .back)
                     return .returnElement(element, resumeSender: sender.continuation, cancelled: cancelled)
                 }
                 return .returnElement(element, resumeSender: nil, cancelled: cancelled)
@@ -333,7 +367,7 @@ extension Async.Channel.Bounded.State where Element: ~Copyable {
 
             // If there are waiting senders, take directly from them (skipping cancelled)
             if let sender = popNextSender(resumeCancelled: collectCancelled) {
-                return .returnElement(sender.element, resumeSender: sender.continuation, cancelled: cancelled)
+                return .returnElement(sender.slot.take(__unchecked: ()), resumeSender: sender.continuation, cancelled: cancelled)
             }
 
             // Nothing available, would need to suspend
@@ -379,14 +413,14 @@ extension Async.Channel.Bounded.State where Element: ~Copyable {
             // Double-check: element might be available
             if let element = buffer.take(from: .front) {
                 if let sender = popNextSender(resumeCancelled: collectCancelled) {
-                    buffer.push(sender.element, to: .back)
+                    buffer.push(sender.slot.take(__unchecked: ()), to: .back)
                     return .returnElement(element, resumeSender: sender.continuation, cancelled: cancelled)
                 }
                 return .returnElement(element, resumeSender: nil, cancelled: cancelled)
             }
 
             if let sender = popNextSender(resumeCancelled: collectCancelled) {
-                return .returnElement(sender.element, resumeSender: sender.continuation, cancelled: cancelled)
+                return .returnElement(sender.slot.take(__unchecked: ()), resumeSender: sender.continuation, cancelled: cancelled)
             }
 
             // Store receiver

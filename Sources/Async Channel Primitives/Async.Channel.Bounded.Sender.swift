@@ -12,7 +12,7 @@
 // Async channels require task suspension which is not available on embedded Swift.
 #if !hasFeature(Embedded)
 
-internal import Ownership_Primitives
+public import Ownership_Primitives
 internal import Queue_Primitives
 
 extension Async.Channel.Bounded where Element: ~Copyable {
@@ -105,13 +105,17 @@ extension Async.Channel.Bounded.Sender where Element: ~Copyable {
     public func send(
         _ element: consuming sending Element
     ) async throws(Async.Channel<Element>.Error) {
+        // Stage element in Slot before lock — Slot is Copyable+Sendable,
+        // avoids the ~Copyable closure capture issue.
+        let slot = Ownership.Slot(element)
+
         // Fast path: try immediate send
-        let fastAction = handle.storage.withLock { state in
-            state.trySend(element)
+        let decision = handle.storage.withLock { state in
+            state.trySend(slot: slot)
         }
 
         let id: UInt64
-        switch fastAction {
+        switch consume decision {
         case .deliverToReceiver(let receiverCont, let element):
             handle.storage.deliverySlot.store(element)
             receiverCont.resume(returning: Async.Channel<Element>.Bounded.State.Receive.Signal.delivered)
@@ -120,8 +124,6 @@ extension Async.Channel.Bounded.Sender where Element: ~Copyable {
             return
         case .rejectClosed:
             throw .closed
-        case .rejectCancelled:
-            throw .cancelled
         case .suspend(let suspendId):
             id = suspendId
         }
@@ -131,13 +133,13 @@ extension Async.Channel.Bounded.Sender where Element: ~Copyable {
             await unsafe withUnsafeContinuation { (raw: UnsafeContinuation<Async.Channel<Element>.Error?, Never>) in
                 let continuation = unsafe Async.Continuation.Unsafe(raw)
                 let action = handle.storage.withLock { state in
-                    state.sendSuspended(id: id, element: element, continuation: continuation)
+                    state.sendSuspended(id: id, slot: slot, continuation: continuation)
                 }
 
-                switch action {
+                switch consume action {
                 case .deliverToReceiver(let receiverCont, let element):
                     handle.storage.deliverySlot.store(element)
-            receiverCont.resume(returning: Async.Channel<Element>.Bounded.State.Receive.Signal.delivered)
+                    receiverCont.resume(returning: Async.Channel<Element>.Bounded.State.Receive.Signal.delivered)
                     continuation.resume(returning: nil)
                 case .buffered:
                     continuation.resume(returning: nil)
@@ -145,7 +147,7 @@ extension Async.Channel.Bounded.Sender where Element: ~Copyable {
                     continuation.resume(returning: .closed)
                 case .rejectCancelled:
                     continuation.resume(returning: .cancelled)
-                case .suspend:
+                case .suspended:
                     // Continuation stored, will be resumed later
                     break
                 }
@@ -189,20 +191,19 @@ extension Async.Channel.Bounded.Sender where Element: ~Copyable {
         ///           `.cancelled` if the task was cancelled.
         @inlinable
         public func immediate(_ element: consuming sending Element) throws(Async.Channel<Element>.Error) {
-            let action = handle.storage.withLock { state in
-                state.trySend(element)
+            let slot = Ownership.Slot(element)
+            let decision = handle.storage.withLock { state in
+                state.trySend(slot: slot)
             }
 
-            switch action {
+            switch consume decision {
             case .deliverToReceiver(let receiverCont, let element):
                 handle.storage.deliverySlot.store(element)
-            receiverCont.resume(returning: Async.Channel<Element>.Bounded.State.Receive.Signal.delivered)
+                receiverCont.resume(returning: Async.Channel<Element>.Bounded.State.Receive.Signal.delivered)
             case .buffered:
                 break
             case .rejectClosed:
                 throw .closed
-            case .rejectCancelled:
-                throw .cancelled
             case .suspend:
                 throw .full
             }

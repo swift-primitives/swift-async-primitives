@@ -101,7 +101,7 @@ extension Async.Channel.Bounded.Receiver where Element: ~Copyable {
                     state.receiveSuspended(continuation: continuation)
                 }
 
-                switch action {
+                switch consume action {
                 case .returnElement(let element, let resumeSender, let cancelled):
                     // Resume cancelled senders first (minimizes stuck time)
                     if var cancelled {
@@ -168,12 +168,10 @@ extension Async.Channel.Bounded.Receiver where Element: ~Copyable {
             }
 
             switch consume action {
-            case .returnElement(let element, let resumeSender, let cancelled):
+            case .returnElement(let element, let resumeSender, var cancelled):
                 // Resume cancelled senders first (minimizes stuck time)
-                if var cancelled {
-                    while let c = cancelled.take(from: .front) {
-                        c.resume(returning: .cancelled)
-                    }
+                while let c = cancelled?.take(from: .front) {
+                    c.resume(returning: .cancelled)
                 }
                 resumeSender?.resume(returning: nil)
                 return element
@@ -258,7 +256,7 @@ extension Async.Channel.Bounded.Elements {
                 state.tryReceive()
             }
 
-            switch fastAction {
+            switch consume fastAction {
             case .returnElement(let element, let resumeSender, let cancelled):
                 if var cancelled {
                     while let c = cancelled.take(from: .front) {
