@@ -26,8 +26,19 @@ extension Async.Channel.Unbounded {
     @usableFromInline
     struct State: Sendable {
         /// Buffered elements waiting to be received.
+        /// Optional to allow releasing the reference without heap allocation
+        /// in `receive._modify` (set to nil instead of `= Deque()`).
         @usableFromInline
-        var buffer: Deque<Element>
+        var _buffer: Deque<Element>?
+
+        /// Non-optional accessor for the buffer. The buffer is only nil
+        /// during the brief window inside `receive._modify`; all other
+        /// access is guarded by the mutex.
+        @usableFromInline
+        var buffer: Deque<Element> {
+            _read { yield _buffer.unsafelyUnwrapped }
+            _modify { yield &_buffer! }
+        }
 
         @usableFromInline
         var slot: Slot
@@ -38,7 +49,7 @@ extension Async.Channel.Unbounded {
 
         @usableFromInline
         init() {
-            self.buffer = Deque()
+            self._buffer = Deque()
             self.slot = .none
             self._closed = false
         }
@@ -141,14 +152,14 @@ extension Async.Channel.Unbounded.State {
             // This must happen before copying self to maintain CoW invariant.
             // Without this, the Deque._modify accessor receives a shared reference
             // and ensureUnique() triggers a copy with corrupted capacity.
-            buffer.reserve(.zero)
+            _buffer!.reserve(.zero)
 
             // Transfer state to wrapper (creates copy with shared buffer reference)
             var temp = Receive(self)
 
             // Release self's buffer reference - temp is now the unique owner.
-            // This mirrors the ownership transfer pattern in Deque.Take._modify.
-            buffer = Deque()
+            // Setting to nil avoids the heap allocation that `= Deque()` incurred.
+            _buffer = nil
 
             // Restore state from wrapper after mutation completes
             defer { self = temp.base }

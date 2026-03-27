@@ -74,10 +74,12 @@ extension Async.Channel.Bounded.Receiver {
         }
 
         switch fastAction {
-        case .returnElement(let element, let resumeSender, var cancelled):
+        case .returnElement(let element, let resumeSender, let cancelled):
             // Resume cancelled senders first (minimizes stuck time)
-            while let c = cancelled.front.take {
-                c.resume(returning: .cancelled)
+            if var cancelled {
+                while let c = cancelled.front.take {
+                    c.resume(returning: .cancelled)
+                }
             }
             resumeSender?.resume(returning: nil)
             return element
@@ -98,10 +100,12 @@ extension Async.Channel.Bounded.Receiver {
                 }
 
                 switch action {
-                case .returnElement(let element, let resumeSender, var cancelled):
+                case .returnElement(let element, let resumeSender, let cancelled):
                     // Resume cancelled senders first (minimizes stuck time)
-                    while let c = cancelled.front.take {
-                        c.resume(returning: .cancelled)
+                    if var cancelled {
+                        while let c = cancelled.front.take {
+                            c.resume(returning: .cancelled)
+                        }
                     }
                     resumeSender?.resume(returning: nil)
                     continuation.resume(returning: (element, nil))
@@ -158,10 +162,12 @@ extension Async.Channel.Bounded.Receiver {
             }
 
             switch action {
-            case .returnElement(let element, let resumeSender, var cancelled):
+            case .returnElement(let element, let resumeSender, let cancelled):
                 // Resume cancelled senders first (minimizes stuck time)
-                while let c = cancelled.front.take {
-                    c.resume(returning: .cancelled)
+                if var cancelled {
+                    while let c = cancelled.front.take {
+                        c.resume(returning: .cancelled)
+                    }
                 }
                 resumeSender?.resume(returning: nil)
                 return element
@@ -244,9 +250,11 @@ extension Async.Channel.Bounded.Elements {
             }
 
             switch fastAction {
-            case .returnElement(let element, let resumeSender, var cancelled):
-                while let c = cancelled.front.take {
-                    c.resume(returning: .cancelled)
+            case .returnElement(let element, let resumeSender, let cancelled):
+                if var cancelled {
+                    while let c = cancelled.front.take {
+                        c.resume(returning: .cancelled)
+                    }
                 }
                 resumeSender?.resume(returning: nil)
                 return element
@@ -267,9 +275,11 @@ extension Async.Channel.Bounded.Elements {
                     }
 
                     switch action {
-                    case .returnElement(let element, let resumeSender, var cancelled):
-                        while let c = cancelled.front.take {
-                            c.resume(returning: .cancelled)
+                    case .returnElement(let element, let resumeSender, let cancelled):
+                        if var cancelled {
+                            while let c = cancelled.front.take {
+                                c.resume(returning: .cancelled)
+                            }
                         }
                         resumeSender?.resume(returning: nil)
                         continuation.resume(returning: (element, nil))
