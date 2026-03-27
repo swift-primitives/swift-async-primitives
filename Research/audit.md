@@ -114,6 +114,8 @@ The `unsafe` keyword is used correctly as an expression keyword (not a block con
 
 All `@unchecked Sendable` usages have documented justification (Mutex-protected internal state or atomic operations). `consuming func` is used appropriately on `Entry.resumption(with:)` and `Take.ends()`.
 
+The `inout Element?` send-path pattern (bounded/unbounded channels) is ownership-correct: `element.take()!` is only called on paths where the Optional is guaranteed non-nil by control flow, and the `inout` reference passes safely through non-escaping `withLock` closures without ownership violations. The `.take()!` idiom (not `!`) avoids a known Swift 6.3 IRGen crash on force-unwrap of `var Optional<~Copyable>` into a generic `consuming` parameter.
+
 ---
 
 ## Primitives — 2026-03-27
@@ -136,6 +138,68 @@ No findings.
 0 findings.
 
 No Foundation imports anywhere in the package. All dependencies are on lower-tier primitives packages (`Buffer_Primitives`, `Queue_Primitives`, `Identity_Primitives`, `Dictionary_Primitives`, `Handle_Primitives`, `Ownership_Primitives`, `Kernel_Primitives`). Module naming uses the correct `-primitives` suffix convention. Downward-only tier dependency constraint is satisfied.
+
+---
+
+## Platform — 2026-03-27
+
+### Scope
+
+- **Target**: swift-async-primitives — all 6 source targets
+- **Skill**: platform — [PLAT-ARCH-*], [PATTERN-001–008]
+- **Files**: 55 source files, Package.swift
+
+### Findings
+
+| # | Severity | Rule | Location | Finding | Status |
+|---|----------|------|----------|---------|--------|
+
+No findings.
+
+### Summary
+
+0 findings.
+
+`#if !hasFeature(Embedded)` is used consistently across all async-suspension-dependent code (channels, broadcast, bridge, continuation). This is correct — `withUnsafeContinuation` and `withCheckedContinuation` are unavailable on embedded Swift. Non-suspension code (Lifecycle, Publication, Callback value paths) is unconditionally available.
+
+Package.swift correctly uses `.when(platforms:)` conditional for Kernel Primitives dependency (platform-specific). Swift settings include `.strictMemorySafety()`, `ExistentialAny`, `InternalImportsByDefault`, `MemberImportVisibility`, `NonisolatedNonsendingByDefault`, `Lifetimes`, `SuppressedAssociatedTypes` — consistent with ecosystem conventions. Swift language mode is v6. Swift tools version is 6.2.
+
+---
+
+## Testing — 2026-03-27
+
+### Scope
+
+- **Target**: swift-async-primitives — test target
+- **Skill**: testing — [TEST-*], testing-swiftlang — [SWIFT-TEST-*]
+- **Files**: 6 test files, 1 test support module
+
+### Findings
+
+| # | Severity | Rule | Location | Finding | Status |
+|---|----------|------|----------|---------|--------|
+| 1 | HIGH | [TEST-*] | Tests/ | No tests for Async Timer Primitives — Timer.Wheel is a multi-level hierarchical timer with tick computation, level promotion, slot management, and node lifecycle. Zero test coverage. | OPEN |
+| 2 | HIGH | [TEST-*] | Tests/ | No tests for Async Waiter Primitives — Waiter.Queue supports bounded/unbounded variants with two-phase suspension, flag-based filtering, and lazy skip. Zero test coverage. | OPEN |
+| 3 | MEDIUM | [TEST-*] | Tests/ | No dedicated tests for Core types: Bridge, Completion, Lifecycle, Promise, Precedence, Barrier, Mutex. Some exercised indirectly (Barrier as test synchronization util, Bridge in Publication stress tests via Unbounded channel) but no targeted coverage. | OPEN |
+| 4 | MEDIUM | [SWIFT-TEST-*] | Async.Channel.Bounded Tests.swift | Flat `@Suite struct BoundedChannelTests` without nested Unit/EdgeCase/Integration/Performance categorization. Contrast with Callback and Publication tests which use the nested `{Type}.Test.{Category}` pattern. | OPEN |
+| 5 | MEDIUM | [SWIFT-TEST-*] | Async.Channel.Unbounded Tests.swift | Same flat structure as bounded channel tests. Should follow nested pattern. | OPEN |
+| 6 | MEDIUM | [SWIFT-TEST-*] | Async.Broadcast Tests.swift | Two separate top-level suites (`BroadcastTests`, `BroadcastStressTests`) instead of nested `Broadcast.Test.Unit` / `Broadcast.Test.Stress` pattern. | OPEN |
+| 7 | MEDIUM | [TEST-*] | Async.Channel.Bounded Tests.swift | No explicit cancellation test for bounded sender. The `sendCancelled` path with lazy-skip and the `onCancel` handler in `send()` are never directly tested. Contrast with UnboundedChannelTests which has `Cancellation throws cancelled error`. | OPEN |
+| 8 | MEDIUM | [TEST-*] | Async.Channel.Bounded Tests.swift:267 | "Auto-close when sender drops" test is incomplete — comment at line 280 says "The test needs restructuring". Test creates `ends` before sender drops, keeping the handle alive via `ends.sender`, so auto-close is never actually triggered and verified. | OPEN |
+
+### Summary
+
+8 findings: 0 critical, 2 high, 6 medium, 0 low.
+
+**Coverage gap — Timer and Waiter** (Findings #1–2): Two of six source targets have zero test coverage. Timer.Wheel is particularly complex (multi-level promotion, tick arithmetic, node lifecycle) and Waiter.Queue has subtle concurrency semantics (two-phase suspension, flag-based filtering). These represent the largest testing gap in the package.
+
+**Coverage gap — Core types** (Finding #3): Bridge, Completion, Lifecycle, Promise, Barrier, Precedence, and Mutex lack dedicated tests. While some are exercised indirectly, this is insufficient for correctness confidence on infrastructure code.
+
+**Structural inconsistency** (Findings #4–6): Channel and Broadcast tests use flat suite organization while Callback and Publication tests use the proper nested `{Type}.Test.{Category}` pattern. The nested pattern enables selective test execution by category and provides clearer organization.
+
+**Bounded channel gaps** (Findings #7–8): Missing cancellation test and incomplete auto-close test leave two important bounded channel behaviors unverified.
+
+**Positive observations**: Test names are descriptive and backtick-quoted. `#expect` assertions used throughout (no XCTAssert). Stress tests use iteration (rounds) for statistical confidence. `Async.Barrier` used for deterministic task synchronization instead of arbitrary sleeps. Typed `do throws(...)` used for error-type assertions. Test support module re-exports all dependencies cleanly.
 
 ---
 
@@ -207,8 +271,8 @@ The bounded and unbounded channels are in good shape after the `53c9694e` optimi
 |---|----------|------|----------|---------|--------|
 | 1 | HIGH | PERF-COPY | Async.Continuation.swift:60, Async.Continuation.Unsafe.swift:43 | `resume(returning value: T)` takes `value` by default convention (owned), not `consuming`. The stdlib `UnsafeContinuation.resume(returning: consuming sending T)` takes `consuming`. This creates a copy at the wrapper → stdlib boundary for every element delivery across all channel types. | RESOLVED 2026-03-27 |
 | 2 | HIGH | PERF-COPY | Async.Channel.Bounded.State.swift:266 | Receive continuation type is `Async.Continuation<(Element?, Error?)>.Unsafe` — every element delivery wraps in Optional then constructs a 2-element tuple. The unbounded channel has the same pattern (State.swift:123). Contrast with Broadcast's `Next.Outcome` enum which avoids Optional wrapping entirely. | RESOLVED 2026-03-27 |
-| 3 | MEDIUM | PERF-COPY | Async.Channel.Bounded.State.swift:76–94 | `State.Sender` bundles `element: Element` with `id` and `continuation` as `let` fields. When a suspended sender is popped at :316/:324, `sender.element` reads a `let` field from a live struct — this is a copy, not a move. The element cannot be consumed independently of the struct. | OPEN |
-| 4 | MEDIUM | PERF-COPY | Async.Channel.Bounded.State.swift:149, Unbounded.State.swift:83,100 | Action enum associated values carry `Element` through the lock boundary. `Send.Action.deliverToReceiver(_, Element)` and `Receive.Action.returnElement(Element, _, _)` store the element, then the caller pattern-matches it out. For Copyable types, enum extraction creates a binding copy; the optimizer should eliminate it in -O, but is not guaranteed to. | OPEN |
+| 3 | MEDIUM | PERF-COPY | Async.Channel.Bounded.State.swift:76–94 | `State.Sender` bundles `element: Element` with `id` and `continuation` as `let` fields. When a suspended sender is popped at :316/:324, `sender.element` reads a `let` field from a live struct — this is a copy, not a move. The element cannot be consumed independently of the struct. | RESOLVED 2026-03-27 — Restructure stores `Ownership.Slot<Element>` (Copyable reference) instead of `Element`. Reading `sender.slot` copies a reference (trivial); `slot.take(__unchecked:)` moves the element via atomic CAS + pointer move. Zero copies regardless of Sender struct lifetime. |
+| 4 | MEDIUM | PERF-COPY | Async.Channel.Bounded.State.swift:149, Unbounded.State.swift:83,100 | Action enum associated values carry `Element` through the lock boundary. `Send.Action.deliverToReceiver(_, Element)` and `Receive.Action.returnElement(Element, _, _)` store the element, then the caller pattern-matches it out. For Copyable types, enum extraction creates a binding copy; the optimizer should eliminate it in -O, but is not guaranteed to. | IMPROVED 2026-03-27 — All fast-path switches use `switch consume`, forcing destructive extraction for ~Copyable. Optimizer-dependent for Copyable unchanged. |
 | 5 | MEDIUM | PERF-COPY | Async.Broadcast.swift:133–148 | `toResume` array copies `element` once per waiting subscriber: `toResume.append((cont, element))`. For fan-out to N>1 subscribers, N-1 copies are inherent. But for the single-subscriber fast path, the copy into the array is avoidable — could deliver directly without array intermediary. | OPEN |
 | 6 | MEDIUM | [MEM-OWN-001] | Async.Channel.Bounded.State.swift:178, Unbounded.State.swift:94 | `trySend(_ element: Element)` and `send(_ element: Element)` take `element` by default owned convention, not `consuming`. Adding `consuming` would make the ownership transfer explicit and eliminate any caller-side retain for Copyable types with heap storage (arrays, strings). | RESOLVED 2026-03-27 |
 | 7 | LOW | PERF-COPY | Async.Bridge.swift:84–98 | `push(_ element: sending Element)` has a double-delivery pattern: element is captured in the `withLock` closure, but on the direct-to-continuation path, `element` is also passed to `continuationToResume?.resume(returning: element)` outside the lock. The same `element` binding is used in both the buffer path and the resume path, which is correct (only one executes) but the binding crosses the lock boundary in both cases. Not a copy — compiler can prove mutual exclusion — but the pattern is fragile. | OPEN |
@@ -513,20 +577,26 @@ mutating func send(_ element: consuming Element) -> Send.Action { ... }
 
 ### Summary
 
-9 findings: 0 critical, 2 high, 4 medium, 3 low (including 2 false positives). **3 resolved**, 6 open (including 2 false positives).
+9 findings: 0 critical, 2 high, 4 medium, 3 low (including 2 false positives). **5 resolved**, 1 improved, 3 unchanged (1 open, 2 false positives).
 
 **Resolved — Continuation copy elimination** (#1): `Async.Continuation.resume(returning:)` and `.Unsafe.resume(returning:)` now take `consuming` parameter, matching the stdlib `UnsafeContinuation.resume(returning: consuming sending T)` contract. Eliminates 1 copy per element delivery across all channel types.
 
-**Resolved — Tri-state receive outcome** (#2): Bounded and unbounded channels now use `Receive.Outcome` enum (`.element(Element)` | `.closed` | `.cancelled`) instead of `(Element?, Error?)` tuple. Eliminates Optional wrapping and sentinel-based `(nil, nil)` closed signaling. Follows the pattern already established by Broadcast's `Next.Outcome`.
+**Resolved — Tri-state receive outcome → Signal + deliverySlot** (#2): Bounded and unbounded channels now use `Receive.Signal` enum (`.delivered` | `.closed` | `.cancelled`) for the continuation, with the element transferred via a persistent `Ownership.Slot<Element>` (deliverySlot) on Storage. This completely eliminates Optional wrapping, tuple construction, and element transport through the continuation type.
 
-**Resolved — `consuming` on state machine sends** (#6): `trySend(_ element: consuming Element)`, `sendSuspended(... element: consuming Element ...)`, and unbounded `send(_ element: consuming Element)` now explicitly transfer ownership.
+**Resolved — Sender.element let-field copy** (#3): The ~Copyable restructure (`6f04280f`) replaced `let element: Element` with `let slot: Ownership.Slot<Element>` in the Sender struct. Reading `sender.slot` copies a class reference (trivial); `slot.take(__unchecked:)` atomically moves the element via CAS + pointer move. The 1-copy-per-suspended-sender-delivery is eliminated.
 
-**Core insight**: The Deque layer is zero-copy — `consuming` push and destructive take move elements without copying. The remaining copies are:
+**Improved — Action enum extraction** (#4): All fast-path switches now use `switch consume`, which forces destructive pattern matching for ~Copyable elements (guaranteed move). For Copyable elements, optimizer-dependent as before.
 
-1. **Sender struct field read** (Finding #3, MEDIUM): 1 copy per suspended sender delivery. Structural fix deferred.
-2. **Action enum extraction** (Finding #4, MEDIUM): optimizer-dependent, likely 0 copies in -O.
-3. **Broadcast fan-out** (Finding #5, MEDIUM): inherent for N>1 subscribers.
+**Resolved — `consuming` on state machine sends** (#6): Now moot — state machine methods receive `Ownership.Slot<Element>` (Copyable reference) instead of `Element` directly.
 
-**~Copyable and ~Sendable Element**: Both blocked at the language level by stdlib continuation generics. DEFERRED pending Swift evolution.
+**Core insight**: The entire element pipeline is now zero-copy for ~Copyable elements. The Deque layer uses `consuming` push and destructive take. The Slot-based staging adds ~100-140ns overhead per send (1 malloc/free + 4 atomics) as the cost of ~Copyable closure capture avoidance. The remaining considerations are:
+
+1. **Action enum extraction** (Finding #4, IMPROVED): 0 copies for ~Copyable (forced by `consume`), optimizer-dependent for Copyable.
+2. **Broadcast fan-out** (Finding #5, OPEN): inherent for N>1 subscribers. Out of scope for channel restructure.
+3. **Slot-per-send overhead**: ~100-140ns per send. Necessary for ~Copyable; a Copyable-specialized fast path could eliminate it for the common case. Not a correctness issue.
+
+**~Copyable Element**: Internal constraints fully prepared. 1 genuine stdlib blocker remains (`UnsafeContinuation<T>` implicit Copyable). See `Research/zero-copy-noncopyable-element-feasibility.md`.
+
+**~Sendable Element**: Blocked by `Mutex<State: Sendable>` → `Deque<Element: Sendable>` chain. Requires radically different architecture. DEFERRED.
 
 **Concurrency annotations**: All correct. `nonisolated(nonsending)` and `isolated (any Actor)?` applied consistently.
