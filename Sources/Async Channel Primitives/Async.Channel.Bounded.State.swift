@@ -14,7 +14,7 @@
 
 public import Queue_Primitives
 
-extension Async.Channel.Bounded {
+extension Async.Channel.Bounded where Element: ~Copyable {
     /// Pure state machine for bounded channel operations.
     ///
     /// This state machine contains no side effects. All operations return
@@ -24,7 +24,7 @@ extension Async.Channel.Bounded {
     /// values. This eliminates the per-mutation extract-reconstruct cycle
     /// (and the `.modifying` sentinel needed to prevent CoW during extraction).
     @usableFromInline
-    struct State: Sendable {
+    struct State: ~Copyable, @unchecked Sendable {
         @usableFromInline
         var status: Status
         @usableFromInline
@@ -34,7 +34,7 @@ extension Async.Channel.Bounded {
         @usableFromInline
         var receiver: Receiver?
         @usableFromInline
-        let capacity: Int
+        let capacity: Index<Element>.Count
         @usableFromInline
         var nextId: UInt64 = 0
         @usableFromInline
@@ -43,7 +43,7 @@ extension Async.Channel.Bounded {
         var cancelledReceiver: Bool = false
 
         @usableFromInline
-        init(capacity: Int) {
+        init(capacity: Index<Element>.Count) {
             self.status = .open
             self.buffer = Deque()
             self.senders = Deque()
@@ -55,7 +55,7 @@ extension Async.Channel.Bounded {
 
 // MARK: - Status
 
-extension Async.Channel.Bounded.State {
+extension Async.Channel.Bounded.State where Element: ~Copyable {
     @usableFromInline
     enum Status: Sendable {
         /// Channel is open and operational.
@@ -71,9 +71,9 @@ extension Async.Channel.Bounded.State {
 
 // MARK: - Sender
 
-extension Async.Channel.Bounded.State {
+extension Async.Channel.Bounded.State where Element: ~Copyable {
     @usableFromInline
-    struct Sender: Sendable {
+    struct Sender: ~Copyable, @unchecked Sendable {
         @usableFromInline
         let id: UInt64
         @usableFromInline
@@ -84,7 +84,7 @@ extension Async.Channel.Bounded.State {
         @usableFromInline
         init(
             id: UInt64,
-            element: Element,
+            element: consuming Element,
             continuation: Send.Continuation
         ) {
             self.id = id
@@ -96,7 +96,7 @@ extension Async.Channel.Bounded.State {
 
 // MARK: - Receiver
 
-extension Async.Channel.Bounded.State {
+extension Async.Channel.Bounded.State where Element: ~Copyable {
     @usableFromInline
     struct Receiver: Sendable {
         @usableFromInline
@@ -111,7 +111,7 @@ extension Async.Channel.Bounded.State {
 
 // MARK: - Sender Queue Helpers
 
-extension Async.Channel.Bounded.State {
+extension Async.Channel.Bounded.State where Element: ~Copyable {
     /// Pops the next non-cancelled sender from the queue.
     ///
     /// Cancelled senders are skipped and their continuations resumed via the closure.
@@ -122,7 +122,7 @@ extension Async.Channel.Bounded.State {
     mutating func popNextSender(
         resumeCancelled: (Send.Continuation) -> Void
     ) -> Sender? {
-        while let sender = senders.front.take {
+        while let sender = senders.take(from: .front) {
             if cancelledSenders.remove(sender.id) != nil {
                 resumeCancelled(sender.continuation)
                 continue
@@ -135,7 +135,7 @@ extension Async.Channel.Bounded.State {
 
 // MARK: - Send
 
-extension Async.Channel.Bounded.State {
+extension Async.Channel.Bounded.State where Element: ~Copyable {
     @usableFromInline
     enum Send {
         /// Continuation type for send operations.
@@ -144,7 +144,7 @@ extension Async.Channel.Bounded.State {
         typealias Continuation = Async.Continuation<Async.Channel<Element>.Error?>.Unsafe
 
         @usableFromInline
-        enum Action: Sendable {
+        enum Action: ~Copyable, @unchecked Sendable {
             /// Deliver the element directly to a waiting receiver.
             case deliverToReceiver(Receive.Continuation, Element)
 
@@ -186,7 +186,7 @@ extension Async.Channel.Bounded.State {
 
             // If buffer has space, add to buffer
             if buffer.count < capacity {
-                buffer.back.push(element)
+                buffer.push(element, to: .back)
                 return .buffered
             }
 
@@ -223,12 +223,12 @@ extension Async.Channel.Bounded.State {
 
             // Double-check: space might be available
             if buffer.count < capacity {
-                buffer.back.push(element)
+                buffer.push(element, to: .back)
                 return .buffered
             }
 
             // Enqueue waiter
-            senders.back.push(Sender(id: id, element: element, continuation: continuation))
+            senders.push(Sender(id: id, element: element, continuation: continuation), to: .back)
             return .suspend(id: id)
 
         case .closed, .finished:
@@ -257,14 +257,15 @@ extension Async.Channel.Bounded.State {
 
 // MARK: - Receive
 
-extension Async.Channel.Bounded.State {
+extension Async.Channel.Bounded.State where Element: ~Copyable {
     @usableFromInline
     enum Receive {
-        /// Tri-state outcome for receive operations.
+        /// Lightweight signal carried through the continuation.
+        /// Element delivery happens via Ownership.Slot, not through the continuation.
         @usableFromInline
-        enum Outcome: Sendable {
-            /// An element was received.
-            case element(Element)
+        enum Signal: Sendable {
+            /// An element was delivered via the delivery slot.
+            case delivered
             /// The channel is closed and drained.
             case closed
             /// The operation was cancelled.
@@ -272,11 +273,12 @@ extension Async.Channel.Bounded.State {
         }
 
         /// Continuation type for receive operations.
+        /// Carries Signal (Copyable) — element travels via Ownership.Slot.
         @usableFromInline
-        typealias Continuation = Async.Continuation<Outcome>.Unsafe
+        typealias Continuation = Async.Continuation<Signal>.Unsafe
 
         @usableFromInline
-        enum Action: Sendable {
+        enum Action: ~Copyable, @unchecked Sendable {
             /// Return the element immediately.
             /// `resumeSender`: continuation of the sender that provided this element.
             /// `cancelled`: continuations of cancelled senders skipped during pop.
@@ -316,14 +318,14 @@ extension Async.Channel.Bounded.State {
             var cancelled: Deque<Send.Continuation>? = nil
             let collectCancelled: (Send.Continuation) -> Void = {
                 if cancelled == nil { cancelled = Deque() }
-                cancelled!.back.push($0)
+                cancelled!.push($0, to: .back)
             }
 
             // If buffer has elements
-            if let element = buffer.front.take {
+            if let element = buffer.take(from: .front) {
                 // Wake up a waiting sender if any (skipping cancelled)
                 if let sender = popNextSender(resumeCancelled: collectCancelled) {
-                    buffer.back.push(sender.element)
+                    buffer.push(sender.element, to: .back)
                     return .returnElement(element, resumeSender: sender.continuation, cancelled: cancelled)
                 }
                 return .returnElement(element, resumeSender: nil, cancelled: cancelled)
@@ -338,7 +340,7 @@ extension Async.Channel.Bounded.State {
             return .suspend
 
         case .closed:
-            if let element = buffer.front.take {
+            if let element = buffer.take(from: .front) {
                 if buffer.isEmpty {
                     status = .finished
                 }
@@ -371,13 +373,13 @@ extension Async.Channel.Bounded.State {
             var cancelled: Deque<Send.Continuation>? = nil
             let collectCancelled: (Send.Continuation) -> Void = {
                 if cancelled == nil { cancelled = Deque() }
-                cancelled!.back.push($0)
+                cancelled!.push($0, to: .back)
             }
 
             // Double-check: element might be available
-            if let element = buffer.front.take {
+            if let element = buffer.take(from: .front) {
                 if let sender = popNextSender(resumeCancelled: collectCancelled) {
-                    buffer.back.push(sender.element)
+                    buffer.push(sender.element, to: .back)
                     return .returnElement(element, resumeSender: sender.continuation, cancelled: cancelled)
                 }
                 return .returnElement(element, resumeSender: nil, cancelled: cancelled)
@@ -392,7 +394,7 @@ extension Async.Channel.Bounded.State {
             return .suspend
 
         case .closed:
-            if let element = buffer.front.take {
+            if let element = buffer.take(from: .front) {
                 if buffer.isEmpty {
                     status = .finished
                 }
@@ -427,7 +429,7 @@ extension Async.Channel.Bounded.State {
 
 // MARK: - Close
 
-extension Async.Channel.Bounded.State {
+extension Async.Channel.Bounded.State where Element: ~Copyable {
     @usableFromInline
     struct Close: Sendable {
         @usableFromInline
@@ -451,8 +453,8 @@ extension Async.Channel.Bounded.State {
         case .open:
             // Collect senders to cancel (drain the queue)
             var sendersToCancel = Deque<Send.Continuation>()
-            while let sender = senders.front.take {
-                sendersToCancel.back.push(sender.continuation)
+            while let sender = senders.take(from: .front) {
+                sendersToCancel.push(sender.continuation, to: .back)
             }
 
             // If buffer is empty and receiver is waiting, resume with nil
@@ -479,7 +481,7 @@ extension Async.Channel.Bounded.State {
 
 // MARK: - Query
 
-extension Async.Channel.Bounded.State {
+extension Async.Channel.Bounded.State where Element: ~Copyable {
     @usableFromInline
     var isClosed: Bool {
         switch status {

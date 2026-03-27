@@ -14,7 +14,7 @@
 
 public import Queue_Primitives
 
-extension Async.Channel.Unbounded {
+extension Async.Channel.Unbounded where Element: ~Copyable {
     /// Pure state machine for unbounded channel operations.
     ///
     /// This state machine contains no side effects. All operations return
@@ -58,7 +58,7 @@ extension Async.Channel.Unbounded {
 
 // MARK: - Slot
 
-extension Async.Channel.Unbounded.State {
+extension Async.Channel.Unbounded.State where Element: ~Copyable {
     @usableFromInline
     enum Slot: Sendable {
         case none
@@ -68,14 +68,14 @@ extension Async.Channel.Unbounded.State {
 
 // MARK: - Query
 
-extension Async.Channel.Unbounded.State {
+extension Async.Channel.Unbounded.State where Element: ~Copyable {
     @usableFromInline
     var closed: Bool { _closed }
 }
 
 // MARK: - Send
 
-extension Async.Channel.Unbounded.State {
+extension Async.Channel.Unbounded.State where Element: ~Copyable {
     @usableFromInline
     enum Send {
         @usableFromInline
@@ -107,7 +107,7 @@ extension Async.Channel.Unbounded.State {
 
 // MARK: - Receive
 
-extension Async.Channel.Unbounded.State {
+extension Async.Channel.Unbounded.State where Element: ~Copyable {
     @usableFromInline
     struct Receive {
         
@@ -179,7 +179,7 @@ extension Async.Channel.Unbounded.State {
     }
 }
 
-extension Async.Channel.Unbounded.State.Receive {
+extension Async.Channel.Unbounded.State.Receive where Element: ~Copyable {
     @usableFromInline
     mutating func poll() -> Element? {
         base.buffer.front.take
@@ -228,7 +228,7 @@ extension Async.Channel.Unbounded.State.Receive {
 
 // MARK: - Close
 
-extension Async.Channel.Unbounded.State {
+extension Async.Channel.Unbounded.State where Element: ~Copyable {
     @usableFromInline
     enum Close: Sendable {
         case none

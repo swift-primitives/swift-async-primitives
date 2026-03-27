@@ -14,7 +14,7 @@
 
 internal import Queue_Primitives
 
-extension Async.Channel.Unbounded {
+extension Async.Channel.Unbounded where Element: ~Copyable {
     /// A receiver for an unbounded channel.
     ///
     /// `Receiver` is `~Copyable` (unique) and transferable across tasks.
@@ -56,7 +56,7 @@ extension Async.Channel.Unbounded {
 
 // MARK: - Receive Operations
 
-extension Async.Channel.Unbounded.Receiver {
+extension Async.Channel.Unbounded.Receiver where Element: ~Copyable {
     /// Receive the next element from the channel.
     ///
     /// Suspends if the buffer is empty until an element becomes available
@@ -145,7 +145,7 @@ extension Async.Channel.Unbounded.Receiver {
 
 // MARK: - Query
 
-extension Async.Channel.Unbounded.Receiver {
+extension Async.Channel.Unbounded.Receiver where Element: ~Copyable {
     /// Whether the channel has been closed.
     ///
     /// Returns true when no further elements can be enqueued.
@@ -160,7 +160,7 @@ extension Async.Channel.Unbounded.Receiver {
 
 // MARK: - AsyncSequence View
 
-extension Async.Channel.Unbounded.Receiver {
+extension Async.Channel.Unbounded.Receiver where Element: ~Copyable {
     /// Returns an AsyncSequence view for iteration.
     ///
     /// ```swift

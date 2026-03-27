@@ -12,7 +12,7 @@
 // Async channels require task suspension which is not available on embedded Swift.
 #if !hasFeature(Embedded)
 
-extension Async.Channel {
+extension Async.Channel where Element: ~Copyable {
     /// Bounded channel with backpressure.
     ///
     /// Provides a capacity-limited channel where sends suspend when
@@ -73,8 +73,8 @@ extension Async.Channel {
         ///
         /// - Parameter capacity: The maximum number of elements that can be buffered.
         ///   Must be greater than zero.
-        public init(capacity: Int) {
-            precondition(capacity > 0, "Bounded channel capacity must be greater than zero")
+        public init(capacity: Index<Element>.Count) {
+            precondition(capacity > .zero, "Bounded channel capacity must be greater than zero")
             let storage = Storage(capacity: capacity)
             self.storage = storage
             self.sender = Sender(storage: storage)
@@ -99,7 +99,7 @@ extension Async.Channel {
 
 // MARK: - Take (consuming accessors)
 
-extension Async.Channel.Bounded {
+extension Async.Channel.Bounded where Element: ~Copyable {
     /// Consuming accessor for moving endpoints out of the channel.
     ///
     /// ```swift
@@ -132,7 +132,7 @@ extension Async.Channel.Bounded {
 
 // MARK: - Ends
 
-extension Async.Channel.Bounded {
+extension Async.Channel.Bounded where Element: ~Copyable {
     /// Bundle containing both sender and receiver.
     ///
     /// `Ends` is `~Copyable` because it contains the `~Copyable` receiver.

@@ -12,7 +12,7 @@
 // Async channels require task suspension which is not available on embedded Swift.
 #if !hasFeature(Embedded)
 
-extension Async.Channel.Unbounded {
+extension Async.Channel.Unbounded where Element: ~Copyable {
     /// A sender view for an unbounded channel.
     ///
     /// `Sender` is a Copyable, Sendable struct that allows sending elements
@@ -52,7 +52,7 @@ extension Async.Channel.Unbounded {
 
 // MARK: - Send Operations
 
-extension Async.Channel.Unbounded.Sender {
+extension Async.Channel.Unbounded.Sender where Element: ~Copyable {
     /// Send an element to the channel.
     ///
     /// If a receiver is waiting, delivers the element directly.
@@ -113,7 +113,7 @@ extension Async.Channel.Unbounded.Sender {
 
 // MARK: - Lifecycle
 
-extension Async.Channel.Unbounded.Sender {
+extension Async.Channel.Unbounded.Sender where Element: ~Copyable {
     /// Close the channel, signaling no more elements will be sent.
     ///
     /// After this call:

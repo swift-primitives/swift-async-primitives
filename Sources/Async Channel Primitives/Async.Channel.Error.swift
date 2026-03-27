@@ -12,7 +12,7 @@
 // Async channels require task suspension which is not available on embedded Swift.
 #if !hasFeature(Embedded)
 
-extension Async.Channel {
+extension Async.Channel where Element: ~Copyable {
     /// Errors that can occur during channel operations.
     public typealias Error = Async._ChannelError
 }

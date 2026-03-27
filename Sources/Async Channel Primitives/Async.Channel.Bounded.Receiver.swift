@@ -12,9 +12,10 @@
 // Async channels require task suspension which is not available on embedded Swift.
 #if !hasFeature(Embedded)
 
+public import Ownership_Primitives
 public import Queue_Primitives
 
-extension Async.Channel.Bounded {
+extension Async.Channel.Bounded where Element: ~Copyable {
     /// A receiver handle for a bounded channel.
     ///
     /// `Receiver` enforces a single-suspended-receiver invariant: at most one
@@ -53,7 +54,7 @@ extension Async.Channel.Bounded {
 
 // MARK: - Receive Operations
 
-extension Async.Channel.Bounded.Receiver {
+extension Async.Channel.Bounded.Receiver where Element: ~Copyable {
     /// Receive the next element from the channel.
     ///
     /// Suspends if the buffer is empty until an element becomes available
@@ -73,11 +74,11 @@ extension Async.Channel.Bounded.Receiver {
             state.tryReceive()
         }
 
-        switch fastAction {
+        switch consume fastAction {
         case .returnElement(let element, let resumeSender, let cancelled):
             // Resume cancelled senders first (minimizes stuck time)
             if var cancelled {
-                while let c = cancelled.front.take {
+                while let c = cancelled.take(from: .front) {
                     c.resume(returning: .cancelled)
                 }
             }
@@ -92,8 +93,9 @@ extension Async.Channel.Bounded.Receiver {
         }
 
         // Slow path: need to suspend
-        let outcome: Async.Channel<Element>.Bounded.State.Receive.Outcome = await withTaskCancellationHandler {
-            await unsafe withUnsafeContinuation { (raw: UnsafeContinuation<Async.Channel<Element>.Bounded.State.Receive.Outcome, Never>) in
+        // Element delivery uses Ownership.Slot — continuation carries Signal only.
+        let signal: Async.Channel<Element>.Bounded.State.Receive.Signal = await withTaskCancellationHandler {
+            await unsafe withUnsafeContinuation { (raw: UnsafeContinuation<Async.Channel<Element>.Bounded.State.Receive.Signal, Never>) in
                 let continuation = unsafe Async.Continuation.Unsafe(raw)
                 let action = storage.withLock { state in
                     state.receiveSuspended(continuation: continuation)
@@ -103,12 +105,13 @@ extension Async.Channel.Bounded.Receiver {
                 case .returnElement(let element, let resumeSender, let cancelled):
                     // Resume cancelled senders first (minimizes stuck time)
                     if var cancelled {
-                        while let c = cancelled.front.take {
+                        while let c = cancelled.take(from: .front) {
                             c.resume(returning: .cancelled)
                         }
                     }
                     resumeSender?.resume(returning: nil)
-                    continuation.resume(returning: .element(element))
+                    storage.deliverySlot.store(element)
+                    continuation.resume(returning: .delivered)
                 case .returnNil:
                     continuation.resume(returning: .closed)
                 case .rejectCancelled:
@@ -130,8 +133,8 @@ extension Async.Channel.Bounded.Receiver {
             }
         }
 
-        switch outcome {
-        case .element(let element): return element
+        switch signal {
+        case .delivered: return storage.deliverySlot.take()
         case .closed: return nil
         case .cancelled: throw .cancelled
         }
@@ -143,7 +146,7 @@ extension Async.Channel.Bounded.Receiver {
 
 // MARK: - Receive Accessor
 
-extension Async.Channel.Bounded.Receiver {
+extension Async.Channel.Bounded.Receiver where Element: ~Copyable {
     /// Receive operation accessor with variants.
     public struct Receive: @unchecked Sendable {
         @usableFromInline
@@ -164,11 +167,11 @@ extension Async.Channel.Bounded.Receiver {
                 state.tryReceive()
             }
 
-            switch action {
+            switch consume action {
             case .returnElement(let element, let resumeSender, let cancelled):
                 // Resume cancelled senders first (minimizes stuck time)
                 if var cancelled {
-                    while let c = cancelled.front.take {
+                    while let c = cancelled.take(from: .front) {
                         c.resume(returning: .cancelled)
                     }
                 }
@@ -187,7 +190,7 @@ extension Async.Channel.Bounded.Receiver {
 
 // MARK: - Query
 
-extension Async.Channel.Bounded.Receiver {
+extension Async.Channel.Bounded.Receiver where Element: ~Copyable {
     /// Whether the channel has been closed.
     ///
     /// Note: Even when `true`, `receive()` may still return elements
@@ -201,6 +204,9 @@ extension Async.Channel.Bounded.Receiver {
 
 extension Async.Channel.Bounded.Receiver {
     /// Returns an AsyncSequence view for iteration.
+    ///
+    /// Available only when `Element` is `Copyable` (required by `AsyncSequence`).
+    /// For `~Copyable` elements, use `receive()` directly in a while loop.
     ///
     /// ```swift
     /// for try await value in receiver.elements {
@@ -255,7 +261,7 @@ extension Async.Channel.Bounded.Elements {
             switch fastAction {
             case .returnElement(let element, let resumeSender, let cancelled):
                 if var cancelled {
-                    while let c = cancelled.front.take {
+                    while let c = cancelled.take(from: .front) {
                         c.resume(returning: .cancelled)
                     }
                 }
@@ -270,8 +276,8 @@ extension Async.Channel.Bounded.Elements {
             }
 
             // Slow path: need to suspend
-            let outcome: Async.Channel<Element>.Bounded.State.Receive.Outcome = await withTaskCancellationHandler {
-                await unsafe withUnsafeContinuation { (raw: UnsafeContinuation<Async.Channel<Element>.Bounded.State.Receive.Outcome, Never>) in
+            let signal: Async.Channel<Element>.Bounded.State.Receive.Signal = await withTaskCancellationHandler {
+                await unsafe withUnsafeContinuation { (raw: UnsafeContinuation<Async.Channel<Element>.Bounded.State.Receive.Signal, Never>) in
                     let continuation = unsafe Async.Continuation.Unsafe(raw)
                     let action = storage.withLock { state in
                         state.receiveSuspended(continuation: continuation)
@@ -280,12 +286,13 @@ extension Async.Channel.Bounded.Elements {
                     switch action {
                     case .returnElement(let element, let resumeSender, let cancelled):
                         if var cancelled {
-                            while let c = cancelled.front.take {
+                            while let c = cancelled.take(from: .front) {
                                 c.resume(returning: .cancelled)
                             }
                         }
                         resumeSender?.resume(returning: nil)
-                        continuation.resume(returning: .element(element))
+                        storage.deliverySlot.store(element)
+                        continuation.resume(returning: .delivered)
                     case .returnNil:
                         continuation.resume(returning: .closed)
                     case .rejectCancelled:
@@ -306,8 +313,8 @@ extension Async.Channel.Bounded.Elements {
                 }
             }
 
-            switch outcome {
-            case .element(let element): return element
+            switch signal {
+            case .delivered: return storage.deliverySlot.take()
             case .closed: return nil
             case .cancelled: throw .cancelled
             }

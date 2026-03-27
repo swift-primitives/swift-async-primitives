@@ -15,7 +15,7 @@
 public import Ownership_Primitives
 public import Synchronization
 
-extension Async.Channel.Bounded {
+extension Async.Channel.Bounded where Element: ~Copyable {
     /// Thread-safe storage wrapping the state machine.
     ///
     /// Uses `Ownership.Mutable.Unchecked` to give the channel reference semantics
@@ -26,13 +26,19 @@ extension Async.Channel.Bounded {
         @usableFromInline
         let _storage: Ownership.Mutable<Mutex<State>>.Unchecked
 
+        /// Slot for transferring ~Copyable elements outside the continuation.
+        /// The continuation carries a lightweight Signal; the element travels here.
         @usableFromInline
-        init(capacity: Int) {
+        let deliverySlot: Ownership.Slot<Element>
+
+        @usableFromInline
+        init(capacity: Index<Element>.Count) {
             self._storage = Ownership.Mutable.Unchecked(Mutex(State(capacity: capacity)))
+            self.deliverySlot = Ownership.Slot()
         }
 
         @inlinable
-        func withLock<T, E: Swift.Error>(_ body: (inout State) throws(E) -> T) throws(E) -> T {
+        func withLock<T: ~Copyable, E: Swift.Error>(_ body: (inout State) throws(E) -> sending T) throws(E) -> sending T {
             try _storage.mutable.value.withLock { (state: inout State) throws(E) -> T in
                 try body(&state)
             }

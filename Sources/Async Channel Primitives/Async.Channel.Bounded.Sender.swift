@@ -12,9 +12,10 @@
 // Async channels require task suspension which is not available on embedded Swift.
 #if !hasFeature(Embedded)
 
+internal import Ownership_Primitives
 internal import Queue_Primitives
 
-extension Async.Channel.Bounded {
+extension Async.Channel.Bounded where Element: ~Copyable {
     /// A sender handle for a bounded channel.
     ///
     /// `Sender` is a Copyable, Sendable struct that allows sending elements
@@ -53,7 +54,7 @@ extension Async.Channel.Bounded {
 
 // MARK: - Handle (ARC-based auto-close)
 
-extension Async.Channel.Bounded.Sender {
+extension Async.Channel.Bounded.Sender where Element: ~Copyable {
     /// Internal handle that provides ARC-based auto-close.
     ///
     /// When the last reference to this handle is released, the channel
@@ -78,7 +79,7 @@ extension Async.Channel.Bounded.Sender {
             closeAction.receiverToResume?.resume(returning: .closed)
 
             // Cancel all waiting senders - outside lock
-            while let continuation = closeAction.sendersToCancel.front.take {
+            while let continuation = closeAction.sendersToCancel.take(from: .front) {
                 continuation.resume(returning: .closed)
             }
         }
@@ -87,7 +88,7 @@ extension Async.Channel.Bounded.Sender {
 
 // MARK: - Send Operations
 
-extension Async.Channel.Bounded.Sender {
+extension Async.Channel.Bounded.Sender where Element: ~Copyable {
     /// Send an element to the channel.
     ///
     /// Suspends if the buffer is full until space becomes available
@@ -102,7 +103,7 @@ extension Async.Channel.Bounded.Sender {
     @inlinable
     nonisolated(nonsending)
     public func send(
-        _ element: sending Element
+        _ element: consuming sending Element
     ) async throws(Async.Channel<Element>.Error) {
         // Fast path: try immediate send
         let fastAction = handle.storage.withLock { state in
@@ -112,7 +113,8 @@ extension Async.Channel.Bounded.Sender {
         let id: UInt64
         switch fastAction {
         case .deliverToReceiver(let receiverCont, let element):
-            receiverCont.resume(returning: .element(element))
+            handle.storage.deliverySlot.store(element)
+            receiverCont.resume(returning: Async.Channel<Element>.Bounded.State.Receive.Signal.delivered)
             return
         case .buffered:
             return
@@ -134,7 +136,8 @@ extension Async.Channel.Bounded.Sender {
 
                 switch action {
                 case .deliverToReceiver(let receiverCont, let element):
-                    receiverCont.resume(returning: .element(element))
+                    handle.storage.deliverySlot.store(element)
+            receiverCont.resume(returning: Async.Channel<Element>.Bounded.State.Receive.Signal.delivered)
                     continuation.resume(returning: nil)
                 case .buffered:
                     continuation.resume(returning: nil)
@@ -168,7 +171,7 @@ extension Async.Channel.Bounded.Sender {
 
 // MARK: - Send Accessor
 
-extension Async.Channel.Bounded.Sender {
+extension Async.Channel.Bounded.Sender where Element: ~Copyable {
     /// Send operation accessor with variants.
     public struct Send: Sendable {
         @usableFromInline
@@ -185,14 +188,15 @@ extension Async.Channel.Bounded.Sender {
         /// - Throws: `.full` if the buffer is full, `.closed` if the channel is closed,
         ///           `.cancelled` if the task was cancelled.
         @inlinable
-        public func immediate(_ element: sending Element) throws(Async.Channel<Element>.Error) {
+        public func immediate(_ element: consuming sending Element) throws(Async.Channel<Element>.Error) {
             let action = handle.storage.withLock { state in
                 state.trySend(element)
             }
 
             switch action {
             case .deliverToReceiver(let receiverCont, let element):
-                receiverCont.resume(returning: .element(element))
+                handle.storage.deliverySlot.store(element)
+            receiverCont.resume(returning: Async.Channel<Element>.Bounded.State.Receive.Signal.delivered)
             case .buffered:
                 break
             case .rejectClosed:
@@ -208,7 +212,7 @@ extension Async.Channel.Bounded.Sender {
 
 // MARK: - Lifecycle
 
-extension Async.Channel.Bounded.Sender {
+extension Async.Channel.Bounded.Sender where Element: ~Copyable {
     /// Close the channel, signaling no more elements will be sent.
     ///
     /// After this call:
@@ -225,7 +229,7 @@ extension Async.Channel.Bounded.Sender {
         closeAction.receiverToResume?.resume(returning: .closed)
 
         // Cancel all waiting senders - outside lock
-        while let continuation = closeAction.sendersToCancel.front.take {
+        while let continuation = closeAction.sendersToCancel.take(from: .front) {
             continuation.resume(returning: .closed)
         }
     }

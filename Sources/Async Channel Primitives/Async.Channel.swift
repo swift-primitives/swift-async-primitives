@@ -19,7 +19,7 @@ extension Async {
     /// Available channel types:
     /// - `Unbounded`: Unlimited buffer, sync send, async receive
     /// - `Bounded`: Capacity-limited buffer with backpressure
-    public struct Channel<Element: Sendable> {}
+    public struct Channel<Element: ~Copyable & Sendable> {}
 }
 
 #endif  // !hasFeature(Embedded)

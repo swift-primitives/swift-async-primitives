@@ -12,7 +12,7 @@
 // Async channels require task suspension which is not available on embedded Swift.
 #if !hasFeature(Embedded)
 
-extension Async.Channel {
+extension Async.Channel where Element: ~Copyable {
     /// Unbounded channel with single-suspended-receiver semantics.
     ///
     /// Provides an unbounded-capacity channel where sends are synchronous
@@ -100,7 +100,7 @@ extension Async.Channel {
 
 // MARK: - Take (consuming accessors)
 
-extension Async.Channel.Unbounded {
+extension Async.Channel.Unbounded where Element: ~Copyable {
     /// Consuming accessor for moving endpoints out of the channel.
     ///
     /// ```swift
@@ -133,7 +133,7 @@ extension Async.Channel.Unbounded {
 
 // MARK: - Ends
 
-extension Async.Channel.Unbounded {
+extension Async.Channel.Unbounded where Element: ~Copyable {
     /// Bundle containing both sender and receiver.
     ///
     /// `Ends` is `~Copyable` because it contains the `~Copyable` receiver.
