@@ -12,7 +12,6 @@
 // Async channels require task suspension which is not available on embedded Swift.
 #if !hasFeature(Embedded)
 
-public import Ownership_Primitives
 public import Queue_Primitives
 
 extension Async.Channel.Unbounded where Element: ~Copyable {
@@ -77,19 +76,19 @@ extension Async.Channel.Unbounded.State where Element: ~Copyable {
 
     /// Send an element to the channel.
     ///
-    /// The element is in the provided Ownership.Slot. On deliver, it is
+    /// The element is in the caller's `inout Element?`. On deliver, it is
     /// taken and returned in the action. On buffer, it is taken and pushed.
-    /// On shut, it remains in the Slot (cleaned up by Slot deinit).
+    /// On shut, it remains in the Optional (cleaned up by deinit).
     @usableFromInline
-    mutating func send(slot: Ownership.Slot<Element>) -> Send.Action {
+    mutating func send(_ element: inout Element?) -> Send.Action {
         guard !_closed else { return .shut }
 
         switch self.slot {
         case .wait(let cont):
             self.slot = .none
-            return .give(cont, slot.take(__unchecked: ()))
+            return .give(cont, element.take()!)
         case .none:
-            buffer.push(slot.take(__unchecked: ()), to: .back)
+            buffer.push(element.take()!, to: .back)
             return .keep
         }
     }

@@ -43,6 +43,16 @@ extension Async.Channel.Bounded where Element: ~Copyable {
                 try body(&state)
             }
         }
+
+        @inlinable
+        func withLockAndElement<T: ~Copyable, E: Swift.Error>(
+            _ element: inout Element?,
+            _ body: (inout State, inout Element?) throws(E) -> sending T
+        ) throws(E) -> sending T {
+            try _storage.mutable.value.withLock { (state: inout State) throws(E) -> T in
+                try body(&state, &element)
+            }
+        }
     }
 }
 

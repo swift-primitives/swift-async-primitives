@@ -145,24 +145,24 @@ extension Async.Channel.Bounded.State where Element: ~Copyable {
         typealias Continuation = Async.Continuation<Async.Channel<Element>.Error?>.Unsafe
 
         /// Result of `trySend` — fast-path decision.
-        /// Element is handled via the caller's Ownership.Slot: taken on
-        /// deliver/buffer paths, left in Slot on suspend/reject.
+        /// Element is handled via the caller's `inout Element?`: taken on
+        /// deliver/buffer paths, left in Optional on suspend/reject.
         @usableFromInline
         enum Decision: ~Copyable, @unchecked Sendable {
             /// Deliver the element directly to a waiting receiver.
-            /// Element was taken from the Slot inside trySend.
+            /// Element was taken from the Optional inside trySend.
             case deliverToReceiver(Receive.Continuation, Element)
 
-            /// Element was buffered successfully (taken from Slot).
+            /// Element was buffered successfully (taken from Optional).
             case buffered
 
             /// Sender must suspend and wait. Element remains in the caller's
-            /// Slot. The id is pre-generated for cancellation tracking
+            /// Optional. The id is pre-generated for cancellation tracking
             /// (eliminates a separate lock acquisition).
             case suspend(id: UInt64)
 
             /// Channel is closed, reject the send.
-            /// Element remains in the caller's Slot (cleaned up by Slot deinit).
+            /// Element remains in the caller's Optional (cleaned up by deinit).
             case rejectClosed
         }
 
@@ -196,30 +196,26 @@ extension Async.Channel.Bounded.State where Element: ~Copyable {
 
     /// Attempt a synchronous send (non-blocking).
     ///
-    /// The element is in the provided Ownership.Slot. On deliver/buffer
-    /// paths it is taken from the Slot. On suspend/reject, the element
-    /// remains in the Slot for the caller to handle.
-    ///
-    /// Using a Slot (Copyable reference) instead of a consuming Element
-    /// avoids the ~Copyable closure capture issue: the Slot can be captured
-    /// in the non-escaping withLock closure without ownership problems.
+    /// The element is in the caller's `inout Element?`. On deliver/buffer
+    /// paths it is taken from the Optional. On suspend/reject, the element
+    /// remains in the Optional for the caller to handle.
     @usableFromInline
-    mutating func trySend(slot: Ownership.Slot<Element>) -> Send.Decision {
+    mutating func trySend(_ element: inout Element?) -> Send.Decision {
         switch status {
         case .open:
             // If a receiver is waiting, deliver directly
             if let receiver = receiver {
                 self.receiver = nil
-                return .deliverToReceiver(receiver.continuation, slot.take(__unchecked: ()))
+                return .deliverToReceiver(receiver.continuation, element.take()!)
             }
 
             // If buffer has space, add to buffer
             if buffer.count < capacity {
-                buffer.push(slot.take(__unchecked: ()), to: .back)
+                buffer.push(element.take()!, to: .back)
                 return .buffered
             }
 
-            // Buffer full — element stays in Slot for slow-path staging
+            // Buffer full — element stays in Optional for slow-path staging
             let id = nextId
             nextId &+= 1
             return .suspend(id: id)

@@ -66,9 +66,9 @@ extension Async.Channel.Unbounded.Sender where Element: ~Copyable {
     /// - Throws: `Async.Channel<Element>.Error.closed` if the channel is closed.
     @inlinable
     public func send(_ element: consuming sending Element) throws(Async.Channel<Element>.Error) {
-        let slot = Ownership.Slot(element)
-        let action = storage.withLock { state in
-            state.send(slot: slot)
+        var opt: Element? = consume element
+        let action = storage.withLockAndElement(&opt) { state, element in
+            state.send(&element)
         }
 
         switch consume action {
