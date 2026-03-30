@@ -77,6 +77,7 @@ let package = Package(
             name: "Async Channel Primitives",
             dependencies: [
                 "Async Primitives Core",
+                "Async Waiter Primitives",
                 .product(name: "Ownership Primitives", package: "swift-ownership-primitives"),
             ]
         ),

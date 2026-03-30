@@ -84,6 +84,8 @@ extension Async.Channel.Unbounded.Receiver where Element: ~Copyable {
             return nil
         case .wait:
             break // Fall through to slow path
+        case .cancelled:
+            throw .cancelled
         }
 
         // Check cancellation before entering slow path
@@ -109,6 +111,8 @@ extension Async.Channel.Unbounded.Receiver where Element: ~Copyable {
                 case .wait:
                     // Continuation stored, will be resumed by send/close/stop
                     break
+                case .cancelled:
+                    continuation.resume(returning: .cancelled)
                 }
             }
         } onCancel: {
@@ -226,6 +230,8 @@ extension Async.Channel.Unbounded.Elements {
                 return nil
             case .wait:
                 break
+            case .cancelled:
+                throw .cancelled
             }
 
             // Check cancellation before entering slow path
@@ -250,6 +256,8 @@ extension Async.Channel.Unbounded.Elements {
                         continuation.resume(returning: .closed)
                     case .wait:
                         break
+                    case .cancelled:
+                        continuation.resume(returning: .cancelled)
                     }
                 }
             } onCancel: {

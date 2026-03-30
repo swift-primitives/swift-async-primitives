@@ -270,17 +270,53 @@ struct BoundedChannelTests {
             let channel = Async.Channel<Int>.Bounded(capacity: 1)
             try await channel.sender.send(42)
             ends = channel.take().ends()
-            // sender reference from channel drops here, but ends.sender keeps handle alive
+            // take().ends() consumes the channel — the stored Sender.Handle
+            // drops during partial consumption, triggering auto-close.
         }
 
+        // Channel auto-closed when take().ends() consumed the channel
+        let isClosed = ends.isClosed
+        #expect(isClosed)
+
+        // Buffered element still available after close
         let value = try await ends.receiver.receive()
         #expect(value == 42)
 
-        // Now drop our reference to sender via ends - auto-close should happen
-        // Since ends owns the receiver, we need to verify by checking closed state
-        // Actually, we need to let the sender drop properly
-        // The test needs restructuring: create channel, get sender copy, drop channel,
-        // then drop sender copy to trigger auto-close
+        // Further receives return nil (channel closed)
+        let closed = try await ends.receiver.receive()
+        #expect(closed == nil)
+    }
+
+    @Test
+    func `Cancellation throws cancelled error for suspended send`() async throws {
+        let channel = Async.Channel<Int>.Bounded(capacity: 1)
+        let sender = channel.sender
+        let started = Async.Barrier(parties: 2)
+
+        // Fill the buffer
+        try await sender.send(1)
+
+        // Start a send that will suspend (buffer full)
+        let sendTask = Task { () -> Async.Channel<Int>.Error? in
+            await started.arrive()
+            do {
+                try await sender.send(2)
+                return nil
+            } catch let error as Async.Channel<Int>.Error {
+                return error
+            } catch {
+                return nil
+            }
+        }
+
+        await started.arrive()
+        sendTask.cancel()
+
+        let error = await sendTask.value
+        #expect(error == .cancelled)
+
+        // Drain buffered element
+        _ = try await channel.receiver.receive()
     }
 
     @Test

@@ -12,6 +12,7 @@
 // Async channels require task suspension which is not available on embedded Swift.
 #if !hasFeature(Embedded)
 
+public import Async_Waiter_Primitives
 public import Ownership_Primitives
 internal import Queue_Primitives
 
@@ -111,7 +112,7 @@ extension Async.Channel.Bounded.Sender where Element: ~Copyable {
             state.trySend(&element)
         }
 
-        let id: UInt64
+        let flag: Async.Waiter.Flag
         switch consume decision {
         case .deliverToReceiver(let receiverCont, let element):
             handle.storage.deliverySlot.store(element)
@@ -121,8 +122,8 @@ extension Async.Channel.Bounded.Sender where Element: ~Copyable {
             return
         case .rejectClosed:
             throw .closed
-        case .suspend(let suspendId):
-            id = suspendId
+        case .suspend(let sendFlag):
+            flag = sendFlag
         }
 
         // Slow path: NOW allocate Slot (only when sender must actually suspend)
@@ -132,7 +133,7 @@ extension Async.Channel.Bounded.Sender where Element: ~Copyable {
             await unsafe withUnsafeContinuation { (raw: UnsafeContinuation<Async.Channel<Element>.Error?, Never>) in
                 let continuation = unsafe Async.Continuation.Unsafe(raw)
                 let action = handle.storage.withLock { state in
-                    state.sendSuspended(id: id, slot: slot, continuation: continuation)
+                    state.sendSuspended(flag: flag, slot: slot, continuation: continuation)
                 }
 
                 switch consume action {
@@ -147,19 +148,18 @@ extension Async.Channel.Bounded.Sender where Element: ~Copyable {
                 case .rejectCancelled:
                     continuation.resume(returning: .cancelled)
                 case .suspended:
-                    // Continuation stored, will be resumed later
                     break
                 }
             }
         } onCancel: {
-            let action = handle.storage.withLock { state in
-                state.sendCancelled(id: id)
-            }
-            switch action {
-            case .resumeWithCancellation(let continuation):
-                continuation.resume(returning: .cancelled)
-            case .none:
-                break
+            if flag.cancel() {
+                var cancelled = Deque<Async.Channel<Element>.Bounded.State.Send.Continuation>()
+                handle.storage.withLock { state in
+                    cancelled = state.reapCancelledSenders()
+                }
+                while let cont = cancelled.take(from: .front) {
+                    cont.resume(returning: .cancelled)
+                }
             }
         }
 

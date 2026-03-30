@@ -12,6 +12,7 @@
 // Async channels require task suspension which is not available on embedded Swift.
 #if !hasFeature(Embedded)
 
+public import Async_Waiter_Primitives
 public import Ownership_Primitives
 public import Queue_Primitives
 
@@ -36,10 +37,6 @@ extension Async.Channel.Bounded where Element: ~Copyable {
         var receiver: Receiver?
         @usableFromInline
         let capacity: Index<Element>.Count
-        @usableFromInline
-        var nextId: UInt64 = 0
-        @usableFromInline
-        var cancelledSenders: Set<UInt64> = []
         @usableFromInline
         var cancelledReceiver: Bool = false
 
@@ -76,21 +73,21 @@ extension Async.Channel.Bounded.State where Element: ~Copyable {
     @usableFromInline
     struct Sender: Sendable {
         @usableFromInline
-        let id: UInt64
-        @usableFromInline
         let slot: Ownership.Slot<Element>
         @usableFromInline
         let continuation: Send.Continuation
+        @usableFromInline
+        let flag: Async.Waiter.Flag
 
         @usableFromInline
         init(
-            id: UInt64,
             slot: Ownership.Slot<Element>,
-            continuation: Send.Continuation
+            continuation: Send.Continuation,
+            flag: Async.Waiter.Flag
         ) {
-            self.id = id
             self.slot = slot
             self.continuation = continuation
+            self.flag = flag
         }
     }
 }
@@ -115,16 +112,13 @@ extension Async.Channel.Bounded.State where Element: ~Copyable {
 extension Async.Channel.Bounded.State where Element: ~Copyable {
     /// Pops the next non-cancelled sender from the queue.
     ///
-    /// Cancelled senders are skipped and their continuations resumed via the closure.
-    /// The cancellation marker is consumed from `cancelledSenders` on skip.
-    ///
-    /// - Invariant: Each sender id is unique and appears at most once in the queue.
+    /// Flagged senders are skipped and their continuations resumed via the closure.
     @usableFromInline
     mutating func popNextSender(
         resumeCancelled: (Send.Continuation) -> Void
     ) -> Sender? {
         while let sender = senders.take(from: .front) {
-            if cancelledSenders.remove(sender.id) != nil {
+            if sender.flag.isFlagged {
                 resumeCancelled(sender.continuation)
                 continue
             }
@@ -157,9 +151,9 @@ extension Async.Channel.Bounded.State where Element: ~Copyable {
             case buffered
 
             /// Sender must suspend and wait. Element remains in the caller's
-            /// Optional. The id is pre-generated for cancellation tracking
-            /// (eliminates a separate lock acquisition).
-            case suspend(id: UInt64)
+            /// Optional. The flag is pre-created for cancellation signaling
+            /// (shared between queue entry and onCancel handler).
+            case suspend(flag: Async.Waiter.Flag)
 
             /// Channel is closed, reject the send.
             /// Element remains in the caller's Optional (cleaned up by deinit).
@@ -187,11 +181,6 @@ extension Async.Channel.Bounded.State where Element: ~Copyable {
             case rejectCancelled
         }
 
-        @usableFromInline
-        enum Cancel: Sendable {
-            case resumeWithCancellation(Send.Continuation)
-            case none
-        }
     }
 
     /// Attempt a synchronous send (non-blocking).
@@ -216,9 +205,7 @@ extension Async.Channel.Bounded.State where Element: ~Copyable {
             }
 
             // Buffer full — element stays in Optional for slow-path staging
-            let id = nextId
-            nextId &+= 1
-            return .suspend(id: id)
+            return .suspend(flag: Async.Waiter.Flag())
 
         case .closed, .finished:
             return .rejectClosed
@@ -232,13 +219,12 @@ extension Async.Channel.Bounded.State where Element: ~Copyable {
     /// the sender queue. On reject, the Slot's deinit handles cleanup.
     @usableFromInline
     mutating func sendSuspended(
-        id: UInt64,
+        flag: Async.Waiter.Flag,
         slot: Ownership.Slot<Element>,
         continuation: Send.Continuation
     ) -> Send.Action {
-        // Check if already cancelled
-        if cancelledSenders.contains(id) {
-            cancelledSenders.remove(id)
+        // Pre-registration check: cancellation arrived before suspension
+        if flag.cancelled {
             return .rejectCancelled
         }
 
@@ -257,8 +243,8 @@ extension Async.Channel.Bounded.State where Element: ~Copyable {
                 return .buffered
             }
 
-            // Enqueue waiter — Slot reference stored in Sender
-            senders.push(Sender(id: id, slot: slot, continuation: continuation), to: .back)
+            // Enqueue waiter — flag shared with onCancel handler
+            senders.push(Sender(slot: slot, continuation: continuation, flag: flag), to: .back)
             return .suspended
 
         case .closed, .finished:
@@ -266,22 +252,24 @@ extension Async.Channel.Bounded.State where Element: ~Copyable {
         }
     }
 
-    /// Handle sender cancellation.
+    /// Reap all flagged (cancelled) senders from the queue.
     ///
-    /// With lazy skip, cancellation is marked but not acted upon immediately.
-    /// The cancelled sender's continuation will be resumed when popped via `popNextSender`.
+    /// Drains the queue, collecting flagged entries' continuations and
+    /// re-enqueuing non-flagged entries. Follows the Waiter `reapFlagged()` pattern.
+    /// Flagged senders' slots are dropped — `Slot.deinit` cleans up the element.
     @usableFromInline
-    mutating func sendCancelled(id: UInt64) -> Send.Cancel {
-        switch status {
-        case .open:
-            // Mark as cancelled - will be handled lazily on pop
-            cancelledSenders.insert(id)
-            return .none
-
-        case .closed, .finished:
-            // Channel is closed/finished - no senders can be waiting, don't accumulate
-            return .none
+    mutating func reapCancelledSenders() -> Deque<Send.Continuation> {
+        var cancelled = Deque<Send.Continuation>()
+        var survivors = Deque<Sender>()
+        while let sender = senders.take(from: .front) {
+            if sender.flag.isFlagged {
+                cancelled.push(sender.continuation, to: .back)
+            } else {
+                survivors.push(sender, to: .back)
+            }
         }
+        senders = survivors
+        return cancelled
     }
 }
 

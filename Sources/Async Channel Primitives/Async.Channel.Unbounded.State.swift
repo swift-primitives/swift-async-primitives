@@ -51,6 +51,7 @@ extension Async.Channel.Unbounded.State where Element: ~Copyable {
     enum Slot: Sendable {
         case none
         case wait(Receive.Continuation)
+        case cancelled
     }
 }
 
@@ -87,7 +88,7 @@ extension Async.Channel.Unbounded.State where Element: ~Copyable {
         case .wait(let cont):
             self.slot = .none
             return .give(cont, element.take()!)
-        case .none:
+        case .none, .cancelled:
             buffer.push(element.take()!, to: .back)
             return .keep
         }
@@ -121,6 +122,7 @@ extension Async.Channel.Unbounded.State where Element: ~Copyable {
             case val(Element)
             case end
             case wait
+            case cancelled
         }
 
         @usableFromInline
@@ -151,6 +153,11 @@ extension Async.Channel.Unbounded.State where Element: ~Copyable {
     /// Register a receiver that will suspend.
     @usableFromInline
     mutating func receiveWait(_ cont: Receive.Continuation) -> Receive.Step {
+        if case .cancelled = slot {
+            slot = .none
+            return .cancelled
+        }
+
         precondition({
             if case .none = slot { return true }
             return false
@@ -175,6 +182,9 @@ extension Async.Channel.Unbounded.State where Element: ~Copyable {
             slot = .none
             return .stop(cont)
         case .none:
+            slot = .cancelled
+            return .none
+        case .cancelled:
             return .none
         }
     }
@@ -201,7 +211,7 @@ extension Async.Channel.Unbounded.State where Element: ~Copyable {
         case .wait(let cont):
             slot = .none
             return .end(cont)
-        case .none:
+        case .none, .cancelled:
             return .none
         }
     }

@@ -100,7 +100,7 @@ extension Async.Channel.Unbounded.Sender where Element: ~Copyable {
                 case .wait(let cont) where firstReceiver == nil:
                     state.slot = .none
                     firstReceiver = (cont, element)
-                case .wait, .none:
+                case .wait, .none, .cancelled:
                     state.buffer.back.push(element)
                 }
             }
