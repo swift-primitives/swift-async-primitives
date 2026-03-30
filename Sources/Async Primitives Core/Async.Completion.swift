@@ -71,12 +71,12 @@ extension Async {
         }
 
         let state: Atomic<State>
-        private let _continuation: Mutex<CheckedContinuation<Result, Never>?>
+        private let _continuation: Async.Mutex<CheckedContinuation<Result, Never>?>
 
         /// Creates a new completion in pending state.
         public init() {
             self.state = Atomic(.pending)
-            self._continuation = Mutex(nil)
+            self._continuation = Async.Mutex(nil)
         }
 
         /// Atomic state for CAS discipline.

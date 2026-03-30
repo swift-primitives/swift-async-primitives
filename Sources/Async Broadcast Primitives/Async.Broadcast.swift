@@ -77,7 +77,7 @@ extension Async {
     /// - Satisfies §5.3: "call a function that returns continuations to resume"
     /// - Single-slot waiter, token proves ownership, exactly-once provable
     public final class Broadcast<Element: Sendable>: @unchecked Sendable {
-        private let _state: Mutex<State>
+        private let _state: Async.Mutex<State>
         private let buffer: Buffer
 
         /// Creates a new broadcast channel.
@@ -87,7 +87,7 @@ extension Async {
         public init(bufferCapacity: Int = 64) {
             precondition(bufferCapacity > 0, "Broadcast buffer capacity must be greater than zero")
             self.buffer = Buffer(limit: bufferCapacity)
-            self._state = Mutex(State())
+            self._state = Async.Mutex(State())
         }
 
         /// Buffer configuration namespace.

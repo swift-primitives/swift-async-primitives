@@ -57,7 +57,7 @@ extension Async {
     /// Uses `@unchecked Sendable` because internal state is protected
     /// by mutex synchronization.
     public final class Bridge<Element: Sendable>: @unchecked Sendable {
-        private let _state: Mutex<State>
+        private let _state: Async.Mutex<State>
 
         struct State {
             var buffer: Deque<Element> = .init()
@@ -70,7 +70,7 @@ extension Async {
 
         /// Creates a new bridge.
         public init() {
-            self._state = Mutex(State())
+            self._state = Async.Mutex(State())
         }
 
         /// Push a single element from a sync context.

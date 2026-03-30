@@ -24,7 +24,7 @@ extension Async.Channel.Bounded where Element: ~Copyable {
     @usableFromInline
     struct Storage: Sendable {
         @usableFromInline
-        let _storage: Ownership.Mutable<Mutex<State>>.Unchecked
+        let _storage: Ownership.Mutable<Async.Mutex<State>>.Unchecked
 
         /// Slot for transferring ~Copyable elements outside the continuation.
         /// The continuation carries a lightweight Signal; the element travels here.
@@ -33,7 +33,7 @@ extension Async.Channel.Bounded where Element: ~Copyable {
 
         @usableFromInline
         init(capacity: Index<Element>.Count) {
-            self._storage = Ownership.Mutable.Unchecked(Mutex(State(capacity: capacity)))
+            self._storage = Ownership.Mutable.Unchecked(Async.Mutex(State(capacity: capacity)))
             self.deliverySlot = Ownership.Slot()
         }
 

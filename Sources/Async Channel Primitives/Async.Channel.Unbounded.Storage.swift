@@ -20,7 +20,7 @@ extension Async.Channel.Unbounded where Element: ~Copyable {
     @usableFromInline
     final class Storage: Sendable {
         @usableFromInline
-        let mutex: Mutex<State>
+        let mutex: Async.Mutex<State>
 
         /// Slot for transferring ~Copyable elements outside the continuation.
         /// The continuation carries a lightweight Signal; the element travels here.
@@ -29,7 +29,7 @@ extension Async.Channel.Unbounded where Element: ~Copyable {
 
         @usableFromInline
         init() {
-            self.mutex = Mutex(State())
+            self.mutex = Async.Mutex(State())
             self.deliverySlot = Ownership.Slot()
         }
 
