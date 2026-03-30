@@ -13,6 +13,7 @@
 // Post-optimization baseline (flat state, no CoW traps).
 
 import Async_Primitives
+import Async_Primitives_Test_Support
 import Testing
 
 // MARK: - Bounded Channel
@@ -53,7 +54,7 @@ extension Benchmark.BoundedChannel {
     /// All sends hit the fast path (buffer has space).
     @Test(.timed(iterations: 10, warmup: 2))
     func `1000 round-trips capacity 1000`() async throws {
-        let channel = Async.Channel<Int>.Bounded(capacity: Benchmark.iterations)
+        let channel = Async.Channel<Int>.Bounded(capacity: 1_000)
         let sender = channel.sender
 
         let producer = Task.detached {
@@ -72,7 +73,7 @@ extension Benchmark.BoundedChannel {
     /// Synchronous send via send.immediate (no async overhead).
     @Test(.timed(iterations: 10, warmup: 2))
     func `1000 immediate sends capacity 1000`() async throws {
-        let channel = Async.Channel<Int>.Bounded(capacity: Benchmark.iterations)
+        let channel = Async.Channel<Int>.Bounded(capacity: 1_000)
         let sender = channel.sender
 
         let producer = Task.detached {

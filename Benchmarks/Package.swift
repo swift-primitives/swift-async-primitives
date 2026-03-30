@@ -16,6 +16,7 @@ let package = Package(
             name: "Async Primitives Performance Tests",
             dependencies: [
                 .product(name: "Async Primitives", package: "swift-async-primitives"),
+                .product(name: "Async Primitives Test Support", package: "swift-async-primitives"),
                 .product(name: "Testing", package: "swift-testing"),
             ],
             path: "Async Primitives Performance Tests"

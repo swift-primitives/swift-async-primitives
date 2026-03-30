@@ -10,6 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 import Async_Primitives
+import Async_Primitives_Test_Support
 import Testing
 
 @Suite(.serialized)
