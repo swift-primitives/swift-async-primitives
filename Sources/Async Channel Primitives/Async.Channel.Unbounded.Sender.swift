@@ -96,24 +96,27 @@ extension Async.Channel.Unbounded.Sender where Element: ~Copyable {
     /// - Parameter elements: The elements to send.
     /// - Throws: `Async.Channel<Element>.Error.closed` if the channel is closed.
     @inlinable
-    public func send<S: Swift.Sequence>(contentsOf elements: S) throws(Async.Channel<Element>.Error) where S.Element == Element, Element: Sendable {
-        let action: (receiver: (Async.Channel<Element>.Unbounded.State.Receive.Continuation, Element)?, closed: Bool) = storage.withLock { state in
-            var firstReceiver: (Async.Channel<Element>.Unbounded.State.Receive.Continuation, Element)? = nil
-            for element in elements {
-                guard !state._closed else { return (firstReceiver, true) }
+    public func send<S: Swift.Sequence>(contentsOf elements: sending S) throws(Async.Channel<Element>.Error) where S.Element == Element {
+        let elementSlot = Ownership.Slot(Array(elements))
+        let deliverySlot = storage.deliverySlot
+        let action: (cont: Async.Channel<Element>.Unbounded.State.Receive.Continuation?, closed: Bool) = storage.withLock { state in
+            guard let batch = elementSlot.take() else { return (nil, false) }
+            var receiverCont: Async.Channel<Element>.Unbounded.State.Receive.Continuation? = nil
+            for element in batch {
+                guard !state._closed else { return (receiverCont, true) }
                 switch state.slot {
-                case .wait(let cont) where firstReceiver == nil:
+                case .wait(let cont) where receiverCont == nil:
                     state.slot = .none
-                    firstReceiver = (cont, element)
+                    deliverySlot.store(element)
+                    receiverCont = cont
                 case .wait, .none, .cancelled:
                     state.buffer.back.push(element)
                 }
             }
-            return (firstReceiver, false)
+            return (receiverCont, false)
         }
 
-        if let (cont, element) = action.receiver {
-            storage.deliverySlot.store(element)
+        if let cont = action.cont {
             cont.resume(returning: Async.Channel<Element>.Unbounded.State.Receive.Signal.delivered)
         }
         if action.closed { throw .closed }
