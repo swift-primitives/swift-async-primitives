@@ -69,14 +69,13 @@ extension Async {
     ///
     /// ## Thread Safety
     /// All operations are protected by an internal mutex.
-    /// Uses `@unchecked Sendable` because internal state is protected
-    /// by mutex synchronization.
+    /// All stored properties are `let` and `Sendable` (`Mutex` provides internal synchronization).
     ///
     /// ## Cancellation (§5.3 Compliant)
     /// - Uses token-matching cancel function which returns resumption
     /// - Satisfies §5.3: "call a function that returns continuations to resume"
     /// - Single-slot waiter, token proves ownership, exactly-once provable
-    public final class Broadcast<Element: Sendable>: @unchecked Sendable {
+    public final class Broadcast<Element: Sendable>: Sendable {
         private let _state: Async.Mutex<State>
         private let buffer: Buffer
 

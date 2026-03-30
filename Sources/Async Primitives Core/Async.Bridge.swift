@@ -54,9 +54,8 @@ extension Async {
     ///
     /// ## Thread Safety
     /// All operations are protected by an internal mutex.
-    /// Uses `@unchecked Sendable` because internal state is protected
-    /// by mutex synchronization.
-    public final class Bridge<Element: Sendable>: @unchecked Sendable {
+    /// All stored properties are `let` and `Sendable` (`Mutex` provides internal synchronization).
+    public final class Bridge<Element: Sendable>: Sendable {
         private let _state: Async.Mutex<State>
 
         struct State {

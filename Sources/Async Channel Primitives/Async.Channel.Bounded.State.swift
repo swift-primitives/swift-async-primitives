@@ -14,7 +14,7 @@
 
 public import Async_Waiter_Primitives
 public import Ownership_Primitives
-public import Queue_Primitives
+internal import Queue_Primitives
 
 extension Async.Channel.Bounded where Element: ~Copyable {
     /// Pure state machine for bounded channel operations.

@@ -49,7 +49,7 @@ extension Async.Waiter {
     ///
     /// When both flags are set, the caller determines precedence.
     /// Standard precedence is: cancellation > timeout.
-    public final class Flag: @unchecked Sendable {
+    public final class Flag: Sendable {
         @usableFromInline
         let _bits: Atomic<UInt8>
 

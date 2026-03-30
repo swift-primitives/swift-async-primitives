@@ -51,10 +51,11 @@ extension Async {
     /// ```
     ///
     /// ## Thread Safety
-    /// Uses `@unchecked Sendable` because internal state is protected by:
+    /// Internal state is protected by:
     /// - Atomic state machine for CAS transitions
     /// - Mutex for continuation storage
-    public final class Completion<Success: Sendable, Failure: Error & Sendable>: @unchecked Sendable {
+    /// All stored properties are `let` and `Sendable`.
+    public final class Completion<Success: Sendable, Failure: Error & Sendable>: Sendable {
         /// Result type for continuation resume.
         public typealias Result = Swift.Result<Success, Error>
 

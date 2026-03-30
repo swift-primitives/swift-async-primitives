@@ -114,7 +114,7 @@ extension Async.Channel.Bounded.Sender where Element: ~Copyable {
             var opt: Element? = slot.take()
             let d = state.send(&opt)
             if let remaining = opt.take() {
-                slot.store(remaining)
+                _ = slot.store(remaining)
             }
             return d
         }
@@ -122,7 +122,7 @@ extension Async.Channel.Bounded.Sender where Element: ~Copyable {
         let flag: Async.Waiter.Flag
         switch consume decision {
         case .deliverToReceiver(let receiverCont, let element):
-            handle.storage.deliverySlot.store(element)
+            _ = handle.storage.deliverySlot.store(element)
             receiverCont.resume(returning: Async.Channel<Element>.Bounded.State.Receive.Signal.delivered)
             return
         case .buffered:
@@ -142,7 +142,7 @@ extension Async.Channel.Bounded.Sender where Element: ~Copyable {
 
                 switch consume action {
                 case .deliverToReceiver(let receiverCont, let element):
-                    handle.storage.deliverySlot.store(element)
+                    _ = handle.storage.deliverySlot.store(element)
                     receiverCont.resume(returning: Async.Channel<Element>.Bounded.State.Receive.Signal.delivered)
                     continuation.resume(returning: nil)
                 case .buffered:
@@ -199,14 +199,14 @@ extension Async.Channel.Bounded.Sender where Element: ~Copyable {
                 var opt: Element? = slot.take()
                 let d = state.send(&opt)
                 if let remaining = opt.take() {
-                    slot.store(remaining)
+                    _ = slot.store(remaining)
                 }
                 return d
             }
 
             switch consume decision {
             case .deliverToReceiver(let receiverCont, let element):
-                handle.storage.deliverySlot.store(element)
+                _ = handle.storage.deliverySlot.store(element)
                 receiverCont.resume(returning: Async.Channel<Element>.Bounded.State.Receive.Signal.delivered)
             case .buffered:
                 break

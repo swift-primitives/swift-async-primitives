@@ -71,14 +71,14 @@ extension Async.Channel.Unbounded.Sender where Element: ~Copyable {
             var opt: Element? = slot.take()
             let a = state.send(&opt)
             if let remaining = opt.take() {
-                slot.store(remaining)
+                _ = slot.store(remaining)
             }
             return a
         }
 
         switch consume action {
         case .give(let cont, let element):
-            storage.deliverySlot.store(element)
+            _ = storage.deliverySlot.store(element)
             cont.resume(returning: Async.Channel<Element>.Unbounded.State.Receive.Signal.delivered)
         case .keep:
             break
@@ -107,7 +107,7 @@ extension Async.Channel.Unbounded.Sender where Element: ~Copyable {
                 switch state.slot {
                 case .wait(let cont) where receiverCont == nil:
                     state.slot = .none
-                    deliverySlot.store(element)
+                    _ = deliverySlot.store(element)
                     receiverCont = cont
                 case .wait, .none, .cancelled:
                     state.buffer.back.push(element)

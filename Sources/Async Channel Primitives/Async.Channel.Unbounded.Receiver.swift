@@ -104,7 +104,7 @@ extension Async.Channel.Unbounded.Receiver where Element: ~Copyable {
 
                 switch consume action {
                 case .val(let element):
-                    storage.deliverySlot.store(element)
+                    _ = storage.deliverySlot.store(element)
                     continuation.resume(returning: .delivered)
                 case .end:
                     continuation.resume(returning: .closed)
@@ -250,7 +250,7 @@ extension Async.Channel.Unbounded.Elements {
 
                     switch consume action {
                     case .val(let element):
-                        storage.deliverySlot.store(element)
+                        _ = storage.deliverySlot.store(element)
                         continuation.resume(returning: .delivered)
                     case .end:
                         continuation.resume(returning: .closed)

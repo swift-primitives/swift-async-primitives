@@ -110,7 +110,7 @@ extension Async.Channel.Bounded.Receiver where Element: ~Copyable {
                         }
                     }
                     resumeSender?.resume(returning: nil)
-                    storage.deliverySlot.store(element)
+                    _ = storage.deliverySlot.store(element)
                     continuation.resume(returning: .delivered)
                 case .returnNil:
                     continuation.resume(returning: .closed)
@@ -289,7 +289,7 @@ extension Async.Channel.Bounded.Elements {
                             }
                         }
                         resumeSender?.resume(returning: nil)
-                        storage.deliverySlot.store(element)
+                        _ = storage.deliverySlot.store(element)
                         continuation.resume(returning: .delivered)
                     case .returnNil:
                         continuation.resume(returning: .closed)

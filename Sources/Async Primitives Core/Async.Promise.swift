@@ -52,13 +52,12 @@ extension Async {
     ///
     /// ## Thread Safety
     /// All operations are protected by an internal mutex.
-    /// Uses `@unchecked Sendable` because internal state is protected
-    /// by mutex synchronization.
+    /// All stored properties are `let` and `Sendable` (`Mutex` provides internal synchronization).
     ///
     /// ## Embedded Swift Support
     /// On embedded platforms, use the callback-based `wait(_:)` method.
     /// The async `value` property is only available on non-embedded platforms.
-    public final class Promise<Value: Sendable>: @unchecked Sendable {
+    public final class Promise<Value: Sendable>: Sendable {
         private let _state: Async.Mutex<State>
 
         private struct State: Sendable {
