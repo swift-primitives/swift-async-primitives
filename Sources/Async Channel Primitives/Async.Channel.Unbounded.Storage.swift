@@ -18,7 +18,7 @@ public import Synchronization
 extension Async.Channel.Unbounded where Element: ~Copyable {
     /// Thread-safe storage wrapping the state machine.
     @usableFromInline
-    final class Storage: @unchecked Sendable {
+    final class Storage: Sendable {
         @usableFromInline
         let mutex: Mutex<State>
 

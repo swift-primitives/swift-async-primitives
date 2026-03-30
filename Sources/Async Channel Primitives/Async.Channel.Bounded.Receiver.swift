@@ -38,7 +38,7 @@ extension Async.Channel.Bounded where Element: ~Copyable {
     /// ```
     ///
     /// ## Thread Safety
-    /// `Receiver` is `@unchecked Sendable` - it may be moved to another task
+    /// `Receiver` is `Sendable` - it may be moved to another task
     /// for the canonical "handoff to consumer task" pattern. The mutex guards
     /// all state access. Concurrent suspension is caught by precondition.
     public struct Receiver: ~Copyable, Sendable {

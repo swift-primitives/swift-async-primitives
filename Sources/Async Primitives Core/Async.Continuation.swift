@@ -35,7 +35,7 @@ extension Async {
     /// ```
     public struct Continuation<T: Sendable>: Sendable {
         @usableFromInline
-        enum Storage: @unchecked Sendable {
+        enum Storage: Sendable {
             case checkedContinuation(CheckedContinuation<T, Never>)
             case callback(@Sendable (T) -> Void)
         }

@@ -61,7 +61,7 @@ extension Async.Channel.Bounded.Sender where Element: ~Copyable {
     /// When the last reference to this handle is released, the channel
     /// automatically closes.
     @usableFromInline
-    final class Handle: @unchecked Sendable {
+    final class Handle: Sendable {
         @usableFromInline
         let storage: Async.Channel<Element>.Bounded.Storage
 
