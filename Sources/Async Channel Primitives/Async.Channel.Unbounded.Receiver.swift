@@ -74,7 +74,7 @@ extension Async.Channel.Unbounded.Receiver where Element: ~Copyable {
     ) async throws(Async.Channel<Element>.Error) -> Element? {
         // Fast path: try immediate receive
         let fastAction = storage.withLock { state in
-            state.receiveTake()
+            state.receive()
         }
 
         switch consume fastAction {
@@ -99,7 +99,7 @@ extension Async.Channel.Unbounded.Receiver where Element: ~Copyable {
             await unsafe withUnsafeContinuation { (raw: UnsafeContinuation<Async.Channel<Element>.Unbounded.State.Receive.Signal, Never>) in
                 let continuation = unsafe Async.Continuation.Unsafe(raw)
                 let action = storage.withLock { state in
-                    state.receiveWait(continuation)
+                    state.wait(continuation)
                 }
 
                 switch consume action {
@@ -118,7 +118,7 @@ extension Async.Channel.Unbounded.Receiver where Element: ~Copyable {
         } onCancel: {
             // Extract continuation under lock, resume outside
             let stopAction = storage.withLock { state in
-                state.receiveStop()
+                state.stop()
             }
 
             if case .stop(let cont) = stopAction {
@@ -145,7 +145,7 @@ extension Async.Channel.Unbounded.Receiver where Element: ~Copyable {
     @inlinable
     public func poll() -> Element? {
         storage.withLock { state in
-            state.tryReceive()
+            state.poll()
         }
     }
 }
@@ -220,7 +220,7 @@ extension Async.Channel.Unbounded.Elements {
 
             // Fast path: try immediate receive
             let fastAction = storage.withLock { state in
-                state.receiveTake()
+                state.receive()
             }
 
             switch consume fastAction {
@@ -245,7 +245,7 @@ extension Async.Channel.Unbounded.Elements {
                 await unsafe withUnsafeContinuation { (raw: UnsafeContinuation<Async.Channel<Element>.Unbounded.State.Receive.Signal, Never>) in
                     let continuation = unsafe Async.Continuation.Unsafe(raw)
                     let action = storage.withLock { state in
-                        state.receiveWait(continuation)
+                        state.wait(continuation)
                     }
 
                     switch consume action {
@@ -262,7 +262,7 @@ extension Async.Channel.Unbounded.Elements {
                 }
             } onCancel: {
                 let stopAction = storage.withLock { state in
-                    state.receiveStop()
+                    state.stop()
                 }
 
                 if case .stop(let cont) = stopAction {

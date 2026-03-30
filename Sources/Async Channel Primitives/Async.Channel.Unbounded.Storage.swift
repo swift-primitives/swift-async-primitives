@@ -34,20 +34,8 @@ extension Async.Channel.Unbounded where Element: ~Copyable {
         }
 
         @inlinable
-        func withLock<T: ~Copyable, E: Swift.Error>(_ body: (inout State) throws(E) -> sending T) throws(E) -> sending T {
-            try mutex.withLock { (state: inout State) throws(E) -> T in
-                try body(&state)
-            }
-        }
-
-        @inlinable
-        func withLockAndElement<T: ~Copyable, E: Swift.Error>(
-            _ element: inout Element?,
-            _ body: (inout State, inout Element?) throws(E) -> sending T
-        ) throws(E) -> sending T {
-            try mutex.withLock { (state: inout State) throws(E) -> T in
-                try body(&state, &element)
-            }
+        func withLock<T: ~Copyable, E: Swift.Error>(_ body: (inout sending State) throws(E) -> sending T) throws(E) -> sending T {
+            try mutex.withLock(body)
         }
 
         deinit {

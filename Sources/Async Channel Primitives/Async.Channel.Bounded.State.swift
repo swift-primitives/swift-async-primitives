@@ -26,7 +26,7 @@ extension Async.Channel.Bounded where Element: ~Copyable {
     /// values. This eliminates the per-mutation extract-reconstruct cycle
     /// (and the `.modifying` sentinel needed to prevent CoW during extraction).
     @usableFromInline
-    struct State: ~Copyable, @unchecked Sendable {
+    struct State: ~Copyable {
         @usableFromInline
         var status: Status
         @usableFromInline
@@ -114,7 +114,7 @@ extension Async.Channel.Bounded.State where Element: ~Copyable {
     ///
     /// Flagged senders are skipped and their continuations resumed via the closure.
     @usableFromInline
-    mutating func popNextSender(
+    mutating func next(
         resumeCancelled: (Send.Continuation) -> Void
     ) -> Sender? {
         while let sender = senders.take(from: .front) {
@@ -138,13 +138,13 @@ extension Async.Channel.Bounded.State where Element: ~Copyable {
         @usableFromInline
         typealias Continuation = Async.Continuation<Async.Channel<Element>.Error?>.Unsafe
 
-        /// Result of `trySend` — fast-path decision.
+        /// Result of `send` — fast-path decision.
         /// Element is handled via the caller's `inout Element?`: taken on
         /// deliver/buffer paths, left in Optional on suspend/reject.
         @usableFromInline
-        enum Decision: ~Copyable, @unchecked Sendable {
+        enum Decision: ~Copyable {
             /// Deliver the element directly to a waiting receiver.
-            /// Element was taken from the Optional inside trySend.
+            /// Element was taken from the Optional inside send.
             case deliverToReceiver(Receive.Continuation, Element)
 
             /// Element was buffered successfully (taken from Optional).
@@ -160,11 +160,11 @@ extension Async.Channel.Bounded.State where Element: ~Copyable {
             case rejectClosed
         }
 
-        /// Result of `sendSuspended` — slow-path action.
+        /// Result of `suspend(flag:slot:continuation:)` — slow-path action.
         /// Element is handled via Ownership.Slot (taken on deliver/buffer,
         /// stored in queue on suspend, cleaned up by Slot deinit on reject).
         @usableFromInline
-        enum Action: ~Copyable, @unchecked Sendable {
+        enum Action: ~Copyable {
             /// Deliver the element directly to a waiting receiver.
             case deliverToReceiver(Receive.Continuation, Element)
 
@@ -189,7 +189,7 @@ extension Async.Channel.Bounded.State where Element: ~Copyable {
     /// paths it is taken from the Optional. On suspend/reject, the element
     /// remains in the Optional for the caller to handle.
     @usableFromInline
-    mutating func trySend(_ element: inout Element?) -> Send.Decision {
+    mutating func send(_ element: inout Element?) -> Send.Decision {
         switch status {
         case .open:
             // If a receiver is waiting, deliver directly
@@ -218,7 +218,7 @@ extension Async.Channel.Bounded.State where Element: ~Copyable {
     /// it is taken from the Slot. On suspend, the Slot reference is stored in
     /// the sender queue. On reject, the Slot's deinit handles cleanup.
     @usableFromInline
-    mutating func sendSuspended(
+    mutating func suspend(
         flag: Async.Waiter.Flag,
         slot: Ownership.Slot<Element>,
         continuation: Send.Continuation
@@ -258,7 +258,7 @@ extension Async.Channel.Bounded.State where Element: ~Copyable {
     /// re-enqueuing non-flagged entries. Follows the Waiter `reapFlagged()` pattern.
     /// Flagged senders' slots are dropped — `Slot.deinit` cleans up the element.
     @usableFromInline
-    mutating func reapCancelledSenders() -> Deque<Send.Continuation> {
+    mutating func reap() -> Deque<Send.Continuation> {
         var cancelled = Deque<Send.Continuation>()
         var survivors = Deque<Sender>()
         while let sender = senders.take(from: .front) {
@@ -296,7 +296,7 @@ extension Async.Channel.Bounded.State where Element: ~Copyable {
         typealias Continuation = Async.Continuation<Signal>.Unsafe
 
         @usableFromInline
-        enum Action: ~Copyable, @unchecked Sendable {
+        enum Action: ~Copyable {
             /// Return the element immediately.
             /// `resumeSender`: continuation of the sender that provided this element.
             /// `cancelled`: continuations of cancelled senders skipped during pop.
@@ -327,7 +327,7 @@ extension Async.Channel.Bounded.State where Element: ~Copyable {
 
     /// Attempt a synchronous receive (non-blocking).
     @usableFromInline
-    mutating func tryReceive() -> Receive.Action {
+    mutating func receive() -> Receive.Action {
         switch status {
         case .open:
             precondition(receiver == nil, "Single-consumer invariant violated")
@@ -342,7 +342,7 @@ extension Async.Channel.Bounded.State where Element: ~Copyable {
             // If buffer has elements
             if let element = buffer.take(from: .front) {
                 // Wake up a waiting sender if any (skipping cancelled)
-                if let sender = popNextSender(resumeCancelled: collectCancelled) {
+                if let sender = next(resumeCancelled: collectCancelled) {
                     buffer.push(sender.slot.take(__unchecked: ()), to: .back)
                     return .returnElement(element, resumeSender: sender.continuation, cancelled: cancelled)
                 }
@@ -350,7 +350,7 @@ extension Async.Channel.Bounded.State where Element: ~Copyable {
             }
 
             // If there are waiting senders, take directly from them (skipping cancelled)
-            if let sender = popNextSender(resumeCancelled: collectCancelled) {
+            if let sender = next(resumeCancelled: collectCancelled) {
                 return .returnElement(sender.slot.take(__unchecked: ()), resumeSender: sender.continuation, cancelled: cancelled)
             }
 
@@ -374,7 +374,7 @@ extension Async.Channel.Bounded.State where Element: ~Copyable {
 
     /// Register a receiver that will suspend.
     @usableFromInline
-    mutating func receiveSuspended(
+    mutating func suspend(
         continuation: Receive.Continuation
     ) -> Receive.Action {
         // Check if already cancelled
@@ -396,14 +396,14 @@ extension Async.Channel.Bounded.State where Element: ~Copyable {
 
             // Double-check: element might be available
             if let element = buffer.take(from: .front) {
-                if let sender = popNextSender(resumeCancelled: collectCancelled) {
+                if let sender = next(resumeCancelled: collectCancelled) {
                     buffer.push(sender.slot.take(__unchecked: ()), to: .back)
                     return .returnElement(element, resumeSender: sender.continuation, cancelled: cancelled)
                 }
                 return .returnElement(element, resumeSender: nil, cancelled: cancelled)
             }
 
-            if let sender = popNextSender(resumeCancelled: collectCancelled) {
+            if let sender = next(resumeCancelled: collectCancelled) {
                 return .returnElement(sender.slot.take(__unchecked: ()), resumeSender: sender.continuation, cancelled: cancelled)
             }
 
@@ -428,7 +428,7 @@ extension Async.Channel.Bounded.State where Element: ~Copyable {
 
     /// Handle receiver cancellation.
     @usableFromInline
-    mutating func receiveCancelled() -> Receive.Cancel {
+    mutating func cancel() -> Receive.Cancel {
         switch status {
         case .open:
             if let receiver = receiver {

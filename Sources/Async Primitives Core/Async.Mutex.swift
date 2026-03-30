@@ -37,12 +37,12 @@ extension Async {
     ///
     /// On embedded platforms there is no OS kernel and typically no threading.
     /// This provides API compatibility while compiling to no-ops.
-    public final class Mutex<Value: ~Copyable & Sendable>: @unchecked Sendable {
+    public final class Mutex<Value: ~Copyable>: @unchecked Sendable {
         @usableFromInline
         var _value: Value
 
         @inlinable
-        public init(_ value: consuming Value) {
+        public init(_ value: consuming sending Value) {
             self._value = value
         }
 

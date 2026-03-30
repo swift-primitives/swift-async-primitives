@@ -66,9 +66,14 @@ extension Async.Channel.Unbounded.Sender where Element: ~Copyable {
     /// - Throws: `Async.Channel<Element>.Error.closed` if the channel is closed.
     @inlinable
     public func send(_ element: consuming sending Element) throws(Async.Channel<Element>.Error) {
-        var opt: Element? = consume element
-        let action = storage.withLockAndElement(&opt) { state, element in
-            state.send(&element)
+        let slot = Ownership.Slot(consume element)
+        let action = storage.withLock { state in
+            var opt: Element? = slot.take()
+            let a = state.send(&opt)
+            if let remaining = opt.take() {
+                slot.store(remaining)
+            }
+            return a
         }
 
         switch consume action {
@@ -91,7 +96,7 @@ extension Async.Channel.Unbounded.Sender where Element: ~Copyable {
     /// - Parameter elements: The elements to send.
     /// - Throws: `Async.Channel<Element>.Error.closed` if the channel is closed.
     @inlinable
-    public func send<S: Swift.Sequence>(contentsOf elements: S) throws(Async.Channel<Element>.Error) where S.Element == Element {
+    public func send<S: Swift.Sequence>(contentsOf elements: S) throws(Async.Channel<Element>.Error) where S.Element == Element, Element: Sendable {
         let action: (receiver: (Async.Channel<Element>.Unbounded.State.Receive.Continuation, Element)?, closed: Bool) = storage.withLock { state in
             var firstReceiver: (Async.Channel<Element>.Unbounded.State.Receive.Continuation, Element)? = nil
             for element in elements {

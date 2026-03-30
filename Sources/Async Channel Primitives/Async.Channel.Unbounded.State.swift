@@ -24,7 +24,7 @@ extension Async.Channel.Unbounded where Element: ~Copyable {
     /// At most one task may be suspended in `receive()` at a time.
     /// Concurrent suspended receives trigger a precondition failure.
     @usableFromInline
-    struct State: ~Copyable, @unchecked Sendable {
+    struct State: ~Copyable {
         @usableFromInline
         var buffer: Deque<Element>
 
@@ -68,7 +68,7 @@ extension Async.Channel.Unbounded.State where Element: ~Copyable {
     @usableFromInline
     enum Send {
         @usableFromInline
-        enum Action: ~Copyable, @unchecked Sendable {
+        enum Action: ~Copyable {
             case give(Receive.Continuation, Element)
             case keep
             case shut
@@ -118,7 +118,7 @@ extension Async.Channel.Unbounded.State where Element: ~Copyable {
         typealias Continuation = Async.Continuation<Signal>.Unsafe
 
         @usableFromInline
-        enum Step: ~Copyable, @unchecked Sendable {
+        enum Step: ~Copyable {
             case val(Element)
             case end
             case wait
@@ -134,13 +134,13 @@ extension Async.Channel.Unbounded.State where Element: ~Copyable {
 
     /// Non-blocking receive: take from buffer if available.
     @usableFromInline
-    mutating func tryReceive() -> Element? {
+    mutating func poll() -> Element? {
         buffer.take(from: .front)
     }
 
     /// Synchronous receive attempt.
     @usableFromInline
-    mutating func receiveTake() -> Receive.Step {
+    mutating func receive() -> Receive.Step {
         if let element = buffer.take(from: .front) {
             return .val(element)
         }
@@ -152,7 +152,7 @@ extension Async.Channel.Unbounded.State where Element: ~Copyable {
 
     /// Register a receiver that will suspend.
     @usableFromInline
-    mutating func receiveWait(_ cont: Receive.Continuation) -> Receive.Step {
+    mutating func wait(_ cont: Receive.Continuation) -> Receive.Step {
         if case .cancelled = slot {
             slot = .none
             return .cancelled
@@ -176,7 +176,7 @@ extension Async.Channel.Unbounded.State where Element: ~Copyable {
 
     /// Handle receiver cancellation.
     @usableFromInline
-    mutating func receiveStop() -> Receive.Stop {
+    mutating func stop() -> Receive.Stop {
         switch slot {
         case .wait(let cont):
             slot = .none

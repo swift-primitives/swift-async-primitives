@@ -106,10 +106,17 @@ extension Async.Channel.Bounded.Sender where Element: ~Copyable {
     public func send(
         _ element: consuming sending Element
     ) async throws(Async.Channel<Element>.Error) {
-        // Fast path: pass element through lock via inout Optional — zero allocations.
-        var opt: Element? = consume element
-        let decision = handle.storage.withLockAndElement(&opt) { state, element in
-            state.trySend(&element)
+        // Stage element in a Sendable Slot for lock-boundary transfer.
+        // Ownership.Slot is @unchecked Sendable — capturing it in the withLock
+        // closure avoids region merge that inout Element? would cause.
+        let slot = Ownership.Slot(consume element)
+        let decision = handle.storage.withLock { state in
+            var opt: Element? = slot.take()
+            let d = state.send(&opt)
+            if let remaining = opt.take() {
+                slot.store(remaining)
+            }
+            return d
         }
 
         let flag: Async.Waiter.Flag
@@ -126,14 +133,11 @@ extension Async.Channel.Bounded.Sender where Element: ~Copyable {
             flag = sendFlag
         }
 
-        // Slow path: NOW allocate Slot (only when sender must actually suspend)
-        let slot = Ownership.Slot(opt.take()!)
-
         let error: Async.Channel<Element>.Error? = await withTaskCancellationHandler {
             await unsafe withUnsafeContinuation { (raw: UnsafeContinuation<Async.Channel<Element>.Error?, Never>) in
                 let continuation = unsafe Async.Continuation.Unsafe(raw)
                 let action = handle.storage.withLock { state in
-                    state.sendSuspended(flag: flag, slot: slot, continuation: continuation)
+                    state.suspend(flag: flag, slot: slot, continuation: continuation)
                 }
 
                 switch consume action {
@@ -155,7 +159,7 @@ extension Async.Channel.Bounded.Sender where Element: ~Copyable {
             if flag.cancel() {
                 var cancelled = Deque<Async.Channel<Element>.Bounded.State.Send.Continuation>()
                 handle.storage.withLock { state in
-                    cancelled = state.reapCancelledSenders()
+                    cancelled = state.reap()
                 }
                 while let cont = cancelled.take(from: .front) {
                     cont.resume(returning: .cancelled)
@@ -190,9 +194,14 @@ extension Async.Channel.Bounded.Sender where Element: ~Copyable {
         ///           `.cancelled` if the task was cancelled.
         @inlinable
         public func immediate(_ element: consuming sending Element) throws(Async.Channel<Element>.Error) {
-            var opt: Element? = consume element
-            let decision = handle.storage.withLockAndElement(&opt) { state, element in
-                state.trySend(&element)
+            let slot = Ownership.Slot(consume element)
+            let decision = handle.storage.withLock { state in
+                var opt: Element? = slot.take()
+                let d = state.send(&opt)
+                if let remaining = opt.take() {
+                    slot.store(remaining)
+                }
+                return d
             }
 
             switch consume decision {

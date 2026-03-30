@@ -20,7 +20,7 @@ extension Async.Channel.Bounded where Element: ~Copyable {
     ///
     /// `Receiver` enforces a single-suspended-receiver invariant: at most one
     /// task may be suspended in `receive()` at a time. Concurrent suspended
-    /// receives trigger a precondition failure in `State.receiveSuspended`.
+    /// receives trigger a precondition failure in `State.suspend(continuation:)`.
     ///
     /// ## Usage
     /// ```swift
@@ -71,7 +71,7 @@ extension Async.Channel.Bounded.Receiver where Element: ~Copyable {
     ) async throws(Async.Channel<Element>.Error) -> Element? {
         // Fast path: try immediate receive
         let fastAction = storage.withLock { state in
-            state.tryReceive()
+            state.receive()
         }
 
         switch consume fastAction {
@@ -98,7 +98,7 @@ extension Async.Channel.Bounded.Receiver where Element: ~Copyable {
             await unsafe withUnsafeContinuation { (raw: UnsafeContinuation<Async.Channel<Element>.Bounded.State.Receive.Signal, Never>) in
                 let continuation = unsafe Async.Continuation.Unsafe(raw)
                 let action = storage.withLock { state in
-                    state.receiveSuspended(continuation: continuation)
+                    state.suspend(continuation: continuation)
                 }
 
                 switch consume action {
@@ -123,7 +123,7 @@ extension Async.Channel.Bounded.Receiver where Element: ~Copyable {
             }
         } onCancel: {
             let action = storage.withLock { state in
-                state.receiveCancelled()
+                state.cancel()
             }
             switch action {
             case .resumeWithCancellation(let continuation):
@@ -164,7 +164,7 @@ extension Async.Channel.Bounded.Receiver where Element: ~Copyable {
         @inlinable
         public func immediate() throws(Async.Channel<Element>.Error) -> Element? {
             let action = storage.withLock { state in
-                state.tryReceive()
+                state.receive()
             }
 
             switch consume action {
@@ -253,7 +253,7 @@ extension Async.Channel.Bounded.Elements {
 
             // Fast path: try immediate receive
             let fastAction = storage.withLock { state in
-                state.tryReceive()
+                state.receive()
             }
 
             switch consume fastAction {
@@ -278,7 +278,7 @@ extension Async.Channel.Bounded.Elements {
                 await unsafe withUnsafeContinuation { (raw: UnsafeContinuation<Async.Channel<Element>.Bounded.State.Receive.Signal, Never>) in
                     let continuation = unsafe Async.Continuation.Unsafe(raw)
                     let action = storage.withLock { state in
-                        state.receiveSuspended(continuation: continuation)
+                        state.suspend(continuation: continuation)
                     }
 
                     switch action {
@@ -301,7 +301,7 @@ extension Async.Channel.Bounded.Elements {
                 }
             } onCancel: {
                 let action = storage.withLock { state in
-                    state.receiveCancelled()
+                    state.cancel()
                 }
                 switch action {
                 case .resumeWithCancellation(let continuation):
