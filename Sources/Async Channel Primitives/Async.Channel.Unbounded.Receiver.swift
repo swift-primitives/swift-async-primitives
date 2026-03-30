@@ -44,7 +44,7 @@ extension Async.Channel.Unbounded where Element: ~Copyable {
     /// `Receiver` is `@unchecked Sendable` - it may be moved to another task
     /// for the canonical "handoff to consumer task" pattern. The mutex guards
     /// all state access. Concurrent suspension is caught by precondition.
-    public struct Receiver: ~Copyable, @unchecked Sendable {
+    public struct Receiver: ~Copyable, Sendable {
         @usableFromInline
         let storage: Storage
 
@@ -185,7 +185,7 @@ extension Async.Channel.Unbounded.Receiver {
 
 extension Async.Channel.Unbounded {
     /// An AsyncSequence view over an unbounded channel receiver.
-    public struct Elements: AsyncSequence, @unchecked Sendable {
+    public struct Elements: AsyncSequence, Sendable {
         @usableFromInline
         let storage: Storage
 
@@ -202,7 +202,7 @@ extension Async.Channel.Unbounded {
 
 extension Async.Channel.Unbounded.Elements {
     /// Iterator for the AsyncSequence view.
-    public struct Iterator: AsyncIteratorProtocol, @unchecked Sendable {
+    public struct Iterator: AsyncIteratorProtocol, Sendable {
         @usableFromInline
         let storage: Async.Channel<Element>.Unbounded.Storage
 

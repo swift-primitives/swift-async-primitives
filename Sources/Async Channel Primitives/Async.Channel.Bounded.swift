@@ -52,7 +52,7 @@ extension Async.Channel where Element: ~Copyable {
     ///     // Task was cancelled
     /// }
     /// ```
-    public struct Bounded: ~Copyable, @unchecked Sendable {
+    public struct Bounded: ~Copyable, Sendable {
         @usableFromInline
         let storage: Storage
 
@@ -113,7 +113,7 @@ extension Async.Channel.Bounded where Element: ~Copyable {
     }
 
     /// Consuming accessor namespace.
-    public struct Take: ~Copyable, @unchecked Sendable {
+    public struct Take: ~Copyable, Sendable {
         @usableFromInline
         var channel: Async.Channel<Element>.Bounded
 
@@ -138,7 +138,7 @@ extension Async.Channel.Bounded where Element: ~Copyable {
     ///
     /// `Ends` is `~Copyable` because it contains the `~Copyable` receiver.
     /// Use `channel.take().ends()` to consume the channel and obtain this bundle.
-    public struct Ends: ~Copyable, @unchecked Sendable {
+    public struct Ends: ~Copyable, Sendable {
         @usableFromInline
         let storage: Storage
 
