@@ -17,6 +17,32 @@ let package = Package(
             name: "Async Primitives Core",
             targets: ["Async Primitives Core"]
         ),
+        // MARK: - Mutex
+        .library(
+            name: "Async Mutex Primitives",
+            targets: ["Async Mutex Primitives"]
+        ),
+        // MARK: - Coordination
+        .library(
+            name: "Async Bridge Primitives",
+            targets: ["Async Bridge Primitives"]
+        ),
+        .library(
+            name: "Async Promise Primitives",
+            targets: ["Async Promise Primitives"]
+        ),
+        .library(
+            name: "Async Publication Primitives",
+            targets: ["Async Publication Primitives"]
+        ),
+        .library(
+            name: "Async Barrier Primitives",
+            targets: ["Async Barrier Primitives"]
+        ),
+        .library(
+            name: "Async Completion Primitives",
+            targets: ["Async Completion Primitives"]
+        ),
         // MARK: - Variants
         .library(
             name: "Async Channel Primitives",
@@ -61,6 +87,14 @@ let package = Package(
                 .product(name: "Buffer Primitives", package: "swift-buffer-primitives"),
                 .product(name: "Queue Primitives", package: "swift-queue-primitives"),
                 .product(name: "Identity Primitives", package: "swift-identity-primitives"),
+            ]
+        ),
+
+        // MARK: - Mutex
+        .target(
+            name: "Async Mutex Primitives",
+            dependencies: [
+                "Async Primitives Core",
                 .product(
                     name: "Kernel Primitives",
                     package: "swift-kernel-primitives",
@@ -72,11 +106,49 @@ let package = Package(
             ]
         ),
 
+        // MARK: - Coordination
+        .target(
+            name: "Async Bridge Primitives",
+            dependencies: [
+                "Async Primitives Core",
+                "Async Mutex Primitives",
+            ]
+        ),
+        .target(
+            name: "Async Promise Primitives",
+            dependencies: [
+                "Async Primitives Core",
+                "Async Mutex Primitives",
+            ]
+        ),
+        .target(
+            name: "Async Publication Primitives",
+            dependencies: [
+                "Async Primitives Core",
+                "Async Mutex Primitives",
+            ]
+        ),
+        .target(
+            name: "Async Barrier Primitives",
+            dependencies: [
+                "Async Primitives Core",
+                "Async Mutex Primitives",
+            ]
+        ),
+        .target(
+            name: "Async Completion Primitives",
+            dependencies: [
+                "Async Primitives Core",
+                "Async Mutex Primitives",
+            ]
+        ),
+
         // MARK: - Variants
         .target(
             name: "Async Channel Primitives",
             dependencies: [
                 "Async Primitives Core",
+                "Async Mutex Primitives",
                 "Async Waiter Primitives",
                 .product(name: "Ownership Primitives", package: "swift-ownership-primitives"),
             ]
@@ -85,6 +157,8 @@ let package = Package(
             name: "Async Broadcast Primitives",
             dependencies: [
                 "Async Primitives Core",
+                "Async Mutex Primitives",
+                "Async Publication Primitives",
                 .product(name: "Dictionary Primitives", package: "swift-dictionary-primitives"),
             ]
         ),
@@ -107,6 +181,12 @@ let package = Package(
             name: "Async Primitives",
             dependencies: [
                 "Async Primitives Core",
+                "Async Mutex Primitives",
+                "Async Bridge Primitives",
+                "Async Promise Primitives",
+                "Async Publication Primitives",
+                "Async Barrier Primitives",
+                "Async Completion Primitives",
                 "Async Channel Primitives",
                 "Async Broadcast Primitives",
                 "Async Timer Primitives",
@@ -147,6 +227,7 @@ for target in package.targets where ![.system, .binary, .plugin, .macro].contain
         .enableUpcomingFeature("MemberImportVisibility"),
         .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
         .enableExperimentalFeature("Lifetimes"),
+        .enableExperimentalFeature("RawLayout"),
         .enableExperimentalFeature("SuppressedAssociatedTypes"),
     ]
 
