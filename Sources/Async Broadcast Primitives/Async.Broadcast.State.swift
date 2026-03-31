@@ -22,13 +22,13 @@ extension Async.Broadcast {
         var buffer: Deque<(index: UInt64, element: Element)> = .init()
 
         /// Next element index to assign.
-        var next: NextIndex = .init()
+        var next: Next.Index = .init()
 
         /// Active subscribers keyed by ID.
         var subscribers: Dictionary<UInt64, Subscriber>.Ordered = .init()
 
         /// Subscriber ID allocation.
-        var subscriber: SubscriberID = .init()
+        var subscriber: Subscriber.ID = .init()
 
         /// Lifecycle flags.
         var `is`: Is = .active
