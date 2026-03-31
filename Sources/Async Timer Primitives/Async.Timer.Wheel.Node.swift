@@ -60,23 +60,3 @@ extension Async.Timer.Wheel {
         }
     }
 }
-
-extension Async.Timer.Wheel.Node {
-    /// Bundles the deadline instant with its tick representation.
-    @usableFromInline
-    struct Deadline: Sendable {
-        /// The original deadline instant (for yielding in Entry).
-        @usableFromInline
-        var instant: C.Instant
-
-        /// The deadline as a tick number (for internal calculations).
-        @usableFromInline
-        var tick: Async.Timer.Wheel<C>.Tick
-
-        @usableFromInline
-        init(instant: C.Instant, tick: Async.Timer.Wheel<C>.Tick) {
-            self.instant = instant
-            self.tick = tick
-        }
-    }
-}
