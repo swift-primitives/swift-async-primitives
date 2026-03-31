@@ -53,12 +53,6 @@ extension Async.Waiter {
         @usableFromInline
         let _bits: Atomic<UInt8>
 
-        @usableFromInline
-        static let cancelledBit: UInt8 = 1
-
-        @usableFromInline
-        static let timedOutBit: UInt8 = 2
-
         /// Creates a new flag with both bits clear.
         public init() {
             self._bits = Atomic(0)
@@ -69,6 +63,12 @@ extension Async.Waiter {
 // MARK: - Flag Operations
 
 extension Async.Waiter.Flag {
+    @usableFromInline
+    static let cancelledBit: UInt8 = 1
+
+    @usableFromInline
+    static let timedOutBit: UInt8 = 2
+
     /// Whether the waiter has been cancelled (read-only).
     public var cancelled: Bool {
         _bits.load(ordering: .relaxed) & Self.cancelledBit != 0
