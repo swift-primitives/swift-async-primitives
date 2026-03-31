@@ -60,12 +60,6 @@ extension Async {
         private let _state: Async.Mutex<State>
         private let parties: Int
 
-        private struct State: Sendable {
-            var arrived: Int = 0
-            var waiters: [Async.Continuation<Void>] = []
-            var released: Bool = false
-        }
-
         /// Creates a new barrier expecting the given number of parties.
         ///
         /// - Parameter parties: Number of tasks that must arrive before release.
@@ -75,6 +69,14 @@ extension Async {
             self.parties = parties
             self._state = Async.Mutex(State())
         }
+    }
+}
+
+private extension Async.Barrier {
+    struct State: Sendable {
+        var arrived: Int = 0
+        var waiters: [Async.Continuation<Void>] = []
+        var released: Bool = false
     }
 }
 
