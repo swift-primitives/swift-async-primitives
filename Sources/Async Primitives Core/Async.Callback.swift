@@ -117,7 +117,7 @@ extension Async.Callback where Value: Sendable {
     @inlinable
     public init(
         wrapping cps: @escaping @Sendable (
-            @escaping @Sendable (Value) -> Void
+            @escaping @Sendable (sending Value) -> Void
         ) -> Void
     ) {
         self.init {

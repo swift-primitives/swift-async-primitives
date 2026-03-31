@@ -102,7 +102,7 @@ extension Async {
         /// This method works on all platforms including embedded Swift.
         ///
         /// - Parameter callback: The callback to invoke with the fulfilled value.
-        public func wait(_ callback: @escaping @Sendable (Value) -> Void) {
+        public func wait(_ callback: @escaping @Sendable (sending Value) -> Void) {
             let immediateValue: Value? = _state.withLock { state in
                 if let value = state.fulfilled {
                     return value

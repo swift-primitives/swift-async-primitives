@@ -37,7 +37,7 @@ extension Async {
         @usableFromInline
         enum Storage: Sendable {
             case checkedContinuation(CheckedContinuation<T, Never>)
-            case callback(@Sendable (T) -> Void)
+            case callback(@Sendable (sending T) -> Void)
         }
 
         @usableFromInline
@@ -51,7 +51,7 @@ extension Async {
 
         /// Creates a continuation with a callback.
         @inlinable
-        public init(_ callback: @escaping @Sendable (T) -> Void) {
+        public init(_ callback: @escaping @Sendable (sending T) -> Void) {
             self.storage = .callback(callback)
         }
 
@@ -84,11 +84,11 @@ extension Async {
     /// ```
     public struct Continuation<T: Sendable>: Sendable {
         @usableFromInline
-        let callback: @Sendable (T) -> Void
+        let callback: @Sendable (sending T) -> Void
 
         /// Creates a continuation with a callback.
         @inlinable
-        public init(_ callback: @escaping @Sendable (T) -> Void) {
+        public init(_ callback: @escaping @Sendable (sending T) -> Void) {
             self.callback = callback
         }
 
