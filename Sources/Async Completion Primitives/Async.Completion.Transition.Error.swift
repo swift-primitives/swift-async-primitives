@@ -11,9 +11,12 @@
 
 #if !hasFeature(Embedded)
 
-extension Async.Completion {
-    /// State transition namespace.
-    public enum Transition {}
+extension Async.Completion.Transition {
+    /// Error thrown when a state transition fails.
+    public enum Error: Swift.Error, Sendable {
+        /// The completion has already transitioned to a terminal state.
+        case alreadyDone
+    }
 }
 
 #endif  // !hasFeature(Embedded)
