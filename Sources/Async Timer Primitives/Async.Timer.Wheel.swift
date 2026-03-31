@@ -84,7 +84,7 @@ extension Async.Timer {
 
         /// Cached index of the earliest timer (lazy invalidation).
         @usableFromInline
-        var earliest: Storage.Index?
+        var earliest: Index<Node>?
 
         /// Creates a timer wheel with the specified clock and configuration.
         ///

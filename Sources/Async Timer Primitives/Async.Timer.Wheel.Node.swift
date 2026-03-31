@@ -37,11 +37,11 @@ extension Async.Timer.Wheel {
 
         /// Previous node in the slot's linked list (nil if head).
         @usableFromInline
-        var prev: Storage.Index?
+        var prev: Index<Node>?
 
         /// Next node in the slot's linked list (nil if tail).
         @usableFromInline
-        var next: Storage.Index?
+        var next: Index<Node>?
 
         /// Creates a node with the given parameters.
         @usableFromInline

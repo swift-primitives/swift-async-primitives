@@ -22,11 +22,11 @@ extension Async.Timer.Wheel {
     struct Slot: Sendable {
         /// Index of the first node, or nil if empty.
         @usableFromInline
-        var head: Storage.Index?
+        var head: Index<Node>?
 
         /// Index of the last node, or nil if empty.
         @usableFromInline
-        var tail: Storage.Index?
+        var tail: Index<Node>?
 
         /// Number of nodes in this slot.
         @usableFromInline

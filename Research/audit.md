@@ -731,3 +731,156 @@ Not in this package — affects `Buffer_Primitives_Core` (`Buffer<UInt8>.Unbound
 - [Upstream issue](https://github.com/swiftlang/swift/issues/85743) — swiftlang/swift#85743 (CLOSED)
 - [Upstream fix PR](https://github.com/swiftlang/swift/pull/85745) — swiftlang/swift#85745 (MERGED 2025-12-04)
 - [DeinitDevirtualizer blocker](/Users/coen/Developer/HANDOFF-deinit-devirtualizer-upstream.md) — separate 6.4-dev blocker that prevented earlier verification
+
+---
+
+## Ecosystem Data Structures — 2026-03-31
+
+### Scope
+
+- **Target**: `Async.Timer.Wheel.Storage.Free` — hand-rolled free list in `Async.Timer.Wheel.Storage`
+- **Skill**: ecosystem-data-structures — [DS-001] through [DS-010]
+- **Files**: `Sources/Async Timer Primitives/Async.Timer.Wheel.Storage.swift` (lines 78–112, plus allocate/deallocate/subscript at 116–193)
+- **Prior finding**: async-pool-primitives-audit.md Finding #1 (2026-03-18) flagged this as HIGH VALUE, recommending `Buffer.Slab`
+- **Investigation**: Evaluate `Buffer.Slab`, `Buffer.Arena`, `Buffer.Arena.Bounded`, and `Slab<E>` against the Timer.Wheel use case
+
+### Current Implementation Analysis
+
+`Storage.Free` is a parallel-array intrusive free list:
+
+| Component | Current | Type |
+|-----------|---------|------|
+| Element storage | `nodes: [Node?]` | stdlib `Array` with nil for free slots |
+| Free-list linkage | `free.links: [UInt32]` | parallel array, sentinel `UInt32.max` |
+| Free-list head | `free.head: Index?` | `Optional<Tagged<Node, UInt32>>` |
+| Generation | `generation: UInt32` | **global** counter, incremented on every `allocate()` |
+| Capacity | `capacity: Int` | raw `Int` |
+
+The free list is structurally correct: O(1) allocate (pop head), O(1) deallocate (push head), sentinel-terminated. The concern is not correctness but whether ecosystem infrastructure already provides this exact abstraction.
+
+### Candidate Evaluation
+
+#### Candidate 1: `Buffer.Slab` / `Slab<E>` — NOT RECOMMENDED
+
+**Source**: `Buffer_Slab_Primitives` (Tier 15), `Slab_Primitives` (Tier 16)
+
+`Buffer.Slab` is a **bitmap-tracked** sparse container backed by `Storage<E>.Slab`. The prior audit (2026-03-18 Finding #1) recommended it based on the "slab allocator" label, but the underlying semantics do not match:
+
+| Requirement | Timer.Wheel needs | Buffer.Slab provides |
+|-------------|-------------------|---------------------|
+| Allocation strategy | O(1) LIFO free-list pop | O(word) bitmap scan via `firstVacant()` |
+| Deallocation | O(1) push to free-list head | O(1) bitmap clear |
+| ABA prevention | Generation counter per allocation | ❌ None — no generation tokens |
+| Stale-reference detection | Match generation before accessing slot | ❌ None — bitmap is sole occupancy oracle |
+| Occupancy tracking | Free-list (implicit) | Bitmap (`Bit.Vector.Bounded`) |
+
+**Verdict**: `Buffer.Slab` solves a different problem (bitmap-tracked sparse storage with consumer-chosen indices). Timer.Wheel needs a **free-list allocator with generation tokens**. Using `Buffer.Slab` would require Timer.Wheel to maintain its own external generation counter and degrade allocation from O(1) to O(word). This is a step backward from the hand-rolled code.
+
+The prior audit's recommendation is **retracted** for this finding.
+
+#### Candidate 2: `Buffer.Arena.Bounded` — RECOMMENDED
+
+**Source**: `Buffer_Arena_Primitives` (Tier 15)
+
+`Buffer.Arena` is the ecosystem's **generation-token arena** with LIFO free-list allocation. `Buffer.Arena.Bounded` is the fixed-capacity variant. The semantic alignment is nearly exact:
+
+| Requirement | Timer.Wheel (current) | Buffer.Arena.Bounded |
+|-------------|----------------------|---------------------|
+| Allocation | `free.head` pop, O(1) | `header.freeHead` pop, O(1) — identical algorithm |
+| Deallocation | push to `free.head`, O(1) | push to `header.freeHead` + token increment, O(1) |
+| Generation | **Global** `UInt32` counter | **Per-slot** `Meta.token` with odd/even parity |
+| Stale detection | Caller checks `generation` match on `Handle<_Entry>` | `isValid(position)` checks token match — built-in |
+| Element storage | `[Node?]` (Optional per slot) | Contiguous typed storage, token parity = occupancy |
+| Free-list linkage | Parallel `[UInt32]` array | Per-slot `Meta.link: UInt32` — SoA metadata |
+| Capacity model | Fixed at init | Fixed at init |
+| Typed index | `Tagged<Node, UInt32>` | `Index<Element>` + `Position` handle |
+
+**Structural correspondence**:
+
+| Storage.Free | Buffer.Arena.Bounded |
+|-------------|---------------------|
+| `free.links: [UInt32]` | `Meta[i].link: UInt32` (per-slot metadata) |
+| `free.head: Index?` | `header.freeHead: UInt32` (`.max` = empty) |
+| `generation: UInt32` (global) | `Meta[i].token: UInt32` (per-slot, odd=occupied) |
+| `nodes: [Node?]` | `Storage<Node>.Arena` (no Optional overhead) |
+| `capacity: Int` | `header.capacity: Index<Node>.Count` (typed) |
+
+**Key advantages of Arena over current code**:
+
+1. **Per-slot generation** is strictly better for ABA prevention. Global counter wraps after 2^32 total allocations; per-slot wraps after 2^32 reuses of the same slot. For a timer wheel with high churn on a subset of slots, per-slot is materially safer.
+
+2. **No Optional overhead**. Current `[Node?]` stores an 83-byte `Node?` (Node + 1 byte tag) per slot. Arena stores `Node` without Optional wrapper; occupancy is tracked by token parity in the metadata array.
+
+3. **Built-in stale-reference detection**. `arena.isValid(position)` replaces the manual `generation == handle.generation` check that `cancel()` will need.
+
+4. **Eliminates ~90 lines** of hand-rolled free-list infrastructure (Free struct, init loop, allocate, deallocate, subscript, take).
+
+5. **Dependency cost: zero**. `Buffer Arena Primitives` is already transitively available: `Async Timer Primitives` → `Async Primitives Core` → `Buffer Primitives` (umbrella) → `Buffer Arena Primitives`.
+
+**Handle/Position alignment**:
+
+| | Timer.Wheel `Handle<_Entry>` | Arena `Position` |
+|---|---|---|
+| Index | `Int` (widened from UInt32) | `UInt32` (native) |
+| Generation | `UInt32` | `UInt32` (token) |
+| Size | 12–16 bytes | 8 bytes |
+| Validation | Manual check by caller | `arena.isValid(_:)` built-in |
+
+`Handle<_Entry>` via `SlotAddress(index: Int, generation: UInt32)` and `Arena.Position(index: UInt32, token: UInt32)` encode the same semantic concept — an ephemeral capability with ABA protection. Arena's `Position` is more compact (8 bytes vs 12–16) and has built-in validation.
+
+### Findings
+
+| # | Severity | Rule | Location | Finding | Status |
+|---|----------|------|----------|---------|--------|
+| 1 | HIGH | [DS-010] | Storage.swift:78–112 | `Storage.Free` hand-rolls a LIFO free list. Per [DS-010] stable-index decision tree: "Need use-after-free detection? → Buffer.Arena". Timer.Wheel needs generation-based stale-reference detection for `cancel()`. `Buffer.Arena.Bounded` provides the exact semantics: O(1) LIFO free-list + per-slot generation tokens + fixed capacity. | OPEN |
+| 2 | HIGH | [DS-010] | Storage.swift:49–51 | `nodes: [Node?]` uses stdlib Optional array. Arena eliminates Optional overhead — token parity in metadata is the occupancy oracle. Saves 1 byte per slot (Optional tag) and removes 9 optional-chaining call sites in `Async.Timer.Wheel+Slot.swift`. | OPEN |
+| 3 | MEDIUM | [DS-001] | Storage.swift:88–111 | `Storage.Free` operates at the **Memory** level (raw indices, sentinel values, manual linkage) but is consumed at the **Buffer** level (manages element lifecycle). Per [DS-001], this should compose Storage → Buffer layers, not bypass them. | OPEN |
+| 4 | MEDIUM | [DS-009] | Storage.swift:47 | `Storage.Index = Tagged<Node, UInt32>` is a manual phantom-typed index. Arena provides `Index<Node>` (from `Index_Primitives`) + `Position` for external handles. Unifies with ecosystem index conventions. | OPEN |
+| 5 | LOW | [DS-002] | Storage.swift:69–74 | Fixed-capacity allocation pattern matches `.Bounded` variant selection. Current code uses growable stdlib `Array` for fixed-capacity semantics — the capacity is set at init and never changes. `Buffer.Arena.Bounded` encodes this constraint in the type. | OPEN |
+| 6 | INFO | — | Prior audit Finding #1 | The 2026-03-18 recommendation to use `Buffer.Slab` is **retracted**. `Buffer.Slab` is bitmap-tracked with no free-list and no generation tokens — wrong data structure for this use case. `Buffer.Arena.Bounded` is the correct match. | SUPERSEDED |
+
+### Migration Path
+
+**Phase 1 — Replace Storage internals** (Medium effort, ~50 lines):
+
+Replace `nodes: [Node?]`, `free: Free`, `generation: UInt32`, `capacity: Int` with a single `Buffer<Node>.Arena.Bounded` field. Delegate `allocate()` to `arena.insert(_:)` or `arena.allocate()` + pointer init. Delegate `deallocate(_:)` to `arena.free(at:)`. Replace subscript with `arena.pointer(at:)`.
+
+**Phase 2 — Bridge Handle/Position** (Low effort, ~10 lines):
+
+Keep `Timer.Wheel.ID = Handle<_Entry>` as the public API. Bridge at the boundary:
+- `_makeID`: construct `Handle<_Entry>` from `Position.index` (UInt32 → Int) + `Position.token`
+- `_storageIndex`: extract `Position.slot` from Handle (Int → UInt32 → Index<Node>)
+
+Alternative: replace `ID` with `Buffer<Node>.Arena.Position` directly if the public API can change. This eliminates the Handle dependency entirely and gives 8-byte IDs instead of 12–16.
+
+**Phase 3 — Update intrusive list operations** (Low effort, ~20 lines):
+
+Replace `storage[index]?.next = value` patterns (9 sites in `Async.Timer.Wheel+Slot.swift`) with pointer-based access: `unsafe arena.pointer(at: slot).pointee.next = value`. The optional chaining becomes unnecessary because occupied slots are guaranteed initialized by the arena's token invariant.
+
+### Dependency Impact
+
+None. `Buffer Arena Primitives` is already transitively available through the existing dependency chain:
+```
+Async Timer Primitives
+  → Async Primitives Core
+    → Buffer Primitives (umbrella, swift-buffer-primitives)
+      → Buffer Arena Primitives ✓
+```
+
+An explicit `import Buffer_Arena_Primitives` in the Timer source files is all that's needed.
+
+### Summary
+
+5 findings + 1 retraction: 0 critical, 2 high, 2 medium, 1 low, 1 info.
+
+The prior audit's `Buffer.Slab` recommendation was incorrect — `Buffer.Slab` is bitmap-tracked sparse storage without free-list or generation tokens. `Buffer.Arena.Bounded` is the correct ecosystem data structure: it implements the exact algorithm Timer.Wheel hand-rolls (LIFO free-list + generation tokens) with additional benefits (per-slot generations, no Optional overhead, built-in stale-reference validation, typed indices).
+
+The migration is self-contained within `Async Timer Primitives` with zero new dependencies. Most of the hand-rolled infrastructure (Free struct, parallel array, sentinel values, subscript boundary conversions) is eliminated. The active call sites (9 subscript usages in Slot operations) change from optional-chaining to pointer-based access.
+
+### Related Documents
+
+- [Prior audit](/Users/coen/Developer/swift-institute/Research/async-pool-primitives-audit.md) — Finding #1 (retracted `Buffer.Slab` recommendation)
+- [Handoff](/Users/coen/Developer/swift-primitives/swift-async-primitives/HANDOFF-storage-free-data-structure.md) — Investigation brief
+- `Buffer.Arena.Bounded` source: `swift-buffer-primitives/Sources/Buffer Arena Primitives/Buffer.Arena.Bounded.swift`
+- `Buffer.Arena.Position` source: `swift-buffer-primitives/Sources/Buffer Primitives Core/Buffer.Arena.Position.swift`
+- `Storage<E>.Arena.Meta` source: `swift-storage-primitives/Sources/Storage Primitives Core/Storage.Arena.swift:88`

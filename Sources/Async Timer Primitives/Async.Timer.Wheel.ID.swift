@@ -21,21 +21,21 @@ extension Async.Timer.Wheel {
     /// Unique identifier for a scheduled timer.
     ///
     /// IDs are used to cancel timers before they fire. Each ID contains:
-    /// - An index into the storage slab
-    /// - A generation counter for ABA prevention
+    /// - An index into the storage arena
+    /// - A generation token for ABA prevention
     ///
     /// ## Generation Safety
     ///
     /// When a timer fires or is cancelled, its storage slot is returned to
-    /// the free list. If a new timer reuses that slot, it receives a new
-    /// generation number. Attempts to cancel with an old ID (stale generation)
-    /// will fail safely.
+    /// the free list. If a new timer reuses that slot, the slot's per-slot
+    /// generation token increments. Attempts to cancel with an old ID
+    /// (stale token) will fail safely.
     ///
     /// ## Implementation Note
     ///
     /// `ID` is implemented as `Handle<_Entry>` to unify handle
-    /// types across the Swift Institute primitives. The wheel's validation
-    /// semantics remain wheel-specific (global epoch, not per-slot generation).
+    /// types across the Swift Institute primitives. Internally, the wheel
+    /// bridges between `Handle` and `Buffer.Arena.Position`.
     ///
     /// ## Usage
     ///
@@ -50,29 +50,42 @@ extension Async.Timer.Wheel {
 // MARK: - Construction Helpers
 
 extension Async.Timer.Wheel {
-    /// Creates an ID from the storage allocation result.
+    /// Creates an ID from an arena position.
     ///
-    /// This is the boundary where the typed `Storage.Index` is widened
-    /// to `Int` for the `Handle`'s `SlotAddress`.
+    /// This is the boundary where the arena's `Position` is widened
+    /// to `Handle<_Entry>` for external use.
     ///
-    /// - Parameters:
-    ///   - index: The typed storage index.
-    ///   - generation: The generation counter.
+    /// - Parameter position: The arena position handle.
     /// - Returns: A handle suitable for external use.
     @usableFromInline
-    static func _makeID(index: Storage.Index, generation: UInt32) -> ID {
-        ID(index: Int(index.rawValue), generation: generation)
+    static func _makeID(
+        position: Buffer<Async.Timer.Wheel<C>.Node>.Arena.Position
+    ) -> ID {
+        ID(index: Int(position.index), generation: position.token)
     }
 
-    /// Extracts the storage index from an ID.
+    /// Extracts the typed storage index from an ID.
     ///
     /// This is the boundary where the `Handle`'s `Int` index is narrowed
-    /// back to the typed `Storage.Index`.
+    /// back to the typed `Index<Node>` for arena access.
     ///
     /// - Parameter id: The timer ID.
-    /// - Returns: The typed storage index.
+    /// - Returns: The typed slot index.
     @usableFromInline
-    static func _storageIndex(_ id: ID) -> Storage.Index {
-        Storage.Index(__unchecked: (), UInt32(id.index))
+    static func _storageIndex(_ id: ID) -> Index<Async.Timer.Wheel<C>.Node> {
+        Index<Node>(Ordinal(UInt(id.index)))
+    }
+
+    /// Reconstructs an arena position from an ID.
+    ///
+    /// Used for position-based validation (e.g., `storage.isValid`).
+    ///
+    /// - Parameter id: The timer ID.
+    /// - Returns: The arena position handle.
+    @usableFromInline
+    static func _position(
+        _ id: ID
+    ) -> Buffer<Async.Timer.Wheel<C>.Node>.Arena.Position {
+        .init(index: UInt32(id.index), token: id.generation)
     }
 }

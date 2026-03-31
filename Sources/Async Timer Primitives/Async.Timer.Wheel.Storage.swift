@@ -9,13 +9,12 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import Identity_Primitives
-
 extension Async.Timer.Wheel {
-    /// Slab allocator for timer nodes.
+    /// Arena-backed storage for timer nodes.
     ///
     /// Storage provides O(1) allocation and deallocation of node slots
-    /// using a free list. All memory is pre-allocated at initialization.
+    /// using `Buffer.Arena.Bounded` — a fixed-capacity arena with per-slot
+    /// generation tokens and a LIFO free list.
     ///
     /// ## Thread Safety
     ///
@@ -24,89 +23,27 @@ extension Async.Timer.Wheel {
     /// `~Copyable` and intended for single-actor use. All mutations are
     /// serialized by the owning actor.
     ///
-    /// ## Generation Counter
+    /// ## Generation Tokens
     ///
-    /// Each allocation increments a global generation counter. When a slot
-    /// is reused, the new node gets a new generation. This prevents the
-    /// ABA problem where a stale ID might accidentally match a new timer.
-    ///
-    /// ## Free List
-    ///
-    /// The `free` sub-struct manages a parallel array where `free.links[i]`
-    /// stores the next-free index when `nodes[i]` is nil. Sentinel value
-    /// `UInt32.max` indicates end of list. `free.head` uses `Optional`
-    /// to represent the exhausted state.
+    /// Each slot has an independent generation token (odd = occupied,
+    /// even = free). When a slot is reused, its token increments. This
+    /// prevents the ABA problem where a stale ID might accidentally match
+    /// a new timer. Per-slot tokens provide stronger ABA protection than
+    /// a global counter — they wrap only after 2^32 reuses of the same slot.
     @usableFromInline
     struct Storage: ~Copyable, @unchecked Sendable {
-        /// Typed index into the node storage array.
-        ///
-        /// Wraps `UInt32` with a phantom tag (`Node`) to prevent accidental
-        /// confusion with other integer values. The `Int` conversion for
-        /// array subscripting happens once, in the boundary subscript.
+        /// Arena buffer managing node allocation and lifecycle.
         @usableFromInline
-        typealias Index = Tagged<Node, UInt32>
-
-        /// Node storage. Nil indicates a free slot.
-        @usableFromInline
-        var nodes: [Node?]
-
-        /// Free list state for O(1) allocation/deallocation.
-        @usableFromInline
-        var free: Free
-
-        /// Next generation counter for ABA prevention.
-        @usableFromInline
-        var generation: UInt32
-
-        /// The storage capacity.
-        @usableFromInline
-        let capacity: Int
+        var arena: Buffer<Node>.Arena.Bounded
 
         /// Creates storage with the specified capacity.
         ///
         /// - Parameter capacity: Maximum number of concurrent timers.
         @usableFromInline
         init(capacity: Int) {
-            self.capacity = capacity
-            self.nodes = [Node?](repeating: nil, count: capacity)
-            self.free = Free(capacity: capacity)
-            self.generation = 0
-        }
-    }
-}
-
-// MARK: - Free List
-
-extension Async.Timer.Wheel.Storage {
-    /// Free list state for O(1) slot allocation/deallocation.
-    ///
-    /// Uses a parallel array (`links`) where `links[i]` stores the next-free
-    /// index when `nodes[i]` is nil. Sentinel value `UInt32.max` indicates
-    /// end of list. The typed `head` uses `Optional` for the exhausted state.
-    @usableFromInline
-    struct Free: Sendable {
-        /// Parallel array for free list linkage.
-        @usableFromInline
-        var links: [UInt32]
-
-        /// Head of the free list. `nil` means exhausted.
-        @usableFromInline
-        var head: Index?
-
-        @usableFromInline
-        init(capacity: Int) {
-            self.links = [UInt32](repeating: 0, count: capacity)
-
-            // Build free list: 0 → 1 → 2 → ... → (capacity-1) → sentinel
-            if capacity > 0 {
-                for i in 0..<(capacity - 1) {
-                    links[i] = UInt32(i + 1)
-                }
-                links[capacity - 1] = UInt32.max
-                head = Index(__unchecked: (), 0)
-            } else {
-                head = nil
-            }
+            self.arena = .init(
+                minimumCapacity: Index<Node>.Count(Cardinal(UInt(capacity)))
+            )
         }
     }
 }
@@ -115,79 +52,58 @@ extension Async.Timer.Wheel.Storage {
 
 extension Async.Timer.Wheel.Storage {
 
-    /// Allocates a slot from the free list.
+    /// Inserts a node into the arena.
     ///
-    /// - Returns: A tuple of (index, generation), or nil if exhausted.
+    /// - Parameter node: The node to store.
+    /// - Returns: The arena position handle, or nil if capacity is exhausted.
     ///
     /// - Complexity: O(1)
     @usableFromInline
-    mutating func allocate() -> (index: Index, generation: UInt32)? {
-        guard let index = free.head else {
-            return nil // Storage exhausted
-        }
-
-        // Pop from free list
-        let raw = index.rawValue
-        let nextRaw = free.links[Int(raw)]
-        free.head = nextRaw == UInt32.max ? nil : Index(__unchecked: (), nextRaw)
-
-        // Increment generation
-        let gen = generation
-        generation &+= 1
-
-        return (index, gen)
+    mutating func insert(
+        _ node: consuming Async.Timer.Wheel<C>.Node
+    ) -> Buffer<Async.Timer.Wheel<C>.Node>.Arena.Position? {
+        try? arena.insert(node)
     }
 
-    /// Returns a slot to the free list.
+    /// Frees the slot at the given index, deinitializing the node.
     ///
-    /// - Parameter index: The slot index to deallocate.
+    /// - Parameter index: The slot index to free.
     ///
     /// - Complexity: O(1)
-    /// - Precondition: The slot must be currently allocated.
+    /// - Precondition: The slot must be currently occupied.
     @usableFromInline
-    mutating func deallocate(_ index: Index) {
-        let raw = index.rawValue
-
-        // Clear the node
-        nodes[Int(raw)] = nil
-
-        // Push to free list
-        free.links[Int(raw)] = free.head?.rawValue ?? UInt32.max
-        free.head = index
+    mutating func free(at index: Index<Async.Timer.Wheel<C>.Node>) {
+        arena.free(at: index)
     }
-
 }
 
 // MARK: - Access
 
 extension Async.Timer.Wheel.Storage {
 
-    /// Accesses the node at the given index.
+    /// Returns an unsafe mutable pointer to the node at the given slot.
     ///
-    /// This is the single boundary where `Index` is converted to `Int`
-    /// for array subscripting. All other code uses the typed `Index`.
-    ///
-    /// - Parameter index: The typed slot index.
-    /// - Returns: The node, or nil if the slot is free.
-    @usableFromInline
-    subscript(_ index: Index) -> Async.Timer.Wheel<C>.Node? {
-        get { nodes[Int(index.rawValue)] }
-        set { nodes[Int(index.rawValue)] = newValue }
-    }
-
-    /// Removes and returns the node at the given index.
-    ///
-    /// This does NOT return the slot to the free list. Use `deallocate`
-    /// separately if the slot should be freed.
+    /// Use this to read or mutate node fields (e.g., intrusive list pointers)
+    /// in-place. The pointer is valid until the arena is deallocated.
     ///
     /// - Parameter index: The typed slot index.
-    /// - Returns: The removed node, or nil if already empty.
+    /// - Precondition: The slot must be occupied.
+    @unsafe
     @usableFromInline
-    mutating func take(_ index: Index) -> Async.Timer.Wheel<C>.Node? {
-        let position = Int(index.rawValue)
-        let node = nodes[position]
-        nodes[position] = nil
-        return node
+    func pointer(
+        at index: Index<Async.Timer.Wheel<C>.Node>
+    ) -> UnsafeMutablePointer<Async.Timer.Wheel<C>.Node> {
+        unsafe arena.pointer(at: index)
     }
 
+    /// Returns whether the given position handle is still valid.
+    ///
+    /// A position is valid when its token matches the slot's current
+    /// generation token and the slot is occupied.
+    @usableFromInline
+    func isValid(
+        _ position: Buffer<Async.Timer.Wheel<C>.Node>.Arena.Position
+    ) -> Bool {
+        arena.isValid(position)
+    }
 }

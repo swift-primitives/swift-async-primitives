@@ -39,19 +39,19 @@ extension Async.Timer.Wheel {
     ///   - slot: The slot to append to.
     ///
     /// - Complexity: O(1)
-    /// - Precondition: `storage[index]` must exist and have nil prev/next.
+    /// - Precondition: The slot at `index` must be occupied with nil prev/next.
     @usableFromInline
-    mutating func slotAppend(_ index: Storage.Index, to slot: inout Slot) {
+    mutating func slotAppend(_ index: Index<Node>, to slot: inout Slot) {
         if let tailIndex = slot.tail {
             // Link to existing tail
-            storage[tailIndex]?.next = index
-            storage[index]?.prev = tailIndex
+            unsafe storage.pointer(at: tailIndex).pointee.next = index
+            unsafe storage.pointer(at: index).pointee.prev = tailIndex
         } else {
             // First node
             slot.head = index
         }
         slot.tail = index
-        storage[index]?.next = nil
+        unsafe storage.pointer(at: index).pointee.next = nil
         slot.count += 1
     }
 
@@ -64,15 +64,14 @@ extension Async.Timer.Wheel {
     /// - Complexity: O(1)
     /// - Precondition: The node must be in this slot's list.
     @usableFromInline
-    mutating func slotRemove(_ index: Storage.Index, from slot: inout Slot) {
-        guard let node = storage[index] else { return }
-
-        let prevIndex = node.prev
-        let nextIndex = node.next
+    mutating func slotRemove(_ index: Index<Node>, from slot: inout Slot) {
+        let nodePtr = unsafe storage.pointer(at: index)
+        let prevIndex = unsafe nodePtr.pointee.prev
+        let nextIndex = unsafe nodePtr.pointee.next
 
         // Update previous node's next pointer
         if let p = prevIndex {
-            storage[p]?.next = nextIndex
+            unsafe storage.pointer(at: p).pointee.next = nextIndex
         } else {
             // Removing head
             slot.head = nextIndex
@@ -80,15 +79,15 @@ extension Async.Timer.Wheel {
 
         // Update next node's prev pointer
         if let n = nextIndex {
-            storage[n]?.prev = prevIndex
+            unsafe storage.pointer(at: n).pointee.prev = prevIndex
         } else {
             // Removing tail
             slot.tail = prevIndex
         }
 
         // Clear the removed node's links
-        storage[index]?.prev = nil
-        storage[index]?.next = nil
+        unsafe nodePtr.pointee.prev = nil
+        unsafe nodePtr.pointee.next = nil
 
         slot.count -= 1
     }
@@ -100,7 +99,7 @@ extension Async.Timer.Wheel {
     ///
     /// - Complexity: O(1)
     @usableFromInline
-    mutating func slotPopFirst(from slot: inout Slot) -> Storage.Index? {
+    mutating func slotPopFirst(from slot: inout Slot) -> Index<Node>? {
         guard let index = slot.head else { return nil }
         slotRemove(index, from: &slot)
         return index
