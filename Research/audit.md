@@ -21,10 +21,10 @@
 | 6 | MEDIUM | [API-NAME-002] | Async.Timer.Wheel.Config.swift | `slot.mask`, `slot.shift`, `range.ticks`, `level.range(_:)`, `ticks.perSlot(_:)` via namespace structs. | RESOLVED 2026-03-31 |
 | 7 | MEDIUM | [API-NAME-002] | Async.Timer.Wheel+Tick.swift | `tick(for:)`, `slot(at:)`, `divided.roundingDown(by:)`. | RESOLVED 2026-03-31 |
 | 8 | LOW | [API-NAME-002] | Async.Broadcast.State.swift | `minCursor()`, `pruneBuffer()` — internal compound methods. | DEFERRED — [IMPL-024] internal implementation layer |
-| 9 | LOW | [API-NAME-002] | Async.Timer.Wheel.Node.swift:32 | `deadlineTick` — internal compound stored property. | OPEN |
+| 9 | LOW | [API-NAME-002] | Async.Timer.Wheel.Node.swift | `deadlineTick` → `deadline.tick` via `Deadline` sub-struct. | RESOLVED 2026-03-31 |
 | 10 | LOW | [API-NAME-002] | Async.Timer.Wheel+Slot.swift | `withSlot`, `slotAppend`, `slotRemove`, `slotPopFirst` — internal compound methods. | DEFERRED — [IMPL-024] internal implementation layer |
-| 11 | LOW | [API-NAME-002] | Async.Timer.Wheel.Storage.swift:57,61 | `freeLinks`, `freeHead` — internal compound stored properties. | OPEN |
-| 12 | LOW | [API-NAME-002] | Async.Timer.Wheel.swift:87 | `minIndex` — internal compound stored property. | OPEN |
+| 11 | LOW | [API-NAME-002] | Async.Timer.Wheel.Storage.swift | `freeLinks`/`freeHead` → `free.links`/`free.head` via `Free` sub-struct. | RESOLVED 2026-03-31 |
+| 12 | LOW | [API-NAME-002] | Async.Timer.Wheel.swift | `minIndex` → `earliest`. | RESOLVED 2026-03-31 |
 | 13 | MEDIUM | [API-IMPL-003] | Async.Channel.Unbounded.State.swift | `_closed: Bool` → `Status` enum { open, closed, finished } mirroring Bounded. | RESOLVED 2026-03-31 |
 | 14 | LOW | [API-IMPL-003] | Async.Broadcast.Is.swift | `Is.finished: Bool` → `enum Is { case active, finished }`. | RESOLVED 2026-03-31 |
 | 15 | HIGH | [API-IMPL-005] | Async.Completion.swift | Transition + Transition.Error extracted to Async.Completion.Transition.swift. | RESOLVED 2026-03-31 |
@@ -72,13 +72,11 @@
 
 ### Summary
 
-33 findings: 0 critical, 3 high, 16 medium, 14 low. **30 RESOLVED, 2 DEFERRED, 3 OPEN (all LOW).**
+33 findings: 0 critical, 3 high, 16 medium, 14 low. **31 RESOLVED, 2 DEFERRED.**
 
-**RESOLVED**: All 3 HIGH, all 16 MEDIUM, and 11 of 14 LOW findings addressed in 6 commits.
+**RESOLVED**: All 33 findings addressed across 9 commits. All HIGH, all MEDIUM, and 12 of 14 LOW findings fully resolved.
 
-**DEFERRED (2)**: Internal compound method names (#8, #10) per [IMPL-024] — implementation-layer methods may use compound names. Documented with WORKAROUND annotations.
-
-**OPEN (3)**: Internal compound stored properties on Timer.Wheel types (#9 `deadlineTick`, #11 `freeLinks`/`freeHead`, #12 `minIndex`). LOW severity — internal properties with contained blast radius.
+**DEFERRED (2)**: Internal compound method names (#8 `minCursor`/`pruneBuffer`, #10 `slotAppend`/`slotRemove`/`slotPopFirst`/`withSlot`) per [IMPL-024] — implementation-layer methods may use compound names. Documented with WORKAROUND annotations.
 
 **Compared to prior audit (2026-03-27)**: This strict re-audit expanded from 5 checked rules to the full code-surface requirement set. New findings: [API-IMPL-008] was not previously audited and accounts for 1 HIGH systemic finding covering 20 files. [API-IMPL-003] and [API-IMPL-007] are also new. Prior findings 7–8 (Channel State files) reclassified as justified exceptions per [MEM-COPY-006]. Prior findings 1 and 13 remain RESOLVED.
 
