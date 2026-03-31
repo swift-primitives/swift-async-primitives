@@ -105,7 +105,7 @@ extension Async.Channel.Unbounded.Sender where Element: ~Copyable {
             guard let batch = elementSlot.take() else { return (nil, false) }
             var receiverCont: Async.Channel<Element>.Unbounded.State.Receive.Continuation? = nil
             for element in batch {
-                guard !state._closed else { return (receiverCont, true) }
+                guard !state.isClosed else { return (receiverCont, true) }
                 switch state.slot {
                 case .wait(let cont) where receiverCont == nil:
                     state.slot = .none
@@ -156,7 +156,7 @@ extension Async.Channel.Unbounded.Sender where Element: ~Copyable {
     /// Note: Even when `true`, `receive()` may still return elements
     /// if the buffer is not yet drained.
     public var closed: Bool {
-        storage.withLock { $0.closed }
+        storage.withLock { $0.isClosed }
     }
 }
 

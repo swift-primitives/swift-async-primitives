@@ -31,16 +31,31 @@ extension Async.Channel.Unbounded where Element: ~Copyable {
         @usableFromInline
         var slot: Slot
 
-        /// Whether the channel has been closed.
         @usableFromInline
-        var _closed: Bool
+        var status: Status
 
         @usableFromInline
         init() {
             self.buffer = Deque()
             self.slot = .none
-            self._closed = false
+            self.status = .open
         }
+    }
+}
+
+// MARK: - Status
+
+extension Async.Channel.Unbounded.State where Element: ~Copyable {
+    @usableFromInline
+    enum Status: Sendable {
+        /// Channel is open and operational.
+        case open
+
+        /// Channel is closed but may still have buffered elements.
+        case closed
+
+        /// Channel is finished - no more elements, fully drained.
+        case finished
     }
 }
 
@@ -59,7 +74,14 @@ extension Async.Channel.Unbounded.State where Element: ~Copyable {
 
 extension Async.Channel.Unbounded.State where Element: ~Copyable {
     @usableFromInline
-    var closed: Bool { _closed }
+    var isClosed: Bool {
+        switch status {
+        case .open:
+            return false
+        case .closed, .finished:
+            return true
+        }
+    }
 }
 
 // MARK: - Send
@@ -82,15 +104,18 @@ extension Async.Channel.Unbounded.State where Element: ~Copyable {
     /// On shut, it remains in the Optional (cleaned up by deinit).
     @usableFromInline
     mutating func send(_ element: inout Element?) -> Send.Action {
-        guard !_closed else { return .shut }
-
-        switch self.slot {
-        case .wait(let cont):
-            self.slot = .none
-            return .give(cont, element.take()!)
-        case .none, .cancelled:
-            buffer.push(element.take()!, to: .back)
-            return .keep
+        switch status {
+        case .open:
+            switch self.slot {
+            case .wait(let cont):
+                self.slot = .none
+                return .give(cont, element.take()!)
+            case .none, .cancelled:
+                buffer.push(element.take()!, to: .back)
+                return .keep
+            }
+        case .closed, .finished:
+            return .shut
         }
     }
 }
@@ -144,7 +169,7 @@ extension Async.Channel.Unbounded.State where Element: ~Copyable {
         if let element = buffer.take(from: .front) {
             return .val(element)
         }
-        if _closed {
+        if isClosed {
             return .end
         }
         return .wait
@@ -166,7 +191,7 @@ extension Async.Channel.Unbounded.State where Element: ~Copyable {
         if let element = buffer.take(from: .front) {
             return .val(element)
         }
-        if _closed {
+        if isClosed {
             return .end
         }
 
@@ -201,9 +226,9 @@ extension Async.Channel.Unbounded.State where Element: ~Copyable {
 
     @usableFromInline
     mutating func close() -> Close {
-        guard !_closed else { return .none }
+        guard status == .open else { return .none }
 
-        _closed = true
+        status = .closed
 
         guard buffer.isEmpty else { return .none }
 

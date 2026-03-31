@@ -148,7 +148,7 @@ extension Async.Channel.Unbounded.Receiver where Element: ~Copyable {
     /// Note: Even when `true`, `receive()` may still return elements
     /// if the buffer is not yet drained.
     public var closed: Bool {
-        storage.withLock { $0.closed }
+        storage.withLock { $0.isClosed }
     }
 }
 
@@ -167,95 +167,6 @@ extension Async.Channel.Unbounded.Receiver {
     /// ```
     public var elements: Async.Channel<Element>.Unbounded.Elements {
         Async.Channel<Element>.Unbounded.Elements(storage: storage)
-    }
-}
-
-extension Async.Channel.Unbounded {
-    /// An AsyncSequence view over an unbounded channel receiver.
-    public struct Elements: AsyncSequence, Sendable {
-        @usableFromInline
-        let storage: Storage
-
-        @usableFromInline
-        init(storage: Storage) {
-            self.storage = storage
-        }
-    }
-}
-
-extension Async.Channel.Unbounded.Elements {
-    public func makeAsyncIterator() -> Iterator {
-        Iterator(storage: storage)
-    }
-}
-
-extension Async.Channel.Unbounded.Elements {
-    /// Iterator for the AsyncSequence view.
-    public struct Iterator: AsyncIteratorProtocol, Sendable {
-        @usableFromInline
-        let storage: Async.Channel<Element>.Unbounded.Storage
-
-        @usableFromInline
-        init(storage: Async.Channel<Element>.Unbounded.Storage) {
-            self.storage = storage
-        }
-
-        // WORKAROUND: @_optimize(none) — see Unbounded.Storage.handleReceive workaround comment.
-        @_optimize(none)
-        @inlinable
-        nonisolated(nonsending)
-        public mutating func next() async throws(Async.Channel<Element>.Error) -> Element? {
-            // Capture storage to avoid capturing self in @Sendable closure
-            let storage = self.storage
-
-            // Fast path: try immediate receive
-            let fastAction = storage.withLock { state in
-                state.receive()
-            }
-
-            switch consume fastAction {
-            case .val(let element):
-                return element
-            case .end:
-                return nil
-            case .wait:
-                break
-            case .cancelled:
-                throw .cancelled
-            }
-
-            // Check cancellation before entering slow path
-            if Task.isCancelled {
-                throw .cancelled
-            }
-
-            // Slow path: need to suspend
-            // Element delivery uses Ownership.Slot — continuation carries Signal only.
-            let signal: Async.Channel<Element>.Unbounded.State.Receive.Signal = await withTaskCancellationHandler {
-                await unsafe withUnsafeContinuation { (raw: UnsafeContinuation<Async.Channel<Element>.Unbounded.State.Receive.Signal, Never>) in
-                    let continuation = unsafe Async.Continuation.Unsafe(raw)
-                    let action = storage.withLock { state in
-                        state.wait(continuation)
-                    }
-
-                    Async.Channel<Element>.Unbounded.Storage.handleReceive(consume action, storage: storage, continuation: continuation)
-                }
-            } onCancel: {
-                let stopAction = storage.withLock { state in
-                    state.stop()
-                }
-
-                if case .stop(let cont) = stopAction {
-                    cont.resume(returning: .cancelled)
-                }
-            }
-
-            switch signal {
-            case .delivered: return storage.deliverySlot.take()
-            case .closed: return nil
-            case .cancelled: throw .cancelled
-            }
-        }
     }
 }
 
