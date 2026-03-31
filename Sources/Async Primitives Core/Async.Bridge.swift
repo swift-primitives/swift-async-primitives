@@ -23,6 +23,16 @@ extension Async {
     /// transferring elements from synchronous code (e.g., OS threads)
     /// to async code (e.g., Swift actors).
     ///
+    /// Supports `~Copyable` elements. The continuation is a void signal —
+    /// elements are always delivered through the internal buffer, never
+    /// through the continuation return value. This is required because
+    /// `CheckedContinuation<T>` requires `T: Copyable`.
+    ///
+    /// ## Performance
+    /// - Fast path (buffer non-empty): single mutex acquisition
+    /// - Slow path (suspension → wakeup): three mutex acquisitions,
+    ///   dominated by the task suspension/context-switch cost
+    ///
     /// ## Pattern
     /// - Producers call `push(_:)` (synchronous, never blocks)
     /// - Consumer calls `next()` (async, suspends until element available)
@@ -36,31 +46,21 @@ extension Async {
     /// will be pushed, and `next()` returns `nil` when finished AND drained.
     /// Higher layers compose shutdown behavior using `CPU.Atomic.Flag`.
     ///
-    /// ## Usage
-    /// ```swift
-    /// let bridge = Async.Bridge<Int>()
-    ///
-    /// // Producer (sync thread)
-    /// bridge.push(1)
-    /// bridge.push([2, 3, 4])
-    /// bridge.finish()
-    ///
-    /// // Consumer (async)
-    /// while let value = await bridge.next() {
-    ///     // Process value
-    /// }
-    /// // nil means finished AND drained
-    /// ```
-    ///
     /// ## Thread Safety
     /// All operations are protected by an internal mutex.
     /// All stored properties are `let` and `Sendable` (`Mutex` provides internal synchronization).
-    public final class Bridge<Element: Sendable>: Sendable {
+    public final class Bridge<Element: ~Copyable & Sendable>: Sendable {
         private let _state: Async.Mutex<State>
 
-        struct State {
+        private enum _Take: ~Copyable {
+            case element(Element)
+            case finished
+            case suspend
+        }
+
+        struct State: ~Copyable {
             var buffer: Deque<Element> = .init()
-            var continuation: CheckedContinuation<Element?, Never>?
+            var continuation: CheckedContinuation<Void, Never>?
             var isFinished: Bool = false
             #if DEBUG
             var hasWaitingConsumer: Bool = false
@@ -74,88 +74,37 @@ extension Async {
 
         /// Push a single element from a sync context.
         ///
-        /// If the consumer is awaiting via `next()`, resumes it immediately.
-        /// Otherwise, queues the element for later consumption.
+        /// Always buffers the element, then signals any waiting consumer.
         ///
-        /// After `finish()`, pushes are silently ignored.
+        /// After `finish()`, pushes are silently ignored (element is dropped).
         ///
-        /// - Parameter element: The element to deliver.
-        public func push(_ element: sending Element) {
-            let continuationToResume: CheckedContinuation<Element?, Never>? = _state.withLock { state in
-                guard !state.isFinished else { return nil }
-                if let cont = state.continuation {
-                    state.continuation = nil
-                    #if DEBUG
-                    state.hasWaitingConsumer = false
-                    #endif
-                    return cont
-                } else {
-                    state.buffer.back.push(element)
-                    return nil
-                }
-            }
-            continuationToResume?.resume(returning: element)
-        }
-
-        /// Push multiple elements from a sync context (fast path).
-        ///
-        /// Efficiently transfers a batch without per-element overhead.
-        /// If the consumer is awaiting, resumes with the first element
-        /// and queues the rest.
-        ///
-        /// After `finish()`, pushes are silently ignored.
-        ///
-        /// - Parameter elements: The elements to deliver.
-        public func push(_ elements: borrowing [Element]) {
-            guard !elements.isEmpty else { return }
-
-            // Copy indices/count outside lock to work with borrowing
-            let count = elements.count
-            let first = elements[0]
-
-            let (continuationToResume, firstElement): (CheckedContinuation<Element?, Never>?, Element?) =
-                _state.withLock { state in
-                    guard !state.isFinished else { return (nil, nil) }
+        /// - Parameter element: The element to deliver (ownership transferred
+        ///   across isolation boundary).
+        public func push(_ element: consuming sending Element) {
+            let continuationToResume: CheckedContinuation<Void, Never>? =
+                _state.withLock(consuming: element) { state, element in
+                    guard !state.isFinished else {
+                        _ = consume element
+                        return nil
+                    }
+                    state.buffer.push(consume element, to: .back)
                     if let cont = state.continuation {
                         state.continuation = nil
                         #if DEBUG
                         state.hasWaitingConsumer = false
                         #endif
-                        // Resume with first, queue rest
-                        if count > 1 {
-                            for i in 1..<count {
-                                state.buffer.back.push(elements[i])
-                            }
-                        }
-                        return (cont, first)
-                    } else {
-                        for i in 0..<count {
-                            state.buffer.back.push(elements[i])
-                        }
-                        return (nil, nil)
+                        return cont
                     }
+                    return nil
                 }
-            if let cont = continuationToResume, let element = firstElement {
-                cont.resume(returning: element)
-            }
-        }
-
-        /// Push elements from a sequence.
-        ///
-        /// Convenience method that may internally buffer the sequence.
-        /// For known arrays, prefer `push(_: [Element])` for better performance.
-        ///
-        /// After `finish()`, pushes are silently ignored.
-        ///
-        /// - Parameter elements: The elements to deliver.
-        public func push<S: Swift.Sequence>(contentsOf elements: S) where S.Element == Element {
-            push(Swift.Array(elements))
+            continuationToResume?.resume()
         }
 
         /// Wait for the next element (async, suspends if none available).
         ///
-        /// - Parameters:
-        ///   - isolation: The actor isolation context for the operation.
+        /// Fast path (buffer non-empty or finished): single mutex acquisition,
+        /// no task suspension. Slow path (empty buffer, not finished): suspends
+        /// until `push()` or `finish()` signals.
         ///
         /// - Returns: The next element, or `nil` if finished AND drained.
         ///
@@ -163,46 +112,70 @@ extension Async {
         ///   Concurrent calls result in undefined behavior.
         nonisolated(nonsending)
         public func next() async -> Element? {
-            // Using (shouldSuspend: Bool, element: Element?) to avoid nested enum in generic
-            return await withCheckedContinuation { continuation in
-                let (shouldSuspend, immediateResult): (Bool, Element??) = _state.withLock { state in
-                    #if DEBUG
-                    precondition(
-                        !state.hasWaitingConsumer,
-                        "Bridge: concurrent next() calls detected - single-consumer invariant violated"
-                    )
-                    #endif
+            // Fast path: try to take from buffer under single lock
+            let fast: _Take = _state.withLock { state in
+                #if DEBUG
+                precondition(
+                    !state.hasWaitingConsumer,
+                    "Bridge: concurrent next() calls detected - single-consumer invariant violated"
+                )
+                #endif
 
-                    if let element = state.buffer.front.take {
-                        return (false, .some(element))
-                    }
-                    if state.isFinished {
-                        return (false, .some(nil))
+                if let element = state.buffer.pop(from: .front) {
+                    return .element(element)
+                }
+                if state.isFinished {
+                    return .finished
+                }
+                return .suspend
+            }
+
+            switch consume fast {
+            case .element(let element):
+                return element
+            case .finished:
+                return nil
+            case .suspend:
+                break
+            }
+
+            // Slow path: suspend until push() or finish() signals
+            await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+                let shouldResumeImmediately: Bool = _state.withLock { state in
+                    // Re-check: producer may have pushed between the fast-path lock and here
+                    if !state.buffer.isEmpty || state.isFinished {
+                        return true
                     }
                     state.continuation = continuation
                     #if DEBUG
                     state.hasWaitingConsumer = true
                     #endif
-                    return (true, nil)
+                    return false
                 }
+                if shouldResumeImmediately {
+                    continuation.resume()
+                }
+            }
 
-                if !shouldSuspend {
-                    continuation.resume(returning: immediateResult ?? nil)
-                }
-                // If shouldSuspend, will be resumed by push() or finish()
+            // After signal: take from buffer
+            return _state.withLock { state in
+                #if DEBUG
+                state.hasWaitingConsumer = false
+                #endif
+                return state.buffer.pop(from: .front)
             }
         }
 
         /// Signal that no more elements will be pushed.
         ///
         /// After this call:
-        /// - Any pending `next()` returns `nil` (if buffer empty)
+        /// - Any pending `next()` is signaled (returns `nil` if buffer empty)
         /// - Future `next()` calls drain buffer then return `nil`
         /// - Future `push()` calls are silently ignored
         public func finish() {
-            let continuationToResume: CheckedContinuation<Element?, Never>? = _state.withLock { state in
+            let continuationToResume: CheckedContinuation<Void, Never>? = _state.withLock { state in
                 state.isFinished = true
-                if let cont = state.continuation, state.buffer.isEmpty {
+                if let cont = state.continuation {
                     state.continuation = nil
                     #if DEBUG
                     state.hasWaitingConsumer = false
@@ -211,7 +184,7 @@ extension Async {
                 }
                 return nil
             }
-            continuationToResume?.resume(returning: nil)
+            continuationToResume?.resume()
         }
 
         /// Whether `finish()` has been called.
@@ -221,6 +194,64 @@ extension Async {
         public var isFinished: Bool {
             _state.withLock { $0.isFinished }
         }
+    }
+}
+
+// MARK: - Batch Push (Copyable)
+
+extension Async.Bridge where Element: Copyable {
+    /// Push multiple elements from a sync context (fast path).
+    ///
+    /// Efficiently transfers a batch without per-element overhead.
+    /// If the consumer is awaiting, signals it after buffering all elements.
+    ///
+    /// After `finish()`, pushes are silently ignored.
+    ///
+    /// - Parameter elements: The elements to deliver.
+    public func push(_ elements: borrowing [Element]) {
+        guard !elements.isEmpty else { return }
+
+        let continuationToResume: CheckedContinuation<Void, Never>? = _state.withLock { state in
+            guard !state.isFinished else { return nil }
+            for i in 0..<elements.count {
+                state.buffer.push(elements[i], to: .back)
+            }
+            if let cont = state.continuation {
+                state.continuation = nil
+                #if DEBUG
+                state.hasWaitingConsumer = false
+                #endif
+                return cont
+            }
+            return nil
+        }
+        continuationToResume?.resume()
+    }
+
+    /// Push elements from a sequence.
+    ///
+    /// Iterates the sequence inside the lock — no intermediate Array
+    /// allocation. The lock is held for the duration of iteration.
+    ///
+    /// After `finish()`, pushes are silently ignored.
+    ///
+    /// - Parameter elements: The elements to deliver.
+    public func push<S: Swift.Sequence>(contentsOf elements: S) where S.Element == Element {
+        let continuationToResume: CheckedContinuation<Void, Never>? = _state.withLock { state in
+            guard !state.isFinished else { return nil }
+            for element in elements {
+                state.buffer.push(element, to: .back)
+            }
+            if let cont = state.continuation {
+                state.continuation = nil
+                #if DEBUG
+                state.hasWaitingConsumer = false
+                #endif
+                return cont
+            }
+            return nil
+        }
+        continuationToResume?.resume()
     }
 }
 

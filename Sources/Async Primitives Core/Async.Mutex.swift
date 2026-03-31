@@ -47,12 +47,16 @@ extension Async {
         }
 
         @inlinable
-        public func withLock<T, E: Error>(_ body: (inout Value) throws(E) -> T) throws(E) -> T {
+        public func withLock<T: ~Copyable, E: Error>(
+            _ body: (inout sending Value) throws(E) -> sending T
+        ) throws(E) -> sending T {
             try body(&_value)
         }
 
         @inlinable
-        public func withLockIfAvailable<T, E: Error>(_ body: (inout Value) throws(E) -> T) throws(E) -> T? {
+        public func withLockIfAvailable<T: ~Copyable, E: Error>(
+            _ body: (inout sending Value) throws(E) -> sending T
+        ) throws(E) -> sending T? {
             try body(&_value)
         }
     }
