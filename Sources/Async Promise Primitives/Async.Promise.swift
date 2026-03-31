@@ -60,15 +60,17 @@ extension Async {
     public final class Promise<Value: Sendable>: Sendable {
         private let _state: Async.Mutex<State>
 
-        private struct State: Sendable {
-            var waiters: [Async.Continuation<Value>] = []
-            var fulfilled: Value? = nil
-        }
-
         /// Creates a new unfulfilled promise.
         public init() {
             self._state = Async.Mutex(State())
         }
+    }
+}
+
+private extension Async.Promise {
+    struct State: Sendable {
+        var waiters: [Async.Continuation<Value>] = []
+        var fulfilled: Value? = nil
     }
 }
 
