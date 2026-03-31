@@ -12,15 +12,14 @@
 // Async broadcast requires task suspension which is not available on embedded Swift.
 #if !hasFeature(Embedded)
 
-extension Async.Broadcast.Next {
-    /// Outcome of a next() operation.
-    enum Outcome {
-        /// An element was received.
-        case element(Element)
-        /// The broadcast is finished and no more elements are available.
-        case finished
-        /// The operation was cancelled.
-        case cancelled
+extension Async.Broadcast {
+    /// Wait token namespace for subscriber cancellation matching.
+    struct Wait {
+        /// Monotonically increasing token per subscriber.
+        ///
+        /// Incremented each time the subscriber suspends.
+        /// Used to match cancellation requests to active waits.
+        var token: UInt64 = 0
     }
 }
 

@@ -89,10 +89,6 @@ extension Async {
             self._state = Async.Mutex(State())
         }
 
-        /// Buffer configuration namespace.
-        struct Buffer {
-            let limit: Int
-        }
     }
 }
 

@@ -25,14 +25,6 @@ extension Async.Broadcast {
         var continuation: CheckedContinuation<Next.Outcome, Never>?
     }
 
-    /// Wait token namespace for subscriber cancellation matching.
-    struct Wait {
-        /// Monotonically increasing token per subscriber.
-        ///
-        /// Incremented each time the subscriber suspends.
-        /// Used to match cancellation requests to active waits.
-        var token: UInt64 = 0
-    }
 }
 
 #endif  // !hasFeature(Embedded)

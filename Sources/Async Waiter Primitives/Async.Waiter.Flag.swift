@@ -140,29 +140,3 @@ extension Async.Waiter.Flag {
     }
 }
 
-// MARK: - Reason
-
-extension Async.Waiter.Flag {
-    /// Reason a waiter was flagged for early termination.
-    ///
-    /// This represents flag-level precedence only (cancelled > timedOut).
-    /// Global lifecycle precedence (shutdown > cancellation > timeout > success)
-    /// remains the caller's responsibility.
-    public enum Reason: Sendable {
-        /// The task was cancelled.
-        case cancelled
-        /// The operation timed out.
-        case timedOut
-    }
-
-    /// Returns the reason this flag is set, if any.
-    ///
-    /// Checks flag bits in precedence order: cancelled > timedOut.
-    /// This is flag-level precedence only; global lifecycle precedence
-    /// (shutdown > cancellation > timeout > success) is the caller's responsibility.
-    public var reason: Reason? {
-        if cancelled { return .cancelled }
-        if timedOut { return .timedOut }
-        return nil
-    }
-}

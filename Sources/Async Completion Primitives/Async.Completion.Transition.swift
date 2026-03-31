@@ -9,18 +9,16 @@
 //
 // ===----------------------------------------------------------------------===//
 
-// Async broadcast requires task suspension which is not available on embedded Swift.
 #if !hasFeature(Embedded)
 
-extension Async.Broadcast.Next {
-    /// Outcome of a next() operation.
-    enum Outcome {
-        /// An element was received.
-        case element(Element)
-        /// The broadcast is finished and no more elements are available.
-        case finished
-        /// The operation was cancelled.
-        case cancelled
+extension Async.Completion {
+    /// State transition namespace.
+    public enum Transition {
+        /// Error thrown when a state transition fails.
+        public enum Error: Swift.Error, Sendable {
+            /// The completion has already transitioned to a terminal state.
+            case alreadyDone
+        }
     }
 }
 

@@ -12,15 +12,10 @@
 // Async broadcast requires task suspension which is not available on embedded Swift.
 #if !hasFeature(Embedded)
 
-extension Async.Broadcast.Next {
-    /// Outcome of a next() operation.
-    enum Outcome {
-        /// An element was received.
-        case element(Element)
-        /// The broadcast is finished and no more elements are available.
-        case finished
-        /// The operation was cancelled.
-        case cancelled
+extension Async.Broadcast {
+    /// Buffer configuration namespace.
+    struct Buffer {
+        let limit: Int
     }
 }
 

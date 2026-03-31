@@ -117,19 +117,6 @@ extension Async.Completion {
     }
 }
 
-// MARK: - Transition
-
-extension Async.Completion {
-    /// State transition namespace.
-    public enum Transition {
-        /// Error thrown when a state transition fails.
-        public enum Error: Swift.Error, Sendable {
-            /// The completion has already transitioned to a terminal state.
-            case alreadyDone
-        }
-    }
-}
-
 // MARK: - Continuation
 
 extension Async.Completion {

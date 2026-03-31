@@ -34,20 +34,6 @@ extension Async.Broadcast {
         var `is`: Is = .init()
     }
 
-    /// Next index namespace (§2.2 compliant).
-    struct NextIndex {
-        var index: UInt64 = 0
-    }
-
-    /// Subscriber ID allocation namespace (§2.2 compliant).
-    struct SubscriberID {
-        var seed: UInt64 = 0
-    }
-
-    /// Lifecycle flags namespace (§2.2 compliant).
-    struct Is {
-        var finished: Bool = false
-    }
 }
 
 // MARK: - Buffer Management

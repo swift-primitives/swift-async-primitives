@@ -35,12 +35,6 @@ extension Async {
     /// ```
     public struct Continuation<T: Sendable>: Sendable {
         @usableFromInline
-        enum Storage: Sendable {
-            case checkedContinuation(CheckedContinuation<T, Never>)
-            case callback(@Sendable (sending T) -> Void)
-        }
-
-        @usableFromInline
         let storage: Storage
 
         /// Creates a continuation wrapping a `CheckedContinuation`.
