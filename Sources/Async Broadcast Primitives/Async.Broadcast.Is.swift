@@ -13,9 +13,11 @@
 #if !hasFeature(Embedded)
 
 extension Async.Broadcast {
-    /// Lifecycle flags namespace (§2.2 compliant).
-    struct Is {
-        var finished: Bool = false
+    /// Lifecycle state (§2.2 compliant).
+    @usableFromInline
+    enum Is: Sendable {
+        case active
+        case finished
     }
 }
 

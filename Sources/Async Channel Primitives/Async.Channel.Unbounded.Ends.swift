@@ -33,11 +33,8 @@ extension Async.Channel.Unbounded where Element: ~Copyable {
 }
 
 extension Async.Channel.Unbounded.Ends where Element: ~Copyable {
-    public typealias Receiver = Async.Channel<Element>.Unbounded.Receiver
-    public typealias Sender = Async.Channel<Element>.Unbounded.Sender
-
     /// View for receiving elements.
-    public var receiver: Receiver {
+    public var receiver: Async.Channel<Element>.Unbounded.Receiver {
         _read {
             yield _receiver
         }
@@ -47,8 +44,8 @@ extension Async.Channel.Unbounded.Ends where Element: ~Copyable {
     }
 
     /// View for sending elements.
-    public var sender: Sender {
-        Sender(storage: storage)
+    public var sender: Async.Channel<Element>.Unbounded.Sender {
+        Async.Channel<Element>.Unbounded.Sender(storage: storage)
     }
 
     /// Close the channel.

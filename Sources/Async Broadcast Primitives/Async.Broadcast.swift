@@ -106,7 +106,7 @@ extension Async.Broadcast {
     public func send(_ element: sending Element) {
         let bufferLimit = buffer.limit
         let continuationsToResume: [(CheckedContinuation<Next.Outcome, Never>, Element)] = _state.withLock { state in
-            guard !state.is.finished else { return [] }
+            guard state.is == .active else { return [] }
 
             let index = state.next.index
             state.next.index += 1
@@ -159,7 +159,7 @@ extension Async.Broadcast {
     /// - Future `send()` calls are silently ignored
     public func finish() {
         let continuationsToResume: [CheckedContinuation<Next.Outcome, Never>] = _state.withLock { state in
-            state.is.finished = true
+            state.is = .finished
 
             // Find subscribers to finish (forEach avoids key snapshot heap allocation)
             var toResume: [CheckedContinuation<Next.Outcome, Never>] = []
@@ -193,7 +193,7 @@ extension Async.Broadcast {
 
     /// Whether `finish()` has been called.
     public var isFinished: Bool {
-        _state.withLock { $0.is.finished }
+        _state.withLock { $0.is == .finished }
     }
 }
 
@@ -232,7 +232,7 @@ extension Async.Broadcast {
         public struct AsyncIterator: AsyncIteratorProtocol {
             let broadcast: Async.Broadcast<Element>
             let id: UInt64
-            let publication: Async.Publication<Wait>
+            let publication: Async.Publication<Async.Broadcast<Element>.Wait>
 
             nonisolated(nonsending)
             public mutating func next() async throws(Async.Broadcast<Element>.Error) -> Element? {
@@ -244,10 +244,10 @@ extension Async.Broadcast {
                 let publication = self.publication
                 _ = publication.take()
 
-                let result: Next.Outcome = await withTaskCancellationHandler {
+                let result: Async.Broadcast<Element>.Next.Outcome = await withTaskCancellationHandler {
                     await withCheckedContinuation { continuation in
                         // Single lock acquisition: returns immediate result OR installed wait token
-                        let (immediateResult, installedWait): (Next.Outcome?, Wait?) = broadcast._state.withLock { state in
+                        let (immediateResult, installedWait): (Async.Broadcast<Element>.Next.Outcome?, Async.Broadcast<Element>.Wait?) = broadcast._state.withLock { state in
                             guard var subscriber = state.subscribers[id] else {
                                 return (.finished, nil)
                             }
@@ -260,7 +260,7 @@ extension Async.Broadcast {
                             }
 
                             // Check if finished
-                            if state.is.finished {
+                            if state.is == .finished {
                                 return (.finished, nil)
                             }
 
@@ -272,7 +272,7 @@ extension Async.Broadcast {
                             let token = subscriber.wait.token
                             subscriber.continuation = continuation
                             state.subscribers[id] = subscriber
-                            return (nil, Wait(token: token))
+                            return (nil, Async.Broadcast<Element>.Wait(token: token))
                         }
 
                         if let result = immediateResult {
@@ -325,16 +325,13 @@ extension Async.Broadcast {
 }
 
 extension Async.Broadcast.Subscription {
-    typealias Wait = Async.Broadcast<Element>.Wait
-    typealias Next = Async.Broadcast<Element>.Next
-
     public func makeAsyncIterator() -> AsyncIterator {
-        AsyncIterator(broadcast: broadcast, id: id, publication: Async.Publication<Wait>())
+        AsyncIterator(broadcast: broadcast, id: id, publication: Async.Publication<Async.Broadcast<Element>.Wait>())
     }
 
     /// Unsubscribe and release resources.
     public func cancel() {
-        let continuationToCancel: CheckedContinuation<Next.Outcome, Never>? = broadcast._state.withLock { state in
+        let continuationToCancel: CheckedContinuation<Async.Broadcast<Element>.Next.Outcome, Never>? = broadcast._state.withLock { state in
             guard let subscriber = state.subscribers.values.remove(id) else { return nil }
             return subscriber.continuation
         }

@@ -12,22 +12,6 @@
 #if !hasFeature(Embedded) && canImport(Darwin)
 public import Darwin.os.lock
 
-// MARK: - Raw Storage
-
-@_rawLayout(like: Value, movesAsLike)
-@usableFromInline
-struct _AsyncMutexValue<Value: ~Copyable>: ~Copyable {
-    @inlinable init() {}
-}
-/// Access serialized by external lock.
-extension _AsyncMutexValue: @unchecked Sendable where Value: ~Copyable {}
-
-@_rawLayout(like: os_unfair_lock_s)
-@usableFromInline
-struct _AsyncMutexLock: ~Copyable, @unchecked Sendable {
-    @inlinable init() {}
-}
-
 // MARK: - Mutex
 
 extension Async {
@@ -54,16 +38,32 @@ extension Async {
     /// mutex.locked.value.count += 1
     /// ```
     public struct Mutex<Value: ~Copyable>: ~Copyable {
+        // MARK: - Raw Storage
+
+        @safe
+        @_rawLayout(like: Value, movesAsLike)
         @usableFromInline
-        let _lockRaw: _AsyncMutexLock
+        struct _Value: ~Copyable {
+            @inlinable init() {}
+        }
+
+        @safe
+        @_rawLayout(like: os_unfair_lock_s)
+        @usableFromInline
+        struct _Lock: ~Copyable, @unchecked Sendable {
+            @inlinable init() {}
+        }
 
         @usableFromInline
-        let _valueRaw: _AsyncMutexValue<Value>
+        let _lockRaw: _Lock
+
+        @usableFromInline
+        let _valueRaw: _Value
 
         @inlinable
         public init(_ value: consuming sending Value) {
-            _lockRaw = _AsyncMutexLock()
-            _valueRaw = _AsyncMutexValue()
+            _lockRaw = _Lock()
+            _valueRaw = _Value()
             unsafe _lockPointer().initialize(to: os_unfair_lock_s())
             unsafe _valuePointer().initialize(to: value)
         }
@@ -73,6 +73,8 @@ extension Async {
 /// ## Safety Invariant
 /// Internal `os_unfair_lock` serializes all access to the stored value.
 extension Async.Mutex: @unchecked Sendable where Value: ~Copyable {}
+/// Access serialized by external lock.
+extension Async.Mutex._Value: @unchecked Sendable where Value: ~Copyable {}
 
 // MARK: - Lock Internals
 

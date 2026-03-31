@@ -49,11 +49,8 @@ extension Async.Channel.Unbounded where Element: ~Copyable {
 }
 
 extension Async.Channel.Unbounded.Storage where Element: ~Copyable {
-    @usableFromInline
-    typealias State = Async.Channel<Element>.Unbounded.State
-
     @inlinable
-    func withLock<T: ~Copyable, E: Swift.Error>(_ body: (inout sending State) throws(E) -> sending T) throws(E) -> sending T {
+    func withLock<T: ~Copyable, E: Swift.Error>(_ body: (inout sending Async.Channel<Element>.Unbounded.State) throws(E) -> sending T) throws(E) -> sending T {
         try mutex.withLock(body)
     }
 
@@ -67,9 +64,9 @@ extension Async.Channel.Unbounded.Storage where Element: ~Copyable {
     @_optimize(none)
     @usableFromInline
     static func handleReceive(
-        _ action: consuming State.Receive.Step,
+        _ action: consuming Async.Channel<Element>.Unbounded.State.Receive.Step,
         storage: Async.Channel<Element>.Unbounded.Storage,
-        continuation: State.Receive.Continuation
+        continuation: Async.Channel<Element>.Unbounded.State.Receive.Continuation
     ) {
         switch consume action {
         case .val(let element):

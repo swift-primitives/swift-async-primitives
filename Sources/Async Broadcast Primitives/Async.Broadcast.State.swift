@@ -31,7 +31,7 @@ extension Async.Broadcast {
         var subscriber: SubscriberID = .init()
 
         /// Lifecycle flags.
-        var `is`: Is = .init()
+        var `is`: Is = .active
     }
 
 }

@@ -40,11 +40,8 @@ extension Async.Channel.Bounded where Element: ~Copyable {
 }
 
 extension Async.Channel.Bounded.Storage where Element: ~Copyable {
-    @usableFromInline
-    typealias State = Async.Channel<Element>.Bounded.State
-
     @inlinable
-    func withLock<T: ~Copyable, E: Swift.Error>(_ body: (inout sending State) throws(E) -> sending T) throws(E) -> sending T {
+    func withLock<T: ~Copyable, E: Swift.Error>(_ body: (inout sending Async.Channel<Element>.Bounded.State) throws(E) -> sending T) throws(E) -> sending T {
         try _storage.mutable.value.withLock(body)
     }
 
@@ -58,9 +55,9 @@ extension Async.Channel.Bounded.Storage where Element: ~Copyable {
     @_optimize(none)
     @usableFromInline
     static func handleReceive(
-        _ action: consuming State.Receive.Action,
+        _ action: consuming Async.Channel<Element>.Bounded.State.Receive.Action,
         storage: Async.Channel<Element>.Bounded.Storage,
-        continuation: State.Receive.Continuation
+        continuation: Async.Channel<Element>.Bounded.State.Receive.Continuation
     ) {
         switch consume action {
         case .returnElement(let element, let resumeSender, let cancelled):
@@ -85,14 +82,14 @@ extension Async.Channel.Bounded.Storage where Element: ~Copyable {
     @_optimize(none)
     @usableFromInline
     static func handleSend(
-        _ action: consuming State.Send.Action,
+        _ action: consuming Async.Channel<Element>.Bounded.State.Send.Action,
         storage: Async.Channel<Element>.Bounded.Storage,
-        continuation: State.Send.Continuation
+        continuation: Async.Channel<Element>.Bounded.State.Send.Continuation
     ) {
         switch consume action {
         case .deliverToReceiver(let receiverCont, let element):
             _ = storage.deliverySlot.store(element)
-            receiverCont.resume(returning: State.Receive.Signal.delivered)
+            receiverCont.resume(returning: Async.Channel<Element>.Bounded.State.Receive.Signal.delivered)
             continuation.resume(returning: nil)
         case .buffered:
             continuation.resume(returning: nil)
