@@ -32,9 +32,9 @@ extension Async.Timer.Wheel {
     ///
     /// ## Free List
     ///
-    /// The free list uses a parallel array (`freeLinks`) to store next-free
-    /// indices. The sentinel value `UInt32.max` indicates end of list
-    /// within the parallel array. The typed `freeHead` uses `Optional`
+    /// The `free` sub-struct manages a parallel array where `free.links[i]`
+    /// stores the next-free index when `nodes[i]` is nil. Sentinel value
+    /// `UInt32.max` indicates end of list. `free.head` uses `Optional`
     /// to represent the exhausted state.
     @usableFromInline
     struct Storage: ~Copyable, @unchecked Sendable {
@@ -50,15 +50,9 @@ extension Async.Timer.Wheel {
         @usableFromInline
         var nodes: [Node?]
 
-        /// Parallel array for free list linkage.
-        /// `freeLinks[i]` is the raw next-free index when `nodes[i]` is nil.
-        /// Sentinel value `UInt32.max` indicates end of free list.
+        /// Free list state for O(1) allocation/deallocation.
         @usableFromInline
-        var freeLinks: [UInt32]
-
-        /// Head of the free list. `nil` means exhausted.
-        @usableFromInline
-        var freeHead: Index?
+        var free: Free
 
         /// Next generation counter for ABA prevention.
         @usableFromInline
@@ -75,18 +69,43 @@ extension Async.Timer.Wheel {
         init(capacity: Int) {
             self.capacity = capacity
             self.nodes = [Node?](repeating: nil, count: capacity)
-            self.freeLinks = [UInt32](repeating: 0, count: capacity)
+            self.free = Free(capacity: capacity)
             self.generation = 0
+        }
+    }
+}
+
+// MARK: - Free List
+
+extension Async.Timer.Wheel.Storage {
+    /// Free list state for O(1) slot allocation/deallocation.
+    ///
+    /// Uses a parallel array (`links`) where `links[i]` stores the next-free
+    /// index when `nodes[i]` is nil. Sentinel value `UInt32.max` indicates
+    /// end of list. The typed `head` uses `Optional` for the exhausted state.
+    @usableFromInline
+    struct Free: Sendable {
+        /// Parallel array for free list linkage.
+        @usableFromInline
+        var links: [UInt32]
+
+        /// Head of the free list. `nil` means exhausted.
+        @usableFromInline
+        var head: Index?
+
+        @usableFromInline
+        init(capacity: Int) {
+            self.links = [UInt32](repeating: 0, count: capacity)
 
             // Build free list: 0 → 1 → 2 → ... → (capacity-1) → sentinel
             if capacity > 0 {
                 for i in 0..<(capacity - 1) {
-                    freeLinks[i] = UInt32(i + 1)
+                    links[i] = UInt32(i + 1)
                 }
-                freeLinks[capacity - 1] = UInt32.max // Sentinel for end
-                freeHead = Index(__unchecked: (), 0)
+                links[capacity - 1] = UInt32.max
+                head = Index(__unchecked: (), 0)
             } else {
-                freeHead = nil // Exhausted (empty capacity)
+                head = nil
             }
         }
     }
@@ -103,14 +122,14 @@ extension Async.Timer.Wheel.Storage {
     /// - Complexity: O(1)
     @usableFromInline
     mutating func allocate() -> (index: Index, generation: UInt32)? {
-        guard let index = freeHead else {
+        guard let index = free.head else {
             return nil // Storage exhausted
         }
 
         // Pop from free list
         let raw = index.rawValue
-        let nextRaw = freeLinks[Int(raw)]
-        freeHead = nextRaw == UInt32.max ? nil : Index(__unchecked: (), nextRaw)
+        let nextRaw = free.links[Int(raw)]
+        free.head = nextRaw == UInt32.max ? nil : Index(__unchecked: (), nextRaw)
 
         // Increment generation
         let gen = generation
@@ -133,8 +152,8 @@ extension Async.Timer.Wheel.Storage {
         nodes[Int(raw)] = nil
 
         // Push to free list
-        freeLinks[Int(raw)] = freeHead?.rawValue ?? UInt32.max
-        freeHead = index
+        free.links[Int(raw)] = free.head?.rawValue ?? UInt32.max
+        free.head = index
     }
 
 }

@@ -23,13 +23,9 @@ extension Async.Timer.Wheel {
         @usableFromInline
         var id: ID
 
-        /// The original deadline instant (for yielding in Entry).
+        /// The timer's deadline (instant + tick representation).
         @usableFromInline
-        var deadline: C.Instant
-
-        /// The deadline as a tick number (for internal calculations).
-        @usableFromInline
-        var deadlineTick: Tick
+        var deadline: Deadline
 
         /// The level this node is currently in.
         @usableFromInline
@@ -51,18 +47,36 @@ extension Async.Timer.Wheel {
         @usableFromInline
         init(
             id: ID,
-            deadline: C.Instant,
-            deadlineTick: Tick,
+            deadline: Deadline,
             level: Int,
             slot: Int
         ) {
             self.id = id
             self.deadline = deadline
-            self.deadlineTick = deadlineTick
             self.level = UInt8(level)
             self.slot = UInt16(slot)
             self.prev = nil
             self.next = nil
+        }
+    }
+}
+
+extension Async.Timer.Wheel.Node {
+    /// Bundles the deadline instant with its tick representation.
+    @usableFromInline
+    struct Deadline: Sendable {
+        /// The original deadline instant (for yielding in Entry).
+        @usableFromInline
+        var instant: C.Instant
+
+        /// The deadline as a tick number (for internal calculations).
+        @usableFromInline
+        var tick: Async.Timer.Wheel<C>.Tick
+
+        @usableFromInline
+        init(instant: C.Instant, tick: Async.Timer.Wheel<C>.Tick) {
+            self.instant = instant
+            self.tick = tick
         }
     }
 }

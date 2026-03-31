@@ -84,7 +84,7 @@ extension Async.Timer {
 
         /// Cached index of the earliest timer (lazy invalidation).
         @usableFromInline
-        var minIndex: Storage.Index?
+        var earliest: Storage.Index?
 
         /// Creates a timer wheel with the specified clock and configuration.
         ///
@@ -98,7 +98,7 @@ extension Async.Timer {
             self.levels = (0..<config.levels).map { _ in Level(slotCount: config.slots) }
             self.storage = Storage(capacity: config.capacity)
             self._count = 0
-            self.minIndex = nil
+            self.earliest = nil
         }
     }
 }
