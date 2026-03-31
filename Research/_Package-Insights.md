@@ -47,3 +47,13 @@ The end-state solution ([IMPL-070] coroutine Mutex) would eliminate the closure 
 **Highest-leverage single change**: Refactor `Async.Mutex` to `Async.Mutex<Value: ~Copyable>` using `sending` for region transfer. This unblocks 7+ `@unchecked Sendable` removals in channel state types. Handoff written: `HANDOFF-async-mutex-sending-refactor.md`.
 
 **Applies to**: Async.Mutex, all channel State types, Async.Channel.Bounded.State, Async.Channel.Unbounded.State
+
+---
+
+## Ownership.Slot.store() Discardable Result Warning (2026-03-30)
+
+**Date**: 2026-03-30
+
+**Context**: `Ownership.Slot.store()` returns the previously stored value (if any). In channel sender implementations, the return value is unused at 3 call sites, producing warnings. Options: (1) add `@discardableResult` to `Ownership.Slot.store()` in swift-ownership-primitives, or (2) use `_ = slot.store(element)` at each call site.
+
+**Applies to**: Channel Sender types, Ownership.Slot
