@@ -57,3 +57,15 @@ The end-state solution ([IMPL-070] coroutine Mutex) would eliminate the closure 
 **Context**: `Ownership.Slot.store()` returns the previously stored value (if any). In channel sender implementations, the return value is unused at 3 call sites, producing warnings. Options: (1) add `@discardableResult` to `Ownership.Slot.store()` in swift-ownership-primitives, or (2) use `_ = slot.store(element)` at each call site.
 
 **Applies to**: Channel Sender types, Ownership.Slot
+
+---
+
+## Timer.Wheel.Storage.Free — Slab Free List (2026-03-31)
+
+**Date**: 2026-03-31
+
+**Context**: Code-surface audit revealed that `Timer.Wheel.Storage.Free` hand-rolls a slab free list. `Buffer.Slab` from swift-slab-primitives may be a better fit, potentially eliminating custom free-list management code.
+
+Investigation deferred. Handoff written: `HANDOFF-storage-free-data-structure.md`.
+
+**Applies to**: Timer.Wheel.Storage.Free, swift-slab-primitives
