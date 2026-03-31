@@ -68,6 +68,8 @@ extension Async.Channel.Unbounded.Receiver where Element: ~Copyable {
     ///
     /// - Returns: The next element, or `nil` if the channel is closed and drained.
     /// - Throws: `Async.Channel<Element>.Error.cancelled` if the task is cancelled.
+    // WORKAROUND: @_optimize(none) — see Unbounded.Storage.handleReceive workaround comment.
+    @_optimize(none)
     @inlinable
     public func receive(
         isolation: isolated (any Actor)? = #isolation
@@ -102,18 +104,7 @@ extension Async.Channel.Unbounded.Receiver where Element: ~Copyable {
                     state.wait(continuation)
                 }
 
-                switch consume action {
-                case .val(let element):
-                    _ = storage.deliverySlot.store(element)
-                    continuation.resume(returning: .delivered)
-                case .end:
-                    continuation.resume(returning: .closed)
-                case .wait:
-                    // Continuation stored, will be resumed by send/close/stop
-                    break
-                case .cancelled:
-                    continuation.resume(returning: .cancelled)
-                }
+                Async.Channel<Element>.Unbounded.Storage.handleReceive(consume action, storage: storage, continuation: continuation)
             }
         } onCancel: {
             // Extract continuation under lock, resume outside
@@ -211,6 +202,8 @@ extension Async.Channel.Unbounded.Elements {
             self.storage = storage
         }
 
+        // WORKAROUND: @_optimize(none) — see Unbounded.Storage.handleReceive workaround comment.
+        @_optimize(none)
         @inlinable
         public mutating func next(
             isolation: isolated (any Actor)? = #isolation
@@ -248,17 +241,7 @@ extension Async.Channel.Unbounded.Elements {
                         state.wait(continuation)
                     }
 
-                    switch consume action {
-                    case .val(let element):
-                        _ = storage.deliverySlot.store(element)
-                        continuation.resume(returning: .delivered)
-                    case .end:
-                        continuation.resume(returning: .closed)
-                    case .wait:
-                        break
-                    case .cancelled:
-                        continuation.resume(returning: .cancelled)
-                    }
+                    Async.Channel<Element>.Unbounded.Storage.handleReceive(consume action, storage: storage, continuation: continuation)
                 }
             } onCancel: {
                 let stopAction = storage.withLock { state in

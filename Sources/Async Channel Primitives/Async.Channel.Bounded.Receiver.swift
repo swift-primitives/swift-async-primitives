@@ -65,6 +65,11 @@ extension Async.Channel.Bounded.Receiver where Element: ~Copyable {
     ///
     /// - Returns: The next element, or `nil` if the channel is closed and drained.
     /// - Throws: `Async.Channel<Element>.Error.cancelled` if the task is cancelled.
+    // WORKAROUND: @_optimize(none) prevents CopyPropagation ownership
+    // verification crash on `switch consume` of ~Copyable enum in async context.
+    // TRACKING: Not yet filed upstream.
+    // WHEN TO REMOVE: When the CopyPropagation crash is fixed upstream.
+    @_optimize(none)
     @inlinable
     public func receive(
         isolation: isolated (any Actor)? = #isolation
@@ -100,26 +105,7 @@ extension Async.Channel.Bounded.Receiver where Element: ~Copyable {
                 let action = storage.withLock { state in
                     state.suspend(continuation: continuation)
                 }
-
-                switch consume action {
-                case .returnElement(let element, let resumeSender, let cancelled):
-                    // Resume cancelled senders first (minimizes stuck time)
-                    if var cancelled {
-                        while let c = cancelled.take(from: .front) {
-                            c.resume(returning: .cancelled)
-                        }
-                    }
-                    resumeSender?.resume(returning: nil)
-                    _ = storage.deliverySlot.store(element)
-                    continuation.resume(returning: .delivered)
-                case .returnNil:
-                    continuation.resume(returning: .closed)
-                case .rejectCancelled:
-                    continuation.resume(returning: .cancelled)
-                case .suspend:
-                    // Continuation stored, will be resumed later
-                    break
-                }
+                Async.Channel<Element>.Bounded.Storage.handleReceive(consume action, storage: storage, continuation: continuation)
             }
         } onCancel: {
             let action = storage.withLock { state in
@@ -161,6 +147,8 @@ extension Async.Channel.Bounded.Receiver where Element: ~Copyable {
         ///
         /// - Returns: The next element if available, `nil` if the channel is closed and drained.
         /// - Throws: `.empty` if the buffer is empty, `.cancelled` if the task was cancelled.
+        // WORKAROUND: @_optimize(none) — see Storage.handleReceive workaround comment.
+        @_optimize(none)
         @inlinable
         public func immediate() throws(Async.Channel<Element>.Error) -> Element? {
             let action = storage.withLock { state in
@@ -244,6 +232,8 @@ extension Async.Channel.Bounded.Elements {
             self.storage = storage
         }
 
+        // WORKAROUND: @_optimize(none) — see Storage.handle workaround comment.
+        @_optimize(none)
         @inlinable
         public mutating func next(
             isolation: isolated (any Actor)? = #isolation
@@ -280,24 +270,7 @@ extension Async.Channel.Bounded.Elements {
                     let action = storage.withLock { state in
                         state.suspend(continuation: continuation)
                     }
-
-                    switch action {
-                    case .returnElement(let element, let resumeSender, let cancelled):
-                        if var cancelled {
-                            while let c = cancelled.take(from: .front) {
-                                c.resume(returning: .cancelled)
-                            }
-                        }
-                        resumeSender?.resume(returning: nil)
-                        _ = storage.deliverySlot.store(element)
-                        continuation.resume(returning: .delivered)
-                    case .returnNil:
-                        continuation.resume(returning: .closed)
-                    case .rejectCancelled:
-                        continuation.resume(returning: .cancelled)
-                    case .suspend:
-                        break
-                    }
+                    Async.Channel<Element>.Bounded.Storage.handleReceive(consume action, storage: storage, continuation: continuation)
                 }
             } onCancel: {
                 let action = storage.withLock { state in

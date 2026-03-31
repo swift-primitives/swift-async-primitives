@@ -101,6 +101,8 @@ extension Async.Channel.Bounded.Sender where Element: ~Copyable {
     ///
     /// - Throws: `Async.Channel<Element>.Error.closed` if the channel is closed.
     ///           `Async.Channel<Element>.Error.cancelled` if the task is cancelled.
+    // WORKAROUND: @_optimize(none) — see Storage.handleSend workaround comment.
+    @_optimize(none)
     @inlinable
     nonisolated(nonsending)
     public func send(
@@ -140,20 +142,7 @@ extension Async.Channel.Bounded.Sender where Element: ~Copyable {
                     state.suspend(flag: flag, slot: slot, continuation: continuation)
                 }
 
-                switch consume action {
-                case .deliverToReceiver(let receiverCont, let element):
-                    _ = handle.storage.deliverySlot.store(element)
-                    receiverCont.resume(returning: Async.Channel<Element>.Bounded.State.Receive.Signal.delivered)
-                    continuation.resume(returning: nil)
-                case .buffered:
-                    continuation.resume(returning: nil)
-                case .rejectClosed:
-                    continuation.resume(returning: .closed)
-                case .rejectCancelled:
-                    continuation.resume(returning: .cancelled)
-                case .suspended:
-                    break
-                }
+                Async.Channel<Element>.Bounded.Storage.handleSend(consume action, storage: handle.storage, continuation: continuation)
             }
         } onCancel: {
             if flag.cancel() {
@@ -192,6 +181,8 @@ extension Async.Channel.Bounded.Sender where Element: ~Copyable {
         /// - Parameter element: The element to send.
         /// - Throws: `.full` if the buffer is full, `.closed` if the channel is closed,
         ///           `.cancelled` if the task was cancelled.
+        // WORKAROUND: @_optimize(none) — see Storage.handleSend workaround comment.
+        @_optimize(none)
         @inlinable
         public func immediate(_ element: consuming sending Element) throws(Async.Channel<Element>.Error) {
             let slot = Ownership.Slot(consume element)
