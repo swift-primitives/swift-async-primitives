@@ -35,3 +35,15 @@ The Slot-per-send overhead on the fast path is non-zero: one class allocation pe
 The end-state solution ([IMPL-070] coroutine Mutex) would eliminate the closure entirely, avoiding both the capture limitation and the Slot overhead. Until the coroutine Mutex is production-ready, the Slot approach is the correct implementation.
 
 **Applies to**: Async.Channel.Bounded, Async.Channel.Unbounded, send/trySend hot paths
+
+---
+
+## Async.Mutex Sendable Constraint Cascade (2026-03-30)
+
+**Date**: 2026-03-30
+
+**Context**: `Async.Mutex<Value: ~Copyable & Sendable>` forces the `Sendable` constraint onto all channel State types — 7 `@unchecked Sendable` annotations exist solely to satisfy this. Stdlib's `Synchronization.Mutex` has no such constraint (uses `sending` for region transfer instead).
+
+**Highest-leverage single change**: Refactor `Async.Mutex` to `Async.Mutex<Value: ~Copyable>` using `sending` for region transfer. This unblocks 7+ `@unchecked Sendable` removals in channel state types. Handoff written: `HANDOFF-async-mutex-sending-refactor.md`.
+
+**Applies to**: Async.Mutex, all channel State types, Async.Channel.Bounded.State, Async.Channel.Unbounded.State
