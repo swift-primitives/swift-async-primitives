@@ -119,16 +119,6 @@ extension Async.Waiter.Queue {
             self.entry = entry
         }
 
-        /// Deconstructs this flagged value into its components, consuming self.
-        ///
-        /// Makes the ownership transition explicit in one step.
-        ///
-        /// - Returns: A `Split` containing reason and entry with ownership transferred.
-        @inlinable
-        public consuming func split() -> Split {
-            Split(reason: reason, entry: entry)
-        }
-
         /// Result of splitting a flagged entry into its components.
         @frozen
         public struct Split: ~Copyable, Sendable {
@@ -144,5 +134,19 @@ extension Async.Waiter.Queue {
                 self.entry = entry
             }
         }
+    }
+}
+
+// MARK: - Flagged Operations
+
+extension Async.Waiter.Queue.Flagged {
+    /// Deconstructs this flagged value into its components, consuming self.
+    ///
+    /// Makes the ownership transition explicit in one step.
+    ///
+    /// - Returns: A `Split` containing reason and entry with ownership transferred.
+    @inlinable
+    public consuming func split() -> Split {
+        Split(reason: reason, entry: entry)
     }
 }

@@ -194,20 +194,22 @@ extension Async {
         public init(_ value: consuming sending Value) {
             self._value = value
         }
+    }
+}
 
-        @inlinable
-        public func withLock<T: ~Copyable, E: Error>(
-            _ body: (inout sending Value) throws(E) -> sending T
-        ) throws(E) -> sending T {
-            try body(&_value)
-        }
+extension Async.Mutex where Value: ~Copyable {
+    @inlinable
+    public func withLock<T: ~Copyable, E: Error>(
+        _ body: (inout sending Value) throws(E) -> sending T
+    ) throws(E) -> sending T {
+        try body(&_value)
+    }
 
-        @inlinable
-        public func withLockIfAvailable<T: ~Copyable, E: Error>(
-            _ body: (inout sending Value) throws(E) -> sending T
-        ) throws(E) -> sending T? {
-            try body(&_value)
-        }
+    @inlinable
+    public func withLockIfAvailable<T: ~Copyable, E: Error>(
+        _ body: (inout sending Value) throws(E) -> sending T
+    ) throws(E) -> sending T? {
+        try body(&_value)
     }
 }
 

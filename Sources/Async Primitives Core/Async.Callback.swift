@@ -57,49 +57,51 @@ extension Async {
         ) {
             self.operation = operation
         }
+    }
+}
 
-        /// Creates a callback with an immediate value.
-        ///
-        /// - Parameter value: The value to wrap.
-        @inlinable
-        public init(value: Value) {
-            self.operation = { value }
-        }
+extension Async.Callback {
+    /// Creates a callback with an immediate value.
+    ///
+    /// - Parameter value: The value to wrap.
+    @inlinable
+    public init(value: Value) {
+        self.operation = { value }
+    }
 
-        /// Executes the computation and returns the value.
-        ///
-        /// Inherits the caller's isolation context. If the underlying
-        /// operation is synchronous, this completes without suspension.
-        @inlinable
-        nonisolated(nonsending)
-        public func callAsFunction() async -> Value {
-            await operation()
-        }
+    /// Executes the computation and returns the value.
+    ///
+    /// Inherits the caller's isolation context. If the underlying
+    /// operation is synchronous, this completes without suspension.
+    @inlinable
+    nonisolated(nonsending)
+    public func callAsFunction() async -> Value {
+        await operation()
+    }
 
-        /// Transforms the computed value with a synchronous closure.
-        ///
-        /// The transform executes within the caller's isolation context.
-        ///
-        /// - Parameter transform: A function to apply to the value.
-        /// - Returns: A callback that produces the transformed value.
-        @inlinable
-        public func map<NewValue>(
-            _ transform: @escaping (Value) -> NewValue
-        ) -> Async.Callback<NewValue> {
-            .init { transform(await self()) }
-        }
+    /// Transforms the computed value with a synchronous closure.
+    ///
+    /// The transform executes within the caller's isolation context.
+    ///
+    /// - Parameter transform: A function to apply to the value.
+    /// - Returns: A callback that produces the transformed value.
+    @inlinable
+    public func map<NewValue>(
+        _ transform: @escaping (Value) -> NewValue
+    ) -> Async.Callback<NewValue> {
+        .init { transform(await self()) }
+    }
 
-        /// Chains a dependent computation.
-        ///
-        /// - Parameter transform: A function that takes the value and returns
-        ///   a callback for the next computation.
-        /// - Returns: A callback that runs both computations in sequence.
-        @inlinable
-        public func flatMap<NewValue>(
-            _ transform: @escaping (Value) -> Async.Callback<NewValue>
-        ) -> Async.Callback<NewValue> {
-            .init { await transform(await self())() }
-        }
+    /// Chains a dependent computation.
+    ///
+    /// - Parameter transform: A function that takes the value and returns
+    ///   a callback for the next computation.
+    /// - Returns: A callback that runs both computations in sequence.
+    @inlinable
+    public func flatMap<NewValue>(
+        _ transform: @escaping (Value) -> Async.Callback<NewValue>
+    ) -> Async.Callback<NewValue> {
+        .init { await transform(await self())() }
     }
 }
 

@@ -36,67 +36,72 @@ extension Async.Channel.Bounded where Element: ~Copyable {
             self._storage = Ownership.Mutable.Unchecked(Async.Mutex(State(capacity: capacity)))
             self.deliverySlot = Ownership.Slot()
         }
+    }
+}
 
-        @inlinable
-        func withLock<T: ~Copyable, E: Swift.Error>(_ body: (inout sending State) throws(E) -> sending T) throws(E) -> sending T {
-            try _storage.mutable.value.withLock(body)
-        }
+extension Async.Channel.Bounded.Storage where Element: ~Copyable {
+    @usableFromInline
+    typealias State = Async.Channel<Element>.Bounded.State
 
-        // WORKAROUND: @_optimize(none) prevents CopyPropagation ownership
-        // verification crash on ~Copyable enum consume in nested async closures.
-        // WHY: CopyPropagation fails initializeConsumingUse when optimizing
-        //       `switch consume` on ~Copyable enum inside withUnsafeContinuation
-        //       closure inside withTaskCancellationHandler.
-        // TRACKING: Not yet filed upstream.
-        // WHEN TO REMOVE: When the CopyPropagation crash is fixed upstream.
-        @_optimize(none)
-        @usableFromInline
-        static func handleReceive(
-            _ action: consuming State.Receive.Action,
-            storage: Storage,
-            continuation: State.Receive.Continuation
-        ) {
-            switch consume action {
-            case .returnElement(let element, let resumeSender, let cancelled):
-                if var cancelled {
-                    while let c = cancelled.take(from: .front) {
-                        c.resume(returning: .cancelled)
-                    }
+    @inlinable
+    func withLock<T: ~Copyable, E: Swift.Error>(_ body: (inout sending State) throws(E) -> sending T) throws(E) -> sending T {
+        try _storage.mutable.value.withLock(body)
+    }
+
+    // WORKAROUND: @_optimize(none) prevents CopyPropagation ownership
+    // verification crash on ~Copyable enum consume in nested async closures.
+    // WHY: CopyPropagation fails initializeConsumingUse when optimizing
+    //       `switch consume` on ~Copyable enum inside withUnsafeContinuation
+    //       closure inside withTaskCancellationHandler.
+    // TRACKING: Not yet filed upstream.
+    // WHEN TO REMOVE: When the CopyPropagation crash is fixed upstream.
+    @_optimize(none)
+    @usableFromInline
+    static func handleReceive(
+        _ action: consuming State.Receive.Action,
+        storage: Async.Channel<Element>.Bounded.Storage,
+        continuation: State.Receive.Continuation
+    ) {
+        switch consume action {
+        case .returnElement(let element, let resumeSender, let cancelled):
+            if var cancelled {
+                while let c = cancelled.take(from: .front) {
+                    c.resume(returning: .cancelled)
                 }
-                resumeSender?.resume(returning: nil)
-                _ = storage.deliverySlot.store(element)
-                continuation.resume(returning: .delivered)
-            case .returnNil:
-                continuation.resume(returning: .closed)
-            case .rejectCancelled:
-                continuation.resume(returning: .cancelled)
-            case .suspend:
-                break
             }
+            resumeSender?.resume(returning: nil)
+            _ = storage.deliverySlot.store(element)
+            continuation.resume(returning: .delivered)
+        case .returnNil:
+            continuation.resume(returning: .closed)
+        case .rejectCancelled:
+            continuation.resume(returning: .cancelled)
+        case .suspend:
+            break
         }
+    }
 
-        // WORKAROUND: Same CopyPropagation crash — see handleReceive comment.
-        @_optimize(none)
-        @usableFromInline
-        static func handleSend(
-            _ action: consuming State.Send.Action,
-            storage: Storage,
-            continuation: State.Send.Continuation
-        ) {
-            switch consume action {
-            case .deliverToReceiver(let receiverCont, let element):
-                _ = storage.deliverySlot.store(element)
-                receiverCont.resume(returning: State.Receive.Signal.delivered)
-                continuation.resume(returning: nil)
-            case .buffered:
-                continuation.resume(returning: nil)
-            case .rejectClosed:
-                continuation.resume(returning: .closed)
-            case .rejectCancelled:
-                continuation.resume(returning: .cancelled)
-            case .suspended:
-                break
-            }
+    // WORKAROUND: Same CopyPropagation crash — see handleReceive comment.
+    @_optimize(none)
+    @usableFromInline
+    static func handleSend(
+        _ action: consuming State.Send.Action,
+        storage: Async.Channel<Element>.Bounded.Storage,
+        continuation: State.Send.Continuation
+    ) {
+        switch consume action {
+        case .deliverToReceiver(let receiverCont, let element):
+            _ = storage.deliverySlot.store(element)
+            receiverCont.resume(returning: State.Receive.Signal.delivered)
+            continuation.resume(returning: nil)
+        case .buffered:
+            continuation.resume(returning: nil)
+        case .rejectClosed:
+            continuation.resume(returning: .closed)
+        case .rejectCancelled:
+            continuation.resume(returning: .cancelled)
+        case .suspended:
+            break
         }
     }
 }

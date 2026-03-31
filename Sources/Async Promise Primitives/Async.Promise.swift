@@ -69,64 +69,68 @@ extension Async {
         public init() {
             self._state = Async.Mutex(State())
         }
+    }
+}
 
-        /// Fulfills the promise with a value, releasing all waiting tasks.
-        ///
-        /// After this call:
-        /// - All currently waiting tasks/callbacks resume with the value
-        /// - All future `value` accesses or `wait(_:)` calls return immediately
-        ///
-        /// - Parameter value: The value to fulfill the promise with.
-        /// - Returns: `true` if the promise was fulfilled, `false` if already fulfilled.
-        @discardableResult
-        public func fulfill(_ value: sending Value) -> Bool {
-            let waitersToResume: [Async.Continuation<Value>]? = _state.withLock { state in
-                guard state.fulfilled == nil else { return nil }
-                state.fulfilled = value
-                let waiters = state.waiters
-                state.waiters = []
-                return waiters
-            }
-            guard let waiters = waitersToResume else { return false }
-            for waiter in waiters {
-                waiter.resume(returning: value)
-            }
-            return true
-        }
+// MARK: - Core Operations
 
-        /// Waits for the promise to be fulfilled, calling the callback with the value.
-        ///
-        /// If the promise is already fulfilled, the callback is invoked immediately.
-        /// Otherwise, the callback is stored and invoked when `fulfill(_:)` is called.
-        ///
-        /// This method works on all platforms including embedded Swift.
-        ///
-        /// - Parameter callback: The callback to invoke with the fulfilled value.
-        public func wait(_ callback: @escaping @Sendable (sending Value) -> Void) {
-            let immediateValue: Value? = _state.withLock { state in
-                if let value = state.fulfilled {
-                    return value
-                }
-                state.waiters.append(Async.Continuation(callback))
-                return nil
-            }
-            if let value = immediateValue {
-                callback(value)
-            }
+extension Async.Promise {
+    /// Fulfills the promise with a value, releasing all waiting tasks.
+    ///
+    /// After this call:
+    /// - All currently waiting tasks/callbacks resume with the value
+    /// - All future `value` accesses or `wait(_:)` calls return immediately
+    ///
+    /// - Parameter value: The value to fulfill the promise with.
+    /// - Returns: `true` if the promise was fulfilled, `false` if already fulfilled.
+    @discardableResult
+    public func fulfill(_ value: sending Value) -> Bool {
+        let waitersToResume: [Async.Continuation<Value>]? = _state.withLock { state in
+            guard state.fulfilled == nil else { return nil }
+            state.fulfilled = value
+            let waiters = state.waiters
+            state.waiters = []
+            return waiters
         }
+        guard let waiters = waitersToResume else { return false }
+        for waiter in waiters {
+            waiter.resume(returning: value)
+        }
+        return true
+    }
 
-        /// Whether the promise has been fulfilled.
-        public var isFulfilled: Bool {
-            _state.withLock { $0.fulfilled != nil }
+    /// Waits for the promise to be fulfilled, calling the callback with the value.
+    ///
+    /// If the promise is already fulfilled, the callback is invoked immediately.
+    /// Otherwise, the callback is stored and invoked when `fulfill(_:)` is called.
+    ///
+    /// This method works on all platforms including embedded Swift.
+    ///
+    /// - Parameter callback: The callback to invoke with the fulfilled value.
+    public func wait(_ callback: @escaping @Sendable (sending Value) -> Void) {
+        let immediateValue: Value? = _state.withLock { state in
+            if let value = state.fulfilled {
+                return value
+            }
+            state.waiters.append(Async.Continuation(callback))
+            return nil
         }
+        if let value = immediateValue {
+            callback(value)
+        }
+    }
 
-        /// The fulfilled value, if available.
-        ///
-        /// Returns `nil` if the promise has not yet been fulfilled.
-        /// This is a non-blocking check.
-        public var fulfilledValue: Value? {
-            _state.withLock { $0.fulfilled }
-        }
+    /// Whether the promise has been fulfilled.
+    public var isFulfilled: Bool {
+        _state.withLock { $0.fulfilled != nil }
+    }
+
+    /// The fulfilled value, if available.
+    ///
+    /// Returns `nil` if the promise has not yet been fulfilled.
+    /// This is a non-blocking check.
+    public var fulfilledValue: Value? {
+        _state.withLock { $0.fulfilled }
     }
 }
 

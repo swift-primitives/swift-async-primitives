@@ -75,58 +75,62 @@ extension Async {
             self.parties = parties
             self._state = Async.Mutex(State())
         }
+    }
+}
 
-        /// Arrives at the barrier and calls the callback when all parties have arrived.
-        ///
-        /// If all parties have already arrived (barrier released), the callback
-        /// is invoked immediately. Otherwise, the callback is stored and invoked
-        /// when the last party arrives.
-        ///
-        /// This method works on all platforms including embedded Swift.
-        ///
-        /// - Parameter callback: The callback to invoke when all parties arrive.
-        public func arrive(_ callback: @escaping @Sendable () -> Void) {
-            // Collect waiters to resume OUTSIDE lock
-            let result: (shouldResume: Bool, waitersToResume: [Async.Continuation<Void>]) = _state.withLock { state in
-                // Already released - proceed immediately
-                if state.released {
-                    return (true, [])
-                }
+// MARK: - Core Operations
 
-                state.arrived += 1
-
-                if state.arrived >= parties {
-                    // Last party - collect waiters for resumption outside lock
-                    state.released = true
-                    let waiters = state.waiters
-                    state.waiters = []
-                    return (true, waiters)
-                } else {
-                    // Wait for remaining parties
-                    state.waiters.append(Async.Continuation(callback))
-                    return (false, [])
-                }
+extension Async.Barrier {
+    /// Arrives at the barrier and calls the callback when all parties have arrived.
+    ///
+    /// If all parties have already arrived (barrier released), the callback
+    /// is invoked immediately. Otherwise, the callback is stored and invoked
+    /// when the last party arrives.
+    ///
+    /// This method works on all platforms including embedded Swift.
+    ///
+    /// - Parameter callback: The callback to invoke when all parties arrive.
+    public func arrive(_ callback: @escaping @Sendable () -> Void) {
+        // Collect waiters to resume OUTSIDE lock
+        let result: (shouldResume: Bool, waitersToResume: [Async.Continuation<Void>]) = _state.withLock { state in
+            // Already released - proceed immediately
+            if state.released {
+                return (true, [])
             }
 
-            // Resume waiters OUTSIDE lock (FIFO order)
-            for waiter in result.waitersToResume {
-                waiter.resume(returning: ())
-            }
+            state.arrived += 1
 
-            if result.shouldResume {
-                callback()
+            if state.arrived >= parties {
+                // Last party - collect waiters for resumption outside lock
+                state.released = true
+                let waiters = state.waiters
+                state.waiters = []
+                return (true, waiters)
+            } else {
+                // Wait for remaining parties
+                state.waiters.append(Async.Continuation(callback))
+                return (false, [])
             }
         }
 
-        /// Current count of parties that have arrived.
-        public var arrivedCount: Int {
-            _state.withLock { $0.arrived }
+        // Resume waiters OUTSIDE lock (FIFO order)
+        for waiter in result.waitersToResume {
+            waiter.resume(returning: ())
         }
 
-        /// Whether all parties have arrived and the barrier is released.
-        public var isReleased: Bool {
-            _state.withLock { $0.released }
+        if result.shouldResume {
+            callback()
         }
+    }
+
+    /// Current count of parties that have arrived.
+    public var arrivedCount: Int {
+        _state.withLock { $0.arrived }
+    }
+
+    /// Whether all parties have arrived and the barrier is released.
+    public var isReleased: Bool {
+        _state.withLock { $0.released }
     }
 }
 

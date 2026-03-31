@@ -81,20 +81,22 @@ extension Async.Channel where Element: ~Copyable {
             self.sender = Sender(storage: storage)
             self.receiver = Receiver(storage: storage)
         }
+    }
+}
 
-        /// Close the channel, signaling no more elements will be sent.
-        ///
-        /// After close:
-        /// - `send()` throws `.closed`
-        /// - `receive()` drains buffer then returns `nil`
-        public func close() {
-            sender.close()
-        }
+extension Async.Channel.Unbounded where Element: ~Copyable {
+    /// Close the channel, signaling no more elements will be sent.
+    ///
+    /// After close:
+    /// - `send()` throws `.closed`
+    /// - `receive()` drains buffer then returns `nil`
+    public func close() {
+        sender.close()
+    }
 
-        /// Whether the channel has been closed.
-        public var closed: Bool {
-            storage.withLock { $0.closed }
-        }
+    /// Whether the channel has been closed.
+    public var closed: Bool {
+        storage.withLock { $0.closed }
     }
 }
 
@@ -145,36 +147,41 @@ extension Async.Channel.Unbounded where Element: ~Copyable {
         @usableFromInline
         var _receiver: Receiver
 
-        /// View for receiving elements.
-        public var receiver: Receiver {
-            _read {
-                yield _receiver
-            }
-            _modify {
-                yield &_receiver
-            }
-        }
-
-        /// View for sending elements.
-        public var sender: Sender {
-            Sender(storage: storage)
-        }
-
         @usableFromInline
         init(storage: Storage, receiver: consuming Receiver) {
             self.storage = storage
             self._receiver = receiver
         }
+    }
+}
 
-        /// Close the channel.
-        public func close() {
-            sender.close()
-        }
+extension Async.Channel.Unbounded.Ends where Element: ~Copyable {
+    public typealias Receiver = Async.Channel<Element>.Unbounded.Receiver
+    public typealias Sender = Async.Channel<Element>.Unbounded.Sender
 
-        /// Whether the channel has been closed.
-        public var closed: Bool {
-            sender.closed
+    /// View for receiving elements.
+    public var receiver: Receiver {
+        _read {
+            yield _receiver
         }
+        _modify {
+            yield &_receiver
+        }
+    }
+
+    /// View for sending elements.
+    public var sender: Sender {
+        Sender(storage: storage)
+    }
+
+    /// Close the channel.
+    public func close() {
+        sender.close()
+    }
+
+    /// Whether the channel has been closed.
+    public var closed: Bool {
+        sender.closed
     }
 }
 

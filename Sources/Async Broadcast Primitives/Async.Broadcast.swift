@@ -233,27 +233,13 @@ extension Async.Broadcast {
             self.id = id
         }
 
-        public func makeAsyncIterator() -> AsyncIterator {
-            AsyncIterator(broadcast: broadcast, id: id, publication: Async.Publication<Wait>())
-        }
-
-        /// Unsubscribe and release resources.
-        public func cancel() {
-            let continuationToCancel: CheckedContinuation<Next.Outcome, Never>? = broadcast._state.withLock { state in
-                guard let subscriber = state.subscribers.values.remove(id) else { return nil }
-                return subscriber.continuation
-            }
-            continuationToCancel?.resume(returning: .finished)
-        }
-
         public struct AsyncIterator: AsyncIteratorProtocol {
             let broadcast: Async.Broadcast<Element>
             let id: UInt64
             let publication: Async.Publication<Wait>
 
-            public mutating func next(
-                isolation: isolated (any Actor)? = #isolation
-            ) async throws(Async.Broadcast<Element>.Error) -> Element? {
+            nonisolated(nonsending)
+            public mutating func next() async throws(Async.Broadcast<Element>.Error) -> Element? {
                 // Capture values explicitly to avoid capturing self in @Sendable closures
                 let broadcast = self.broadcast
                 let id = self.id
@@ -339,6 +325,24 @@ extension Async.Broadcast {
                 }
             }
         }
+    }
+}
+
+extension Async.Broadcast.Subscription {
+    typealias Wait = Async.Broadcast<Element>.Wait
+    typealias Next = Async.Broadcast<Element>.Next
+
+    public func makeAsyncIterator() -> AsyncIterator {
+        AsyncIterator(broadcast: broadcast, id: id, publication: Async.Publication<Wait>())
+    }
+
+    /// Unsubscribe and release resources.
+    public func cancel() {
+        let continuationToCancel: CheckedContinuation<Next.Outcome, Never>? = broadcast._state.withLock { state in
+            guard let subscriber = state.subscribers.values.remove(id) else { return nil }
+            return subscriber.continuation
+        }
+        continuationToCancel?.resume(returning: .finished)
     }
 }
 

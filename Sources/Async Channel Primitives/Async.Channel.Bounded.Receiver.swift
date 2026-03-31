@@ -60,9 +60,6 @@ extension Async.Channel.Bounded.Receiver where Element: ~Copyable {
     /// Suspends if the buffer is empty until an element becomes available
     /// or the channel is closed and drained.
     ///
-    /// - Parameters:
-    ///   - isolation: The actor isolation context for the operation.
-    ///
     /// - Returns: The next element, or `nil` if the channel is closed and drained.
     /// - Throws: `Async.Channel<Element>.Error.cancelled` if the task is cancelled.
     // WORKAROUND: @_optimize(none) prevents CopyPropagation ownership
@@ -71,9 +68,8 @@ extension Async.Channel.Bounded.Receiver where Element: ~Copyable {
     // WHEN TO REMOVE: When the CopyPropagation crash is fixed upstream.
     @_optimize(none)
     @inlinable
-    public func receive(
-        isolation: isolated (any Actor)? = #isolation
-    ) async throws(Async.Channel<Element>.Error) -> Element? {
+    nonisolated(nonsending)
+    public func receive() async throws(Async.Channel<Element>.Error) -> Element? {
         // Fast path: try immediate receive
         let fastAction = storage.withLock { state in
             state.receive()
@@ -214,10 +210,12 @@ extension Async.Channel.Bounded {
         init(storage: Storage) {
             self.storage = storage
         }
+    }
+}
 
-        public func makeAsyncIterator() -> Iterator {
-            Iterator(storage: storage)
-        }
+extension Async.Channel.Bounded.Elements {
+    public func makeAsyncIterator() -> Iterator {
+        Iterator(storage: storage)
     }
 }
 
@@ -235,9 +233,8 @@ extension Async.Channel.Bounded.Elements {
         // WORKAROUND: @_optimize(none) — see Storage.handle workaround comment.
         @_optimize(none)
         @inlinable
-        public mutating func next(
-            isolation: isolated (any Actor)? = #isolation
-        ) async throws(Async.Channel<Element>.Error) -> Element? {
+        nonisolated(nonsending)
+        public mutating func next() async throws(Async.Channel<Element>.Error) -> Element? {
             // Capture storage to avoid capturing self in @Sendable closure
             let storage = self.storage
 

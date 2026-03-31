@@ -80,21 +80,22 @@ extension Async.Channel where Element: ~Copyable {
             self.sender = Sender(storage: storage)
             self.receiver = Receiver(storage: storage)
         }
+    }
+}
 
+extension Async.Channel.Bounded where Element: ~Copyable {
+    /// Close the channel, signaling no more elements will be sent.
+    ///
+    /// After close:
+    /// - `send()` throws `.closed`
+    /// - `receive()` drains buffer then returns `nil`
+    public func close() {
+        sender.close()
+    }
 
-        /// Close the channel, signaling no more elements will be sent.
-        ///
-        /// After close:
-        /// - `send()` throws `.closed`
-        /// - `receive()` drains buffer then returns `nil`
-        public func close() {
-            sender.close()
-        }
-
-        /// Whether the channel has been closed.
-        public var isClosed: Bool {
-            storage.withLock { $0.isClosed }
-        }
+    /// Whether the channel has been closed.
+    public var isClosed: Bool {
+        storage.withLock { $0.isClosed }
     }
 }
 
@@ -145,36 +146,41 @@ extension Async.Channel.Bounded where Element: ~Copyable {
         @usableFromInline
         var _receiver: Receiver
 
-        /// View for receiving elements.
-        public var receiver: Receiver {
-            _read {
-                yield _receiver
-            }
-            _modify {
-                yield &_receiver
-            }
-        }
-
-        /// View for sending elements.
-        public var sender: Sender {
-            Sender(storage: storage)
-        }
-
         @usableFromInline
         init(storage: Storage, receiver: consuming Receiver) {
             self.storage = storage
             self._receiver = receiver
         }
+    }
+}
 
-        /// Close the channel.
-        public func close() {
-            sender.close()
-        }
+extension Async.Channel.Bounded.Ends where Element: ~Copyable {
+    public typealias Receiver = Async.Channel<Element>.Bounded.Receiver
+    public typealias Sender = Async.Channel<Element>.Bounded.Sender
 
-        /// Whether the channel has been closed.
-        public var isClosed: Bool {
-            sender.isClosed
+    /// View for receiving elements.
+    public var receiver: Receiver {
+        _read {
+            yield _receiver
         }
+        _modify {
+            yield &_receiver
+        }
+    }
+
+    /// View for sending elements.
+    public var sender: Sender {
+        Sender(storage: storage)
+    }
+
+    /// Close the channel.
+    public func close() {
+        sender.close()
+    }
+
+    /// Whether the channel has been closed.
+    public var isClosed: Bool {
+        sender.isClosed
     }
 }
 

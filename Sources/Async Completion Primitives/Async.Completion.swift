@@ -59,18 +59,6 @@ extension Async {
         /// Result type for continuation resume.
         public typealias Result = Swift.Result<Success, Error>
 
-        /// Error type wrapping timeout, cancellation, and domain failures.
-        public enum Error: Swift.Error, Sendable {
-            /// Operation timed out.
-            case timeout
-
-            /// Operation was cancelled.
-            case cancellation
-
-            /// Operation failed with domain error.
-            case failure(Failure)
-        }
-
         let state: Atomic<State>
         private let _continuation: Async.Mutex<CheckedContinuation<Result, Never>?>
 
@@ -79,37 +67,53 @@ extension Async {
             self.state = Atomic(.pending)
             self._continuation = Async.Mutex(nil)
         }
+    }
+}
 
-        /// Atomic state for CAS discipline.
-        ///
-        /// ## State Machine
-        /// ```
-        /// pending → running → completed
-        ///                   → timedOut
-        ///                   → cancelled
-        ///                   → failed
-        /// pending → cancelled
-        /// pending → failed
-        /// ```
-        public enum State: UInt8, AtomicRepresentable, Sendable {
-            /// Initial state - not yet started.
-            case pending = 0
+// MARK: - Nested Types
 
-            /// Operation is running.
-            case running = 1
+extension Async.Completion {
+    /// Error type wrapping timeout, cancellation, and domain failures.
+    public enum Error: Swift.Error, Sendable {
+        /// Operation timed out.
+        case timeout
 
-            /// Operation completed successfully.
-            case completed = 2
+        /// Operation was cancelled.
+        case cancellation
 
-            /// Operation timed out.
-            case timedOut = 3
+        /// Operation failed with domain error.
+        case failure(Failure)
+    }
 
-            /// Operation was cancelled.
-            case cancelled = 4
+    /// Atomic state for CAS discipline.
+    ///
+    /// ## State Machine
+    /// ```
+    /// pending → running → completed
+    ///                   → timedOut
+    ///                   → cancelled
+    ///                   → failed
+    /// pending → cancelled
+    /// pending → failed
+    /// ```
+    public enum State: UInt8, AtomicRepresentable, Sendable {
+        /// Initial state - not yet started.
+        case pending = 0
 
-            /// Operation failed with error.
-            case failed = 5
-        }
+        /// Operation is running.
+        case running = 1
+
+        /// Operation completed successfully.
+        case completed = 2
+
+        /// Operation timed out.
+        case timedOut = 3
+
+        /// Operation was cancelled.
+        case cancelled = 4
+
+        /// Operation failed with error.
+        case failed = 5
     }
 }
 

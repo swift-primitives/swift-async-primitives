@@ -39,11 +39,15 @@ extension Async.Timer.Wheel {
             self.tail = nil
             self.count = 0
         }
-
-        /// Whether this slot is empty.
-        @usableFromInline
-        var isEmpty: Bool { head == nil }
     }
+}
+
+// MARK: - Computed Properties
+
+extension Async.Timer.Wheel.Slot {
+    /// Whether this slot is empty.
+    @usableFromInline
+    var isEmpty: Bool { head == nil }
 }
 
 // MARK: - Slot Access Helper

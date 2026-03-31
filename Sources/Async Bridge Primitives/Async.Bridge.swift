@@ -71,110 +71,28 @@ extension Async {
         public init() {
             self._state = Async.Mutex(State())
         }
+    }
+}
 
-        /// Push a single element from a sync context.
-        ///
-        /// Always buffers the element, then signals any waiting consumer.
-        ///
-        /// After `finish()`, pushes are silently ignored (element is dropped).
-        ///
-        /// - Parameter element: The element to deliver (ownership transferred
-        ///   across isolation boundary).
-        public func push(_ element: consuming sending Element) {
-            let continuationToResume: CheckedContinuation<Void, Never>? =
-                _state.withLock(consuming: element) { state, element in
-                    guard !state.isFinished else {
-                        _ = consume element
-                        return nil
-                    }
-                    state.buffer.push(consume element, to: .back)
-                    if let cont = state.continuation {
-                        state.continuation = nil
-                        #if DEBUG
-                        state.hasWaitingConsumer = false
-                        #endif
-                        return cont
-                    }
+// MARK: - Core Operations
+
+extension Async.Bridge where Element: ~Copyable {
+    /// Push a single element from a sync context.
+    ///
+    /// Always buffers the element, then signals any waiting consumer.
+    ///
+    /// After `finish()`, pushes are silently ignored (element is dropped).
+    ///
+    /// - Parameter element: The element to deliver (ownership transferred
+    ///   across isolation boundary).
+    public func push(_ element: consuming sending Element) {
+        let continuationToResume: CheckedContinuation<Void, Never>? =
+            _state.withLock(consuming: element) { state, element in
+                guard !state.isFinished else {
+                    _ = consume element
                     return nil
                 }
-            continuationToResume?.resume()
-        }
-
-        /// Wait for the next element (async, suspends if none available).
-        ///
-        /// Fast path (buffer non-empty or finished): single mutex acquisition,
-        /// no task suspension. Slow path (empty buffer, not finished): suspends
-        /// until `push()` or `finish()` signals.
-        ///
-        /// - Returns: The next element, or `nil` if finished AND drained.
-        ///
-        /// - Important: Only one task may call `next()` at a time.
-        ///   Concurrent calls result in undefined behavior.
-        nonisolated(nonsending)
-        public func next() async -> Element? {
-            // Fast path: try to take from buffer under single lock
-            let fast: _Take = _state.withLock { state in
-                #if DEBUG
-                precondition(
-                    !state.hasWaitingConsumer,
-                    "Bridge: concurrent next() calls detected - single-consumer invariant violated"
-                )
-                #endif
-
-                if let element = state.buffer.pop(from: .front) {
-                    return .element(element)
-                }
-                if state.isFinished {
-                    return .finished
-                }
-                return .suspend
-            }
-
-            switch consume fast {
-            case .element(let element):
-                return element
-            case .finished:
-                return nil
-            case .suspend:
-                break
-            }
-
-            // Slow path: suspend until push() or finish() signals
-            await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
-                let shouldResumeImmediately: Bool = _state.withLock { state in
-                    // Re-check: producer may have pushed between the fast-path lock and here
-                    if !state.buffer.isEmpty || state.isFinished {
-                        return true
-                    }
-                    state.continuation = continuation
-                    #if DEBUG
-                    state.hasWaitingConsumer = true
-                    #endif
-                    return false
-                }
-                if shouldResumeImmediately {
-                    continuation.resume()
-                }
-            }
-
-            // After signal: take from buffer
-            return _state.withLock { state in
-                #if DEBUG
-                state.hasWaitingConsumer = false
-                #endif
-                return state.buffer.pop(from: .front)
-            }
-        }
-
-        /// Signal that no more elements will be pushed.
-        ///
-        /// After this call:
-        /// - Any pending `next()` is signaled (returns `nil` if buffer empty)
-        /// - Future `next()` calls drain buffer then return `nil`
-        /// - Future `push()` calls are silently ignored
-        public func finish() {
-            let continuationToResume: CheckedContinuation<Void, Never>? = _state.withLock { state in
-                state.isFinished = true
+                state.buffer.push(consume element, to: .back)
                 if let cont = state.continuation {
                     state.continuation = nil
                     #if DEBUG
@@ -184,16 +102,102 @@ extension Async {
                 }
                 return nil
             }
-            continuationToResume?.resume()
+        continuationToResume?.resume()
+    }
+
+    /// Wait for the next element (async, suspends if none available).
+    ///
+    /// Fast path (buffer non-empty or finished): single mutex acquisition,
+    /// no task suspension. Slow path (empty buffer, not finished): suspends
+    /// until `push()` or `finish()` signals.
+    ///
+    /// - Returns: The next element, or `nil` if finished AND drained.
+    ///
+    /// - Important: Only one task may call `next()` at a time.
+    ///   Concurrent calls result in undefined behavior.
+    nonisolated(nonsending)
+    public func next() async -> Element? {
+        // Fast path: try to take from buffer under single lock
+        let fast: _Take = _state.withLock { state in
+            #if DEBUG
+            precondition(
+                !state.hasWaitingConsumer,
+                "Bridge: concurrent next() calls detected - single-consumer invariant violated"
+            )
+            #endif
+
+            if let element = state.buffer.pop(from: .front) {
+                return .element(element)
+            }
+            if state.isFinished {
+                return .finished
+            }
+            return .suspend
         }
 
-        /// Whether `finish()` has been called.
-        ///
-        /// Note: Even when `true`, `next()` may still return elements
-        /// if the buffer is not yet drained.
-        public var isFinished: Bool {
-            _state.withLock { $0.isFinished }
+        switch consume fast {
+        case .element(let element):
+            return element
+        case .finished:
+            return nil
+        case .suspend:
+            break
         }
+
+        // Slow path: suspend until push() or finish() signals
+        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+            let shouldResumeImmediately: Bool = _state.withLock { state in
+                // Re-check: producer may have pushed between the fast-path lock and here
+                if !state.buffer.isEmpty || state.isFinished {
+                    return true
+                }
+                state.continuation = continuation
+                #if DEBUG
+                state.hasWaitingConsumer = true
+                #endif
+                return false
+            }
+            if shouldResumeImmediately {
+                continuation.resume()
+            }
+        }
+
+        // After signal: take from buffer
+        return _state.withLock { state in
+            #if DEBUG
+            state.hasWaitingConsumer = false
+            #endif
+            return state.buffer.pop(from: .front)
+        }
+    }
+
+    /// Signal that no more elements will be pushed.
+    ///
+    /// After this call:
+    /// - Any pending `next()` is signaled (returns `nil` if buffer empty)
+    /// - Future `next()` calls drain buffer then return `nil`
+    /// - Future `push()` calls are silently ignored
+    public func finish() {
+        let continuationToResume: CheckedContinuation<Void, Never>? = _state.withLock { state in
+            state.isFinished = true
+            if let cont = state.continuation {
+                state.continuation = nil
+                #if DEBUG
+                state.hasWaitingConsumer = false
+                #endif
+                return cont
+            }
+            return nil
+        }
+        continuationToResume?.resume()
+    }
+
+    /// Whether `finish()` has been called.
+    ///
+    /// Note: Even when `true`, `next()` may still return elements
+    /// if the buffer is not yet drained.
+    public var isFinished: Bool {
+        _state.withLock { $0.isFinished }
     }
 }
 

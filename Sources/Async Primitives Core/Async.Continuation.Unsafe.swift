@@ -38,11 +38,13 @@ extension Async.Continuation {
         public init(_ base: UnsafeContinuation<T, Never>) {
             unsafe (self._base = base)
         }
+    }
+}
 
-        @inlinable
-        public func resume(returning value: consuming T) {
-            unsafe _base.resume(returning: value)
-        }
+extension Async.Continuation.Unsafe {
+    @inlinable
+    public func resume(returning value: consuming T) {
+        unsafe _base.resume(returning: value)
     }
 }
 

@@ -95,9 +95,7 @@ extension Async.Channel.Bounded.Sender where Element: ~Copyable {
     /// Suspends if the buffer is full until space becomes available
     /// or the channel is closed.
     ///
-    /// - Parameters:
-    ///   - element: The element to send.
-    ///   - isolation: The actor isolation context for the operation.
+    /// - Parameter element: The element to send.
     ///
     /// - Throws: `Async.Channel<Element>.Error.closed` if the channel is closed.
     ///           `Async.Channel<Element>.Error.cancelled` if the task is cancelled.

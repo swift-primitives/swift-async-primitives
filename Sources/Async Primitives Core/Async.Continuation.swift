@@ -48,23 +48,6 @@ extension Async {
         public init(_ continuation: CheckedContinuation<T, Never>) {
             self.storage = .checkedContinuation(continuation)
         }
-
-        /// Creates a continuation with a callback.
-        @inlinable
-        public init(_ callback: @escaping @Sendable (sending T) -> Void) {
-            self.storage = .callback(callback)
-        }
-
-        /// Resumes the continuation with a value.
-        @inlinable
-        public func resume(returning value: consuming T) {
-            switch storage {
-            case .checkedContinuation(let continuation):
-                continuation.resume(returning: value)
-            case .callback(let callback):
-                callback(value)
-            }
-        }
     }
     #else
     /// Callback-based continuation for embedded platforms.
@@ -91,12 +74,35 @@ extension Async {
         public init(_ callback: @escaping @Sendable (sending T) -> Void) {
             self.callback = callback
         }
-
-        /// Resumes the continuation with a value.
-        @inlinable
-        public func resume(returning value: consuming T) {
-            callback(value)
-        }
     }
     #endif
 }
+
+#if !hasFeature(Embedded)
+extension Async.Continuation {
+    /// Creates a continuation with a callback.
+    @inlinable
+    public init(_ callback: @escaping @Sendable (sending T) -> Void) {
+        self.storage = .callback(callback)
+    }
+
+    /// Resumes the continuation with a value.
+    @inlinable
+    public func resume(returning value: consuming T) {
+        switch storage {
+        case .checkedContinuation(let continuation):
+            continuation.resume(returning: value)
+        case .callback(let callback):
+            callback(value)
+        }
+    }
+}
+#else
+extension Async.Continuation {
+    /// Resumes the continuation with a value.
+    @inlinable
+    public func resume(returning value: consuming T) {
+        callback(value)
+    }
+}
+#endif

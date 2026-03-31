@@ -63,75 +63,79 @@ extension Async.Waiter {
         public init() {
             self._bits = Atomic(0)
         }
+    }
+}
 
-        /// Whether the waiter has been cancelled (read-only).
-        public var cancelled: Bool {
-            _bits.load(ordering: .relaxed) & Self.cancelledBit != 0
-        }
+// MARK: - Flag Operations
 
-        /// Whether the waiter has timed out (read-only).
-        public var timedOut: Bool {
-            _bits.load(ordering: .relaxed) & Self.timedOutBit != 0
-        }
+extension Async.Waiter.Flag {
+    /// Whether the waiter has been cancelled (read-only).
+    public var cancelled: Bool {
+        _bits.load(ordering: .relaxed) & Self.cancelledBit != 0
+    }
 
-        /// Whether either flag is set (read-only).
-        public var isFlagged: Bool {
-            _bits.load(ordering: .relaxed) != 0
-        }
+    /// Whether the waiter has timed out (read-only).
+    public var timedOut: Bool {
+        _bits.load(ordering: .relaxed) & Self.timedOutBit != 0
+    }
 
-        /// Atomically sets the cancelled flag.
-        ///
-        /// This operation is atomic (CAS loop) and monotonic: once set, the flag
-        /// cannot be cleared. Returns `true` only for the first successful transition;
-        /// subsequent calls return `false`. Multiple concurrent calls are safe.
-        ///
-        /// Ordering is relaxed because queue state is synchronized separately
-        /// via the caller's mutex.
-        ///
-        /// - Returns: `true` if this call transitioned the flag from unset to set.
-        @discardableResult
-        public func cancel() -> Bool {
-            setFlag(Self.cancelledBit)
-        }
+    /// Whether either flag is set (read-only).
+    public var isFlagged: Bool {
+        _bits.load(ordering: .relaxed) != 0
+    }
 
-        /// Atomically sets the timed out flag.
-        ///
-        /// This operation is atomic (CAS loop) and monotonic: once set, the flag
-        /// cannot be cleared. Returns `true` only for the first successful transition;
-        /// subsequent calls return `false`. Multiple concurrent calls are safe.
-        ///
-        /// Ordering is relaxed because queue state is synchronized separately
-        /// via the caller's mutex.
-        ///
-        /// - Returns: `true` if this call transitioned the flag from unset to set.
-        @discardableResult
-        public func timeout() -> Bool {
-            setFlag(Self.timedOutBit)
-        }
+    /// Atomically sets the cancelled flag.
+    ///
+    /// This operation is atomic (CAS loop) and monotonic: once set, the flag
+    /// cannot be cleared. Returns `true` only for the first successful transition;
+    /// subsequent calls return `false`. Multiple concurrent calls are safe.
+    ///
+    /// Ordering is relaxed because queue state is synchronized separately
+    /// via the caller's mutex.
+    ///
+    /// - Returns: `true` if this call transitioned the flag from unset to set.
+    @discardableResult
+    public func cancel() -> Bool {
+        setFlag(Self.cancelledBit)
+    }
 
-        /// Atomically sets a flag bit using compare-and-swap loop.
-        ///
-        /// - Parameter mask: The bit mask to set.
-        /// - Returns: `true` if this call set the bit (was previously unset).
-        private func setFlag(_ mask: UInt8) -> Bool {
-            var current = _bits.load(ordering: .relaxed)
-            while true {
-                let next = current | mask
-                if next == current {
-                    // Already set
-                    return false
-                }
-                let result = _bits.compareExchange(
-                    expected: current,
-                    desired: next,
-                    ordering: .relaxed
-                )
-                if result.exchanged {
-                    return true
-                }
-                // CAS failed - reuse observed value for next iteration
-                current = result.original
+    /// Atomically sets the timed out flag.
+    ///
+    /// This operation is atomic (CAS loop) and monotonic: once set, the flag
+    /// cannot be cleared. Returns `true` only for the first successful transition;
+    /// subsequent calls return `false`. Multiple concurrent calls are safe.
+    ///
+    /// Ordering is relaxed because queue state is synchronized separately
+    /// via the caller's mutex.
+    ///
+    /// - Returns: `true` if this call transitioned the flag from unset to set.
+    @discardableResult
+    public func timeout() -> Bool {
+        setFlag(Self.timedOutBit)
+    }
+
+    /// Atomically sets a flag bit using compare-and-swap loop.
+    ///
+    /// - Parameter mask: The bit mask to set.
+    /// - Returns: `true` if this call set the bit (was previously unset).
+    private func setFlag(_ mask: UInt8) -> Bool {
+        var current = _bits.load(ordering: .relaxed)
+        while true {
+            let next = current | mask
+            if next == current {
+                // Already set
+                return false
             }
+            let result = _bits.compareExchange(
+                expected: current,
+                desired: next,
+                ordering: .relaxed
+            )
+            if result.exchanged {
+                return true
+            }
+            // CAS failed - reuse observed value for next iteration
+            current = result.original
         }
     }
 }

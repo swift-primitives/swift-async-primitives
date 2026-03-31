@@ -60,13 +60,17 @@ extension Async.Waiter {
         public init(_ action: @escaping @Sendable () -> Void) {
             self._resume = action
         }
+    }
+}
 
-        /// Consumes the resumption, executing its action.
-        ///
-        /// Must be called after releasing any locks.
-        @inlinable
-        public consuming func resume() {
-            _resume()
-        }
+// MARK: - Resume
+
+extension Async.Waiter.Resumption {
+    /// Consumes the resumption, executing its action.
+    ///
+    /// Must be called after releasing any locks.
+    @inlinable
+    public consuming func resume() {
+        _resume()
     }
 }

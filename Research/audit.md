@@ -1,40 +1,86 @@
 # Audit: swift-async-primitives
 
-## Code Surface — 2026-03-27
+## Code Surface — 2026-03-31
 
 ### Scope
 
-- **Target**: swift-async-primitives — all 6 source targets
-- **Skill**: code-surface — [API-NAME-001], [API-NAME-002], [API-NAME-003], [API-ERR-001], [API-IMPL-005]
-- **Files**: 55 source files, 0 test files
+- **Target**: swift-async-primitives — all 12 source modules
+- **Skill**: code-surface — full requirement set ([API-NAME-001–004], [API-ERR-001–005], [API-IMPL-003/005–011])
+- **Files**: 62 source files (50 type/extension files, 12 export files)
+- **Mode**: Strict — all access levels audited, no findings suppressed by visibility
 
 ### Findings
 
 | # | Severity | Rule | Location | Finding | Status |
 |---|----------|------|----------|---------|--------|
-| 1 | MEDIUM | [API-NAME-001] | Async.Timer.Wheel.ID.swift:17 | `_TimerWheelEntryTag` is a compound name — "TimerWheel" is redundant given `Async.Timer.Wheel` nesting. Also uses forbidden `Tag` suffix. Should be `_Entry` or similar. | RESOLVED 2026-03-27 |
-| 2 | MEDIUM | [API-NAME-002] | Async.Lifecycle.swift:117 | `beginShutdown()` — public compound method. Nested accessor pattern: `shutdown.begin()` | OPEN |
-| 3 | MEDIUM | [API-NAME-002] | Async.Lifecycle.swift:138 | `completeShutdown()` — public compound method. Nested accessor pattern: `shutdown.complete()` | OPEN |
-| 4 | MEDIUM | [API-NAME-002] | Async.Lifecycle.swift:86 | `isShuttingDown` — public compound property. Nested accessor pattern: `shutdown.isActive` or `is.shuttingDown` | OPEN |
-| 5 | MEDIUM | [API-NAME-002] | Async.Lifecycle.swift:94 | `isShutdownComplete` — public compound property. Nested accessor pattern: `shutdown.isComplete` or `is.complete` | OPEN |
-| 6 | MEDIUM | [API-NAME-002] | Async.Completion.swift:138 | `setContinuation(_:)` — public compound method. Nested accessor pattern: `continuation.set(_:)` or initializer parameter | OPEN |
-| 7 | MEDIUM | [API-IMPL-005] | Async.Channel.Bounded.State.swift | Contains 7+ type declarations: `State`, `Status`, `Sender`, `Receiver`, `Send` (+ `Action`, `Cancel`), `Receive` (+ `Action`, `Cancel`), `Close`. Should be split per type. | OPEN |
-| 8 | MEDIUM | [API-IMPL-005] | Async.Channel.Unbounded.State.swift | Contains 5+ type declarations: `State`, `Slot`, `Send` (+ `Action`), `Receive` (+ `Step`, `Stop`, `Continuation`), `Close` | OPEN |
-| 9 | MEDIUM | [API-IMPL-005] | Async.Broadcast.swift | Contains 3 public types spanning ~200 lines: `Broadcast`, `Subscription`, `Subscription.AsyncIterator`. Iterator alone is ~80 lines. | OPEN |
-| 10 | LOW | [API-IMPL-005] | Async.Channel.Bounded.swift:100–178 | Contains `Bounded`, `Take`, `Ends` — three types in one file | OPEN |
-| 11 | LOW | [API-IMPL-005] | Async.Channel.Unbounded.swift:100–179 | Contains `Unbounded`, `Take`, `Ends` — three types in one file | OPEN |
-| 12 | LOW | [API-IMPL-005] | Async.Waiter.Queue.swift | Contains 6+ declarations: `Queue` namespace, `Bounded`/`Unbounded`/`Drain` typealiases, `MetadataTag`, `Metadata`, `Flagged`, `Flagged.Split` | OPEN |
-| 13 | LOW | N/A | Async.Channel.Error.swift:1–6 | Xcode boilerplate header (`//  File.swift`) instead of standard project header | RESOLVED 2026-03-27 |
+| 1 | MEDIUM | [API-NAME-001] | Async.Mutex.swift:19,27 | `_AsyncMutexValue`, `_AsyncMutexLock` — compound top-level names. Should be `Async.Mutex._Value`, `Async.Mutex._Lock`. Extraction may be blocked by `@_rawLayout` + `~Copyable` constraint interaction. | OPEN |
+| 2 | MEDIUM | [API-NAME-002] | Async.Lifecycle.swift:86,94,117,138 | 4 compound public identifiers: `isShuttingDown`, `isShutdownComplete`, `beginShutdown()`, `completeShutdown()`. Nested accessor pattern: `shutdown.begin()`, `shutdown.complete()`, `shutdown.isActive`, `shutdown.isComplete`. | OPEN |
+| 3 | MEDIUM | [API-NAME-002] | Async.Completion.swift:139,280 | `setContinuation(_:)` — compound public method (should be `continuation.set(_:)`). `currentState` — compound internal property. | OPEN |
+| 4 | MEDIUM | [API-NAME-002] | Async.Promise.swift:127 | `fulfilledValue` — compound public property. Should be `fulfilled.value` or restructured via accessor. | OPEN |
+| 5 | MEDIUM | [API-NAME-002] | Async.Barrier.swift:122 | `arrivedCount` — compound property on public type. Should be `arrived.count` or `arrived`. | OPEN |
+| 6 | MEDIUM | [API-NAME-002] | Async.Timer.Wheel.Config.swift:108,112,119,164,178 | 5 compound public identifiers: `slotMask`, `slotShift`, `rangeTicks`, `levelRange(_:)`, `ticksPerSlot(_:)`. Should use nested accessor pattern (e.g., `slot.mask`, `slot.shift`, `level.range(_:)`). | OPEN |
+| 7 | MEDIUM | [API-NAME-002] | Async.Timer.Wheel.Tick.swift:34,51,113 | 3 compound public methods: `tickNumber(for:)`, `currentSlot(level:)`, `dividedRoundingDown(by:)`. | OPEN |
+| 8 | LOW | [API-NAME-002] | Async.Broadcast.State.swift:61,66 | `minCursor()`, `pruneBuffer()` — internal compound methods. | OPEN |
+| 9 | LOW | [API-NAME-002] | Async.Timer.Wheel.Node.swift:32 | `deadlineTick` — internal compound stored property. | OPEN |
+| 10 | LOW | [API-NAME-002] | Async.Timer.Wheel.Slot.swift:62,81,104,140 | 4 internal compound methods on `Wheel`: `withSlot`, `slotAppend`, `slotRemove`, `slotPopFirst`. Slot prefix acts as pseudo-namespace — should be nested accessor. | OPEN |
+| 11 | LOW | [API-NAME-002] | Async.Timer.Wheel.Storage.swift:57,61 | `freeLinks`, `freeHead` — internal compound stored properties. Should use `Free` sub-struct or nested accessor. | OPEN |
+| 12 | LOW | [API-NAME-002] | Async.Timer.Wheel.swift:87 | `minIndex` — internal compound stored property. | OPEN |
+| 13 | MEDIUM | [API-IMPL-003] | Async.Channel.Unbounded.State.swift:36 | `_closed: Bool` — boolean flag where Bounded variant correctly uses `enum Status { open, closed, finished }`. Unbounded cannot represent "closed but draining" vs "finished" with a boolean. | OPEN |
+| 14 | LOW | [API-IMPL-003] | Async.Broadcast.State.swift:49 | `Is.finished: Bool` — lifecycle flag. Could expand to `finishing`/`finished`. | OPEN |
+| 15 | HIGH | [API-IMPL-005] | Async.Completion.swift | 5 type declarations: `Completion` (class), `Error` (enum), `State` (enum), `Transition` (enum), `Transition.Error` (enum). No ~Copyable exception. At minimum extract `Transition` + `Transition.Error`. | OPEN |
+| 16 | HIGH | [API-IMPL-005] | Async.Broadcast.swift | 4 type declarations: `Broadcast` (class), `Buffer` (struct), `Subscription` (struct), `AsyncIterator` (struct). `Buffer` does not reference `Element` — can be cleanly extracted. `Element: Sendable` — no ~Copyable exception. | OPEN |
+| 17 | MEDIUM | [API-IMPL-005] | Async.Lifecycle.swift | 2 types: `Lifecycle` (namespace enum) + `State` (enum). `State` should be in `Async.Lifecycle.State.swift`. | OPEN |
+| 18 | MEDIUM | [API-IMPL-005] | Async.Continuation.swift | 2 types: `Continuation` (struct) + `Storage` (enum). `T: Sendable` is Copyable — no ~Copyable exception applies. | OPEN |
+| 19 | MEDIUM | [API-IMPL-005] | Async.Promise.swift | `Gate = Promise<Void>` typealias + dedicated API surface (`open()`, `wait()`, `isOpen`). Effectively a separate concept — extract to `Async.Gate.swift`. | OPEN |
+| 20 | MEDIUM | [API-IMPL-005] | Async.Mutex.swift:19,27,56 | 3 types: `_AsyncMutexValue`, `_AsyncMutexLock`, `Mutex`. The `@_rawLayout` types reference `Value: ~Copyable` — extraction may be blocked by constraint interaction. Needs verification. | OPEN |
+| 21 | MEDIUM | [API-IMPL-005] | Async.Channel.Bounded.swift | 3 types: `Bounded`, `Take`, `Ends`. ~Copyable `Element` context — verify extractability. | OPEN |
+| 22 | MEDIUM | [API-IMPL-005] | Async.Channel.Bounded.Receiver.swift | 4 types: `Receiver`, `Receive`, `Elements`, `Iterator`. ~Copyable context. | OPEN |
+| 23 | MEDIUM | [API-IMPL-005] | Async.Channel.Bounded.Sender.swift | 3 types: `Sender`, `Handle` (class w/ deinit), `Send`. `Handle` justified (~Copyable + deinit), but `Send` should be extractable. | OPEN |
+| 24 | MEDIUM | [API-IMPL-005] | Async.Channel.Unbounded.swift | 3 types: `Unbounded`, `Take`, `Ends`. ~Copyable context. | OPEN |
+| 25 | MEDIUM | [API-IMPL-005] | Async.Channel.Unbounded.Receiver.swift | 3 types: `Receiver`, `Elements`, `Iterator`. ~Copyable context. | OPEN |
+| 26 | MEDIUM | [API-IMPL-005] | Async.Broadcast.State.swift | 4 types: `State`, `NextIndex`, `SubscriberID`, `Is`. `Element: Sendable` — no ~Copyable exception. | OPEN |
+| 27 | MEDIUM | [API-IMPL-005] | Async.Waiter.Queue.swift | 4 types: `Queue`, `MetadataTag`, `Flagged`, `Split`. `Split` may stay with `Flagged` (~Copyable `Metadata` parameter). | OPEN |
+| 28 | LOW | [API-IMPL-005] | Async.Broadcast.Next.Outcome.swift | 2 types: `Next` (namespace) + `Outcome`. Extract `Next` to `Async.Broadcast.Next.swift`. | OPEN |
+| 29 | LOW | [API-IMPL-005] | Async.Broadcast.Subscriber.swift | 2 types: `Subscriber` + `Wait`. Extract `Wait` to `Async.Broadcast.Wait.swift`. | OPEN |
+| 30 | LOW | [API-IMPL-005] | Async.Waiter.Flag.swift | 2 types: `Flag` (class) + `Reason` (enum). Extract to `Async.Waiter.Flag.Reason.swift`. | OPEN |
+| 31 | MEDIUM | [API-IMPL-007] | Async.Timer.Wheel.Slot.swift:51–145 | Extensions on `Async.Timer.Wheel` (not `Slot`) in file named `Slot`. Should be in `Async.Timer.Wheel+Slot.swift`. | OPEN |
+| 32 | MEDIUM | [API-IMPL-007] | Async.Timer.Wheel.Tick.swift:26–185 | Extensions on `Wheel` and `Duration` in file named for `Tick` typealias. Wheel methods → `Async.Timer.Wheel+Tick.swift`; Duration extension → `Duration+Tick.swift`. | OPEN |
+| 33 | HIGH | [API-IMPL-008] | 20 files systemic | Methods and computed properties in type bodies instead of extensions. **Worst offenders**: Async.Waiter.Flag.swift (6 members), Async.Bridge.swift (4 methods), Async.Promise.swift (4 methods), Async.Barrier.swift (3 methods), Async.Channel.Bounded.Storage.swift (3 methods), Async.Channel.Unbounded.Storage.swift (2 methods), Async.Callback.swift (3 methods + convenience init). **Also affected**: Async.Continuation.swift, Async.Continuation.Unsafe.swift, Async.Completion.swift, Async.Channel.Bounded.swift, Async.Channel.Bounded.Receiver.swift, Async.Channel.Unbounded.swift, Async.Channel.Unbounded.Receiver.swift, Async.Broadcast.swift, Async.Waiter.Entry.swift, Async.Waiter.Queue.swift, Async.Waiter.Resumption.swift, Async.Timer.Wheel.Slot.swift, Async.Mutex.swift (embedded branch). | OPEN |
+
+### Justified Exceptions
+
+| Location | Rule | Justification |
+|----------|------|---------------|
+| Async.Channel.Bounded.State.swift | [API-IMPL-005] | 7+ types — all reference `Element: ~Copyable` through extension constraint. [MEM-COPY-006] exception applies. Methods correctly placed in extensions. |
+| Async.Channel.Unbounded.State.swift | [API-IMPL-005] | 5+ types — same `~Copyable` constraint poisoning justification as Bounded.State. |
+| Async.Channel.Error.swift | [API-IMPL-005] | 2 declarations (`typealias Error` + `enum _ChannelError`) — hoisted pattern per [API-IMPL-009] due to documented IRGen crash on generic-nested error types. |
+| Queue+Async.Waiter.swift | [API-NAME-002] | `popEligible`, `reapFlagged` — documented WORKAROUND annotations with tracked removal criteria. |
+| Queue.Fixed+Async.Waiter.swift | [API-NAME-002] | Same documented workaround as above. |
+
+### Rules Passing Clean
+
+| Rule | Assessment |
+|------|-----------|
+| [API-NAME-003] | N/A — no specification implementations in this package |
+| [API-NAME-004] | Pass — no typealias-for-unification bridges. `Gate = Promise<Void>` is a valid specialization alias per [PATTERN-024]. |
+| [API-ERR-001] | **Pass** — all throwing functions use typed throws (`throws(Async.Channel<Element>.Error)`, `throws(Transition.Error)`, `throws(E)` on generic wrappers). Zero untyped `throws`. |
+| [API-ERR-002] | **Pass** — all error types nested as `Domain.Error`: `Async.Channel.Error`, `Async.Broadcast.Error`, `Async.Completion.Error`, `Async.Completion.Transition.Error`. |
+| [API-ERR-003] | **Pass** — all error cases describe failure conditions (`closed`, `cancelled`, `full`, `empty`, `timeout`, `alreadyDone`). |
+| [API-ERR-004] | **Pass** — typed throws closure annotations present where required (e.g., `Async.Mutex.withLock`, `Async.Channel.Bounded.Storage.withLock`). |
+| [API-ERR-005] | **Pass** — no `@_disfavoredOverload` workarounds for stdlib typed throws. |
+| [API-IMPL-009] | **Pass** — hoisted protocol pattern used correctly for `Async.Channel.Error` (IRGen crash workaround). |
 
 ### Summary
 
-13 findings: 0 critical, 0 high, 8 medium, 5 low.
+33 findings: 0 critical, 3 high, 16 medium, 14 low.
 
-**Systemic pattern — [API-IMPL-005]**: State machine files consistently bundle multiple tightly-coupled types. The bounded channel state file is the worst offender with 7+ types in 484 lines. This is the dominant convention gap across the package.
+**Systemic pattern #1 — [API-IMPL-008] (HIGH, 20 files)**: Methods and computed properties in type bodies is the dominant convention gap. Only `Async.Publication.swift` and `Async.Mutex.Locked.swift` correctly separate stored properties from behavior. Every other type-declaring file has at least one method or computed property inside the type body. This is a mechanical fix — extract methods to extensions — but touches 20 of 50 type files.
 
-**Systemic pattern — [API-NAME-002]**: The `Lifecycle.State` type has 4 compound public API members. These predate the nested accessor convention and need migration.
+**Systemic pattern #2 — [API-IMPL-005] (16 files)**: Multi-type files. Three categories: (a) Broadcast and Completion types (no ~Copyable excuse, clearly extractable), (b) Channel types (~Copyable context — extraction needs verification against constraint poisoning), (c) small namespace+type bundles (low severity, mechanical extraction).
 
-[API-ERR-001] is fully satisfied — all throwing functions use typed throws. [API-NAME-003] is N/A. [API-NAME-001] is well followed with one exception.
+**Systemic pattern #3 — [API-NAME-002] (11 files, ~30 instances)**: Compound identifiers cluster in two areas: Lifecycle public API (4 members) and Timer.Wheel internals (~16 identifiers). Timer.Wheel predates the nested accessor convention and has the highest density of compound names in the package.
+
+**Compared to prior audit (2026-03-27)**: This strict re-audit expanded from 5 checked rules to the full code-surface requirement set. New findings: [API-IMPL-008] was not previously audited and accounts for 1 HIGH systemic finding covering 20 files. [API-IMPL-003] and [API-IMPL-007] are also new. Prior findings 7–8 (Channel State files) reclassified as justified exceptions per [MEM-COPY-006]. Prior findings 1 and 13 remain RESOLVED.
 
 ---
 
@@ -599,4 +645,72 @@ mutating func send(_ element: consuming Element) -> Send.Action { ... }
 
 **~Sendable Element**: Blocked by `Mutex<State: Sendable>` → `Deque<Element: Sendable>` chain. Requires radically different architecture. DEFERRED.
 
-**Concurrency annotations**: All correct. `nonisolated(nonsending)` and `isolated (any Actor)?` applied consistently.
+**Concurrency annotations**: All correct. `nonisolated(nonsending)` applied to all async channel functions (migration completed 2026-03-31).
+
+---
+
+## Compiler Bug Tracking — 2026-03-31
+
+### CopyPropagation crash on `switch consume` of ~Copyable enums
+
+| Field | Value |
+|-------|-------|
+| Severity | HIGH |
+| Target | Async Channel Primitives (Bounded + Unbounded) |
+| Trigger | `swift build -c release --target "Async Channel Primitives"` |
+| Crash | CopyPropagation `initializeConsumingUse` in `isCompatibleDefUse` — ownership verification failure on `switch consume` of ~Copyable Action enums |
+| Root cause | **swiftlang/swift#85743** — SILGen emits `load [take]` instead of `load [trivial]` for trivial tuple elements in consuming switch on address-only enums. CopyPropagation detects this in non-assertion builds. |
+| Affected Swift | 6.3 (Xcode). **Fixed** in Swift 6.4-dev (commit `e93ea1db266`, PR #85745, merged 2025-12-04). |
+| Upstream issue | **swiftlang/swift#85743** (CLOSED) |
+| Status | **WORKAROUND** (`59701830`) — remove when Xcode ships Swift 6.4+ |
+
+**Correction (2026-03-31 follow-up investigation)**: The prior note stated this
+was distinct from #85743. That was based on inability to test on 6.4-dev
+(DeinitDevirtualizer blocked the superrepo build). A standalone reproducer
+matching the exact `Receive.Action` field layout (`Element: ~Copyable` +
+`Optional<Cont>` trivial + `Optional<Array<Cont>>` non-trivial) confirms:
+- Xcode 6.3 + `-sil-verify-all`: crashes with `load [take] $*Optional<Cont>`
+- 6.4-dev + `-sil-verify-all`: passes clean (exit 0)
+
+The CopyPropagation manifestation is the same root cause detected later in the
+pipeline: assertion builds catch it at SILGen; non-assertion builds (Xcode) let
+the bad SIL through until CopyPropagation's ownership canonicalization detects it.
+
+See `/Users/coen/Developer/HANDOFF-copypropagation-noncopyable-enum.md` for full
+investigation record.
+
+**Workaround applied** (commit `59701830`):
+- `@_optimize(none)` on 4 outer async/sync functions (receive, send, next, immediate)
+- Slow-path action handling extracted to `Storage.handleReceive` / `Storage.handleSend` static functions with `@_optimize(none)` (3 handlers)
+- 7 total `@_optimize(none)` annotations across 6 files
+
+**Affected functions** (Bounded + Unbounded, all workaround-annotated):
+- `Bounded.Receiver.receive()` — async, fast + slow path
+- `Bounded.Receiver.Receive.immediate()` — sync
+- `Bounded.Elements.Iterator.next()` — async, fast + slow path
+- `Bounded.Sender.send(_:)` — async, fast + slow path
+- `Bounded.Sender.Send.immediate(_:)` — sync
+- `Unbounded.Receiver.receive()` — async, fast + slow path
+- `Unbounded.Elements.Iterator.next()` — async, fast + slow path
+- `Unbounded.Sender.send(_:)` — sync
+
+**Benchmark impact**: Geometric mean 1.04x vs previous release runs (negligible). Two cancellation benchmarks regressed 0.5–0.8x due to `@_optimize(none)` on the receive path. All throughput/contention/lifecycle benchmarks within 10%.
+
+**When to remove**: When Xcode ships Swift 6.4+ (which includes `e93ea1db266`). Remove all 7 `@_optimize(none)` annotations — search for "CopyPropagation" in WORKAROUND comments.
+
+### nonisolated(nonsending) migration — 2026-03-31
+
+| Field | Value |
+|-------|-------|
+| Severity | LOW (API modernization) |
+| Status | **RESOLVED** |
+
+Migrated 4 channel functions from `isolation: isolated (any Actor)? = #isolation` to `nonisolated(nonsending)`:
+- `Bounded.Receiver.receive()`, `Bounded.Elements.Iterator.next()`
+- `Unbounded.Receiver.receive()`, `Unbounded.Elements.Iterator.next()`
+
+Aligns with existing `nonisolated(nonsending)` usage on `Sender.send(_:)` (already migrated). `Async.Broadcast` subscriber not yet migrated (separate scope).
+
+### Separate blocker: DeinitDevirtualizer on 6.4-dev
+
+Not in this package — affects `Buffer_Primitives_Core` (`Buffer<UInt8>.Unbounded._storage` setter). Blocks the full superrepo release build on 6.4-dev. See `/Users/coen/Developer/swift-primitives/swift-buffer-primitives/HANDOFF-deinit-devirtualizer-crash.md` and `/Users/coen/Developer/HANDOFF-deinit-devirtualizer-upstream.md`.

@@ -68,20 +68,24 @@ extension Async.Waiter {
             self.flag = flag
             self.metadata = metadata
         }
+    }
+}
 
-        /// Creates a resumption thunk for this entry with the given outcome.
-        ///
-        /// Consumes the entry to enforce single-use semantics.
-        ///
-        /// - Parameter outcome: The outcome to resume the continuation with.
-        /// - Returns: A resumption thunk to execute after releasing the lock.
-        @inlinable
-        public consuming func resumption(with outcome: Outcome) -> Async.Waiter.Resumption {
-            let cont = self.continuation
-            _ = consume self
-            return Async.Waiter.Resumption {
-                cont.resume(returning: outcome)
-            }
+// MARK: - Resumption
+
+extension Async.Waiter.Entry {
+    /// Creates a resumption thunk for this entry with the given outcome.
+    ///
+    /// Consumes the entry to enforce single-use semantics.
+    ///
+    /// - Parameter outcome: The outcome to resume the continuation with.
+    /// - Returns: A resumption thunk to execute after releasing the lock.
+    @inlinable
+    public consuming func resumption(with outcome: Outcome) -> Async.Waiter.Resumption {
+        let cont = self.continuation
+        _ = consume self
+        return Async.Waiter.Resumption {
+            cont.resume(returning: outcome)
         }
     }
 }
