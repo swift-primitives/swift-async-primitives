@@ -69,3 +69,15 @@ The end-state solution ([IMPL-070] coroutine Mutex) would eliminate the closure 
 Investigation deferred. Handoff written: `HANDOFF-storage-free-data-structure.md`.
 
 **Applies to**: Timer.Wheel.Storage.Free, swift-slab-primitives
+
+---
+
+## @_optimize(none) Workarounds for CopyPropagation Crash (2026-03-31)
+
+**Date**: 2026-03-31
+
+**Context**: 7 channel functions have `@_optimize(none)` workarounds for a CopyPropagation crash on `switch consume` with ~Copyable enum tuple payloads. Root cause: SILGen `load [take]` on trivial fields (swiftlang/swift#85743, fixed by PR #85745, commit `e93ea1db266`). Verified fixed on Swift 6.4-dev.
+
+When Xcode ships Swift 6.3.1+ or 6.4 containing the fix, remove all 7 `@_optimize(none)` annotations. Tracked in `Research/audit.md` follow-up actions.
+
+**Applies to**: Async.Channel.Bounded (4 functions), Async.Channel.Unbounded (3 functions)
