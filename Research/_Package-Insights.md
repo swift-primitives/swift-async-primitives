@@ -81,3 +81,13 @@ Investigation deferred. Handoff written: `HANDOFF-storage-free-data-structure.md
 When Xcode ships Swift 6.3.1+ or 6.4 containing the fix, remove all 7 `@_optimize(none)` annotations. Tracked in `Research/audit.md` follow-up actions.
 
 **Applies to**: Async.Channel.Bounded (4 functions), Async.Channel.Unbounded (3 functions)
+
+---
+
+## nonisolated(nonsending) Satisfies AsyncIteratorProtocol (2026-03-31)
+
+**Date**: 2026-03-31
+
+**Context**: Empirically confirmed that `nonisolated(nonsending) func next()` (without the `isolation:` parameter) satisfies `AsyncIteratorProtocol`'s `next(isolation:)` requirement. Tested with the specific combination of typed throws (`throws(Async.Channel<Element>.Error)`), `~Copyable` `Element` constraint, and `@_optimize(none)` workaround co-present. Reference this session when migrating other `AsyncIteratorProtocol` conformances.
+
+**Applies to**: Async.Channel.Bounded.AsyncIterator, Async.Channel.Unbounded.AsyncIterator, any future AsyncIteratorProtocol conformances
