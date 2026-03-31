@@ -38,7 +38,7 @@ extension Async {
     ///
     /// // Async side - wait for result
     /// let result = await withCheckedContinuation { continuation in
-    ///     completion.setContinuation(continuation)
+    ///     completion.set(continuation: continuation)
     /// }
     ///
     /// // Sync side - complete (exactly one wins)
@@ -59,12 +59,12 @@ extension Async {
         /// Result type for continuation resume.
         public typealias Result = Swift.Result<Success, Error>
 
-        let state: Atomic<State>
+        private let _state: Atomic<State>
         private let _continuation: Async.Mutex<CheckedContinuation<Result, Never>?>
 
         /// Creates a new completion in pending state.
         public init() {
-            self.state = Atomic(.pending)
+            self._state = Atomic(.pending)
             self._continuation = Async.Mutex(nil)
         }
     }
@@ -126,9 +126,9 @@ extension Async.Completion {
     /// The continuation will be resumed exactly once by whichever
     /// completion method wins the CAS race.
     ///
-    /// - Parameter cont: The continuation to resume with the result.
-    public func setContinuation(_ cont: CheckedContinuation<Result, Never>) {
-        _continuation.withLock { $0 = cont }
+    /// - Parameter continuation: The continuation to resume with the result.
+    public func set(continuation: CheckedContinuation<Result, Never>) {
+        _continuation.withLock { $0 = continuation }
     }
 }
 
@@ -141,7 +141,7 @@ extension Async.Completion {
     ///
     /// - Throws: `Transition.Error.alreadyDone` if not in pending state.
     public func start() throws(Transition.Error) {
-        let (exchanged, _) = state.compareExchange(
+        let (exchanged, _) = _state.compareExchange(
             expected: .pending,
             desired: .running,
             ordering: .acquiringAndReleasing
@@ -156,7 +156,7 @@ extension Async.Completion {
     /// - Parameter value: The success value.
     /// - Throws: `Transition.Error.alreadyDone` if not in running state.
     public func complete(_ value: sending Success) throws(Transition.Error) {
-        let (exchanged, _) = state.compareExchange(
+        let (exchanged, _) = _state.compareExchange(
             expected: .running,
             desired: .completed,
             ordering: .acquiringAndReleasing
@@ -176,7 +176,7 @@ extension Async.Completion {
     ///
     /// - Throws: `Transition.Error.alreadyDone` if not in running state.
     public func timeout() throws(Transition.Error) {
-        let (exchanged, _) = state.compareExchange(
+        let (exchanged, _) = _state.compareExchange(
             expected: .running,
             desired: .timedOut,
             ordering: .acquiringAndReleasing
@@ -197,13 +197,13 @@ extension Async.Completion {
     /// - Throws: `Transition.Error.alreadyDone` if already complete/timed out/failed.
     public func cancel() throws(Transition.Error) {
         // Can cancel from pending or running
-        var (exchanged, original) = state.compareExchange(
+        var (exchanged, original) = _state.compareExchange(
             expected: .pending,
             desired: .cancelled,
             ordering: .acquiringAndReleasing
         )
         if !exchanged && original == .running {
-            (exchanged, _) = state.compareExchange(
+            (exchanged, _) = _state.compareExchange(
                 expected: .running,
                 desired: .cancelled,
                 ordering: .acquiringAndReleasing
@@ -226,7 +226,7 @@ extension Async.Completion {
     /// - Throws: `Transition.Error.alreadyDone` if not in pending state.
     public func fail(_ error: Failure) throws(Transition.Error) {
         // Can fail from pending only
-        let (exchanged, _) = state.compareExchange(
+        let (exchanged, _) = _state.compareExchange(
             expected: .pending,
             desired: .failed,
             ordering: .acquiringAndReleasing
@@ -268,13 +268,13 @@ extension Async.Completion where Failure == Never {
 
 extension Async.Completion {
     /// Current state (for diagnostics).
-    public var currentState: State {
-        state.load(ordering: .acquiring)
+    public var state: State {
+        _state.load(ordering: .acquiring)
     }
 
     /// Whether the completion is in a terminal state.
     public var isTerminal: Bool {
-        switch currentState {
+        switch state {
         case .pending, .running:
             return false
         case .completed, .timedOut, .cancelled, .failed:

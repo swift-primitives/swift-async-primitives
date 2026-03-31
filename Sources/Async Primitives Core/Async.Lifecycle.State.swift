@@ -35,12 +35,12 @@ extension Async.Lifecycle {
     /// let state = Mutex(MyResourceState())
     ///
     /// // Begin shutdown:
-    /// let didBegin = state.withLock { $0.lifecycle.beginShutdown() }
+    /// let didBegin = state.withLock { $0.lifecycle.shutdown.begin() }
     ///
     /// // Complete shutdown when drained:
     /// state.withLock { state in
     ///     if state.activeCount == 0 {
-    ///         state.lifecycle.completeShutdown()
+    ///         state.lifecycle.shutdown.complete()
     ///     }
     /// }
     /// ```
@@ -64,66 +64,56 @@ extension Async.Lifecycle.State {
     public var isOpen: Bool {
         self == .open
     }
-
-    /// Whether the lifecycle is shutting down.
-    ///
-    /// Returns `true` when in `closing` or `closed` state.
-    @inlinable
-    public var isShuttingDown: Bool {
-        self != .open
-    }
-
-    /// Whether shutdown is complete.
-    ///
-    /// Returns `true` only when in the `closed` state.
-    @inlinable
-    public var isShutdownComplete: Bool {
-        self == .closed
-    }
 }
 
-// MARK: - State Transitions
+// MARK: - Shutdown Accessor
 
 extension Async.Lifecycle.State {
-    /// Transitions from `open` to `closing`.
-    ///
-    /// Idempotent: calling on `closing` or `closed` returns `false`
-    /// and has no effect.
-    ///
-    /// ## Locking Contract
-    ///
-    /// Must be called under lock. The return value indicates whether
-    /// the transition occurred, allowing the caller to take action
-    /// (e.g., reject pending waiters) while still holding the lock.
-    ///
-    /// - Returns: `true` if transitioned from `open` to `closing`;
-    ///            `false` if already shutting down.
-    @discardableResult
-    @inlinable
-    public mutating func beginShutdown() -> Bool {
-        guard self == .open else { return false }
-        self = .closing
-        return true
+    @safe
+    public struct Shutdown: ~Copyable, ~Escapable {
+        @usableFromInline
+        let pointer: UnsafeMutablePointer<Async.Lifecycle.State>
+
+        @inlinable @_lifetime(borrow pointer)
+        init(_ pointer: UnsafeMutablePointer<Async.Lifecycle.State>) {
+            self.pointer = pointer
+        }
+
+        /// Whether shutdown is in progress (`closing` or `closed`).
+        @inlinable
+        public var isActive: Bool { unsafe pointer.pointee != .open }
+
+        /// Whether shutdown is complete (`closed`).
+        @inlinable
+        public var isComplete: Bool { unsafe pointer.pointee == .closed }
+
+        /// Transitions from `open` to `closing`.
+        @discardableResult
+        @inlinable
+        public func begin() -> Bool {
+            guard unsafe pointer.pointee == .open else { return false }
+            unsafe pointer.pointee = .closing
+            return true
+        }
+
+        /// Transitions from `closing` to `closed`.
+        @discardableResult
+        @inlinable
+        public func complete() -> Bool {
+            guard unsafe pointer.pointee == .closing else { return false }
+            unsafe pointer.pointee = .closed
+            return true
+        }
     }
 
-    /// Transitions from `closing` to `closed`.
-    ///
-    /// Idempotent: calling on `open` or `closed` returns `false`
-    /// and has no effect.
-    ///
-    /// ## Locking Contract
-    ///
-    /// Must be called under lock. The return value indicates whether
-    /// the transition occurred, allowing the caller to signal
-    /// shutdown-complete waiters while still holding the lock.
-    ///
-    /// - Returns: `true` if transitioned from `closing` to `closed`;
-    ///            `false` if not in `closing` state.
-    @discardableResult
-    @inlinable
-    public mutating func completeShutdown() -> Bool {
-        guard self == .closing else { return false }
-        self = .closed
-        return true
+    /// Shutdown operations accessor.
+    public var shutdown: Shutdown {
+        mutating _read {
+            yield unsafe Shutdown(&self)
+        }
+        mutating _modify {
+            var view = unsafe Shutdown(&self)
+            yield &view
+        }
     }
 }

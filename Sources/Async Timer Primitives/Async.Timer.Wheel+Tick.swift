@@ -19,9 +19,9 @@ extension Async.Timer.Wheel {
     ///
     /// - Complexity: O(1)
     @inlinable
-    func tickNumber(for instant: C.Instant) -> Tick {
+    func tick(for instant: C.Instant) -> Tick {
         let elapsed = start.duration(to: instant)
-        return elapsed.dividedRoundingDown(by: config.tick)
+        return elapsed.divided.roundingDown(by: config.tick)
     }
 
     /// Computes the current slot index at a given level.
@@ -36,8 +36,8 @@ extension Async.Timer.Wheel {
     ///
     /// - Complexity: O(1)
     @inlinable
-    func currentSlot(level: Int) -> Int {
-        Int((tick >> Tick(level * config.slotShift)) & Tick(config.slotMask))
+    func slot(at level: Int) -> Int {
+        Int((tick >> Tick(level * config.slot.shift)) & Tick(config.slot.mask))
     }
 
     /// Finds the appropriate level for a timer with the given delta.
@@ -54,7 +54,7 @@ extension Async.Timer.Wheel {
     /// - Complexity: O(levels), typically O(1) for near-term timers.
     @inlinable
     func level(for delta: Tick) -> Int {
-        let shift = config.slotShift
+        let shift = config.slot.shift
         let slots = Tick(config.slots)
 
         for level in 0..<(config.levels - 1) {
@@ -69,7 +69,7 @@ extension Async.Timer.Wheel {
     /// Computes the slot index for a timer at a given level with the given delta.
     ///
     /// ```
-    /// slot = (currentSlot(level) + offset) & mask
+    /// slot = (slot(at: level) + offset) & mask
     /// where offset = delta >> (level * shift)
     /// ```
     ///
@@ -81,7 +81,7 @@ extension Async.Timer.Wheel {
     /// - Complexity: O(1)
     @inlinable
     func slot(for level: Int, delta: Tick) -> Int {
-        let offset = delta >> Tick(level * config.slotShift)
-        return (currentSlot(level: level) + Int(offset)) & config.slotMask
+        let offset = delta >> Tick(level * config.slot.shift)
+        return (slot(at: level) + Int(offset)) & config.slot.mask
     }
 }

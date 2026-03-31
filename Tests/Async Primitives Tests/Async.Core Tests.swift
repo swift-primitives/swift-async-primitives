@@ -31,72 +31,72 @@ enum Core {
 extension Core.Test.Lifecycle {
     @Test
     func `open state has correct queries`() {
-        let state: Async.Lifecycle.State = .open
+        var state: Async.Lifecycle.State = .open
         #expect(state.isOpen)
-        #expect(!state.isShuttingDown)
-        #expect(!state.isShutdownComplete)
+        #expect(!state.shutdown.isActive)
+        #expect(!state.shutdown.isComplete)
     }
 
     @Test
     func `closing state has correct queries`() {
-        let state: Async.Lifecycle.State = .closing
+        var state: Async.Lifecycle.State = .closing
         #expect(!state.isOpen)
-        #expect(state.isShuttingDown)
-        #expect(!state.isShutdownComplete)
+        #expect(state.shutdown.isActive)
+        #expect(!state.shutdown.isComplete)
     }
 
     @Test
     func `closed state has correct queries`() {
-        let state: Async.Lifecycle.State = .closed
-        #expect(!state.isOpen)
-        #expect(state.isShuttingDown)
-        #expect(state.isShutdownComplete)
-    }
-
-    @Test
-    func `beginShutdown transitions open to closing`() {
-        var state: Async.Lifecycle.State = .open
-        let result = state.beginShutdown()
-        #expect(result)
-        #expect(state == .closing)
-    }
-
-    @Test
-    func `beginShutdown is idempotent on closing`() {
-        var state: Async.Lifecycle.State = .closing
-        let result = state.beginShutdown()
-        #expect(!result)
-        #expect(state == .closing)
-    }
-
-    @Test
-    func `beginShutdown is idempotent on closed`() {
         var state: Async.Lifecycle.State = .closed
-        let result = state.beginShutdown()
+        #expect(!state.isOpen)
+        #expect(state.shutdown.isActive)
+        #expect(state.shutdown.isComplete)
+    }
+
+    @Test
+    func `shutdown begin transitions open to closing`() {
+        var state: Async.Lifecycle.State = .open
+        let result = state.shutdown.begin()
+        #expect(result)
+        #expect(state == .closing)
+    }
+
+    @Test
+    func `shutdown begin is idempotent on closing`() {
+        var state: Async.Lifecycle.State = .closing
+        let result = state.shutdown.begin()
+        #expect(!result)
+        #expect(state == .closing)
+    }
+
+    @Test
+    func `shutdown begin is idempotent on closed`() {
+        var state: Async.Lifecycle.State = .closed
+        let result = state.shutdown.begin()
         #expect(!result)
         #expect(state == .closed)
     }
 
     @Test
-    func `completeShutdown transitions closing to closed`() {
+    func `shutdown complete transitions closing to closed`() {
         var state: Async.Lifecycle.State = .closing
-        let result = state.completeShutdown()
+        let result = state.shutdown.complete()
         #expect(result)
         #expect(state == .closed)
     }
 
     @Test
-    func `completeShutdown is idempotent on open`() {
+    func `shutdown complete is idempotent on open`() {
         var state: Async.Lifecycle.State = .open
-        let result = state.completeShutdown()
+        let result = state.shutdown.complete()
         #expect(!result)
         #expect(state == .open)
     }
 
     @Test
-    func `completeShutdown is idempotent on closed`() {
+    func `shutdown complete is idempotent on closed`() {
         var state: Async.Lifecycle.State = .closed
-        let result = state.completeShutdown()
+        let result = state.shutdown.complete()
         #expect(!result)
         #expect(state == .closed)
     }
@@ -106,23 +106,23 @@ extension Core.Test.Lifecycle {
         var state: Async.Lifecycle.State = .open
         #expect(state.isOpen)
 
-        let didBegin = state.beginShutdown()
+        let didBegin = state.shutdown.begin()
         #expect(didBegin)
         #expect(state == .closing)
-        #expect(state.isShuttingDown)
-        #expect(!state.isShutdownComplete)
+        #expect(state.shutdown.isActive)
+        #expect(!state.shutdown.isComplete)
 
-        let didComplete = state.completeShutdown()
+        let didComplete = state.shutdown.complete()
         #expect(didComplete)
         #expect(state == .closed)
-        #expect(state.isShutdownComplete)
+        #expect(state.shutdown.isComplete)
     }
 
     @Test
     func `cannot skip closing state`() {
         var state: Async.Lifecycle.State = .open
         // Cannot go directly from open to closed
-        let result = state.completeShutdown()
+        let result = state.shutdown.complete()
         #expect(!result)
         #expect(state == .open)
     }
@@ -211,7 +211,7 @@ extension Core.Test.Promise {
     func `init creates unfulfilled promise`() {
         let promise = Async.Promise<Int>()
         #expect(!promise.isFulfilled)
-        #expect(promise.fulfilledValue == nil)
+        #expect(promise.fulfilled == nil)
     }
 
     @Test
@@ -220,7 +220,7 @@ extension Core.Test.Promise {
         let result = promise.fulfill(42)
         #expect(result)
         #expect(promise.isFulfilled)
-        #expect(promise.fulfilledValue == 42)
+        #expect(promise.fulfilled == 42)
     }
 
     @Test
@@ -229,7 +229,7 @@ extension Core.Test.Promise {
         #expect(promise.fulfill(1))
         #expect(!promise.fulfill(2))
         // First value wins
-        #expect(promise.fulfilledValue == 1)
+        #expect(promise.fulfilled == 1)
     }
 
     @Test
@@ -328,7 +328,7 @@ extension Core.Test.Barrier {
     @Test
     func `init creates unreleased barrier`() {
         let barrier = Async.Barrier(parties: 3)
-        #expect(barrier.arrivedCount == 0)
+        #expect(barrier.arrived == 0)
         #expect(!barrier.isReleased)
     }
 
@@ -342,7 +342,7 @@ extension Core.Test.Barrier {
         }
         #expect(publication.take() == true)
         #expect(barrier.isReleased)
-        #expect(barrier.arrivedCount == 1)
+        #expect(barrier.arrived == 1)
     }
 
     @Test
@@ -355,12 +355,12 @@ extension Core.Test.Barrier {
 
         barrier.arrive { pub1.publish(true) }
         #expect(pub1.take() == nil)
-        #expect(barrier.arrivedCount == 1)
+        #expect(barrier.arrived == 1)
         #expect(!barrier.isReleased)
 
         barrier.arrive { pub2.publish(true) }
         #expect(pub2.take() == nil)
-        #expect(barrier.arrivedCount == 2)
+        #expect(barrier.arrived == 2)
         #expect(!barrier.isReleased)
 
         // Last party triggers all callbacks
@@ -368,7 +368,7 @@ extension Core.Test.Barrier {
         #expect(pub1.take() == true)
         #expect(pub2.take() == true)
         #expect(pub3.take() == true)
-        #expect(barrier.arrivedCount == 3)
+        #expect(barrier.arrived == 3)
         #expect(barrier.isReleased)
     }
 
@@ -396,7 +396,7 @@ extension Core.Test.Barrier {
         }
 
         #expect(barrier.isReleased)
-        #expect(barrier.arrivedCount == 3)
+        #expect(barrier.arrived == 3)
     }
     #endif
 }
@@ -408,7 +408,7 @@ extension Core.Test.Completion {
     @Test
     func `init creates pending state`() {
         let completion = Async.Completion<Int, Never>()
-        #expect(completion.currentState == .pending)
+        #expect(completion.state == .pending)
         #expect(!completion.isTerminal)
     }
 
@@ -416,7 +416,7 @@ extension Core.Test.Completion {
     func `start transitions to running`() throws {
         let completion = Async.Completion<Int, Never>()
         try completion.start()
-        #expect(completion.currentState == .running)
+        #expect(completion.state == .running)
         #expect(!completion.isTerminal)
     }
 
@@ -425,7 +425,7 @@ extension Core.Test.Completion {
         let completion = Async.Completion<Int, Never>()
         try completion.start()
         try completion.complete(42)
-        #expect(completion.currentState == .completed)
+        #expect(completion.state == .completed)
         #expect(completion.isTerminal)
     }
 
@@ -434,7 +434,7 @@ extension Core.Test.Completion {
         let completion = Async.Completion<Int, Never>()
         try completion.start()
         try completion.timeout()
-        #expect(completion.currentState == .timedOut)
+        #expect(completion.state == .timedOut)
         #expect(completion.isTerminal)
     }
 
@@ -442,7 +442,7 @@ extension Core.Test.Completion {
     func `cancel from pending transitions to cancelled`() throws {
         let completion = Async.Completion<Int, Never>()
         try completion.cancel()
-        #expect(completion.currentState == .cancelled)
+        #expect(completion.state == .cancelled)
         #expect(completion.isTerminal)
     }
 
@@ -451,7 +451,7 @@ extension Core.Test.Completion {
         let completion = Async.Completion<Int, Never>()
         try completion.start()
         try completion.cancel()
-        #expect(completion.currentState == .cancelled)
+        #expect(completion.state == .cancelled)
         #expect(completion.isTerminal)
     }
 
@@ -520,7 +520,7 @@ extension Core.Test.Completion {
         let completion = Async.Completion<Int, TestError>()
         do {
             try completion.fail(.testFailure)
-            #expect(completion.currentState == .failed)
+            #expect(completion.state == .failed)
             #expect(completion.isTerminal)
         } catch {
             Issue.record("Unexpected error")
@@ -544,7 +544,7 @@ extension Core.Test.Completion {
         let completion = Async.Completion<Int, Never>()
 
         let result = await withCheckedContinuation { continuation in
-            completion.setContinuation(continuation)
+            completion.set(continuation: continuation)
             try! completion.start()
             try! completion.complete(42)
         }
@@ -561,7 +561,7 @@ extension Core.Test.Completion {
         let completion = Async.Completion<Int, Never>()
 
         let result = await withCheckedContinuation { continuation in
-            completion.setContinuation(continuation)
+            completion.set(continuation: continuation)
             try! completion.start()
             try! completion.cancel()
         }
@@ -578,7 +578,7 @@ extension Core.Test.Completion {
         let completion = Async.Completion<Int, Never>()
 
         let result = await withCheckedContinuation { continuation in
-            completion.setContinuation(continuation)
+            completion.set(continuation: continuation)
             try! completion.start()
             try! completion.timeout()
         }

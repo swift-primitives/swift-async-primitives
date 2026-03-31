@@ -124,7 +124,7 @@ extension Async.Barrier {
     }
 
     /// Current count of parties that have arrived.
-    public var arrivedCount: Int {
+    public var arrived: Int {
         _state.withLock { $0.arrived }
     }
 

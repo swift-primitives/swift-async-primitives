@@ -39,6 +39,10 @@ extension Async.Broadcast {
 // MARK: - Buffer Management
 
 extension Async.Broadcast.State {
+    // WORKAROUND: [API-NAME-002] compound name in internal implementation layer.
+    // WHY: Per [IMPL-024] compound names are acceptable in the static/implementation layer.
+    // WHEN TO REMOVE: When cursor/buffer operations are restructured as nested accessors.
+
     /// Compute minimum cursor by scanning all subscribers.
     ///
     /// O(n) where n = subscriber count - acceptable for typical usage.

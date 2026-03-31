@@ -129,7 +129,7 @@ extension Async.Promise {
     ///
     /// Returns `nil` if the promise has not yet been fulfilled.
     /// This is a non-blocking check.
-    public var fulfilledValue: Value? {
+    public var fulfilled: Value? {
         _state.withLock { $0.fulfilled }
     }
 }
