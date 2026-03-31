@@ -100,53 +100,12 @@ extension Async.Timer.Wheel.Config {
     }
 }
 
-// MARK: - Slot Accessor
+// MARK: - Accessor Properties
 
 extension Async.Timer.Wheel.Config {
-    /// Namespace accessor for slot-derived constants.
-    public struct Slot: Sendable {
-        @usableFromInline let config: Async.Timer.Wheel<C>.Config
-
-        @usableFromInline
-        init(config: Async.Timer.Wheel<C>.Config) {
-            self.config = config
-        }
-
-        /// Bit mask for slot index computation: `slots - 1`.
-        @inlinable
-        public var mask: Int { config.slots - 1 }
-
-        /// Bit shift for level computation: `log2(slots)`.
-        @inlinable
-        public var shift: Int { config.slots.trailingZeroBitCount }
-    }
-
     /// Slot-derived constants.
     @inlinable
     public var slot: Slot { Slot(config: self) }
-}
-
-// MARK: - Range Accessor
-
-extension Async.Timer.Wheel.Config {
-    /// Namespace accessor for range-derived constants.
-    public struct Range: Sendable {
-        @usableFromInline let config: Async.Timer.Wheel<C>.Config
-
-        @usableFromInline
-        init(config: Async.Timer.Wheel<C>.Config) {
-            self.config = config
-        }
-
-        /// Maximum representable ticks: `slots^levels`.
-        ///
-        /// Timers with deadlines beyond this range from the current tick
-        /// cannot be scheduled and will return `nil` from `schedule()`.
-        @inlinable
-        public var ticks: UInt64 {
-            UInt64(1) << UInt64(config.levels * config.slot.shift)
-        }
-    }
 
     /// Range-derived constants.
     @inlinable
@@ -179,66 +138,10 @@ extension Async.Timer.Wheel.Config {
 
         return .seconds(rangeSeconds) + .nanoseconds(rangeAttos / 1_000_000_000)
     }
-}
-
-// MARK: - Level Accessor
-
-extension Async.Timer.Wheel.Config {
-    /// Namespace accessor for level-derived computations.
-    public struct Level: Sendable {
-        @usableFromInline let config: Async.Timer.Wheel<C>.Config
-
-        @usableFromInline
-        init(config: Async.Timer.Wheel<C>.Config) {
-            self.config = config
-        }
-
-        /// Returns the tick range covered by a specific level.
-        ///
-        /// Level 0 covers ticks 0..<slots.
-        /// Level 1 covers ticks 0..<(slots^2).
-        /// And so on.
-        ///
-        /// - Parameter level: The level index (0-based).
-        /// - Returns: The number of ticks representable at this level.
-        @inlinable
-        public func range(_ level: Int) -> UInt64 {
-            precondition(level >= 0 && level < config.levels, "level out of range")
-            return UInt64(1) << UInt64((level + 1) * config.slot.shift)
-        }
-    }
 
     /// Level-derived computations.
     @inlinable
     public var level: Level { Level(config: self) }
-}
-
-// MARK: - Ticks Accessor
-
-extension Async.Timer.Wheel.Config {
-    /// Namespace accessor for tick-derived computations.
-    public struct Ticks: Sendable {
-        @usableFromInline let config: Async.Timer.Wheel<C>.Config
-
-        @usableFromInline
-        init(config: Async.Timer.Wheel<C>.Config) {
-            self.config = config
-        }
-
-        /// Returns the tick span per slot at a specific level.
-        ///
-        /// Level 0: 1 tick per slot.
-        /// Level 1: `slots` ticks per slot.
-        /// Level N: `slots^N` ticks per slot.
-        ///
-        /// - Parameter level: The level index (0-based).
-        /// - Returns: The number of ticks each slot represents.
-        @inlinable
-        public func perSlot(_ level: Int) -> UInt64 {
-            precondition(level >= 0 && level < config.levels, "level out of range")
-            return UInt64(1) << UInt64(level * config.slot.shift)
-        }
-    }
 
     /// Tick-derived computations.
     @inlinable
