@@ -197,6 +197,43 @@ extension Async {
     }
 }
 
+// MARK: - Batch Push (~Copyable)
+
+extension Async.Bridge where Element: ~Copyable {
+    /// Push elements by draining a source from a sync context.
+    ///
+    /// Calls `next` repeatedly inside a single lock acquisition until
+    /// it returns `nil`. All elements are buffered before signaling
+    /// any waiting consumer.
+    ///
+    /// After `finish()`, pushes are silently ignored and the source
+    /// is not drained.
+    ///
+    /// ```swift
+    /// bridge.push { source.front.take }
+    /// ```
+    ///
+    /// - Parameter next: A closure that produces the next element,
+    ///   or `nil` when the source is exhausted.
+    public func push(draining next: () -> Element?) {
+        let continuationToResume: CheckedContinuation<Void, Never>? = _state.withLock { state in
+            guard !state.isFinished else { return nil }
+            while let element = next() {
+                state.buffer.push(consume element, to: .back)
+            }
+            if let cont = state.continuation {
+                state.continuation = nil
+                #if DEBUG
+                state.hasWaitingConsumer = false
+                #endif
+                return cont
+            }
+            return nil
+        }
+        continuationToResume?.resume()
+    }
+}
+
 // MARK: - Batch Push (Copyable)
 
 extension Async.Bridge where Element: Copyable {
