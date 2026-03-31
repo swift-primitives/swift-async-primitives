@@ -41,7 +41,7 @@ extension Async.Precedence {
     ///
     /// ```swift
     /// let outcome = Async.Precedence.resolve(
-    ///     shutdown: lifecycle.isShuttingDown,
+    ///     shutdown: lifecycle.shutdown.isActive,
     ///     cancelled: flag.cancelled,
     ///     timedOut: flag.timedOut,
     ///     success: .success(resource),
