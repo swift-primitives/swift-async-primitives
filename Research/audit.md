@@ -70,32 +70,43 @@
 
 ---
 
-## Implementation — 2026-03-27
+## Implementation — 2026-04-01
 
 ### Scope
 
-- **Target**: swift-async-primitives — all 6 source targets
-- **Skill**: implementation — [IMPL-*], [PATTERN-*]
-- **Files**: 55 source files
+- **Target**: swift-async-primitives — all 12 source modules
+- **Skill**: implementation — [IMPL-*], [PATTERN-*], [COPY-FIX-*]
+- **Files**: 87 source files across 12 modules
+- **Prior**: Replaces Implementation section dated 2026-03-27 (6 findings, all OPEN). All 6 prior findings resolved during the code-surface refactor cycle: compound methods renamed to single-word names (`send`, `receive`, `suspend`, `cancel`, `close`, `tick(for:)`, `slot(at:)`, `level(for:)`, `var cursor`), Config accessors restructured as nested accessors (`config.slot`, `config.level`, `config.ticks`), `dividedRoundingDown(by:)` refactored to `duration.divided.roundingDown(by:)`.
 
 ### Findings
 
 | # | Severity | Rule | Location | Finding | Status |
 |---|----------|------|----------|---------|--------|
-| 1 | LOW | [API-NAME-002] | Async.Channel.Bounded.State.swift:122 | `popNextSender(resumeCancelled:)` — internal compound method without WORKAROUND annotation (compare `popEligible` which has one) | OPEN |
-| 2 | LOW | [API-NAME-002] | Async.Channel.Bounded.State.swift:178,205,244,300,347,401 | Internal state machine methods `trySend`, `sendSuspended`, `sendCancelled`, `tryReceive`, `receiveSuspended`, `receiveCancelled` — compound names without WORKAROUND annotations | OPEN |
-| 3 | LOW | [API-NAME-002] | Async.Timer.Wheel.Tick.swift:29 | `tickNumber(for:)` — `@inlinable` public method with compound name | OPEN |
-| 4 | LOW | [API-NAME-002] | Async.Timer.Wheel.Config.swift:102,117 | `levelRange(_:)`, `ticksPerSlot(_:)` — `@inlinable` public methods with compound names | OPEN |
-| 5 | LOW | [API-NAME-002] | Async.Timer.Wheel.Tick.swift:100 | `dividedRoundingDown(by:)` — public extension method on `Duration` with compound name | OPEN |
-| 6 | LOW | [API-NAME-002] | Async.Broadcast.State.swift:60 | `minCursor()`, `pruneBuffer()` — internal compound methods | OPEN |
+| 1 | LOW | [IMPL-002] | Async.Timer.Wheel.Storage.swift:45 | `Index<Node>.Count(Cardinal(UInt(capacity)))` — 3-deep conversion chain. Infrastructure gap: no direct `Count.init(Int)` bridge in cardinal/index primitives. | OPEN |
+| 2 | LOW | [IMPL-002] | Async.Timer.Wheel.ID.swift:76 | `Index<Node>(Ordinal(UInt(id.index)))` — 3-deep conversion chain. Same infrastructure gap: no direct `Index.init(Int)` bridge. | OPEN |
+
+### Rules Passing Clean
+
+| Rule | Assessment |
+|------|-----------|
+| [IMPL-INTENT] | **Pass** — Code reads as intent throughout. Deferred-resumption pattern (compute under lock, resume outside) consistently applied. Channel state machines use single-word domain verbs. |
+| [IMPL-002] | **Pass** (call sites) — Zero `.rawValue` chains across 87 files (verified by grep). Two conversion chains in Timer boundary methods (#1, #2). |
+| [IMPL-010] | **Pass** — `Int` conversions confined to boundary methods (`_makeID`, `_storageIndex`, `slot(at:)`, `slot(for:delta:)`). No `Int()` at domain call sites. |
+| [IMPL-060] | **Pass** — Ecosystem types used: `Buffer.Arena.Bounded` (timer storage), `Handle<_Entry>` (timer IDs), `Index<Node>` (typed indices), `Ownership.Slot` (channel element transfer), `Ownership.Mutable.Unchecked` (channel storage), `Deque` (channel/broadcast buffers), `Dictionary.Ordered` (broadcast subscribers). |
+| [IMPL-064] | **Pass** — `~Copyable` used where appropriate: `Wheel`, `Storage`, `Channel.Bounded`, `Channel.Unbounded`, `Sender`, `Receiver`, `Ends`, `Take`, `Bridge`, `Waiter.Entry`, `Waiter.Resumption`, `Waiter.Queue.Flagged`. Copyable types (namespace enums, config structs, error types, identifiers) are justified. |
+| [IMPL-068] | **Pass** — 5 `@unchecked Sendable` sites all justified: `Timer.Wheel.Storage` (single-actor, documented), `Mutex._Value`/`_Lock` (@_rawLayout), `Mutex` (wraps synchronized internals), `Mutex` embedded fallback (class variant). |
+| [PATTERN-009] | **Pass** — Zero Foundation imports across all 87 files. |
+| [PATTERN-016] | **Pass** — All 15 WORKAROUND annotations are properly structured (WHY, WHEN TO REMOVE, TRACKING). 11 CopyPropagation workarounds + 4 compound-identifier workarounds. |
+| [PATTERN-017] | **Pass** — Zero `.rawValue` at any call site. |
+| [COPY-FIX-003] | **Pass** — All extensions on ~Copyable-generic types include `where Element: ~Copyable`. |
+| [COPY-FIX-004] | **Pass** — Conditional conformances in same file where needed. |
 
 ### Summary
 
-6 findings: 0 critical, 0 high, 0 medium, 6 low.
+2 findings: 0 critical, 0 high, 0 medium, 2 low. **2 OPEN.**
 
-Internal state machine methods consistently use compound names. The waiter queue extensions (`popEligible`, `reapFlagged`) have documented WORKAROUND annotations with tracking — the state machine methods lack this consistency. This is low severity because these are internal types, but adding WORKAROUND annotations would document intent.
-
-The deferred-resumption pattern (compute under lock, resume outside) is consistently applied across all channel types. Expression-first style and typed throws are well used throughout.
+Both findings are the same infrastructure gap: conversion chains in Timer.Wheel boundary methods due to missing `Count.init(Int)` and `Index.init(Int)` bridges in cardinal/index primitives. The conversions are correctly placed at boundaries per [IMPL-010] — the chains are just longer than necessary. Prior 6 findings all resolved during the code-surface refactor cycle.
 
 ---
 
