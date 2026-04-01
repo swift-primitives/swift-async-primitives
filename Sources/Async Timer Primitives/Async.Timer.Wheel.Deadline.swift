@@ -9,7 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-extension Async.Timer.Wheel.Node {
+extension Async.Timer.Wheel {
     /// Bundles the deadline instant with its tick representation.
     @usableFromInline
     struct Deadline: Sendable {

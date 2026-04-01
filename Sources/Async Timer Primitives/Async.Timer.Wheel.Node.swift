@@ -9,16 +9,16 @@
 //
 // ===----------------------------------------------------------------------===//
 
+import Buffer_Primitives
+
 extension Async.Timer.Wheel {
-    /// Internal node representing a scheduled timer in storage.
+    /// Payload stored in each timer node.
     ///
-    /// Nodes are stored in a slab allocator and linked into intrusive
-    /// doubly-linked lists within slots. Each node contains:
-    /// - Timer metadata (ID, deadline)
-    /// - Position tracking (level, slot)
-    /// - Intrusive list pointers (prev, next)
+    /// Contains timer metadata (ID, deadline) and position tracking
+    /// (level, slot). Linked list pointers are managed by
+    /// `Buffer.Linked.Node`'s `links` field.
     @usableFromInline
-    struct Node: Sendable {
+    struct Payload: Sendable {
         /// The timer's unique identifier.
         @usableFromInline
         var id: ID
@@ -35,15 +35,7 @@ extension Async.Timer.Wheel {
         @usableFromInline
         var slot: UInt16
 
-        /// Previous node in the slot's linked list (nil if head).
-        @usableFromInline
-        var prev: Index<Node>?
-
-        /// Next node in the slot's linked list (nil if tail).
-        @usableFromInline
-        var next: Index<Node>?
-
-        /// Creates a node with the given parameters.
+        /// Creates a payload with the given parameters.
         @usableFromInline
         init(
             id: ID,
@@ -55,8 +47,13 @@ extension Async.Timer.Wheel {
             self.deadline = deadline
             self.level = UInt8(level)
             self.slot = UInt16(slot)
-            self.prev = nil
-            self.next = nil
         }
     }
+
+    /// A timer node: payload + doubly-linked list pointers.
+    ///
+    /// Uses `Buffer.Linked.Node` to embed `links: InlineArray<2, Index<Node>>`
+    /// alongside the payload, enabling `Buffer.Link<2>` topology operations.
+    @usableFromInline
+    typealias Node = Buffer<Payload>.Linked<2>.Node
 }

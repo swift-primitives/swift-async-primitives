@@ -9,6 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
+import Buffer_Primitives
+
 extension Async.Timer.Wheel {
     /// Arena-backed storage for timer nodes.
     ///
@@ -36,14 +38,18 @@ extension Async.Timer.Wheel {
         @usableFromInline
         var arena: Buffer<Node>.Arena.Bounded
 
+        /// Sentinel value for linked list headers (derived from arena capacity).
+        @usableFromInline
+        let sentinel: Index<Node>
+
         /// Creates storage with the specified capacity.
         ///
         /// - Parameter capacity: Maximum number of concurrent timers.
         @usableFromInline
         init(capacity: Int) {
-            self.arena = .init(
-                minimumCapacity: Index<Node>.Count(Cardinal(UInt(capacity)))
-            )
+            let count = Index<Node>.Count(Cardinal(UInt(capacity)))
+            self.arena = .init(minimumCapacity: count)
+            self.sentinel = Index<Node>(Ordinal(UInt(capacity)))
         }
     }
 }
@@ -83,8 +89,8 @@ extension Async.Timer.Wheel.Storage {
 
     /// Returns an unsafe mutable pointer to the node at the given slot.
     ///
-    /// Use this to read or mutate node fields (e.g., intrusive list pointers)
-    /// in-place. The pointer is valid until the arena is deallocated.
+    /// Use this to read or mutate node fields in-place.
+    /// The pointer is valid until the arena is deallocated.
     ///
     /// - Parameter index: The typed slot index.
     /// - Precondition: The slot must be occupied.

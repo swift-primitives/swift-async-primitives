@@ -9,79 +9,53 @@
 //
 // ===----------------------------------------------------------------------===//
 
-// MARK: - Intrusive List Operations
+import Buffer_Primitives
+
+// MARK: - Link Topology Operations (delegated to Buffer.Link)
 
 extension Async.Timer.Wheel {
+
+    /// Provides stable `inout` access to a level's slot header.
+    @usableFromInline
+    mutating func withSlot<T>(
+        level: Int,
+        slot: Int,
+        _ body: (inout Buffer<Payload>.Linked<2>.Header) -> T
+    ) -> T {
+        unsafe levels[level].slots.withUnsafeMutableBufferPointer { buffer in
+            unsafe body(&buffer[slot])
+        }
+    }
+
     /// Appends a node to the tail of a slot's list.
     ///
-    /// - Parameters:
-    ///   - index: The typed index of the node to append.
-    ///   - slot: The slot to append to.
-    ///
     /// - Complexity: O(1)
-    /// - Precondition: The node at `index` must be occupied with nil prev/next.
     @usableFromInline
-    mutating func append(_ index: Index<Node>, to slot: inout Slot) {
-        if let tailIndex = slot.tail {
-            // Link to existing tail
-            unsafe storage.pointer(at: tailIndex).pointee.next = index
-            unsafe storage.pointer(at: index).pointee.prev = tailIndex
-        } else {
-            // First node
-            slot.head = index
+    mutating func append(_ index: Index<Node>, to header: inout Buffer<Payload>.Linked<2>.Header) {
+        unsafe Buffer<Payload>.Link<2>.append(index, header: &header) { idx in
+            unsafe self.storage.pointer(at: idx)
         }
-        slot.tail = index
-        unsafe storage.pointer(at: index).pointee.next = nil
-        slot.count += 1
     }
 
     /// Removes a node from a slot's list.
     ///
-    /// - Parameters:
-    ///   - index: The typed index of the node to remove.
-    ///   - slot: The slot to remove from.
-    ///
     /// - Complexity: O(1)
     /// - Precondition: The node must be in this slot's list.
     @usableFromInline
-    mutating func remove(_ index: Index<Node>, from slot: inout Slot) {
-        let nodePtr = unsafe storage.pointer(at: index)
-        let prevIndex = unsafe nodePtr.pointee.prev
-        let nextIndex = unsafe nodePtr.pointee.next
-
-        // Update previous node's next pointer
-        if let p = prevIndex {
-            unsafe storage.pointer(at: p).pointee.next = nextIndex
-        } else {
-            // Removing head
-            slot.head = nextIndex
+    mutating func remove(_ index: Index<Node>, from header: inout Buffer<Payload>.Linked<2>.Header) {
+        unsafe Buffer<Payload>.Link<2>.unlink(index, header: &header) { idx in
+            unsafe self.storage.pointer(at: idx)
         }
-
-        // Update next node's prev pointer
-        if let n = nextIndex {
-            unsafe storage.pointer(at: n).pointee.prev = prevIndex
-        } else {
-            // Removing tail
-            slot.tail = prevIndex
-        }
-
-        // Clear the removed node's links
-        unsafe nodePtr.pointee.prev = nil
-        unsafe nodePtr.pointee.next = nil
-
-        slot.count -= 1
     }
 
-    /// Removes and returns the first node's typed index from a slot.
+    /// Removes and returns the first node's index from a slot.
     ///
-    /// - Parameter slot: The slot to pop from.
-    /// - Returns: The typed index of the removed node, or nil if empty.
-    ///
+    /// - Returns: The index of the removed node, or nil if empty.
     /// - Complexity: O(1)
     @usableFromInline
-    mutating func popFirst(from slot: inout Slot) -> Index<Node>? {
-        guard let index = slot.head else { return nil }
-        remove(index, from: &slot)
-        return index
+    mutating func popFirst(from header: inout Buffer<Payload>.Linked<2>.Header) -> Index<Node>? {
+        unsafe Buffer<Payload>.Link<2>.unlinkFirst(header: &header) { idx in
+            unsafe self.storage.pointer(at: idx)
+        }
     }
 }

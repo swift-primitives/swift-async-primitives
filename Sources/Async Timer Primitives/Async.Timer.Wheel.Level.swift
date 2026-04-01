@@ -9,6 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
+import Buffer_Primitives
+
 extension Async.Timer.Wheel {
     /// A single level in the hierarchical timer wheel.
     ///
@@ -24,16 +26,21 @@ extension Async.Timer.Wheel {
     /// Timers cascade from higher levels to lower levels as time advances.
     @usableFromInline
     struct Level: Sendable {
-        /// The slots in this level.
+        /// The slot headers in this level — one linked list per slot.
         @usableFromInline
-        var slots: [Slot]
+        var slots: [Buffer<Payload>.Linked<2>.Header]
 
         /// Creates a level with the specified number of slots.
         ///
-        /// - Parameter slotCount: The number of slots (must match config.slots).
+        /// - Parameters:
+        ///   - slotCount: The number of slots (must match config.slots).
+        ///   - sentinel: The sentinel value for linked list headers.
         @usableFromInline
-        init(slotCount: Int) {
-            self.slots = [Slot](repeating: Slot(), count: slotCount)
+        init(slotCount: Int, sentinel: Index<Node>) {
+            self.slots = [Buffer<Payload>.Linked<2>.Header](
+                repeating: Buffer<Payload>.Linked<2>.Header(sentinel: sentinel),
+                count: slotCount
+            )
         }
     }
 }

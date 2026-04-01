@@ -95,8 +95,11 @@ extension Async.Timer {
             self.config = config
             self.start = clock.now
             self.tick = 0
-            self.levels = (0..<config.levels).map { _ in Level(slotCount: config.slots) }
             self.storage = Storage(capacity: config.capacity)
+            let sentinel = storage.sentinel
+            self.levels = (0..<config.levels).map { _ in
+                Level(slotCount: config.slots, sentinel: sentinel)
+            }
             self._count = 0
             self.earliest = nil
         }
