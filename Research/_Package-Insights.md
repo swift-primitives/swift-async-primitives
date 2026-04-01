@@ -101,3 +101,13 @@ When Xcode ships Swift 6.3.1+ or 6.4 containing the fix, remove all 7 `@_optimiz
 **Context**: Timer.Wheel.Storage migrated from hand-rolled free-list (`[Node?]` + `Free` + `generation: UInt32`) to `Buffer<Node>.Arena.Bounded`. The arena infrastructure (insert, free, isValid) is in place. However, `Timer.Wheel.schedule()`, `cancel()`, and `advance()` remain unimplemented stubs — they should now use `storage.insert()`, `storage.free()`, and `storage.isValid()`.
 
 **Applies to**: Async.Timer.Wheel.schedule, cancel, advance
+
+---
+
+## Timer.Wheel Intrusive Linked List — Ecosystem Replacement Candidate (2026-04-01)
+
+**Date**: 2026-04-01
+
+**Context**: Data structure triage found that Timer.Wheel's ad-hoc intrusive linked list (Slot/Node with manual next/prev pointer management) may be replaceable by `List.Linked<E, 2>` from `List_Primitives`. This would eliminate ~120 lines of manual list management. However, the list is tightly coupled to arena generation tokens — it may be intentionally lower-level than `List.Linked`. Investigation tracked via `HANDOFF-timer-wheel-intrusive-list.md`.
+
+**Applies to**: Async.Timer.Wheel.Storage, Slot, Node types
