@@ -104,10 +104,12 @@ When Xcode ships Swift 6.3.1+ or 6.4 containing the fix, remove all 7 `@_optimiz
 
 ---
 
-## Timer.Wheel Intrusive Linked List — Ecosystem Replacement Candidate (2026-04-01)
+## Timer.Wheel Intrusive Linked List — Keep Current Design (2026-04-01)
 
 **Date**: 2026-04-01
 
-**Context**: Data structure triage found that Timer.Wheel's ad-hoc intrusive linked list (Slot/Node with manual next/prev pointer management) may be replaceable by `List.Linked<E, 2>` from `List_Primitives`. This would eliminate ~120 lines of manual list management. However, the list is tightly coupled to arena generation tokens — it may be intentionally lower-level than `List.Linked`. Investigation tracked via `HANDOFF-timer-wheel-intrusive-list.md`.
+**Context**: Investigation confirmed that `List.Linked<E, 2>` from `List_Primitives` **cannot** replace Timer.Wheel's intrusive linked list. Two blocking gaps: (1) no `remove(at: Index)` for O(1) positional removal — the cursor/splice API is the #1 tracked gap in list-primitives; (2) no ABA protection — `Storage.Pool` has no generation tokens, so stale cancel handles would silently remove wrong timers. Additionally, ~384 independent lists sharing one `Buffer.Arena.Bounded` is well-supported by the arena but has no API path through `List.Linked`. The ~120 lines of manual list management (now on `Slot` as `append(_:in:)`/`remove(_:in:)`/`popFirst(in:)`) are justified.
 
-**Applies to**: Async.Timer.Wheel.Storage, Slot, Node types
+**Reopen trigger**: If `List.Linked` gains a cursor/splice API AND `Storage.Pool` gains generation-based validation.
+
+**Applies to**: Async.Timer.Wheel.Slot, Node, Storage types
