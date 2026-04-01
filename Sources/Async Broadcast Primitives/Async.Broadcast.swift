@@ -43,7 +43,7 @@ extension Async {
     ///
     /// ## Performance Invariants
     /// - `buffer.first(where:)` is O(buffer.count), acceptable with limit=64
-    /// - `minCursor()` scans subscribers O(n), acceptable for typical subscriber counts
+    /// - `cursor` scans subscribers O(n), acceptable for typical subscriber counts
     ///
     /// ## Concurrency
     /// - Multiple concurrent `next()` calls on same subscription: precondition failure
@@ -115,7 +115,7 @@ extension Async.Broadcast {
             state.buffer.back.push((index, element))
 
             // Trim buffer if needed (keep elements that some subscriber hasn't seen yet)
-            let minCursor = state.minCursor() ?? index
+            let minCursor = state.cursor ?? index
             while state.buffer.count > bufferLimit {
                 if let front = state.buffer.peek.front, front.index < minCursor {
                     _ = state.buffer.front.take

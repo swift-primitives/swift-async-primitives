@@ -16,8 +16,9 @@ extension Async.Timer.Wheel {
     /// removal (given the node's index). The list is doubly-linked via
     /// `prev`/`next` pointers stored in the nodes themselves.
     ///
-    /// Slot is a data-only type. List operations are implemented as methods
-    /// on `Wheel` that take `inout Slot`.
+    /// List operations (`append`, `remove`, `popFirst`) are methods on `Wheel`
+    /// taking `inout Slot` — `Node` and `Storage` are sibling types only
+    /// resolvable in the `Wheel<C>` generic context.
     @usableFromInline
     struct Slot: Sendable {
         /// Index of the first node, or nil if empty.
@@ -49,4 +50,5 @@ extension Async.Timer.Wheel.Slot {
     @usableFromInline
     var isEmpty: Bool { head == nil }
 }
+
 

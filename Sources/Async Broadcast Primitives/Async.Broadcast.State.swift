@@ -39,24 +39,11 @@ extension Async.Broadcast {
 // MARK: - Buffer Management
 
 extension Async.Broadcast.State {
-    // WORKAROUND: [API-NAME-002] compound name in internal implementation layer.
-    // WHY: Per [IMPL-024] compound names are acceptable in the static/implementation layer.
-    // WHEN TO REMOVE: When cursor/buffer operations are restructured as nested accessors.
-
-    /// Compute minimum cursor by scanning all subscribers.
+    /// Minimum cursor position across all subscribers.
     ///
-    /// O(n) where n = subscriber count - acceptable for typical usage.
-    /// Heap removed to avoid stale-entry complexity; scan is simpler and sufficient.
-    func minCursor() -> UInt64? {
+    /// O(n) where n = subscriber count — acceptable for typical usage.
+    var cursor: UInt64? {
         subscribers.values.map(\.cursor).min()
-    }
-
-    /// Prune buffer entries that all subscribers have passed.
-    mutating func pruneBuffer() {
-        guard let min = minCursor() else { return }
-        while let front = buffer.peek.front, front.index < min {
-            _ = buffer.front.take
-        }
     }
 }
 

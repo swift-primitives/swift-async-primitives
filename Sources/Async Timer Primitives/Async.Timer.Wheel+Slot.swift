@@ -9,26 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-// MARK: - Slot Access Helper
-
-extension Async.Timer.Wheel {
-    /// Executes a closure with mutable access to a specific slot.
-    ///
-    /// Uses `withUnsafeMutableBufferPointer` to obtain a stable `inout Slot`
-    /// reference, avoiding repeated indexing and ensuring coherent mutation.
-    ///
-    /// - Parameters:
-    ///   - level: The level index.
-    ///   - slot: The slot index within the level.
-    ///   - body: A closure that receives `inout Slot`.
-    @usableFromInline
-    mutating func withSlot<T>(level: Int, slot: Int, _ body: (inout Slot) -> T) -> T {
-        unsafe levels[level].slots.withUnsafeMutableBufferPointer { buffer in
-            unsafe body(&buffer[slot])
-        }
-    }
-}
-
 // MARK: - Intrusive List Operations
 
 extension Async.Timer.Wheel {
@@ -39,9 +19,9 @@ extension Async.Timer.Wheel {
     ///   - slot: The slot to append to.
     ///
     /// - Complexity: O(1)
-    /// - Precondition: The slot at `index` must be occupied with nil prev/next.
+    /// - Precondition: The node at `index` must be occupied with nil prev/next.
     @usableFromInline
-    mutating func slotAppend(_ index: Index<Node>, to slot: inout Slot) {
+    mutating func append(_ index: Index<Node>, to slot: inout Slot) {
         if let tailIndex = slot.tail {
             // Link to existing tail
             unsafe storage.pointer(at: tailIndex).pointee.next = index
@@ -64,7 +44,7 @@ extension Async.Timer.Wheel {
     /// - Complexity: O(1)
     /// - Precondition: The node must be in this slot's list.
     @usableFromInline
-    mutating func slotRemove(_ index: Index<Node>, from slot: inout Slot) {
+    mutating func remove(_ index: Index<Node>, from slot: inout Slot) {
         let nodePtr = unsafe storage.pointer(at: index)
         let prevIndex = unsafe nodePtr.pointee.prev
         let nextIndex = unsafe nodePtr.pointee.next
@@ -99,9 +79,9 @@ extension Async.Timer.Wheel {
     ///
     /// - Complexity: O(1)
     @usableFromInline
-    mutating func slotPopFirst(from slot: inout Slot) -> Index<Node>? {
+    mutating func popFirst(from slot: inout Slot) -> Index<Node>? {
         guard let index = slot.head else { return nil }
-        slotRemove(index, from: &slot)
+        remove(index, from: &slot)
         return index
     }
 }

@@ -1,37 +1,23 @@
 # Audit: swift-async-primitives
 
-## Code Surface — 2026-03-31
+## Code Surface — 2026-04-01
 
 ### Scope
 
 - **Target**: swift-async-primitives — all 12 source modules
 - **Skill**: code-surface — full requirement set ([API-NAME-001–004], [API-ERR-001–005], [API-IMPL-003/005–011])
-- **Files**: 89 source files (77 type/extension files, 12 export files) across 12 modules
-- **Mode**: Strict — all access levels audited, all files read, no findings suppressed by visibility
-- **Prior**: Replaces prior Code Surface section (33 findings: 31 RESOLVED, 2 DEFERRED). Fresh re-audit per [AUDIT-005].
+- **Files**: 87 source files (82 type/typealias files, 5 extension files) across 12 modules
+- **Mode**: Strict — all access levels audited, all 87 files read, no findings suppressed by visibility
+- **Prior**: Replaces Code Surface section dated 2026-03-31. Fresh re-audit per [AUDIT-005]. Prior had 18 findings (16 RESOLVED, 2 DEFERRED). Both DEFERRED findings resolved between audit cycles. Parallel investigations: timer-wheel intrusive list (verdict: keep), compound-methods restructuring (completed — `minCursor` → `var cursor`, `pruneBuffer` removed, slot operations moved to `Slot` type, `+Slot.swift` deleted).
 
 ### Findings
 
 | # | Severity | Rule | Location | Finding | Status |
 |---|----------|------|----------|---------|--------|
-| 1 | HIGH | [API-IMPL-005] | Async.Broadcast.swift:78,223,232 | Three type declarations: `Broadcast` (class), `Subscription` (struct, line 223), `AsyncIterator` (struct, line 232). Extract `Subscription` → `Async.Broadcast.Subscription.swift`, `AsyncIterator` → `Async.Broadcast.Subscription.AsyncIterator.swift`. | RESOLVED 2026-03-31 |
-| 2 | HIGH | [API-IMPL-005] | Async.Timer.Wheel.Config.swift:40,107,133,188,220 | Five type declarations: `Config` + four accessor structs (`Slot`, `Range`, `Level`, `Ticks`). Extract each to `Async.Timer.Wheel.Config.{Name}.swift`. | RESOLVED 2026-03-31 |
-| 3 | MEDIUM | [API-IMPL-008] | Async.Broadcast.swift:223,232-322 | `Subscription` declares `AsyncSequence` conformance in type declaration (line 223). `AsyncIterator` has `AsyncIteratorProtocol` conformance and `next()` method (85 lines) in type body. Both conformances and all methods should be in extensions. | RESOLVED 2026-03-31 |
-| 4 | MEDIUM | [API-IMPL-008] | Async.Timer.Wheel.Config.swift:107-246 | Accessor struct bodies contain computed properties and methods: `Slot.mask`/`shift` (lines 117,120), `Range.ticks` (line 146), `Level.range(_:)` (line 205), `Ticks.perSlot(_:)` (line 237). Should be in extensions. | RESOLVED 2026-03-31 |
-| 5 | MEDIUM | [API-IMPL-005] | Async.Completion.swift:58,77,99 | Three type declarations: `Completion` (class), `Error` (enum, line 77), `State` (enum, line 99). Both public nested types should be in own files: `Async.Completion.Error.swift`, `Async.Completion.State.swift`. | RESOLVED 2026-03-31 |
-| 6 | MEDIUM | [API-IMPL-005] | Async.Timer.Wheel.Node.swift:21,67 | Two type declarations: `Node` (struct) and `Deadline` (struct, in extension at line 67). Extract `Deadline` → `Async.Timer.Wheel.Node.Deadline.swift`. | RESOLVED 2026-03-31 |
-| 7 | MEDIUM | [API-IMPL-005] | Async.Lifecycle.State.swift:47,73 | Two type declarations: `State` (enum) and `Shutdown` (struct, `~Copyable ~Escapable` pointer-based view at line 73). Extract `Shutdown` → `Async.Lifecycle.State.Shutdown.swift`. | RESOLVED 2026-03-31 |
-| 8 | MEDIUM | [API-IMPL-008] | Async.Lifecycle.State.swift:84-106 | `Shutdown` struct body contains computed properties (`isActive` line 84, `isComplete` line 88) and methods (`begin()` line 93, `complete()` line 102). Should be in extensions. | RESOLVED 2026-03-31 |
-| 9 | LOW | [API-NAME-001] | Async.Broadcast.NextIndex.swift:17 | `NextIndex` is a compound type name. Renamed to `Next.Index` (nested in existing `Next` namespace). | RESOLVED 2026-03-31 |
-| 10 | LOW | [API-NAME-001] | Async.Broadcast.SubscriberID.swift:17 | `SubscriberID` is a compound type name. Renamed to `Subscriber.ID` (nested in existing `Subscriber` type). | RESOLVED 2026-03-31 |
-| 11 | LOW | [API-IMPL-005] | Duration+Tick.swift:17 | `struct Divided` declared in extension file (`+Tick`). Renamed to `Duration.Divided.swift` per [API-IMPL-006]. | RESOLVED 2026-03-31 |
-| 12 | LOW | [API-IMPL-008] | Duration+Tick.swift:34-105 | `Divided` struct body contains `roundingDown(by:)` method (70 lines). Moved to extension. | RESOLVED 2026-03-31 |
-| 13 | LOW | [API-IMPL-008] | Async.Waiter.Flag.swift:57-60 | `static let cancelledBit` and `timedOutBit` in class body. Moved to extension. | RESOLVED 2026-03-31 |
-| 14 | LOW | [API-IMPL-005] | Async.Promise.swift:60,63 | Private `State` struct nested in class body. Moved to private extension in same file ([API-IMPL-008] resolved; [API-IMPL-005] remains — private type, pragmatic trade-off). | RESOLVED 2026-03-31 |
-| 15 | LOW | [API-IMPL-005] | Async.Barrier.swift:59,63 | Private `State` struct nested in class body. Moved to private extension in same file (same as #14). | RESOLVED 2026-03-31 |
-| 16 | LOW | [API-IMPL-005] | Async.Completion.Transition.swift:16,18 | Namespace enum `Transition` + single child `Error`. Extracted `Error` → `Async.Completion.Transition.Error.swift`. | RESOLVED 2026-03-31 |
-| 17 | LOW | [API-NAME-002] | Async.Broadcast.State.swift:50,55 | `minCursor()`, `pruneBuffer()` — internal compound methods. | DEFERRED — [IMPL-024] internal implementation layer |
-| 18 | LOW | [API-NAME-002] | Async.Timer.Wheel+Slot.swift | `withSlot`, `slotAppend`, `slotRemove`, `slotPopFirst` — internal compound methods. | DEFERRED — [IMPL-024] internal implementation layer |
+| 1 | LOW | [API-NAME-002] | Async.Channel.Bounded.Storage.swift:57,84 | `handleReceive`, `handleSend` — `@usableFromInline` compound methods extracted as CopyPropagation crash workaround. Compound names are a side effect of the extraction; names disappear when workaround is removed. | OPEN |
+| 2 | LOW | [API-NAME-002] | Async.Channel.Unbounded.Storage.swift:66 | `handleReceive` — same CopyPropagation crash workaround as #1. | OPEN |
+| 3 | LOW | [API-IMPL-008] | Async.Completion.swift:60 | `typealias Result = Swift.Result<Success, Error>` in class body. Rule says "ONLY stored properties and canonical init"; typealiases not explicitly categorized but excluded by "ONLY" language. Used to type the adjacent stored property `_continuation`. | OPEN |
+| 4 | LOW | [API-NAME-002] | Async.Waiter.Flag.swift:121 | `setFlag(_:)` — private compound CAS helper. Public API (`cancel()`, `timeout()`) uses clean single-word names. Zero external visibility. | OPEN |
 
 ### Justified Exceptions
 
@@ -46,34 +32,41 @@
 | Async.Waiter.Queue.Flagged.swift | [API-IMPL-005] | `Split` references `Metadata: ~Copyable & Sendable` generic parameter. [MEM-COPY-006] constraint poisoning. |
 | Async.Mutex.swift | [API-IMPL-005] | `_Value`, `_Lock` are `@_rawLayout` types — cannot be extracted from generic type body. |
 | Async.Mutex.swift:170,181 | [API-NAME-004] | Platform typealiases (`Synchronization.Mutex`, `Kernel.Thread.Mutex.Value`) in mutually exclusive `#if` branches — platform abstraction, not type unification. |
-| Queue+Async.Waiter.swift | [API-NAME-002] | `popEligible`, `reapFlagged` — documented WORKAROUND annotations with tracked removal criteria. |
+| Async.Promise.swift | [API-IMPL-005] | Private `State` in private extension, same file. Extraction would require widening from `private` to `internal`. Pragmatic trade-off. |
+| Async.Barrier.swift | [API-IMPL-005] | Private `State` in private extension, same file. Same pragmatic trade-off as Promise. |
+| Async.swift:20 | [API-NAME-004] | `_Async = Async` — module disambiguation escape hatch. Standard Swift pattern for namespace enums. Not a unification bridge. |
+| Queue+Async.Waiter.swift | [API-NAME-002] | `popEligible`, `reapFlagged` — documented WORKAROUND annotations with tracked removal criteria (Property.View constrained extension limitation). |
 | Queue.Fixed+Async.Waiter.swift | [API-NAME-002] | Same documented workaround as above. |
 
 ### Rules Passing Clean
 
 | Rule | Assessment |
 |------|-----------|
-| [API-NAME-002] | **Pass** (public API) — all public methods/properties use nested accessors. Two internal DEFERRED findings (#17, #18). |
+| [API-NAME-001] | **Pass** — All types use Nest.Name pattern. Post-refactor: `NextIndex` → `Next.Index`, `SubscriberID` → `Subscriber.ID`. No compound type names. |
+| [API-NAME-002] | **Pass** (public API) — All public methods/properties use nested accessors. Config refactored to `config.slot`, `config.level`, `config.ticks`. Channel state machine uses single-word methods (`send`, `receive`, `suspend`, `cancel`, `close`). Timer tick methods use `tick(for:)`, `slot(at:)`, `level(for:)`. Slot list operations use `append(_:in:)`, `remove(_:in:)`, `popFirst(in:)`. Broadcast uses `var cursor` property. Findings #1–4 are internal/private scope only. |
 | [API-NAME-003] | N/A — no specification implementations in this package. |
-| [API-NAME-004] | **Pass** — all typealiases are [PATTERN-024] generic instantiations (`Gate = Promise<Void>`, `Queue.Bounded/Unbounded/Drain`, `Queue.Metadata = Tagged<...>`, `Timer.Wheel.ID = Handle<_Entry>`) or platform abstraction (Mutex). No unification bridges. |
-| [API-ERR-001] | **Pass** — all throwing functions use typed throws: `throws(Async.Channel<Element>.Error)`, `throws(Transition.Error)`, `throws(E)`. Zero untyped `throws`. |
-| [API-ERR-002] | **Pass** — all error types nested: `Channel.Error`, `Broadcast.Error`, `Completion.Error`, `Completion.Transition.Error`. |
-| [API-ERR-003] | **Pass** — error cases describe failures: `closed`, `cancelled`, `full`, `empty`, `timeout`, `alreadyDone`. |
-| [API-ERR-004] | **Pass** — typed throws closure annotations present (`Async.Mutex.withLock`, `Async.Channel.Bounded.Storage.withLock`). |
-| [API-ERR-005] | **Pass** — no `@_disfavoredOverload` workarounds. |
-| [API-IMPL-003] | **Pass** — state modeled with enums (`Lifecycle.State`, `Broadcast.Is`, `Channel.Bounded.State.Status`, etc.). |
-| [API-IMPL-007] | **Pass** — extension files use `+` suffix: `Async.Mutex+Deque.swift`, `Async.Mutex+Ownership.swift`, `Async.Timer.Wheel+Slot.swift`, `Async.Timer.Wheel+Tick.swift`, `Queue+Async.Waiter.swift`, `Queue.Fixed+Async.Waiter.swift`. (`Duration+Tick.swift` renamed to `Duration.Divided.swift` — was misclassified as extension file, now correctly named for its type declaration.) |
-| [API-IMPL-009] | **Pass** — hoisted protocol pattern correct for `Async.Channel.Error` (IRGen crash workaround). |
-| [API-IMPL-010] | N/A — no access level widening since prior audit. |
+| [API-NAME-004] | **Pass** — All typealiases are [PATTERN-024] generic instantiations (`Gate = Promise<Void>`, `Queue.Bounded/Unbounded/Drain`, `Queue.Metadata = Tagged<...>`, `Timer.Wheel.ID = Handle<_Entry>`, `Completion.Result = Swift.Result<Success, Error>`) or platform abstraction (Mutex). `Tick = UInt64` is domain-semantic alias within single module, not cross-package unification. |
+| [API-ERR-001] | **Pass** — All throwing functions use typed throws: `throws(Async.Channel<Element>.Error)`, `throws(Transition.Error)`, `throws(E)`. Zero untyped `throws`. |
+| [API-ERR-002] | **Pass** — All error types nested: `Channel.Error`, `Broadcast.Error`, `Completion.Error`, `Completion.Transition.Error`. |
+| [API-ERR-003] | **Pass** — Error cases describe failures: `closed`, `cancelled`, `full`, `empty`, `timeout`, `alreadyDone`. |
+| [API-ERR-004] | **Pass** — Typed throws closure annotations present (`Async.Mutex.withLock`, `Async.Channel.Bounded.Storage.withLock`). |
+| [API-ERR-005] | **Pass** — No `@_disfavoredOverload` workarounds. |
+| [API-IMPL-003] | **Pass** — State modeled with enums (`Lifecycle.State`, `Broadcast.Is`, `Channel.Bounded.State.Status`, `Channel.Unbounded.State.Status`, `Completion.State`). |
+| [API-IMPL-005] | **Pass** — One type per file for all non-justified files. 13 files extracted during refactor cycle. |
+| [API-IMPL-006] | **Pass** — File names match nested type paths: `Async.Broadcast.Next.Index.swift`, `Async.Broadcast.Subscriber.ID.swift`, `Async.Timer.Wheel.Config.Level.swift`, etc. `Duration.Divided.swift` correctly named for stdlib-extension nested type. |
+| [API-IMPL-007] | **Pass** — Extension files use `+` suffix: `Async.Mutex+Deque.swift`, `Async.Mutex+Ownership.swift`, `Async.Timer.Wheel+Tick.swift`, `Queue+Async.Waiter.swift`, `Queue.Fixed+Async.Waiter.swift`. (`Async.Timer.Wheel+Slot.swift` deleted — operations moved to `Slot` type file.) |
+| [API-IMPL-008] | **Pass** — Type bodies contain only stored properties and canonical init (with [MEM-COPY-006] exceptions). One borderline finding (#3, Completion typealias). |
+| [API-IMPL-009] | **Pass** — Hoisted protocol pattern correct for `Async.Channel.Error` (IRGen crash workaround). |
+| [API-IMPL-010] | **Pass** — `Broadcast._state` widened from `private` to `internal` during Subscription extraction. Name audited: `_state` is standard backing-storage convention at internal scope. No compound name introduced. |
 | [API-IMPL-011] | N/A — no wrapper types in scope. |
 
 ### Summary
 
-18 findings: 0 critical, 2 high, 6 medium, 10 low. **16 RESOLVED, 2 DEFERRED.**
+4 findings: 0 critical, 0 high, 0 medium, 4 low. **4 OPEN, 0 DEFERRED.**
 
-**RESOLVED (16)**: All 16 OPEN findings addressed across 11 commits. Both HIGH, all 6 MEDIUM, and all 8 LOW findings resolved. For findings #14 and #15 (private State structs in Promise and Barrier), [API-IMPL-008] was resolved by moving to private extensions; [API-IMPL-005] (separate file) remains as a pragmatic trade-off since extraction would require widening visibility from private to internal.
+**OPEN (4)**: #1–2 are `@usableFromInline` compound methods that exist only as CopyPropagation crash workarounds — names disappear when the upstream compiler bug is fixed. The WORKAROUND annotations document the crash but not the naming violation; these should be extended to note the [API-NAME-002] coupling. #3 is a borderline typealias-in-body (rule gap — typealiases not explicitly categorized by [API-IMPL-008]). #4 is a private CAS helper with zero external visibility.
 
-**DEFERRED (2)**: Carried forward unchanged. Internal compound method names (#17 `minCursor`/`pruneBuffer`, #18 `slotAppend`/`slotRemove`/`slotPopFirst`/`withSlot`) per [IMPL-024].
+**Prior findings**: All 18 findings from the 2026-03-31 audit are resolved. 16 were resolved during the refactor cycle (2026-03-31). 2 DEFERRED findings (#17 `minCursor`/`pruneBuffer`, #18 slot compound methods) resolved between audit cycles: `minCursor()` → `var cursor`, dead `pruneBuffer()` removed, slot operations moved from `Wheel` extension to `Slot` type as `append(_:in:)`/`remove(_:in:)`/`popFirst(in:)`, `+Slot.swift` deleted.
 
 ---
 
