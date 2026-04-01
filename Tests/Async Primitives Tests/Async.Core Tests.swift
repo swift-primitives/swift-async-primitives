@@ -33,24 +33,30 @@ extension Core.Test.Lifecycle {
     func `open state has correct queries`() {
         var state: Async.Lifecycle.State = .open
         #expect(state.isOpen)
-        #expect(!state.shutdown.isActive)
-        #expect(!state.shutdown.isComplete)
+        let isActive = state.shutdown.isActive
+        let isComplete = state.shutdown.isComplete
+        #expect(!isActive)
+        #expect(!isComplete)
     }
 
     @Test
     func `closing state has correct queries`() {
         var state: Async.Lifecycle.State = .closing
         #expect(!state.isOpen)
-        #expect(state.shutdown.isActive)
-        #expect(!state.shutdown.isComplete)
+        let isActive = state.shutdown.isActive
+        let isComplete = state.shutdown.isComplete
+        #expect(isActive)
+        #expect(!isComplete)
     }
 
     @Test
     func `closed state has correct queries`() {
         var state: Async.Lifecycle.State = .closed
         #expect(!state.isOpen)
-        #expect(state.shutdown.isActive)
-        #expect(state.shutdown.isComplete)
+        let isActive = state.shutdown.isActive
+        let isComplete = state.shutdown.isComplete
+        #expect(isActive)
+        #expect(isComplete)
     }
 
     @Test
@@ -109,13 +115,16 @@ extension Core.Test.Lifecycle {
         let didBegin = state.shutdown.begin()
         #expect(didBegin)
         #expect(state == .closing)
-        #expect(state.shutdown.isActive)
-        #expect(!state.shutdown.isComplete)
+        let isActive = state.shutdown.isActive
+        let isComplete = state.shutdown.isComplete
+        #expect(isActive)
+        #expect(!isComplete)
 
         let didComplete = state.shutdown.complete()
         #expect(didComplete)
         #expect(state == .closed)
-        #expect(state.shutdown.isComplete)
+        let finalComplete = state.shutdown.isComplete
+        #expect(finalComplete)
     }
 
     @Test
