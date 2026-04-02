@@ -28,7 +28,7 @@ extension Async.Timer.Wheel {
     struct Level: Sendable {
         /// The slot headers in this level — one linked list per slot.
         @usableFromInline
-        var slots: [Buffer<Payload>.Linked<2>.Header]
+        var slots: [Link<2>.Header<Node>]
 
         /// Creates a level with the specified number of slots.
         ///
@@ -37,8 +37,8 @@ extension Async.Timer.Wheel {
         ///   - sentinel: The sentinel value for linked list headers.
         @usableFromInline
         init(slotCount: Int, sentinel: Index<Node>) {
-            self.slots = [Buffer<Payload>.Linked<2>.Header](
-                repeating: Buffer<Payload>.Linked<2>.Header(sentinel: sentinel),
+            self.slots = [Link<2>.Header<Node>](
+                repeating: Link<2>.Header<Node>(sentinel: sentinel),
                 count: slotCount
             )
         }

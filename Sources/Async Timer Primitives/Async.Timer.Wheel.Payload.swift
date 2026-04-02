@@ -52,8 +52,8 @@ extension Async.Timer.Wheel {
 
     /// A timer node: payload + doubly-linked list pointers.
     ///
-    /// Uses `Buffer.Linked.Node` to embed `links: InlineArray<2, Index<Node>>`
-    /// alongside the payload, enabling `Buffer.Link<2>` topology operations.
+    /// Uses `Link<2>.Node<Payload>` to embed `links: InlineArray<2, Index<Node>>`
+    /// alongside the payload, enabling `Link<2>` topology operations.
     @usableFromInline
-    typealias Node = Buffer<Payload>.Linked<2>.Node
+    typealias Node = Link<2>.Node<Payload>
 }

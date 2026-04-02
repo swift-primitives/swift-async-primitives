@@ -11,7 +11,7 @@
 
 import Buffer_Primitives
 
-// MARK: - Link Topology Operations (delegated to Buffer.Link)
+// MARK: - Link Topology Operations (delegated to Link)
 
 extension Async.Timer.Wheel {
 
@@ -20,7 +20,7 @@ extension Async.Timer.Wheel {
     mutating func withSlot<T>(
         level: Int,
         slot: Int,
-        _ body: (inout Buffer<Payload>.Linked<2>.Header) -> T
+        _ body: (inout Link<2>.Header<Node>) -> T
     ) -> T {
         unsafe levels[level].slots.withUnsafeMutableBufferPointer { buffer in
             unsafe body(&buffer[slot])
@@ -31,9 +31,9 @@ extension Async.Timer.Wheel {
     ///
     /// - Complexity: O(1)
     @usableFromInline
-    mutating func append(_ index: Index<Node>, to header: inout Buffer<Payload>.Linked<2>.Header) {
-        unsafe Buffer<Payload>.Link<2>.append(index, header: &header) { idx in
-            unsafe self.storage.pointer(at: idx)
+    mutating func append(_ index: Index<Node>, to header: inout Link<2>.Header<Node>) {
+        unsafe Link<2>.append(index, header: &header) { idx in
+            unsafe Link<2>.linksPointer(in: self.storage.pointer(at: idx))
         }
     }
 
@@ -42,9 +42,9 @@ extension Async.Timer.Wheel {
     /// - Complexity: O(1)
     /// - Precondition: The node must be in this slot's list.
     @usableFromInline
-    mutating func remove(_ index: Index<Node>, from header: inout Buffer<Payload>.Linked<2>.Header) {
-        unsafe Buffer<Payload>.Link<2>.unlink(index, header: &header) { idx in
-            unsafe self.storage.pointer(at: idx)
+    mutating func remove(_ index: Index<Node>, from header: inout Link<2>.Header<Node>) {
+        unsafe Link<2>.unlink(index, header: &header) { idx in
+            unsafe Link<2>.linksPointer(in: self.storage.pointer(at: idx))
         }
     }
 
@@ -53,9 +53,9 @@ extension Async.Timer.Wheel {
     /// - Returns: The index of the removed node, or nil if empty.
     /// - Complexity: O(1)
     @usableFromInline
-    mutating func popFirst(from header: inout Buffer<Payload>.Linked<2>.Header) -> Index<Node>? {
-        unsafe Buffer<Payload>.Link<2>.unlinkFirst(header: &header) { idx in
-            unsafe self.storage.pointer(at: idx)
+    mutating func popFirst(from header: inout Link<2>.Header<Node>) -> Index<Node>? {
+        unsafe Link<2>.unlinkFirst(header: &header) { idx in
+            unsafe Link<2>.linksPointer(in: self.storage.pointer(at: idx))
         }
     }
 }
