@@ -883,3 +883,150 @@ The migration is self-contained within `Async Timer Primitives` with zero new de
 - `Buffer.Arena.Bounded` source: `swift-buffer-primitives/Sources/Buffer Arena Primitives/Buffer.Arena.Bounded.swift`
 - `Buffer.Arena.Position` source: `swift-buffer-primitives/Sources/Buffer Primitives Core/Buffer.Arena.Position.swift`
 - `Storage<E>.Arena.Meta` source: `swift-storage-primitives/Sources/Storage Primitives Core/Storage.Arena.swift:88`
+
+---
+
+## Ownership Transfer Compliance — 2026-03-31
+
+### Scope
+
+Audit of `~Copyable` ownership transfer through `Mutex.withLock` closures against [IMPL-070] layer model and [MEM-OWN-010–012] patterns.
+
+**Target**: swift-async-primitives (Bridge, Channel.Bounded, Channel.Unbounded).
+
+### Requirement IDs
+
+- [IMPL-070] `.take()!` and `var slot: V?` confined to Layer 0/1 infrastructure
+- [MEM-OWN-010] Always-consume: `withLock(consuming:body:)`
+- [MEM-OWN-011] Maybe-consume: state machine takes `inout Element?`
+- [MEM-OWN-012] Action enum dispatch: `switch consume` outside lock
+
+### Findings
+
+Verified: 2026-03-31
+
+| Type | Pattern | `.take()!` Sites | Layer | Verdict |
+|------|---------|-----------------|-------|---------|
+| `Async.Bridge` | Always-consume [MEM-OWN-010] | 0 at Layer 2 | `withLock(consuming:)` | **Conforming** |
+| `Channel.Unbounded.State` | Maybe-consume [MEM-OWN-011] | 2 (lines 90, 92) | Layer 1 (state machine) | **Conforming** |
+| `Channel.Bounded.State` | Maybe-consume [MEM-OWN-011] | 2 (lines 198, 203) | Layer 1 (state machine) | **Conforming** |
+| `Channel.Unbounded.Sender` | Layer 2 consumer | 0 | Uses `Ownership.Slot` + `state.send(&opt)` | **Conforming** |
+| `Channel.Bounded.Sender` | Layer 2 consumer | 0 | Uses `Ownership.Slot` + `state.send(&opt)` | **Conforming** |
+| `Mutex+Ownership` | Layer 0 infrastructure | 1 (line 71) | Extension internals | **Conforming** |
+
+**Action enum dispatch** [MEM-OWN-012]: 15 `switch consume` sites across Bridge and Channel receivers/senders. All dispatch outside locks. Continuations resumed post-lock. **Conforming.**
+
+### Summary
+
+0 violations. All 6 `.take()!` sites are at Layer 0 (Mutex extension) or Layer 1 (state machine). No Layer 2 call site uses raw `.take()!`. Bridge uses `withLock(consuming:body:)`. Channels use `Ownership.Slot` + state machine `inout Element?`. Architecture is fully compliant with [IMPL-070].
+
+### Provenance
+
+Relocated 2026-04-08 from `swift-institute/Research/audit.md` "Ownership Transfer Compliance — 2026-03-31" per [AUDIT-002] scope location correction.
+
+## Legacy
+
+### From: swift-institute/Research/async-pool-primitives-audit.md (async-primitives portion)
+
+Relocated 2026-04-08. Original file dated 2026-02-24, version 1.1.0. The pool-primitives portion was relocated separately to `swift-pool-primitives/Research/audit.md`.
+
+#### Current State (as of 2026-02-24)
+
+**50 source files, 6 test files.** Dependencies: buffer, dictionary, queue, handle, identity, kernel, ownership primitives.
+
+**What's clean (no action needed):**
+- Channels (Bounded/Unbounded): pure state machines, ~Copyable receivers, Copyable senders, typed throws, deferred resumption outside locks
+- Broadcast: section 5.3 cancellation-safe, token-matching, `Dictionary.Ordered` for subscribers
+- Waiters: ~Copyable entries with consuming `resumption(with:)`, `Flag` with atomic CAS
+- Waiter.Queue.Bounded/Unbounded: delegates to `Buffer.Ring` infrastructure
+- Zero `.rawValue` chains in non-timer code
+- Nested accessors: `.send.immediate()`, `.receive.immediate()`, `.front.take`, `.back.push`
+- Platform conditioning for embedded Swift
+
+#### Finding 1: Timer.Wheel — Entirely Untyped (HIGH VALUE)
+
+**Location:** `Async.Timer.Wheel.Storage.swift:37`
+
+Storage uses raw `UInt32` indices, `[Node?]` stdlib arrays, a manual free-list with `UInt32.max` sentinel, and `Int(index)` conversions at 20+ call sites.
+
+| Current | Violation | Should Be |
+|---------|-----------|-----------|
+| `nodes: [Node?]` | Raw stdlib array | `Buffer.Slab` or typed storage |
+| `freeLinks: [UInt32]` | Manual free-list | `Buffer.Slab` manages this internally |
+| `freeHead: UInt32` | Raw sentinel | Slab allocator API |
+| `capacity: Int` | Raw count | `Index<Node>.Count` or `Cardinal` |
+| `generation: UInt32` | Raw counter | `Tagged<Generation, UInt32>` |
+| `nodes[Int(index)]` (20+ sites) | [IMPL-010] Int conversion at call site | Typed subscript |
+| `for i in 0..<(capacity-1)` | [IMPL-033] Manual loop | Bulk initialization |
+
+**Refactor target**: Replace Storage with `Buffer.Slab` from swift-slab-primitives. Slab is a free-list backed allocator with typed indices — it *is* the abstraction Timer.Wheel.Storage hand-rolls. The slab manages allocation, deallocation, generation tracking, and typed access. This would eliminate ~100 lines of manual infrastructure and 20+ `Int()` conversions.
+
+If `Buffer.Slab` doesn't fit the generation/ABA pattern exactly, the minimum fix is:
+- `Tagged<Node, UInt32>` for slot indices
+- Typed subscript accepting that index
+- Push `Int(index)` into one boundary overload
+
+**Status:** [ ] Not started
+
+#### Finding 2: Timer.Wheel.Tick — Raw Arithmetic
+
+**Location:** `Async.Timer.Wheel.Tick.swift:51-52`
+
+`Tick = UInt64` with raw bit-shift arithmetic. The arithmetic is inherently low-level (bit manipulation for hierarchical wheel indexing), so some rawness is principled. However:
+
+- `currentSlot(level:) -> Int` and `slot(for:delta:) -> Int` return raw `Int`
+- `level(for:) -> Int` returns raw `Int`
+- `config.slots`, `config.slotShift`, `config.slotMask` are all raw `Int`
+
+**Refactor target**: Introduce `Wheel.SlotIndex` and `Wheel.LevelIndex` typed wrappers. Keep the bit arithmetic inside those types' implementations. Moderate value — the Timer is internal infrastructure, not a public API consumed elsewhere.
+
+**Status:** [ ] Not started
+
+#### Finding 3: Test Coverage Gaps
+
+No tests for: Timer.Wheel, Waiter.Queue variants, Bridge, Barrier, Completion, Promise, Lifecycle, Mutex+Deque utilities. Only channels and broadcast have dedicated tests.
+
+**Status:** [ ] Not started
+
+#### Refactor Priority (async-primitives rows)
+
+| # | Finding | Value | Effort | Recommendation |
+|---|---------|-------|--------|----------------|
+| 2 | Timer.Wheel.Storage hand-rolls slab | **High** | Medium | Replace with `Buffer.Slab` from swift-slab-primitives, or type the indices. |
+| 3 | Timer.Wheel 20+ `Int(index)` conversions | **High** | Low | Typed index + typed subscript. Falls out of Finding 2 naturally. |
+| 5 | Timer types raw `Int` for level/slot | **Moderate** | Low | `Tagged<Level, Int>`, `Tagged<SlotIndex, Int>` wrappers. |
+| 7 | Test coverage (Timer, Waiter, Bridge, etc.) | **Moderate** | High | Significant work but reduces regression risk. |
+
+#### Compliance (async-primitives column)
+
+| Rule | async-primitives |
+|------|-----------------|
+| [API-NAME-001] Nest.Name | Pass |
+| [API-NAME-002] No compounds | Pass |
+| [API-ERR-001] Typed throws | Pass |
+| [API-IMPL-005] One type/file | Pass |
+| [PRIM-FOUND-001] No Foundation | Pass |
+| [IMPL-INTENT] Code reads as intent | Pass (except Timer) |
+| [IMPL-002] Typed arithmetic | **Fail** (Timer: 20+ raw) |
+| [IMPL-010] Push Int to edge | **Fail** (Timer: 20+ sites) |
+| [IMPL-033] Iteration intent | **Fail** (Timer: manual loops) |
+| [PATTERN-017] rawValue confined | Pass (non-timer) |
+| [INFRA-106] Property accessors | Pass |
+| [INFRA-109] Storage primitives | **Fail** (Timer hand-rolls) |
+
+---
+
+### From: swift-institute/Research/audits/implementation-naming-2026-03-20/swift-async-primitives.md (2026-03-20)
+
+**Implementation + naming audit**
+
+HIGH=3, MEDIUM=5, LOW=4, INFO=3
+Finding IDs: ASYNC-001, ASYNC-002, ASYNC-003, ASYNC-004, ASYNC-005, ASYNC-006, ASYNC-007, ASYNC-008, ASYNC-009, ASYNC-010, ASYNC-011, ASYNC-012, IMPL-002, IMPL-010, IMPL-033 (+1 more)
+
+| Severity | Count |
+|----------|-------|
+| CRITICAL | 0 |
+| HIGH | 2 |
+| MEDIUM | 4 |
+| LOW | 3 |
+| INFO | 2 |
