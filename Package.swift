@@ -60,6 +60,10 @@ let package = Package(
             name: "Async Waiter Primitives",
             targets: ["Async Waiter Primitives"]
         ),
+        .library(
+            name: "Async Semaphore Primitives",
+            targets: ["Async Semaphore Primitives"]
+        ),
         // MARK: - Umbrella
         .library(
             name: "Async Primitives",
@@ -176,6 +180,17 @@ let package = Package(
             ]
         ),
 
+        // MARK: - Semaphore
+        .target(
+            name: "Async Semaphore Primitives",
+            dependencies: [
+                "Async Primitives Core",
+                "Async Mutex Primitives",
+                "Async Waiter Primitives",
+                "Async Promise Primitives",
+            ]
+        ),
+
         // MARK: - Umbrella
         .target(
             name: "Async Primitives",
@@ -191,6 +206,7 @@ let package = Package(
                 "Async Broadcast Primitives",
                 "Async Timer Primitives",
                 "Async Waiter Primitives",
+                "Async Semaphore Primitives",
             ]
         ),
 

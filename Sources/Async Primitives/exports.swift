@@ -12,3 +12,4 @@
 @_exported public import Async_Broadcast_Primitives
 @_exported public import Async_Timer_Primitives
 @_exported public import Async_Waiter_Primitives
+@_exported public import Async_Semaphore_Primitives
