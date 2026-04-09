@@ -100,7 +100,7 @@ let package = Package(
             dependencies: [
                 "Async Primitives Core",
                 .product(
-                    name: "Kernel Primitives",
+                    name: "Kernel Thread Primitives",
                     package: "swift-kernel-primitives",
                     condition: .when(platforms: [
                         .macOS, .iOS, .tvOS, .watchOS, .visionOS,

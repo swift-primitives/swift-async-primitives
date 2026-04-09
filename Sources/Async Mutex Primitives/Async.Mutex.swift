@@ -170,8 +170,8 @@ extension Async {
     public typealias Mutex = Synchronization.Mutex
 }
 
-#elseif !hasFeature(Embedded) && canImport(Kernel_Primitives)
-@_exported public import Kernel_Primitives
+#elseif !hasFeature(Embedded) && canImport(Kernel_Thread_Primitives)
+@_exported public import Kernel_Thread_Primitives
 
 extension Async {
     /// A value-owning mutex for thread synchronization.
