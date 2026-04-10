@@ -100,19 +100,4 @@ extension Async.Channel.Unbounded where Element: ~Copyable {
     }
 }
 
-// MARK: - Take (consuming accessors)
-
-extension Async.Channel.Unbounded where Element: ~Copyable {
-    /// Consuming accessor for moving endpoints out of the channel.
-    ///
-    /// ```swift
-    /// let ends = channel.take().ends()
-    /// try ends.sender.send(42)
-    /// let value = try await ends.receiver.receive()
-    /// ```
-    public consuming func take() -> Take {
-        Take(channel: consume self)
-    }
-}
-
 #endif  // !hasFeature(Embedded)
