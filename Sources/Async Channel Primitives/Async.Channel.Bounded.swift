@@ -84,6 +84,21 @@ extension Async.Channel where Element: ~Copyable {
 }
 
 extension Async.Channel.Bounded where Element: ~Copyable {
+    /// Consume the channel and return a `Take` for endpoint extraction.
+    ///
+    /// Use after extracting the sender (Copyable) to consume the channel
+    /// and obtain both endpoints as a bundle:
+    /// ```swift
+    /// var channel = Async.Channel<Int>.Bounded(capacity: 8)
+    /// let sender = channel.sender
+    /// let ends = (consume channel).take().ends()
+    /// ```
+    public consuming func take() -> Take {
+        Take(channel: consume self)
+    }
+}
+
+extension Async.Channel.Bounded where Element: ~Copyable {
     /// Close the channel, signaling no more elements will be sent.
     ///
     /// After close:
