@@ -1,0 +1,22 @@
+{
+  "$schema": "https://swift-institute.org/schemas/experiments-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-18",
+  "title": "Experiments Index",
+  "blurb": "",
+  "scope": "swift-async-primitives (swift-primitives)",
+  "experiments": [
+    {
+      "directory": "inout-noncopyable-optional-closure-capture",
+      "displayName": "inout-noncopyable-optional-closure-capture",
+      "purpose": "Verify inout Optional<~Copyable> through Mutex.withLock for Slot-free channel send fast path",
+      "date": "2026-03-27",
+      "toolchain": "Swift 6.3",
+      "status": "CONFIRMED",
+      "statusDetail": "(9/9 variants; compiler bug found: `o!` crashes IRGen, `.take()!` workaround)",
+      "statusRaw": "CONFIRMED (9/9 variants; compiler bug found: `o!` crashes IRGen, `.take()!` workaround)",
+      "supersededBy": null,
+      "crossRefs": []
+    }
+  ]
+}
