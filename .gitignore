@@ -29,6 +29,7 @@ Thumbs.db
 !/Skills/
 !/.github/
 !/Package.swift
+!/LICENSE
 !/LICENSE.md
 !/README.md
 
@@ -36,6 +37,7 @@ Thumbs.db
 # Blocks all .md files by default to prevent AI-generated content from being committed
 *.md
 !README.md
+!LICENSE
 !LICENSE.md
 !CHANGELOG.md
 !CONTRIBUTING.md
@@ -46,6 +48,7 @@ Thumbs.db
 !**/Research/**/*.md
 !**/Experiments/**/*.md
 !**/Skills/**/*.md
+!**/.github/**/*.md
 
 # Package insights are non-normative working logs accumulating through
 # reflections-processing. They stay on disk for the author but do not ship.
