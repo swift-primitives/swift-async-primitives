@@ -8,18 +8,9 @@ Package.resolved
 DerivedData/
 Thumbs.db
 
-# Dot files/directories (opt-in only)
-/.*
-!/.github
-!/.gitignore
-!/.spi.yml
-!/.swift-format
-!/.swiftformat
-!/.swiftlint.yml
-!/.swiftlint/
-
 # Top-level entries (opt-in only)
-# First ignore all, then whitelist specific folders and files
+# First ignore everything at root; then whitelist specific folders,
+# files, and dotfiles. Whitelists come AFTER /* so they take effect.
 /*
 !/Sources/
 !/Tests/
@@ -32,6 +23,12 @@ Thumbs.db
 !/LICENSE
 !/LICENSE.md
 !/README.md
+!/.gitignore
+!/.spi.yml
+!/.swift-format
+!/.swiftformat
+!/.swiftlint.yml
+!/.swiftlint/
 
 # Documentation (opt-in for whitelisted .md files and .docc catalogs only)
 # Blocks all .md files by default to prevent AI-generated content from being committed
