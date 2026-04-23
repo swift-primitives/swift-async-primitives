@@ -3,4 +3,4 @@
 
 @_exported public import Buffer_Primitives
 @_exported public import Queue_Primitives
-@_exported public import Identity_Primitives
+@_exported public import Tagged_Primitives

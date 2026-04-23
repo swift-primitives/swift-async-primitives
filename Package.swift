@@ -79,7 +79,7 @@ let package = Package(
         .package(path: "../swift-dictionary-primitives"),
         .package(path: "../swift-queue-primitives"),
         .package(path: "../swift-handle-primitives"),
-        .package(path: "../swift-identity-primitives"),
+        .package(path: "../swift-tagged-primitives"),
         .package(path: "../swift-kernel-primitives"),
         .package(path: "../swift-ownership-primitives"),
     ],
@@ -90,7 +90,7 @@ let package = Package(
             dependencies: [
                 .product(name: "Buffer Primitives", package: "swift-buffer-primitives"),
                 .product(name: "Queue Primitives", package: "swift-queue-primitives"),
-                .product(name: "Identity Primitives", package: "swift-identity-primitives"),
+                .product(name: "Tagged Primitives", package: "swift-tagged-primitives"),
             ]
         ),
 
@@ -226,7 +226,7 @@ let package = Package(
                 "Async Primitives",
                 .product(name: "Buffer Primitives Test Support", package: "swift-buffer-primitives"),
                 .product(name: "Queue Primitives Test Support", package: "swift-queue-primitives"),
-                .product(name: "Identity Primitives Test Support", package: "swift-identity-primitives"),
+                .product(name: "Tagged Primitives Test Support", package: "swift-tagged-primitives"),
                 .product(name: "Kernel Primitives Test Support", package: "swift-kernel-primitives"),
             ],
             path: "Tests/Support"

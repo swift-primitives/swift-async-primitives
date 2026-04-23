@@ -1,5 +1,5 @@
 @_exported public import Async_Primitives
 @_exported public import Buffer_Primitives_Test_Support
 @_exported public import Queue_Primitives_Test_Support
-@_exported public import Identity_Primitives_Test_Support
+@_exported public import Tagged_Primitives_Test_Support
 @_exported public import Kernel_Primitives_Test_Support
