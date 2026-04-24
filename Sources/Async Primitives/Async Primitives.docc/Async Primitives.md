@@ -5,7 +5,11 @@
     @TitleHeading("Swift Primitives")
 }
 
-Async Primitives — umbrella catalog placeholder. Replace this line with a one-sentence
-description of what the package provides.
+Coordination primitives for Swift concurrency — channels, broadcast, barrier,
+semaphore, mutex, and peers. Swift-Embedded-compatible.
 
 ## Topics
+
+### Semantics
+
+- <doc:Semantics>
