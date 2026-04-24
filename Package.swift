@@ -82,6 +82,7 @@ let package = Package(
         .package(path: "../swift-tagged-primitives"),
         .package(path: "../swift-kernel-primitives"),
         .package(path: "../swift-ownership-primitives"),
+        .package(path: "../swift-algebra-primitives"),
     ],
     targets: [
         // MARK: - Core
@@ -188,6 +189,7 @@ let package = Package(
                 "Async Mutex Primitives",
                 "Async Waiter Primitives",
                 "Async Promise Primitives",
+                .product(name: "Algebra Primitives Core", package: "swift-algebra-primitives"),
             ]
         ),
 
