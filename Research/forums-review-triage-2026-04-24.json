@@ -1,0 +1,193 @@
+{
+  "source_simulation": "forums-review-simulation-2026-04-24.md",
+  "triage_date": "2026-04-24",
+  "rule": "FREVIEW-012",
+  "pre_classification_automated": true,
+  "final_classification_requires_human_review": true,
+  "human_review_completed": "2026-04-24",
+  "human_reviewer": "subordinate agent continuing HANDOFF.md (supervisor-in-absentia)",
+  "calibration_signal": {
+    "threshold_per_freview_017": ">=3 archetype-shaped-final reclassifications against automation's load-bearing calls",
+    "observed": {
+      "reclassifications_against_load_bearing": 0,
+      "escape_hatch_upgrades": 1
+    },
+    "triggered": false
+  },
+  "posts": [
+    {
+      "post_number": 1,
+      "handle": "op",
+      "archetype_hint": null,
+      "anchors": {
+        "source_file": 0, "test_file": 0, "docc_catalog": 0, "file_line": 0,
+        "backticked_type": 0, "backticked_fn": 0, "backticked_qualified": 0,
+        "se_crossref": 1, "package_swift": 0, "readme_ref": 0, "_total": 1
+      },
+      "pre_classification": "op-follow-up",
+      "final_classification": "op-follow-up",
+      "disposition": "n/a: OP introduction, not a reviewer critique"
+    },
+    {
+      "post_number": 2,
+      "handle": "reviewer-c1",
+      "archetype_hint": "The general-purpose technical reviewer (canonical c1) — target: concurrency, evolution-process, type-system — opener: question — closer: question-to-author",
+      "anchors": {
+        "source_file": 0, "test_file": 0, "docc_catalog": 0, "file_line": 2,
+        "backticked_type": 0, "backticked_fn": 1, "backticked_qualified": 2,
+        "se_crossref": 0, "package_swift": 0, "readme_ref": 1, "_total": 6
+      },
+      "pre_classification": "load-bearing-candidate",
+      "final_classification": "load-bearing",
+      "disposition": "act-on: Sender ARC-in-TaskGroup docstring expansion (Next Step #9) + testing-coverage gap (withTaskGroup auto-close path); `.immediate` naming decision (Open Q #3)"
+    },
+    {
+      "post_number": 3,
+      "handle": "reviewer-c9",
+      "archetype_hint": "The long-form deep-analysis essay reviewer (canonical c9) — target: concurrency, evolution-process, type-system — opener: thanks — closer: question-to-author",
+      "anchors": {
+        "source_file": 0, "test_file": 0, "docc_catalog": 0, "file_line": 1,
+        "backticked_type": 0, "backticked_fn": 1, "backticked_qualified": 3,
+        "se_crossref": 0, "package_swift": 0, "readme_ref": 2, "_total": 7
+      },
+      "pre_classification": "load-bearing-candidate",
+      "final_classification": "load-bearing",
+      "disposition": "act-on: each question maps to a ?-cell in the Semantics DocC article (Next Step #3). Broadcast linearizability, channel multi-sender ordering, barrier party-count commit, promise fulfilment races — all directly fill rows in the 13×4 table"
+    },
+    {
+      "post_number": 4,
+      "handle": "reviewer-c8",
+      "archetype_hint": "The SwiftPM / build-tooling / modularity reviewer (canonical c8) — target: layering-modularity, build-tooling, evolution-process — opener: question — closer: question-to-author",
+      "anchors": {
+        "source_file": 0, "test_file": 0, "docc_catalog": 0, "file_line": 0,
+        "backticked_type": 0, "backticked_fn": 1, "backticked_qualified": 0,
+        "se_crossref": 0, "package_swift": 2, "readme_ref": 2, "_total": 5
+      },
+      "pre_classification": "load-bearing-candidate",
+      "final_classification": "load-bearing",
+      "disposition": "act-on: granularity-as-contract is Open Q #1 (escalate); embedded-gating posture (source-level #if vs manifest condition.when) → README clarification; umbrella-vs-variant import recommendation → README section per [feedback_no_umbrella_imports]"
+    },
+    {
+      "post_number": 5,
+      "handle": "reviewer-c10",
+      "archetype_hint": "The heavy-quoting long-form authoritative reviewer (canonical c10) — target: evolution-process, concurrency, type-system — opener: direct-stance — closer: question-to-author",
+      "anchors": {
+        "source_file": 0, "test_file": 0, "docc_catalog": 0, "file_line": 1,
+        "backticked_type": 2, "backticked_fn": 0, "backticked_qualified": 2,
+        "se_crossref": 0, "package_swift": 1, "readme_ref": 1, "_total": 7
+      },
+      "pre_classification": "load-bearing-candidate",
+      "final_classification": "load-bearing",
+      "disposition": "act-on: the 13-primitive × 4-column table IS the Semantics-article scaffold (Next Step #3); `swift-async-algorithms` positioning → README paragraph (Next Step #7)"
+    },
+    {
+      "post_number": 6,
+      "handle": "reviewer-c3",
+      "archetype_hint": "The closure/expression/syntax technical reviewer (canonical c3) — target: type-system, concurrency, error-handling — opener: thanks — closer: explicit-vote",
+      "anchors": {
+        "source_file": 0, "test_file": 0, "docc_catalog": 0, "file_line": 1,
+        "backticked_type": 0, "backticked_fn": 0, "backticked_qualified": 2,
+        "se_crossref": 0, "package_swift": 0, "readme_ref": 0, "_total": 3
+      },
+      "pre_classification": "load-bearing-candidate",
+      "final_classification": "load-bearing",
+      "disposition": "act-on: os_unfair_lock fairness disclaimer on Mutex (Next Step #6); Ends.close() semantic doc at :52 (Next Step #9); 12-untyped-throws audit (Next Step #8)"
+    },
+    {
+      "post_number": 7,
+      "handle": "reviewer-c4",
+      "archetype_hint": "The constructive Evolution-process reviewer (canonical c4) — target: evolution-process, naming, concurrency — opener: question — closer: explicit-vote",
+      "anchors": {
+        "source_file": 0, "test_file": 0, "docc_catalog": 0, "file_line": 0,
+        "backticked_type": 0, "backticked_fn": 2, "backticked_qualified": 1,
+        "se_crossref": 2, "package_swift": 0, "readme_ref": 0, "_total": 5
+      },
+      "pre_classification": "load-bearing-candidate",
+      "final_classification": "load-bearing",
+      "disposition": "act-on: cancellation-docstring consistency enforced by Semantics article (Next Step #3); Token-deinit-under-withTaskGroup-throw is a testing gap worth flagging for pre-1.0 (new test target)"
+    },
+    {
+      "post_number": 8,
+      "handle": "reviewer-c2",
+      "archetype_hint": "The ~Copyable / Sendable / protocol-shape reviewer (canonical c2) — target: concurrency, type-system, naming — opener: meta-comment — closer: recommendation",
+      "anchors": {
+        "source_file": 0, "test_file": 0, "docc_catalog": 0, "file_line": 1,
+        "backticked_type": 0, "backticked_fn": 0, "backticked_qualified": 1,
+        "se_crossref": 0, "package_swift": 0, "readme_ref": 0, "_total": 2
+      },
+      "pre_classification": "partially-load-bearing-candidate",
+      "final_classification": "load-bearing",
+      "final_classification_notes": "escape-hatched per [FREVIEW-012] manual escape: surfaces a novel semantic-property gap (116 Sendable conformances with no published checked/conditional/@unchecked inventory) despite 2-anchor count. Aggregate count anchors (116, 157) are not credited by the regex catalogue but are real anchoring signals. Handoff Pre-Existing Code in Scope pre-identified this as the expected escape.",
+      "disposition": "act-on: Research/sendable-conformance-inventory.md enumerating each @unchecked with two-line justification (Next Step #4)"
+    },
+    {
+      "post_number": 9,
+      "handle": "reviewer-c7",
+      "archetype_hint": "The init/deinit/lifecycle reviewer (canonical c7) — target: concurrency, evolution-process, naming — opener: thanks — closer: explicit-vote",
+      "anchors": {
+        "source_file": 0, "test_file": 0, "docc_catalog": 0, "file_line": 2,
+        "backticked_type": 0, "backticked_fn": 0, "backticked_qualified": 1,
+        "se_crossref": 0, "package_swift": 0, "readme_ref": 0, "_total": 3
+      },
+      "pre_classification": "load-bearing-candidate",
+      "final_classification": "load-bearing",
+      "disposition": "act-on: (1) actor-isolated-deinit reentrancy of last-Sender-drop auto-close, (2) cancellation-initiated close vs last-drop close observable ordering, (3) Ends.close() forced-vs-graceful — all real contract gaps (Next Step #9 docstring expansion; (1)(2) also flag testing-coverage asks)"
+    },
+    {
+      "post_number": 10,
+      "handle": "reviewer-c6",
+      "archetype_hint": "The Core-Team-aware process voice (canonical c6) — target: evolution-process, naming, type-system — opener: direct-stance — closer: explicit-vote",
+      "anchors": {
+        "source_file": 0, "test_file": 0, "docc_catalog": 0, "file_line": 0,
+        "backticked_type": 0, "backticked_fn": 0, "backticked_qualified": 3,
+        "se_crossref": 0, "package_swift": 0, "readme_ref": 0, "_total": 3
+      },
+      "pre_classification": "load-bearing-candidate",
+      "final_classification": "load-bearing",
+      "disposition": "act-on via Open Q #1 (escalate): one-version-or-fourteen, cascading-major-on-one-product-break, per-product-tag consideration. No unilateral resolution per supervisor ground rules."
+    },
+    {
+      "post_number": 11,
+      "handle": "reviewer-c5",
+      "archetype_hint": "The pointed -1 reviewer (canonical c5) — target: evolution-process, naming, error-handling — opener: question — closer: question-to-author",
+      "anchors": {
+        "source_file": 0, "test_file": 0, "docc_catalog": 0, "file_line": 0,
+        "backticked_type": 0, "backticked_fn": 0, "backticked_qualified": 4,
+        "se_crossref": 0, "package_swift": 0, "readme_ref": 2, "_total": 6
+      },
+      "pre_classification": "load-bearing-candidate",
+      "final_classification": "load-bearing",
+      "disposition": "act-on via Open Q #2 (escalate): Darwin-only Mutex is a genuine portability regression against the Swift-Embedded-compatible framing (not archetype-shaped — HANDOFF Key Decisions #3 confirms). User decides (a) add Linux/Windows impls, (b) rename to Async.Darwin.Mutex, or (c) document the scope."
+    },
+    {
+      "post_number": 12,
+      "handle": "op",
+      "archetype_hint": "OP follow-up — consolidating responses",
+      "anchors": {
+        "source_file": 0, "test_file": 0, "docc_catalog": 0, "file_line": 0,
+        "backticked_type": 1, "backticked_fn": 0, "backticked_qualified": 1,
+        "se_crossref": 0, "package_swift": 0, "readme_ref": 2, "_total": 4
+      },
+      "pre_classification": "op-follow-up",
+      "final_classification": "op-follow-up",
+      "disposition": "n/a: OP consolidation (is itself the road-map); not a reviewer critique. Contains some simulated-OP opinions (leans to (a) for Mutex, picks all-14-together SemVer) — these are simulated predictions, not binding commitments, per [FREVIEW-010]."
+    }
+  ],
+  "summary": {
+    "substantive_reviewer_posts": 10,
+    "final_load_bearing": 10,
+    "final_partially_load_bearing": 0,
+    "final_archetype_shaped_noise": 0,
+    "escape_hatch_upgrades": 1,
+    "op_posts": 2,
+    "action_item_mapping": {
+      "next_step_3_semantics_docc": [3, 4, 5, 7, 9],
+      "next_step_4_sendable_inventory": [8],
+      "next_step_5_mutex_portability": [11],
+      "next_step_6_mutex_fairness_docstring": [6],
+      "next_step_7_readme_semver_and_positioning": [4, 10, 3, 5, 7],
+      "next_step_8_typed_throws_audit": [6],
+      "next_step_9_lifecycle_docstrings": [2, 5, 6, 9]
+    }
+  }
+}
