@@ -249,3 +249,47 @@ extension Timer.Wheel.Test.EdgeCase {
         }
     }
 }
+
+// MARK: - Release-mode regression guard (Finding #12 narrow-shape watchflag)
+//
+// Parity regression guard for the V11 narrow-shape compiler bug
+// documented at swift-institute/Audits/borrow-pointer-storage-release-
+// miscompile.md finding #12, archived at the experiment
+// swift-institute/Experiments/borrow-pointer-storage-release-miscompile
+// V10/V11 (commit cee7a7a).
+//
+// Scope caveat: Async.Timer.Wheel's internal storage goes through
+// Buffer<Node>.Arena.Bounded, which uses heap-allocated raw memory
+// (stable pointer by construction) — NOT Memory.Inline's `@_rawLayout`
+// field-of-self shape. The V11 failure mode is structurally impossible
+// on this code path. This test exists for 3/3 parity across the audit's
+// enumerated cascade (swift-memory-primitives + swift-buffer-primitives
+// + swift-async-primitives) and asserts Wheel public state remains
+// consistent across repeated cross-module reads on a `let`-bound
+// instance. Any release-mode optimizer regression that widened the
+// bug class to cascade through Buffer.Arena's heap-backed path would
+// surface here.
+
+extension Timer.Wheel.Test.Unit {
+    @Test
+    func `wheel state remains consistent across repeated cross-module reads (finding #12 regression guard)`() {
+        let config = Async.Timer.Wheel<ContinuousClock>.Config(
+            tick: .milliseconds(1), slots: 16, levels: 2, capacity: 64
+        )
+        let wheel = Async.Timer.Wheel(clock: ContinuousClock(), config: config)
+
+        let count1 = wheel.count
+        let count2 = wheel.count
+        let isEmpty1 = wheel.isEmpty
+        let isEmpty2 = wheel.isEmpty
+        let cfg1 = wheel.config
+        let cfg2 = wheel.config
+
+        #expect(count1 == count2)
+        #expect(count1 == 0)
+        #expect(isEmpty1 == isEmpty2)
+        #expect(isEmpty1 == true)
+        #expect(cfg1 == cfg2)
+        #expect(cfg1 == config)
+    }
+}
