@@ -12,8 +12,8 @@
 // Async channels require task suspension which is not available on embedded Swift.
 #if !hasFeature(Embedded)
 
-public import Ownership_Primitives
 public import Synchronization
+public import Ownership_Primitives
 
 extension Async.Channel.Bounded where Element: ~Copyable {
     /// Thread-safe storage wrapping the state machine.
