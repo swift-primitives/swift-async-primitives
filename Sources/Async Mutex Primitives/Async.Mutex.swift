@@ -15,27 +15,27 @@ public import Darwin.os.lock
 // MARK: - Mutex
 
 extension Async {
-    /// A value-owning mutex providing both closure-based and coroutine-based access.
+    /// A value-owning mutex providing closure-based access to ~Copyable state.
     ///
-    /// Uses `os_unfair_lock` for mutual exclusion. Provides two access patterns:
-    /// - `withLock(_:)`: Closure-based, suitable for transactional operations.
-    /// - `locked`: Coroutine-based (`_read`), enabling direct property access
-    ///   without closures, Optional wrappers, or `.take()!` for ~Copyable values.
+    /// Uses `os_unfair_lock` for mutual exclusion. All mutation flows through
+    /// `withLock(_:)` / `withLockIfAvailable(_:)`, which receive the protected
+    /// value as `inout sending Value`.
     ///
-    /// All properties are `let`-bound with interior mutability through raw pointers.
-    /// The `locked` accessor uses `_read` with `nonmutating _modify` on the view,
+    /// Storage is `let`-bound with interior mutability through raw pointers,
     /// so Mutex works correctly with `let` bindings on classes.
+    ///
+    /// ## Fairness
+    ///
+    /// `os_unfair_lock` is **unfair by default**. Contended waiters are not
+    /// guaranteed to acquire in FIFO order, and a heavily-contending task can
+    /// starve others. For ordered/fair admission, compose `Async.Semaphore`
+    /// (FIFO) on top of the protected state rather than using `Mutex` directly.
     ///
     /// ## Usage
     ///
     /// ```swift
     /// let mutex = Async.Mutex(State())
-    ///
-    /// // Closure API (transactional — multiple state reads/writes under one lock)
     /// mutex.withLock { state in state.count += 1 }
-    ///
-    /// // Coroutine API (direct access — single lock per access)
-    /// mutex.locked.value.count += 1
     /// ```
     public struct Mutex<Value: ~Copyable>: ~Copyable {
         // MARK: - Raw Storage
@@ -133,30 +133,6 @@ extension Async.Mutex where Value: ~Copyable {
         guard unsafe os_unfair_lock_trylock(_lockPointer()) else { return nil }
         defer { _unlock() }
         return try unsafe body(&_valuePointer().pointee)
-    }
-}
-
-// MARK: - Coroutine API
-
-extension Async.Mutex where Value: ~Copyable {
-    /// A locked view providing direct property access to the protected value.
-    ///
-    /// The lock is held for the duration of the `_read` coroutine scope.
-    /// Each access to `locked` acquires and releases the lock independently.
-    ///
-    /// For transactional operations requiring multiple state reads/writes
-    /// under a single lock acquisition, use `withLock(_:)` instead.
-    ///
-    /// ```swift
-    /// mutex.locked.value.count += 1
-    /// ```
-    @inlinable
-    public var locked: Locked {
-        _read {
-            _lock()
-            defer { _unlock() }
-            yield unsafe Locked(_valuePointer())
-        }
     }
 }
 
