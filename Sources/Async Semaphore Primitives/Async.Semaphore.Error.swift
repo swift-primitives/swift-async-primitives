@@ -9,18 +9,12 @@
 //
 // ===----------------------------------------------------------------------===//
 
+public import Async_Primitives_Core
+
 extension Async.Semaphore {
     /// Errors thrown by semaphore operations.
     ///
-    /// Precedence order: shutdown > cancelled > timeout.
-    public enum Error: Swift.Error, Sendable, Equatable {
-        /// The semaphore has been shut down.
-        case shutdown
-
-        /// The waiting task was cancelled.
-        case cancelled
-
-        /// The wait operation timed out.
-        case timeout
-    }
+    /// Aliased to ``Async/Lifecycle/Error`` (`shutdown` / `cancelled` /
+    /// `timeout`). Precedence order: shutdown > cancelled > timeout.
+    public typealias Error = Async.Lifecycle.Error
 }
