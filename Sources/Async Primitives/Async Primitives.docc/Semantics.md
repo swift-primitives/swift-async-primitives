@@ -82,7 +82,7 @@ Per the per-primitive cancellation-error-type question (tracked as
 - ``Async/Broadcast/Error`` uses `.cancelled`
 - ``Async/Channel/Error`` uses `.cancelled`
 - ``Async/Completion/Error`` uses `.cancellation` (noun)
-- ``Async/Lifecycle/Error`` (the shared envelope) uses `.cancellation`
+- ``Async/Lifecycle/Error`` (the shared envelope) uses `.cancelled`
 
 The inconsistency is a known pre-1.0 normalization target. The current
 direction (`Research/typed-throws-audit-2026-04-24.md`) is to adopt

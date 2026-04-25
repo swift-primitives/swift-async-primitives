@@ -10,64 +10,38 @@
 // ===----------------------------------------------------------------------===//
 
 extension Async.Lifecycle {
-    /// Error envelope for operations on resources with lifecycle semantics.
+    /// Canonical lifecycle-error envelope for async primitives.
     ///
-    /// Separates lifecycle concerns (shutdown, cancellation, timeout) from
-    /// operational failures. The `.failure(E)` case wraps the domain-specific
-    /// error; the other cases are lifecycle infrastructure.
+    /// Represents the three lifecycle-driven failure modes shared across
+    /// resources with cancellation, shutdown, and timeout semantics.
+    /// Composition with body / domain errors moves into
+    /// `Either<Async.Lifecycle.Error, E>` at the API surface.
     ///
     /// ## Usage
     ///
     /// ```swift
-    /// func run<T>() async throws(Async.Lifecycle.Error<MyError>) -> T
+    /// func wait() async throws(Async.Lifecycle.Error) -> Void
     /// ```
-    public enum Error<E: Swift.Error>: Swift.Error {
+    public enum Error: Swift.Error, Sendable, Equatable {
         /// The resource is shutting down. New operations are rejected.
-        case shutdownInProgress
+        case shutdown
 
         /// The operation was cancelled.
-        case cancellation
+        case cancelled
 
         /// The operation timed out.
         case timeout
-
-        /// An operational failure.
-        case failure(E)
-    }
-}
-
-// MARK: - Map
-
-extension Async.Lifecycle.Error {
-    /// Maps the failure case to a different error type.
-    ///
-    /// Lifecycle cases (shutdown, cancellation, timeout) are preserved.
-    /// Only `.failure` is transformed.
-    @inlinable
-    public func mapFailure<NewE: Swift.Error>(
-        _ transform: (E) -> NewE
-    ) -> Async.Lifecycle.Error<NewE> {
-        switch self {
-        case .shutdownInProgress: .shutdownInProgress
-        case .cancellation: .cancellation
-        case .timeout: .timeout
-        case .failure(let e): .failure(transform(e))
-        }
     }
 }
 
 // MARK: - Conformances
 
-extension Async.Lifecycle.Error: Equatable where E: Equatable {}
-extension Async.Lifecycle.Error: Sendable where E: Sendable {}
-
 extension Async.Lifecycle.Error: CustomStringConvertible {
     public var description: Swift.String {
         switch self {
-        case .shutdownInProgress: "shutdownInProgress"
-        case .cancellation: "cancellation"
+        case .shutdown: "shutdown"
+        case .cancelled: "cancelled"
         case .timeout: "timeout"
-        case .failure(let e): "failure(\(e))"
         }
     }
 }
