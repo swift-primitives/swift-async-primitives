@@ -110,13 +110,13 @@ struct UnboundedChannelTests {
 
         // Start receive in background
         let receiveTask = Task {
-            await started.arrive()
+            try? await started.arrive()
             var iterator = elements.makeAsyncIterator()
             return try await iterator.next()
         }
 
         // Wait for task to be ready
-        await started.arrive()
+        try? await started.arrive()
 
         // Send element
         try sender.send(42)
@@ -136,13 +136,13 @@ struct UnboundedChannelTests {
 
         // Start receive in background
         let receiveTask = Task {
-            await started.arrive()
+            try? await started.arrive()
             var iterator = elements.makeAsyncIterator()
             return try await iterator.next()
         }
 
         // Wait for task to be ready
-        await started.arrive()
+        try? await started.arrive()
 
         // Close channel
         sender.close()
@@ -190,13 +190,13 @@ struct UnboundedChannelTests {
         let elements = ends.receiver.elements
 
         let receiveTask = Task {
-            await started.arrive()
+            try? await started.arrive()
             var iterator = elements.makeAsyncIterator()
             return try await iterator.next()
         }
 
         // Wait for task to be ready
-        await started.arrive()
+        try? await started.arrive()
 
         // Cancel the task
         receiveTask.cancel()
@@ -271,13 +271,13 @@ struct UnboundedChannelTests {
 
         // Start receiver first (will suspend)
         let receiveTask = Task {
-            await started.arrive()
+            try? await started.arrive()
             var iterator = elements.makeAsyncIterator()
             return try await iterator.next()
         }
 
         // Wait for receiver to be ready
-        await started.arrive()
+        try? await started.arrive()
 
         // Send element - should be delivered directly
         try sender.send(42)
@@ -320,12 +320,12 @@ struct UnboundedChannelTests {
 
         // Start a suspended receive
         let receiveTask = Task {
-            await started.arrive()
+            try? await started.arrive()
             var iterator = elements.makeAsyncIterator()
             return try await iterator.next()
         }
 
-        await started.arrive()
+        try? await started.arrive()
 
         // NOTE: We intentionally do NOT poll while receiveTask is suspended
         // because that would violate single-suspended-receiver invariant

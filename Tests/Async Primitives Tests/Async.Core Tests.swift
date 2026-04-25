@@ -368,38 +368,46 @@ extension Core.Test.Barrier {
     }
 
     @Test
-    func `arrive() does not observe Task cancellation mid-await`() async {
-        // Pins the documented contract: a cancelled Task suspended in
-        // arrive() still resumes when the barrier releases. Cancellation
-        // mid-await is silent — it does NOT remove the party from the
-        // arrived count or prevent release.
+    func `arrive() throws cancelled on mid-await cancellation`() async throws {
+        // Pins Shape A contract: a cancelled mid-await party throws
+        // .cancelled (rolled back from arrived, added to cancelled);
+        // remaining parties release when arrived == parties - cancelled.
         let barrier = Async.Barrier(parties: 2)
 
-        // Spawn one party that will be cancelled mid-await
-        let cancellableTask = Task {
-            await barrier.arrive()
-            return true  // resumed
+        // Spawn one party that will be cancelled mid-await.
+        let cancellableTask = Task { () async -> Result<Void, Async.Lifecycle.Error> in
+            do throws(Async.Lifecycle.Error) {
+                try await barrier.arrive()
+                return .success(())
+            } catch {
+                return .failure(error)
+            }
         }
 
-        // Let the task suspend on arrive()
+        // Let the task suspend on arrive().
         try? await Task.sleep(for: .milliseconds(20))
         #expect(barrier.arrived == 1, "first party arrived and is suspended")
 
-        // Cancel the suspended party
+        // Cancel the suspended party.
         cancellableTask.cancel()
 
+        // Allow cancellation to propagate.
         try? await Task.sleep(for: .milliseconds(20))
-        #expect(!barrier.isReleased, "barrier still waiting for second party")
 
-        // Second party arrives → barrier releases → first (cancelled) party resumes
-        let secondTask = Task { await barrier.arrive() }
+        // First party should have thrown .cancelled and been removed from
+        // the rendezvous; effective parties = 2 - 1 = 1.
+        let firstResult = await cancellableTask.value
+        if case .failure(.cancelled) = firstResult {
+            // expected
+        } else {
+            Issue.record("expected .failure(.cancelled), got \(firstResult)")
+        }
+        #expect(barrier.cancelledCount == 1, "cancellation count incremented")
 
-        let firstResumed = await cancellableTask.value
-        _ = await secondTask.value
-
-        #expect(firstResumed, "cancelled mid-await party still resumes on release")
-        #expect(barrier.isReleased)
-        #expect(cancellableTask.isCancelled)
+        // Second party arrives → effective parties (1) reached → release.
+        try await barrier.arrive()
+        #expect(barrier.isReleased, "barrier releases on effective party count met")
+        #expect(barrier.arrived == 1, "arrived rolled back the cancelled party")
     }
 
     @Test
@@ -460,7 +468,7 @@ extension Core.Test.Barrier {
         await withTaskGroup(of: Void.self) { group in
             for _ in 0..<3 {
                 group.addTask {
-                    await barrier.arrive()
+                    try? await barrier.arrive()
                 }
             }
         }

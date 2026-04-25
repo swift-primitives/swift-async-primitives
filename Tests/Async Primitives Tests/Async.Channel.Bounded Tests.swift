@@ -125,11 +125,11 @@ struct BoundedChannelTests {
         let started = Async.Barrier(parties: 2)
 
         let receiveTask = Task {
-            await started.arrive()
+            try? await started.arrive()
             return try await channel.receiver.receive()
         }
 
-        await started.arrive()
+        try? await started.arrive()
         try await sender.send(42)
 
         let result = try await receiveTask.value
@@ -143,11 +143,11 @@ struct BoundedChannelTests {
         let started = Async.Barrier(parties: 2)
 
         let receiveTask = Task {
-            await started.arrive()
+            try? await started.arrive()
             return try await channel.receiver.receive()
         }
 
-        await started.arrive()
+        try? await started.arrive()
         sender.close()
 
         let result = try await receiveTask.value
@@ -163,11 +163,11 @@ struct BoundedChannelTests {
         try await sender.send(1)
 
         let sendTask = Task {
-            await started.arrive()
+            try? await started.arrive()
             try await sender.send(2)
         }
 
-        await started.arrive()
+        try? await started.arrive()
 
         let first = try await channel.receiver.receive()
         #expect(first == 1)
@@ -187,7 +187,7 @@ struct BoundedChannelTests {
         try await sender.send(1)
 
         let sendTask = Task { () -> Async.Channel<Int>.Error? in
-            await started.arrive()
+            try? await started.arrive()
             do {
                 try await sender.send(2)
                 return nil
@@ -198,7 +198,7 @@ struct BoundedChannelTests {
             }
         }
 
-        await started.arrive()
+        try? await started.arrive()
         sender.close()
 
         let error = await sendTask.value
@@ -236,11 +236,11 @@ struct BoundedChannelTests {
         let started = Async.Barrier(parties: 2)
 
         let receiveTask = Task {
-            await started.arrive()
+            try? await started.arrive()
             return try await channel.receiver.receive()
         }
 
-        await started.arrive()
+        try? await started.arrive()
         try await sender.send(42)
 
         let result = try await receiveTask.value
@@ -298,7 +298,7 @@ struct BoundedChannelTests {
 
         // Start a send that will suspend (buffer full)
         let sendTask = Task { () -> Async.Channel<Int>.Error? in
-            await started.arrive()
+            try? await started.arrive()
             do {
                 try await sender.send(2)
                 return nil
@@ -309,7 +309,7 @@ struct BoundedChannelTests {
             }
         }
 
-        await started.arrive()
+        try? await started.arrive()
         sendTask.cancel()
 
         let error = await sendTask.value

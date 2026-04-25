@@ -32,7 +32,7 @@ be documented before v1.0.
 
 | Primitive | Cancellation observation | Ordering | Backpressure | Fairness |
 |---|---|---|---|---|
-| ``Async/Barrier`` | **Non-observing by signature** with two cases. Cancelled mid-await: cancelled party's continuation stays in waiter list; when barrier releases, the cancelled task resumes alongside the others (pinned by `arrive() does not observe Task cancellation mid-await`). Cancelled before `arrive()` is called: party never increments the arrival count → barrier never releases → other parties wait forever. Callers MUST guarantee each party calls `arrive()` exactly once; the barrier exposes no cancellation-release path | N/A (no ordering — all parties released atomically when party-count reached) | N/A (fixed party count at init; one-shot) | Release is simultaneous to all waiters; resume order among waiters after release is **undefined** |
+| ``Async/Barrier`` | `arrive()` throws ``Async/Lifecycle/Error/cancelled`` if the Task is cancelled mid-await. The cancelled party's contribution is rolled back from `arrived` and added to `cancelled`; remaining parties release when `arrived == parties - cancelled` (effective party count). The cancelled-before-`arrive()` case (party never reaches the call site) still requires structural concurrency — the typed-throws contract closes only the in-flight cancellation case. Pinned by `arrive() throws cancelled on mid-await cancellation`. Callback-form `arrive(_:)` is non-observing by design. | N/A (no ordering — all parties released atomically when effective party count is reached) | N/A (fixed party count at init; one-shot) | Release is simultaneous to all waiters; resume order among waiters after release is **undefined** |
 | ``Async/Bridge`` | **Non-observing by signature.** `next()` is `async -> Element?` (not throws); a cancelled consumer Task suspended in `next()` continues to suspend until `push(_:)` or `finish()` signals, then resumes with the element (or `nil`). Termination is the producer's responsibility. Pinned by `Async.Bridge Tests.swift` | FIFO (single-consumer; Deque-backed internal buffer pushes to back, pops from front) | **None** (unbounded internal buffer via Deque) | Single-consumer invariant; no multi-reader fairness question |
 | ``Async/Broadcast`` | `next()` throws ``Async/Broadcast/Error/cancelled``; token-matching cancellation per §5.3 (exactly-once continuation resumption) | Per-subscriber FIFO for delivered items. Across subscribers on a single `send(_:)`: **subscription-order resume** (oldest subscription resumed first; `state.subscribers` is `Dictionary<…>.Ordered`). Resume-call order differs from task-completion order, which is scheduler-determined | **Replay-window bounded** (`bufferCapacity`, default 64). Slow subscribers that fall behind the replay window **silently drop** intermediate events | Subscription-order wakeup signal; observable completion is scheduler-determined |
 | ``Async/Broadcast/Subscription`` | Inherits Broadcast's cancellation semantics via its `AsyncSequence` iterator; `cancel()` is idempotent and triggers `.finished` resumption for any pending `next()` | Per-subscription cursor (independent across subscriptions) | Inherits Broadcast's replay-window | Inherits Broadcast |
@@ -51,13 +51,12 @@ to compose coordination, not coordination primitives themselves.
 
 ## Gap inventory
 
-All `gap` cells from the 2026-04-24 first-pass have been closed except the
-``Async/Barrier`` cancellation contract, which is under design investigation
-per `Research/barrier-api-investigation-2026-04-25.md` (typed-throws-on-arrive
-proposal — closes the cancelled-before-arrival deadlock case at the API level
-rather than as documented runtime behavior). The current ``Async/Barrier``
-row reflects the documented contract; it will tighten once the design call
-lands.
+All `gap` cells from the 2026-04-24 first-pass have been closed. The
+``Async/Barrier`` cancellation contract was redesigned 2026-04-25 per
+`Research/barrier-api-investigation-2026-04-25.md` Shape A — `arrive()`
+now uses typed throws to surface cancellation and the effective party
+count adapts. A follow-up Phase 2 experiment will validate whether
+Shape B (`~Copyable` Party-handle pattern) is worth a 1.0+ redesign.
 
 ## Cancellation-error naming consistency
 
