@@ -23,8 +23,32 @@ extension Async.Channel.Bounded where Element: ~Copyable {
     /// to a bounded channel. Multiple senders can share the same channel
     /// by copying the handle (each copy shares the underlying storage).
     ///
-    /// When the last `Sender` copy is dropped (all references released),
-    /// the channel automatically closes, waking any waiting receivers.
+    /// ## Auto-Close (ARC-Mediated)
+    /// `Sender` wraps an internal `Handle` reference. **Copying a `Sender`
+    /// increments the channel's sender-handle refcount**; dropping a copy
+    /// decrements it. When the **last `Sender` copy across ALL tasks** is
+    /// released and its `Handle` deinit runs, the channel automatically
+    /// closes — pending receivers resume with `nil` (after buffer drains),
+    /// suspended senders throw `.closed`.
+    ///
+    /// This auto-close is the ARC-mediated counterpart to explicit
+    /// `close()`. The two paths converge on the same close action:
+    ///
+    /// - **Explicit**: `sender.close()` (or `ends.close()`) is called from
+    ///   any sender; immediate close action.
+    /// - **Implicit**: last `Sender` copy is released; `Handle.deinit`
+    ///   triggers the close action.
+    ///
+    /// ### Capture in actor-isolated state
+    /// A `Sender` captured in an `actor`'s stored property (or in a closure
+    /// stored on an actor) has its `Handle.deinit` run on the **actor's
+    /// executor** when the captured value is released. The deinit's close
+    /// action acquires the channel's internal `Async.Mutex` (a non-actor
+    /// lock); resumed continuations are scheduled, not synchronously
+    /// invoked. There is no reentrancy hazard for actor-isolated state
+    /// — the actor is not re-entered as part of the close path; any
+    /// continuation that targets the same actor is enqueued via the
+    /// runtime's normal scheduling.
     ///
     /// ## Usage
     /// ```swift
@@ -165,6 +189,28 @@ extension Async.Channel.Bounded.Sender where Element: ~Copyable {
 
 extension Async.Channel.Bounded.Sender where Element: ~Copyable {
     /// Close the channel, signaling no more elements will be sent.
+    ///
+    /// **Hybrid forced/graceful semantics**:
+    ///
+    /// - **Forced for senders**. Suspended `send(_:)` calls (waiting on a
+    ///   full buffer) are immediately resumed with `Error.closed`; their
+    ///   element drops on the floor. Future `send(_:)` calls throw
+    ///   `Error.closed`. The closing party's intent overrides any
+    ///   in-flight send.
+    /// - **Graceful for receivers**. The buffer is **not flushed**.
+    ///   Receivers calling `receive()` continue to see buffered elements
+    ///   in FIFO order until the buffer is drained, only then receiving
+    ///   `nil`. A receiver suspended at the moment of close (empty
+    ///   buffer) resumes immediately with `nil`.
+    ///
+    /// `close()` is idempotent — calling it on an already-closed channel
+    /// is a no-op.
+    ///
+    /// Concurrent semantics: any element pushed by a successful `send`
+    /// that completed before `close()` acquired the storage lock is
+    /// still observable by receivers; any `send` that hadn't yet
+    /// acquired the lock will now throw `.closed`. The lock provides a
+    /// linearization point.
     ///
     /// After this call:
     /// - Any pending `receive()` returns `nil` (if buffer empty)

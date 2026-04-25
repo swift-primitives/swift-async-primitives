@@ -49,6 +49,12 @@ extension Async.Channel.Bounded.Ends where Element: ~Copyable {
     }
 
     /// Close the channel.
+    ///
+    /// Equivalent to calling `close()` on a `Sender` view of this channel:
+    /// suspended senders throw `Error.closed` (forced), but receivers
+    /// continue draining the buffer in FIFO order until empty (graceful).
+    /// See ``Async/Channel/Bounded/Sender/close()`` for the full hybrid
+    /// forced/graceful semantics.
     public func close() {
         sender.close()
     }
