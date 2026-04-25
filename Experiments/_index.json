@@ -17,6 +17,20 @@
       "statusRaw": "CONFIRMED (9/9 variants; compiler bug found: `o!` crashes IRGen, `.take()!` workaround)",
       "supersededBy": null,
       "crossRefs": []
+    },
+    {
+      "directory": "barrier-handle-ownership",
+      "displayName": "barrier-handle-ownership",
+      "purpose": "Validate Shape B (~Copyable Party-handle) for Async.Barrier — does deinit-deregistration fire reliably across direct scope, Task, throw, cancellation, and withTaskGroup paths?",
+      "date": "2026-04-25",
+      "toolchain": "Swift 6.3",
+      "status": "CONFIRMED",
+      "statusDetail": "(6/6 variants; deinit fires on drop and is suppressed by consuming arrive() across all tested paths)",
+      "statusRaw": "CONFIRMED (6/6 variants)",
+      "supersededBy": null,
+      "crossRefs": [
+        "swift-async-primitives/Research/barrier-api-investigation-2026-04-25.md"
+      ]
     }
   ]
 }
