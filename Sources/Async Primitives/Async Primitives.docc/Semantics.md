@@ -36,7 +36,7 @@ be documented before v1.0.
 | ``Async/Bridge`` | **Non-observing by signature.** `next()` is `async -> Element?` (not throws); a cancelled consumer Task suspended in `next()` continues to suspend until `push(_:)` or `finish()` signals, then resumes with the element (or `nil`). Termination is the producer's responsibility. Pinned by `Async.Bridge Tests.swift` | FIFO (single-consumer; Deque-backed internal buffer pushes to back, pops from front) | **None** (unbounded internal buffer via Deque) | Single-consumer invariant; no multi-reader fairness question |
 | ``Async/Broadcast`` | `next()` throws ``Async/Broadcast/Error/cancelled``; token-matching cancellation per §5.3 (exactly-once continuation resumption) | Per-subscriber FIFO for delivered items. Across subscribers on a single `send(_:)`: **subscription-order resume** (oldest subscription resumed first; `state.subscribers` is `Dictionary<…>.Ordered`). Resume-call order differs from task-completion order, which is scheduler-determined | **Replay-window bounded** (`bufferCapacity`, default 64). Slow subscribers that fall behind the replay window **silently drop** intermediate events | Subscription-order wakeup signal; observable completion is scheduler-determined |
 | ``Async/Broadcast/Subscription`` | Inherits Broadcast's cancellation semantics via its `AsyncSequence` iterator; `cancel()` is idempotent and triggers `.finished` resumption for any pending `next()` | Per-subscription cursor (independent across subscriptions) | Inherits Broadcast's replay-window | Inherits Broadcast |
-| ``Async/Channel/Bounded`` | `send(_:)` / `receive()` throw ``Async/Channel/Error/cancelled``; closed-channel path: `.closed` (send) or `nil` return (receive). Auto-close when last `Sender` drops propagates through active receivers | `gap` — per-sender FIFO is guaranteed by the internal queue mutex; **multi-sender interleaving ordering** (whether two concurrent `send(_:)` calls on two distinct Senders observe a global order or only per-sender order) is not yet specified | Capacity-bounded; `send(_:)` suspends when buffer full (backpressure) | `gap` — sender wakeup order under contention is not yet specified; internal queue mutex serializes so arrival-order semantics are a reasonable assumption but undocumented |
+| ``Async/Channel/Bounded`` | `send(_:)` / `receive()` throw ``Async/Channel/Error/cancelled``; closed-channel path: `.closed` (send) or `nil` return (receive). Auto-close when last `Sender` drops propagates through active receivers | **Mutex-acquisition order** — concurrent `send(_:)` calls from distinct Senders serialize on the storage lock; elements appear in buffer (and at receiver) in lock-acquisition order. Per-sender FIFO is preserved | Capacity-bounded; `send(_:)` suspends when buffer full (backpressure) | **FIFO via Deque** — suspended senders are queued in mutex-acquisition order; when a slot frees, front-of-deque resumes first. No priority inversion under bounded contention |
 | ``Async/Channel/Unbounded`` | `receive()` throws ``Async/Channel/Error/cancelled``; closed-channel path: `nil` return after drain; Sender side is non-throwing (sync send). Single-suspended-receiver invariant: concurrent suspended `receive()` calls trap (precondition) | FIFO | **None** (unbounded internal buffer) | Single-receiver invariant; no fairness question on the consumer side |
 | ``Async/Completion`` | `cancel()` transitions `pending \| running → cancelled` via CAS; exactly-once resumption guarantee. Throws ``Async/Completion/Transition/Error/alreadyDone`` if the state is already terminal when a second transition is attempted | N/A (single-value terminal result) | N/A (single-value) | CAS race — the first transition wins deterministically; others throw `.alreadyDone` |
 | ``Async/Mutex`` | — (synchronous; not cancellation-observing by design. `withLock { }` does not test `Task.isCancelled`) | N/A (single-lock acquire) | N/A (binary lock) | **Unfair** — `os_unfair_lock` is unfair by default on Darwin; on Linux/Windows the typealias to `Synchronization.Mutex` inherits that primitive's fairness (stdlib-defined). For FIFO admission, compose ``Async/Semaphore`` (FIFO) over the protected state rather than using Mutex directly |
@@ -51,18 +51,13 @@ to compose coordination, not coordination primitives themselves.
 
 ## Gap inventory
 
-The `gap` cells above are the authoritative list of semantic properties to
-specify before v1.0:
-
-4. ``Async/Channel/Bounded`` multi-sender interleaving ordering — whether
-   the internal queue mutex provides arrival-order semantics across distinct
-   Senders, or only per-sender FIFO.
-5. ``Async/Channel/Bounded`` sender-wakeup fairness under contention —
-   whether waiters on `send(_:)` drain in arrival order.
-
-Each gap is a small documentation addition backed by either an existing
-test, a small new test, or (where the current behavior is accidental) a
-deliberate design call followed by a documentation + test pair.
+All `gap` cells from the 2026-04-24 first-pass have been closed except the
+``Async/Barrier`` cancellation contract, which is under design investigation
+per `Research/barrier-api-investigation-2026-04-25.md` (typed-throws-on-arrive
+proposal — closes the cancelled-before-arrival deadlock case at the API level
+rather than as documented runtime behavior). The current ``Async/Barrier``
+row reflects the documented contract; it will tighten once the design call
+lands.
 
 ## Cancellation-error naming consistency
 

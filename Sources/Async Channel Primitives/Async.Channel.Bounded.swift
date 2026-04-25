@@ -41,6 +41,30 @@ extension Async.Channel where Element: ~Copyable {
     /// - `receiver` is `~Copyable` - exactly one receiver per channel
     /// - Auto-close: Channel closes when last Sender drops
     ///
+    /// ## Ordering and Fairness
+    /// All channel state is protected by an internal mutex; concurrent
+    /// `send(_:)` calls from distinct `Sender` handles serialize on lock
+    /// acquisition. Two consequences follow:
+    ///
+    /// - **Multi-sender ordering**: when N concurrent `send(_:)` calls
+    ///   complete successfully (buffer not full at the time each acquires
+    ///   the lock), elements appear in the buffer (and at the receiver)
+    ///   in **mutex-acquisition order** — i.e., the order the lock was
+    ///   acquired by each sender. Per-sender FIFO is guaranteed; across
+    ///   senders, the order is arrival order at the lock.
+    ///
+    /// - **Sender-wakeup fairness under contention**: when the buffer is
+    ///   full, suspended senders are queued in a `Deque` in
+    ///   mutex-acquisition order. When the receiver consumes an element
+    ///   and a slot frees, the **front sender of the deque is resumed
+    ///   first** — strict FIFO. Suspended senders drain in arrival order;
+    ///   no priority inversion or starvation under bounded contention.
+    ///
+    /// As with broadcast wakeup ordering, the resume-call order is
+    /// distinct from observable Task-completion order (the latter is
+    /// scheduler-determined). The contract is on the wakeup signal, not
+    /// on the order in which `send(_:)` returns to the calling Task.
+    ///
     /// ## Error Handling
     /// Operations use typed throws for exhaustive error handling:
     /// ```swift
