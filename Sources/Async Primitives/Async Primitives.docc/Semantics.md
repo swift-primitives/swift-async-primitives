@@ -78,18 +78,26 @@ deliberate design call followed by a documentation + test pair.
 Per the per-primitive cancellation-error-type question (tracked as
 `Research/forums-review-triage-2026-04-24.md` Q4 / Open Question #2):
 
-- ``Async/Semaphore/Error`` uses `.cancelled` (past participle)
-- ``Async/Broadcast/Error`` uses `.cancelled`
-- ``Async/Channel/Error`` uses `.cancelled`
-- ``Async/Completion/Error`` uses `.cancellation` (noun)
-- ``Async/Lifecycle/Error`` (the shared envelope) uses `.cancelled`
+- ``Async/Semaphore/Error`` uses `.cancelled` — typealiased to ``Async/Lifecycle/Error``
+- ``Async/Broadcast/Error`` uses `.cancelled` — per-primitive enum
+- ``Async/Channel/Error`` uses `.cancelled` — per-primitive enum
+- ``Async/Completion/Error`` uses `.cancellation` (noun) — per-primitive enum, the lone outlier
+- ``Async/Lifecycle/Error`` is non-generic with cases `shutdown` / `cancelled` / `timeout`
 
-The inconsistency is a known pre-1.0 normalization target. The current
-direction (`Research/typed-throws-audit-2026-04-24.md`) is to adopt
-``Async/Lifecycle/Error`` across primitives, which standardizes the
-spelling on `.cancellation` as a side-effect. Until that refactor lands,
-the per-primitive `.cancelled` spelling stands in the ``Async/Broadcast``,
-``Async/Channel``, and ``Async/Semaphore`` surfaces.
+The principle: typealias a per-primitive error to ``Async/Lifecycle/Error``
+ONLY when all three of `.shutdown`, `.cancelled`, and `.timeout` apply to
+the primitive. Semaphore satisfies this; Broadcast, Channel, and Completion
+do not (Broadcast has no shutdown or timeout; Channel mixes `.cancelled`
+with `.closed`/`.full`/`.empty` domain cases; Completion has no shutdown).
+Force-fitting them through the wider type just for typealias uniformity
+introduces phantom cases that never fire and obscures each primitive's
+actual semantic surface.
+
+The residual `.cancellation` (noun) vs `.cancelled` (past participle)
+inconsistency in ``Async/Completion/Error`` is a known pre-1.0
+normalization target. Resolving it does not require lifting Completion
+through ``Async/Lifecycle/Error`` — a simple in-place case rename
+suffices.
 
 ## Composition
 
