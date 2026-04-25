@@ -224,6 +224,32 @@ extension Core.Test.Promise {
     }
 
     @Test
+    func `value() does not observe Task cancellation`() async {
+        // Pins the documented contract: Promise.value() is non-observing
+        // by signature (async -> Value, not throws). A cancelled Task
+        // awaiting value() still resumes with the fulfilled value.
+        let promise = Async.Promise<Int>()
+
+        let task = Task { await promise.value() }
+
+        // Let the task suspend on value()
+        try? await Task.sleep(for: .milliseconds(20))
+
+        // Cancel the awaiter — should NOT interrupt value()
+        task.cancel()
+
+        // Give cancellation time to propagate (it shouldn't, but we test that)
+        try? await Task.sleep(for: .milliseconds(20))
+
+        // Fulfill — every waiter (including the cancelled task) resumes
+        #expect(promise.fulfill(42))
+
+        let result = await task.value
+        #expect(result == 42, "cancelled awaiter still receives the fulfilled value")
+        #expect(task.isCancelled, "task should still report itself as cancelled")
+    }
+
+    @Test
     func `fulfill sets value and returns true`() {
         let promise = Async.Promise<Int>()
         let result = promise.fulfill(42)

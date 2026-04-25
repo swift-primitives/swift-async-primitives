@@ -29,6 +29,21 @@ extension Async {
     /// success, `false` if already fulfilled. Double-fulfillment typically
     /// indicates a logic error.
     ///
+    /// ## Cancellation
+    /// `value()` does NOT observe Task cancellation — its non-throwing
+    /// `async -> Value` signature cannot surface a cancellation error. A
+    /// Task cancelled while awaiting `value()` continues to suspend until
+    /// `fulfill(_:)` is invoked; if `fulfill` is never called, the awaiter
+    /// never resumes (a held continuation, not a deadlock — the rest of
+    /// the runtime is unaffected).
+    ///
+    /// Callers who need cancellation-aware promise consumption MUST compose
+    /// it externally — e.g. by racing `value()` against a cancellation
+    /// signal inside a `withTaskCancellationHandler` block, or by structuring
+    /// the awaiter as a child task whose parent is the cancellation owner.
+    /// The primitive deliberately does NOT bake cancellation into its
+    /// single-value semantics.
+    ///
     /// ## Usage
     /// ```swift
     /// let result = Async.Promise<Config>()
@@ -146,6 +161,11 @@ extension Async.Promise {
     /// Otherwise, suspends until another task calls `fulfill(_:)`.
     ///
     /// Multiple tasks can await concurrently - all will receive the same value.
+    ///
+    /// - Note: This method does NOT observe Task cancellation — the
+    ///   non-throwing signature precludes it. A cancelled awaiter still
+    ///   resumes with the fulfilled value when `fulfill(_:)` is invoked.
+    ///   See the type-level "Cancellation" docs for composition patterns.
     ///
     /// - Note: This property is only available on non-embedded platforms.
     ///   On embedded, use `wait(_:)` instead.
