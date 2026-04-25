@@ -66,7 +66,7 @@ Per the per-primitive cancellation-error-type question (tracked as
 - ``Async/Semaphore/Error`` uses `.cancelled` — typealiased to ``Async/Lifecycle/Error``
 - ``Async/Broadcast/Error`` uses `.cancelled` — per-primitive enum
 - ``Async/Channel/Error`` uses `.cancelled` — per-primitive enum
-- ``Async/Completion/Error`` uses `.cancellation` (noun) — per-primitive enum, the lone outlier
+- ``Async/Completion/Error`` uses `.cancelled` — per-primitive enum (aligned 2026-04-25 per commit `7e893ae`)
 - ``Async/Lifecycle/Error`` is non-generic with cases `shutdown` / `cancelled` / `timeout`
 
 The principle: typealias a per-primitive error to ``Async/Lifecycle/Error``
@@ -77,12 +77,6 @@ with `.closed`/`.full`/`.empty` domain cases; Completion has no shutdown).
 Force-fitting them through the wider type just for typealias uniformity
 introduces phantom cases that never fire and obscures each primitive's
 actual semantic surface.
-
-The residual `.cancellation` (noun) vs `.cancelled` (past participle)
-inconsistency in ``Async/Completion/Error`` is a known pre-1.0
-normalization target. Resolving it does not require lifting Completion
-through ``Async/Lifecycle/Error`` — a simple in-place case rename
-suffices.
 
 ## Composition
 
