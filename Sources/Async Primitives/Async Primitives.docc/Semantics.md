@@ -32,7 +32,7 @@ be documented before v1.0.
 
 | Primitive | Cancellation observation | Ordering | Backpressure | Fairness |
 |---|---|---|---|---|
-| ``Async/Barrier`` | `gap` — cancelled-before-arrival behavior is not yet specified; in particular, does cancelling one party leave the barrier un-releasable for the others, or is there an explicit cancellation-release path? | N/A (no ordering — all parties released atomically when party-count reached) | N/A (fixed party count at init; one-shot) | Release is simultaneous to all waiters; resume order among waiters after release is **undefined** |
+| ``Async/Barrier`` | **Non-observing by signature** with two cases. Cancelled mid-await: cancelled party's continuation stays in waiter list; when barrier releases, the cancelled task resumes alongside the others (pinned by `arrive() does not observe Task cancellation mid-await`). Cancelled before `arrive()` is called: party never increments the arrival count → barrier never releases → other parties wait forever. Callers MUST guarantee each party calls `arrive()` exactly once; the barrier exposes no cancellation-release path | N/A (no ordering — all parties released atomically when party-count reached) | N/A (fixed party count at init; one-shot) | Release is simultaneous to all waiters; resume order among waiters after release is **undefined** |
 | ``Async/Bridge`` | **Non-observing by signature.** `next()` is `async -> Element?` (not throws); a cancelled consumer Task suspended in `next()` continues to suspend until `push(_:)` or `finish()` signals, then resumes with the element (or `nil`). Termination is the producer's responsibility. Pinned by `Async.Bridge Tests.swift` | FIFO (single-consumer; Deque-backed internal buffer pushes to back, pops from front) | **None** (unbounded internal buffer via Deque) | Single-consumer invariant; no multi-reader fairness question |
 | ``Async/Broadcast`` | `next()` throws ``Async/Broadcast/Error/cancelled``; token-matching cancellation per §5.3 (exactly-once continuation resumption) | Per-subscriber FIFO for delivered items | **Replay-window bounded** (`bufferCapacity`, default 64). Slow subscribers that fall behind the replay window **silently drop** intermediate events | `gap` — wakeup ordering across concurrent subscribers on a single `send(_:)` is not yet specified |
 | ``Async/Broadcast/Subscription`` | Inherits Broadcast's cancellation semantics via its `AsyncSequence` iterator; `cancel()` is idempotent and triggers `.finished` resumption for any pending `next()` | Per-subscription cursor (independent across subscriptions) | Inherits Broadcast's replay-window | Inherits Broadcast |
@@ -54,9 +54,6 @@ to compose coordination, not coordination primitives themselves.
 The `gap` cells above are the authoritative list of semantic properties to
 specify before v1.0:
 
-1. ``Async/Barrier`` cancelled-before-arrival — whether a cancelled party
-   leaves the barrier un-releasable, or whether there's a cancellation-release
-   path.
 3. ``Async/Broadcast`` wakeup ordering — whether concurrent subscribers
    awakened by a single `send(_:)` are resumed in any particular order.
 4. ``Async/Channel/Bounded`` multi-sender interleaving ordering — whether

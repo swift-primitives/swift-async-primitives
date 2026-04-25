@@ -368,6 +368,41 @@ extension Core.Test.Barrier {
     }
 
     @Test
+    func `arrive() does not observe Task cancellation mid-await`() async {
+        // Pins the documented contract: a cancelled Task suspended in
+        // arrive() still resumes when the barrier releases. Cancellation
+        // mid-await is silent — it does NOT remove the party from the
+        // arrived count or prevent release.
+        let barrier = Async.Barrier(parties: 2)
+
+        // Spawn one party that will be cancelled mid-await
+        let cancellableTask = Task {
+            await barrier.arrive()
+            return true  // resumed
+        }
+
+        // Let the task suspend on arrive()
+        try? await Task.sleep(for: .milliseconds(20))
+        #expect(barrier.arrived == 1, "first party arrived and is suspended")
+
+        // Cancel the suspended party
+        cancellableTask.cancel()
+
+        try? await Task.sleep(for: .milliseconds(20))
+        #expect(!barrier.isReleased, "barrier still waiting for second party")
+
+        // Second party arrives → barrier releases → first (cancelled) party resumes
+        let secondTask = Task { await barrier.arrive() }
+
+        let firstResumed = await cancellableTask.value
+        _ = await secondTask.value
+
+        #expect(firstResumed, "cancelled mid-await party still resumes on release")
+        #expect(barrier.isReleased)
+        #expect(cancellableTask.isCancelled)
+    }
+
+    @Test
     func `single party barrier releases immediately`() {
         let barrier = Async.Barrier(parties: 1)
 

@@ -30,6 +30,26 @@ extension Async {
     /// `arrive()` calls return immediately. For reusable barriers, create
     /// a new instance.
     ///
+    /// ## Cancellation
+    /// `arrive()` does NOT observe Task cancellation — its non-throwing
+    /// `async` signature precludes it. Two cases warrant care:
+    ///
+    /// 1. **Cancelled mid-await** (after `arrive()` is called, before release):
+    ///    the cancelled task's continuation stays in the waiter list; when
+    ///    the barrier releases (last party arrives), the cancelled task
+    ///    resumes alongside the others. Cancellation is silent.
+    ///
+    /// 2. **Cancelled before `arrive()` is called**: the count never
+    ///    increments for that party, so the barrier never reaches the
+    ///    expected arrival count and **never releases**. The other parties
+    ///    suspended in `arrive()` wait forever. The barrier is one-shot
+    ///    by design and exposes no cancellation-release path.
+    ///
+    /// Callers MUST guarantee that every party calls `arrive()` exactly
+    /// once. If a party may be cancelled before arrival, compose an
+    /// external mechanism (e.g. a structured task group with a finally
+    /// block) so the party-count contract is honored.
+    ///
     /// ## Usage
     /// ```swift
     /// let barrier = Async.Barrier(parties: 3)
