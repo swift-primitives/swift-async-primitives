@@ -41,6 +41,20 @@ extension Async {
     /// Only one task may call `next()` at a time. Concurrent `next()` calls
     /// result in undefined behavior (debug builds trigger a precondition failure).
     ///
+    /// ## Cancellation
+    /// `next()` does NOT observe Task cancellation — its non-throwing
+    /// `async -> Element?` signature precludes it. A consumer Task
+    /// cancelled while suspended in `next()` continues to suspend until
+    /// `push(_:)` or `finish()` signals; if the producer never signals,
+    /// the awaiter never resumes. Termination is the producer's
+    /// responsibility (call `finish()` when done).
+    ///
+    /// Composers needing cancellation-aware bridge consumption MUST
+    /// arrange external cancellation — e.g. wrap `next()` in a
+    /// `withTaskCancellationHandler` block and call `finish()` from the
+    /// onCancel handler, or carry an explicit cancellation flag the
+    /// producer side polls.
+    ///
     /// ## No Lifecycle Policy
     /// The bridge has minimal semantics - `finish()` signals no more values
     /// will be pushed, and `next()` returns `nil` when finished AND drained.
