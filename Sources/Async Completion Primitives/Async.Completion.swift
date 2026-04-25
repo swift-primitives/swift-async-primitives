@@ -168,7 +168,7 @@ extension Async.Completion {
             cont = nil
             return captured
         }
-        cont?.resume(returning: .failure(.cancellation))
+        cont?.resume(returning: .failure(.cancelled))
     }
 
     /// Fail with a domain error.
@@ -202,13 +202,13 @@ extension Async.Completion where Failure == Never {
     /// This overload is available when Failure == Never, allowing
     /// timeout and cancellation without domain errors.
     ///
-    /// - Parameter error: The error (must be timeout or cancellation).
+    /// - Parameter error: The error (must be timeout or cancelled).
     /// - Throws: `Transition.Error.alreadyDone` if transition fails.
     public func fail(_ error: Error) throws(Transition.Error) {
         switch error {
         case .timeout:
             try timeout()
-        case .cancellation:
+        case .cancelled:
             try cancel()
         case .failure:
             // Never type - can't construct this case

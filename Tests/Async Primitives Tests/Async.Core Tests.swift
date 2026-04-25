@@ -575,10 +575,10 @@ extension Core.Test.Completion {
             try! completion.cancel()
         }
 
-        if case .failure(.cancellation) = result {
+        if case .failure(.cancelled) = result {
             // Expected
         } else {
-            Issue.record("Expected cancellation error, got \(result)")
+            Issue.record("Expected cancelled error, got \(result)")
         }
     }
 

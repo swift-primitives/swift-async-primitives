@@ -18,7 +18,7 @@ extension Async.Completion {
         case timeout
 
         /// Operation was cancelled.
-        case cancellation
+        case cancelled
 
         /// Operation failed with domain error.
         case failure(Failure)
