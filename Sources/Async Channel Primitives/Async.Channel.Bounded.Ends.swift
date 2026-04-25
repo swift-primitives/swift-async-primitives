@@ -17,6 +17,19 @@ extension Async.Channel.Bounded where Element: ~Copyable {
     ///
     /// `Ends` is `~Copyable` because it contains the `~Copyable` receiver.
     /// Use `channel.take().ends()` to consume the channel and obtain this bundle.
+    ///
+    /// ## Receiver vs Sender Asymmetry
+    ///
+    /// `receiver` is a stored `~Copyable` property (cursor state lives in
+    /// `_receiver`, accessed via `_read` / `_modify` yielding semantics).
+    /// `sender` is a computed property synthesizing a fresh `Sender` from
+    /// `storage` on each access — `let s1 = ends.sender; let s2 = ends.sender`
+    /// produces two distinct Sender values that share the same underlying
+    /// storage refcount via `Sender`'s ARC-mediated handle (see
+    /// ``Async/Channel/Bounded/Sender`` "Auto-Close (ARC-Mediated)").
+    /// The asymmetry is intentional: receivers carry per-receiver cursor
+    /// state and so are `~Copyable`; senders are re-derivable views of
+    /// the shared storage.
     public struct Ends: ~Copyable, Sendable {
         @usableFromInline
         let storage: Storage

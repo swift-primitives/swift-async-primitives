@@ -57,13 +57,51 @@ for convenience, but importing a narrow variant expresses the smallest
 dependency and is the recommended consumer pattern across the Swift Institute
 ecosystem.
 
+## API conventions
+
+Coordination primitives expose operation variants through `.send` /
+`.receive` accessor properties that namespace non-suspending forms,
+while the suspending form lives at the top level:
+
+```swift
+// Suspending forms (top-level methods)
+try await sender.send(value)                     // suspends if buffer full
+let element = try await receiver.receive()       // suspends if buffer empty
+
+// Non-suspending variants (via .send / .receive accessors)
+try sender.send.immediate(value)                 // throws .full / .closed / .cancelled
+let element = try receiver.receive.immediate()   // throws .empty / .cancelled, returns nil if drained+closed
+```
+
+The pattern keeps top-level type APIs narrow while making variant forms
+discoverable through the accessor.
+
+`Async.Bridge` is the sync-to-async handoff primitive — producers push
+synchronously from any thread, a single consumer awaits on the async
+side:
+
+```swift
+import Async_Bridge_Primitives
+
+let bridge = Async.Bridge<Int>()
+
+// Producer: synchronous, never suspends
+bridge.push(42)
+bridge.finish()  // signal no more elements
+
+// Consumer: single task at a time
+Task {
+    while let value = await bridge.next() { /* process value */ }
+    // reaches here when finish() is called and buffer drains
+}
+```
+
 ## Stability and versioning
 
 SwiftPM versions apply at the Package.swift level: one tag covers all
-14 library products simultaneously. The ecosystem-wide posture for
-what a v1.0 tag commits to across those products — one package version
-freezes every product, or per-product stability tracked by a separate
-convention — is pending resolution at the swift-institute level and is
-not yet decided. Until that lands, consumers should treat the 14
-products as sharing a single package-level version tag and pin
-accordingly.
+14 library products simultaneously. **v1.x commits to this model**:
+all 14 products are treated as sharing a single package-level version
+tag, and consumers should pin accordingly. A future major version may
+revisit per-product versioning at the swift-institute-wide level, but
+the v1.x contract is a unified package-level SemVer across all
+products.

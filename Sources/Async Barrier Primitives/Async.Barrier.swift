@@ -192,6 +192,11 @@ extension Async.Barrier {
     /// Count of parties that arrived and were subsequently cancelled
     /// mid-await. Effective party count for the release condition is
     /// `parties - cancelled`.
+    ///
+    /// This accessor is part of the public Shape A contract — consumers
+    /// MAY rely on observing the cancelled-party count to reason about
+    /// the effective release condition (`arrived == parties - cancelled`).
+    /// It is not diagnostic-only surface.
     public var cancelledCount: Int {
         _state.withLock { $0.cancelled }
     }

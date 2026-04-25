@@ -28,6 +28,15 @@ found in `Tests/` are all test-function signatures (`@Test func foo()
 async throws`) per the Swift Testing convention — not part of the
 package's public API surface and out of scope for this audit.
 
+> **Footnote on tooling counts.** The `swift-forums-review-corpus`
+> `characterize_package.py` reports an `untyped_throws` count (18 as of
+> 2026-04-25) that includes signatures from both `Sources/` and `Tests/`
+> in its grep. The audit count above is `Sources/`-only and is the
+> load-bearing figure for any contract-level argument. Future
+> tool-versions may stratify the count; until then, treat any
+> characterizer-reported `untyped_throws` figure as a Sources/+Tests/
+> aggregate and consult this audit for the Sources/-only ground truth.
+
 ## Typed-throws distribution by error type
 
 ```
