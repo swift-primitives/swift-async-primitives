@@ -35,6 +35,23 @@ extension Async {
     /// - Cursor advances when element is delivered (resumed). If subscriber is
     ///   cancelled after resumption, it may not observe that element.
     ///
+    /// ## Wakeup Ordering Across Subscribers
+    /// On `send(_:)`, subscribers waiting in `next()` are resumed in
+    /// **subscription order** — i.e., the order in which `subscribe()` was
+    /// called for each subscription. Internally `state.subscribers` is a
+    /// `Dictionary<UInt64, Subscriber>.Ordered`; iteration preserves
+    /// insertion order, so the continuation-collection step runs through
+    /// subscribers oldest-first, and `.resume(returning:)` is called on
+    /// each in that order.
+    ///
+    /// Note that *resume call order* is not the same as *task completion
+    /// order*: once a continuation is resumed, the runtime scheduler
+    /// determines when the resumed Task's body actually runs. Two
+    /// subscribers whose resumptions are called in subscription order may
+    /// nevertheless complete `next()` in any order, depending on
+    /// scheduler decisions and other concurrent work. The ordering
+    /// contract is on the wakeup signal, not on observable side effects.
+    ///
     /// ## Cancellation Safety
     /// When a task is cancelled while waiting in `next()`:
     /// - The operation throws `Error.cancelled`
