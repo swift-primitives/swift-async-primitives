@@ -2,6 +2,46 @@
 
 Swift Embedded compatible.
 
+## When to use this package vs `swift-async-algorithms`
+
+`swift-async-primitives` and Apple's [`swift-async-algorithms`](https://github.com/apple/swift-async-algorithms)
+occupy adjacent layers and are intended to compose, not compete:
+
+- **`swift-async-algorithms`** ships operators over `AsyncSequence` (`zip`,
+  `merge`, `throttle`, `debounce`, `chain`, `combineLatest`, …) plus the
+  `AsyncChannel` / `AsyncStream` family for streaming pipelines built on
+  top of `AsyncSequence`. Reach for it when you want sequence-shaped
+  transformations and broadcast/multicast in the `AsyncSequence` idiom.
+- **`swift-async-primitives`** ships raw coordination primitives —
+  `Channel.Bounded` / `Channel.Unbounded` / `Broadcast` / `Semaphore` /
+  `Mutex` / `Barrier` / `Promise` / `Bridge` / `Completion` / `Publication`
+  — designed to support `~Copyable` element types, typed throws on
+  fallible operations, and explicit cancellation observation. Reach for
+  it when you need a coordination primitive at a layer below
+  `AsyncSequence` (lock + condition + admission), or when your element
+  type is non-`Copyable`, or when you want the cancellation contract
+  surfaced as `Async.Lifecycle.Error.cancelled` rather than as
+  `CancellationError`.
+
+The two surfaces overlap on the word "channel" but the semantics differ.
+`AsyncChannel` is unbuffered and multi-consumer; this package's
+`Async.Channel.Bounded` and `.Unbounded` are single-receiver, support
+`~Copyable` elements, and expose per-primitive backpressure / ordering /
+fairness contracts (see the `Semantics` DocC article in the umbrella
+catalog). Where surfaces overlap, you can pick by which contract fits;
+where they don't, the two packages compose — e.g., wrap a primitive's
+output in an `AsyncSequence` and feed it through async-algorithms
+operators.
+
+## Dependencies
+
+This package depends only on Swift Institute primitives:
+`swift-buffer-primitives`, `swift-dictionary-primitives`,
+`swift-queue-primitives`, `swift-handle-primitives`,
+`swift-tagged-primitives`, `swift-kernel-primitives`,
+`swift-ownership-primitives`, `swift-algebra-primitives`. No Foundation,
+no external runtimes.
+
 ## Importing
 
 Consumers should import the narrow product module they need:
