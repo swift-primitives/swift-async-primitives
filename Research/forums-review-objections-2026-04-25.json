@@ -1,0 +1,63 @@
+{
+  "package": "swift-async-primitives",
+  "path": "/Users/coen/Developer/swift-primitives/swift-async-primitives",
+  "predicted_date": "2026-04-25",
+  "package_head": "01c1c5e",
+  "predicted_category": "related-projects",
+  "skill_version": "v1.2 (FREVIEW-001..018)",
+  "venue_base_rates": "stratified:related-projects (n=224)",
+  "era_correction": "swift6-era",
+  "terminal_posture": false,
+  "baseline_reference": "Research/forums-review-objections-2026-04-24.md",
+  "top_5_angle_ranking": [
+    { "rank": 1, "angle_id": "layering-modularity", "score": 78.68, "delta_vs_baseline": "+0.0", "headline": "14-product SemVer commitment, embedded-gating posture, umbrella-vs-narrow-import discipline" },
+    { "rank": 2, "angle_id": "naming",                "score": 61.82, "delta_vs_baseline": "+0.0", "headline": ".receive/.send accessor pattern documentation; Ends sender/receiver asymmetry; 5 compound-identifier smells unchanged" },
+    { "rank": 3, "angle_id": "concurrency",           "score": 54.27, "delta_vs_baseline": "+0.0", "headline": "Semantics article exists with no gap cells; §Cancellation-error stale text post commit 7e893ae (NEW HEADLINE FINDING)" },
+    { "rank": 4, "angle_id": "ownership-memory",      "score": 52.81, "delta_vs_baseline": "+0.0", "headline": "Sendable inventory exists; extend to positive checked-surface assertion; Ends asymmetry; actor-isolated deinit close path test" },
+    { "rank": 5, "angle_id": "error-handling",        "score": 48.16, "delta_vs_baseline": "+0.0", "headline": "0 untyped throws in Sources/; Lifecycle.Error consolidated; same Semantics §Cancellation-error finding from a different angle" }
+  ],
+  "headline_new_load_bearing_finding": {
+    "id": "semantics-md-cancellation-error-stale-text-post-commit-7e893ae",
+    "artifact": "Sources/Async Primitives/Async Primitives.docc/Semantics.md",
+    "lines": "61-85",
+    "stale_items": [
+      "line 69: '`Async/Completion/Error` uses `.cancellation` (noun) — per-primitive enum, the lone outlier'",
+      "lines 81-85: paragraph framing the `.cancellation` → `.cancelled` rename as a 'known pre-1.0 normalization target' still pending"
+    ],
+    "current_source_state": "Sources/Async Completion Primitives/Async.Completion.Error.swift:21 declares `case cancelled` (rename landed at commit 7e893ae)",
+    "self_referential_violation": "Article's §Source of truth at line 102 names doc/source drift as a defect; current state meets that definition",
+    "load_bearing_evidence": "surfaced by 4 independent archetype-voices (c9, c10, c4, c5) in the simulation via independent grep paths",
+    "mitigation": "single-paragraph edit + line-69 spelling fix; ~10 lines of doc work",
+    "supervisor_disposition": "surfaced not actioned per ground-rule MUST entry"
+  },
+  "launch_readiness_2026_04_24": {
+    "verdict": "not ready to announce in related-projects until [5 items]",
+    "items": [
+      "Semantics DocC article — LANDED (Sources/Async Primitives/Async Primitives.docc/Semantics.md)",
+      "Versioning posture in README — LANDED (README.md:60-69, committal-rephrasing recommended)",
+      "@unchecked Sendable inventory — LANDED (Research/sendable-conformance-inventory.md)",
+      "Mutex portability resolution — LANDED (four-branch portable cascade)",
+      "swift-async-algorithms positioning — LANDED (README.md:5-34)"
+    ]
+  },
+  "emerged_and_shipped_items": [
+    "withPermit Either<Async.Semaphore.Error, E> typed-throws fix",
+    "Async.Lifecycle.Error redesign to non-generic Pool-style",
+    "Async.Completion.Error.cancellation → .cancelled rename (source landed; Semantics.md doc lag — see headline finding)",
+    "Async.Barrier Shape A typed-throws on arrive() with effective-party adaptation",
+    "Shape B ~Copyable Party handle pattern Phase 2 experiment (on-shelf)"
+  ],
+  "launch_readiness_2026_04_25": {
+    "verdict": "ready to announce in related-projects after one mechanical fix (Semantics.md §Cancellation-error stale-text update)",
+    "blocker": "Semantics.md §Cancellation-error stale text",
+    "blocker_severity": "load-bearing per 4-archetype-voice convergence; mechanical fix",
+    "estimated_remaining_work": "half a day of documentation work to land headline fix + smaller tightenings"
+  },
+  "calibration": {
+    "rank_inversion_observed": false,
+    "freview_017_threshold_triggered": false,
+    "false_premise_claims": 0,
+    "score_delta_layer": "zero across all top-5 angles",
+    "substance_delta_layer": "9/10 baseline findings closed; 1 partially closed (versioning framing); 1 new emerged (Semantics §Cancellation-error stale text)"
+  }
+}

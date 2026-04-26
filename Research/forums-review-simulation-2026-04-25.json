@@ -1,0 +1,242 @@
+{
+  "package": "swift-async-primitives",
+  "path": "/Users/coen/Developer/swift-primitives/swift-async-primitives",
+  "simulated_date": "2026-04-25",
+  "package_head": "01c1c5e",
+  "predicted_category": "related-projects",
+  "skill_version": "v1.2 (FREVIEW-001..018)",
+  "venue_base_rates": "stratified:related-projects (n=224)",
+  "era_correction": "swift6-era",
+  "terminal_posture": false,
+  "seed": 3,
+  "baseline_reference": "Research/forums-review-simulation-2026-04-24.md",
+  "delta_intent": "re-render against current state after 2026-04-24 launch-readiness mitigations landed",
+  "characterization": {
+    "swift_files": 108,
+    "total_loc": 8435,
+    "public_decls": 240,
+    "noncopyable_types": 152,
+    "borrowing_uses": 0,
+    "consuming_uses": 23,
+    "actor_decls": 1,
+    "sendable_conformances": 122,
+    "async_fns": 21,
+    "typed_throws": 44,
+    "untyped_throws": 18,
+    "unsafe_mentions": 50,
+    "compound_identifier_smell": 5,
+    "target_count": 15,
+    "product_count": 14,
+    "has_docc": true,
+    "has_readme": true,
+    "has_tests": true,
+    "terminal_posture_detected": false
+  },
+  "characterization_delta_vs_2026_04_24": {
+    "swift_files": "109 → 108 (-1)",
+    "noncopyable_types": "157 → 152 (-5)",
+    "sendable_conformances": "116 → 122 (+6)",
+    "typed_throws": "42 → 44 (+2)",
+    "untyped_throws": "12 → 18 (+6) — characterizer count; audit reports 0 in Sources/",
+    "unsafe_mentions": "54 → 50 (-4)",
+    "compound_identifier_smell": "5 → 5 (unchanged)",
+    "predicted_angle_weights": "all unchanged — characterizer signals haven't crossed any thresholds"
+  },
+  "angle_ranking": [
+    { "angle_id": "layering-modularity",   "label": "Layering / modularity / package boundaries", "base_pct": 34.4, "era_multiplier": 1.173, "effective_base_pct": 40.35, "weight": 1.95, "score": 78.68, "delta_2026_04_24": "+0.0" },
+    { "angle_id": "naming",                 "label": "Naming / API surface naming",                 "base_pct": 28.6, "era_multiplier": 0.978, "effective_base_pct": 27.97, "weight": 2.21, "score": 61.82, "delta_2026_04_24": "+0.0" },
+    { "angle_id": "concurrency",            "label": "Concurrency / isolation / Sendable",          "base_pct": 24.1, "era_multiplier": 1.126, "effective_base_pct": 27.14, "weight": 2.00, "score": 54.27, "delta_2026_04_24": "+0.0" },
+    { "angle_id": "ownership-memory",       "label": "Ownership / memory safety",                   "base_pct": 11.6, "era_multiplier": 1.751, "effective_base_pct": 20.31, "weight": 2.60, "score": 52.81, "delta_2026_04_24": "+0.0" },
+    { "angle_id": "error-handling",         "label": "Error handling / typed throws",               "base_pct": 33.0, "era_multiplier": 0.973, "effective_base_pct": 32.11, "weight": 1.50, "score": 48.16, "delta_2026_04_24": "+0.0" },
+    { "angle_id": "performance",            "label": "Performance / allocation / overhead",         "base_pct": 23.2, "era_multiplier": 1.306, "effective_base_pct": 30.30, "weight": 1.00, "score": 30.30, "delta_2026_04_24": "+0.0" },
+    { "angle_id": "type-system",            "label": "Type system / generics / protocols",          "base_pct": 24.6, "era_multiplier": 0.977, "effective_base_pct": 24.04, "weight": 1.20, "score": 28.84, "delta_2026_04_24": "+0.0" },
+    { "angle_id": "evolution-process",      "label": "Evolution process / proposal mechanics",      "base_pct": 33.9, "era_multiplier": 0.820, "effective_base_pct": 27.80, "weight": 1.00, "score": 27.80, "delta_2026_04_24": "+0.0" },
+    { "angle_id": "scope-motivation",       "label": "Scope / motivation / use case",                "base_pct": 27.2, "era_multiplier": 0.929, "effective_base_pct": 25.27, "weight": 1.00, "score": 25.27, "delta_2026_04_24": "+0.0" },
+    { "angle_id": "documentation",          "label": "Documentation / docs",                         "base_pct": 23.2, "era_multiplier": 1.003, "effective_base_pct": 23.27, "weight": 1.00, "score": 23.27, "delta_2026_04_24": "+0.0" },
+    { "angle_id": "foundation-stdlib",      "label": "Foundation / stdlib relationship",             "base_pct": 18.3, "era_multiplier": 1.126, "effective_base_pct": 20.61, "weight": 1.00, "score": 20.61, "delta_2026_04_24": "+0.0" },
+    { "angle_id": "build-tooling",          "label": "Build tooling / SwiftPM",                      "base_pct": 19.6, "era_multiplier": 1.012, "effective_base_pct": 19.84, "weight": 1.00, "score": 19.84, "delta_2026_04_24": "+0.0" },
+    { "angle_id": "platform",               "label": "Platform support / portability",               "base_pct": 10.3, "era_multiplier": 1.923, "effective_base_pct": 19.81, "weight": 1.00, "score": 19.81, "delta_2026_04_24": "+0.0" },
+    { "angle_id": "testing",                "label": "Testing / test discipline",                    "base_pct": 14.3, "era_multiplier": 1.336, "effective_base_pct": 19.10, "weight": 1.00, "score": 19.10, "delta_2026_04_24": "+0.0" },
+    { "angle_id": "abi-source-stability",   "label": "ABI / source stability",                        "base_pct": 16.1, "era_multiplier": 0.987, "effective_base_pct": 15.89, "weight": 1.00, "score": 15.89, "delta_2026_04_24": "+0.0" },
+    { "angle_id": "api-ergonomics",         "label": "API ergonomics",                                "base_pct": 12.5, "era_multiplier": 0.935, "effective_base_pct": 11.69, "weight": 1.30, "score": 15.19, "delta_2026_04_24": "+0.0" },
+    { "angle_id": "precedent-prior-art",    "label": "Precedent / prior art",                         "base_pct": 10.3, "era_multiplier": 1.075, "effective_base_pct": 11.07, "weight": 1.00, "score": 11.07, "delta_2026_04_24": "+0.0" }
+  ],
+  "archetypes_used": [
+    { "post_number": 2,  "cluster_id": 1,  "label": "The general-purpose technical reviewer",          "angles": ["concurrency","evolution-process","type-system"] },
+    { "post_number": 3,  "cluster_id": 9,  "label": "The long-form deep-analysis essay reviewer",      "angles": ["concurrency","evolution-process","type-system"] },
+    { "post_number": 4,  "cluster_id": 8,  "label": "The SwiftPM / build-tooling / modularity reviewer", "angles": ["layering-modularity","build-tooling","evolution-process"] },
+    { "post_number": 5,  "cluster_id": 10, "label": "The heavy-quoting long-form authoritative reviewer", "angles": ["evolution-process","concurrency","type-system"] },
+    { "post_number": 6,  "cluster_id": 3,  "label": "The closure/expression/syntax technical reviewer", "angles": ["type-system","concurrency","error-handling"] },
+    { "post_number": 7,  "cluster_id": 4,  "label": "The constructive Evolution-process reviewer",     "angles": ["evolution-process","naming","concurrency"] },
+    { "post_number": 8,  "cluster_id": 2,  "label": "The ~Copyable / Sendable / protocol-shape reviewer", "angles": ["concurrency","type-system","naming"] },
+    { "post_number": 9,  "cluster_id": 7,  "label": "The init/deinit/lifecycle reviewer",              "angles": ["concurrency","evolution-process","naming"] },
+    { "post_number": 10, "cluster_id": 6,  "label": "The Core-Team-aware process voice",               "angles": ["evolution-process","naming","type-system"] },
+    { "post_number": 11, "cluster_id": 5,  "label": "The pointed -1 reviewer",                         "angles": ["evolution-process","naming","error-handling"] }
+  ],
+  "posts": [
+    {
+      "post_number": 1,
+      "persona": "@op",
+      "role": "OP",
+      "anchors": [
+        "Sources/Async Primitives/Async Primitives.docc/Semantics.md",
+        "Sources/Async Primitives Core/Async.Lifecycle.Error.swift",
+        "Sources/Async Mutex Primitives/Async.Mutex.swift",
+        "Research/sendable-conformance-inventory.md",
+        "Research/typed-throws-audit-2026-04-24.md",
+        "Sources/Async Barrier Primitives/Async.Barrier.swift:225",
+        "Sources/Async Semaphore Primitives/Async.Semaphore+WithPermit.swift:39"
+      ]
+    },
+    {
+      "post_number": 2,
+      "persona_archetype_cluster": 1,
+      "persona_archetype_label": "The general-purpose technical reviewer",
+      "dominant_angles": ["concurrency","evolution-process","type-system"],
+      "opener_pattern": "question",
+      "closer_pattern": "question-to-author",
+      "anchors": [
+        "Sources/Async Channel Primitives/Async.Channel.Bounded.Receiver.Receive.swift:17",
+        "Sources/Async Channel Primitives/Async.Channel.Bounded.Sender.Send.swift:36"
+      ]
+    },
+    {
+      "post_number": 3,
+      "persona_archetype_cluster": 9,
+      "persona_archetype_label": "The long-form deep-analysis essay reviewer",
+      "dominant_angles": ["concurrency","evolution-process","type-system"],
+      "opener_pattern": "thanks",
+      "closer_pattern": "question-to-author",
+      "anchors": [
+        "Sources/Async Primitives/Async Primitives.docc/Semantics.md",
+        "Sources/Async Completion Primitives/Async.Completion.Error.swift:21",
+        "Sources/Async Barrier Primitives/Async.Barrier.swift:225",
+        "Sources/Async Barrier Primitives/Async.Barrier.swift:195",
+        "Sources/Async Bridge Primitives/Async.Bridge.swift:133",
+        "Sources/Async Channel Primitives/Async.Channel.Bounded.Sender.swift:24"
+      ]
+    },
+    {
+      "post_number": 4,
+      "persona_archetype_cluster": 8,
+      "persona_archetype_label": "The SwiftPM / build-tooling / modularity reviewer",
+      "dominant_angles": ["layering-modularity","build-tooling","evolution-process"],
+      "opener_pattern": "question",
+      "closer_pattern": "question-to-author",
+      "anchors": [
+        "README.md:60",
+        "Sources/Async Channel Primitives/Async.Channel.Bounded.Receiver.Receive.swift:13",
+        "Sources/Async Channel Primitives/Async.Channel.Bounded.Receiver.swift:126",
+        "Sources/Async Channel Primitives/Async.Channel.Bounded.Receiver.swift:136"
+      ]
+    },
+    {
+      "post_number": 5,
+      "persona_archetype_cluster": 10,
+      "persona_archetype_label": "The heavy-quoting long-form authoritative reviewer",
+      "dominant_angles": ["evolution-process","concurrency","type-system"],
+      "opener_pattern": "direct-stance",
+      "closer_pattern": "question-to-author",
+      "anchors": [
+        "Sources/Async Semaphore Primitives/Async.Semaphore+WithPermit.swift:39",
+        "Sources/Async Primitives/Async Primitives.docc/Semantics.md"
+      ]
+    },
+    {
+      "post_number": 6,
+      "persona_archetype_cluster": 3,
+      "persona_archetype_label": "The closure/expression/syntax technical reviewer",
+      "dominant_angles": ["type-system","concurrency","error-handling"],
+      "opener_pattern": "thanks",
+      "closer_pattern": "explicit-vote",
+      "anchors": [
+        "Sources/Async Mutex Primitives/Async.Mutex.swift",
+        "Sources/Async Barrier Primitives/Async.Barrier.swift:180",
+        "Sources/Async Barrier Primitives/Async.Barrier.swift:225",
+        "Research/typed-throws-audit-2026-04-24.md"
+      ],
+      "vote": "+1 with documentation asks"
+    },
+    {
+      "post_number": 7,
+      "persona_archetype_cluster": 4,
+      "persona_archetype_label": "The constructive Evolution-process reviewer",
+      "dominant_angles": ["evolution-process","naming","concurrency"],
+      "opener_pattern": "question",
+      "closer_pattern": "explicit-vote",
+      "anchors": [
+        "Sources/Async Primitives Core/Async.Lifecycle.Error.swift",
+        "Sources/Async Semaphore Primitives/Async.Semaphore.Error.swift:19",
+        "Sources/Async Completion Primitives/Async.Completion.Error.swift:21"
+      ],
+      "vote": "+1 once §Cancellation-error block is in sync with source"
+    },
+    {
+      "post_number": 8,
+      "persona_archetype_cluster": 2,
+      "persona_archetype_label": "The ~Copyable / Sendable / protocol-shape reviewer",
+      "dominant_angles": ["concurrency","type-system","naming"],
+      "opener_pattern": "meta-comment",
+      "closer_pattern": "recommendation",
+      "anchors": [
+        "Research/sendable-conformance-inventory.md",
+        "Sources/Async Channel Primitives/Async.Channel.Bounded.Receiver.Receive.swift:17",
+        "Sources/Async Channel Primitives/Async.Channel.Bounded.Sender.Send.swift:36"
+      ]
+    },
+    {
+      "post_number": 9,
+      "persona_archetype_cluster": 7,
+      "persona_archetype_label": "The init/deinit/lifecycle reviewer",
+      "dominant_angles": ["concurrency","evolution-process","naming"],
+      "opener_pattern": "thanks",
+      "closer_pattern": "explicit-vote",
+      "anchors": [
+        "Sources/Async Channel Primitives/Async.Channel.Bounded.Sender.swift:24",
+        "Sources/Async Channel Primitives/Async.Channel.Bounded.Ends.swift:47",
+        "Sources/Async Channel Primitives/Async.Channel.Bounded.Ends.swift:20",
+        "Sources/Async Channel Primitives/Async.Channel.Bounded.Ends.swift:37",
+        "Sources/Async Channel Primitives/Async.Channel.Bounded.Receiver.swift:154"
+      ],
+      "vote": "+1 once actor-deinit close path has explicit test coverage and Ends asymmetry is documented"
+    },
+    {
+      "post_number": 10,
+      "persona_archetype_cluster": 6,
+      "persona_archetype_label": "The Core-Team-aware process voice",
+      "dominant_angles": ["evolution-process","naming","type-system"],
+      "opener_pattern": "direct-stance",
+      "closer_pattern": "explicit-vote",
+      "anchors": [
+        "README.md:60",
+        "Sources/Async Bridge Primitives/Async.Bridge.swift:133",
+        "Sources/Async Barrier Primitives/Async.Barrier.swift:195"
+      ],
+      "vote": "+1 once README framing is committal rather than candidly-deferred"
+    },
+    {
+      "post_number": 11,
+      "persona_archetype_cluster": 5,
+      "persona_archetype_label": "The pointed -1 reviewer",
+      "dominant_angles": ["evolution-process","naming","error-handling"],
+      "opener_pattern": "question",
+      "closer_pattern": "question-to-author",
+      "anchors": [
+        "Sources/Async Mutex Primitives/Async.Mutex.swift",
+        "Sources/Async Primitives/Async Primitives.docc/Semantics.md",
+        "Sources/Async Completion Primitives/Async.Completion.Error.swift:21",
+        "Sources/Async Channel Primitives/Async.Channel.Bounded.Ends.swift:47",
+        "Sources/Async Channel Primitives/Async.Channel.Bounded.Ends.swift:37",
+        "Sources/Async Channel Primitives/Async.Channel.Bounded.Sender.swift:24",
+        "Sources/Async Broadcast Primitives/Async.Broadcast.swift:177"
+      ],
+      "vote": "narrow -1 on tagging 1.0 with stale Semantics.md §Cancellation-error block"
+    },
+    {
+      "post_number": 12,
+      "persona": "@op",
+      "role": "OP follow-up",
+      "consolidates": "documentation/source consistency, lifecycle/accessor clarity, versioning framing, Sendable surface confirmation, Barrier surface, Bridge example, Broadcast.finish framing, typed-throws count disambiguation"
+    }
+  ]
+}
