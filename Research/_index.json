@@ -1,7 +1,7 @@
 {
   "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-04-18",
+  "generatedAt": "2026-04-29",
   "title": "Research Index",
   "blurb": "",
   "scope": "swift-async-primitives (swift-primitives)",
@@ -42,7 +42,7 @@
     {
       "file": "zero-copy-noncopyable-element-feasibility.md",
       "displayName": "zero-copy-noncopyable-element-feasibility.md",
-      "topic": "~Copyable element feasibility — 1 genuine blocker (stdlib continuation), not 5",
+      "topic": "~Copyable element feasibility \u2014 1 genuine blocker (stdlib continuation), not 5",
       "date": "2026-03-27",
       "status": "RECOMMENDATION",
       "statusDetail": null,
