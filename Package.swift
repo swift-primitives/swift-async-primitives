@@ -100,14 +100,6 @@ let package = Package(
             name: "Async Mutex Primitives",
             dependencies: [
                 "Async Primitives Core",
-                .product(
-                    name: "Kernel Thread Primitives",
-                    package: "swift-kernel-primitives",
-                    condition: .when(platforms: [
-                        .macOS, .iOS, .tvOS, .watchOS, .visionOS,
-                        .linux, .windows, .android, .openbsd,
-                    ])
-                ),
             ]
         ),
 
