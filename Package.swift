@@ -80,7 +80,6 @@ let package = Package(
         .package(path: "../swift-queue-primitives"),
         .package(path: "../swift-handle-primitives"),
         .package(path: "../swift-tagged-primitives"),
-        .package(path: "../swift-kernel-primitives"),
         .package(path: "../swift-ownership-primitives"),
         .package(path: "../swift-algebra-primitives"),
     ],
@@ -221,7 +220,6 @@ let package = Package(
                 .product(name: "Buffer Primitives Test Support", package: "swift-buffer-primitives"),
                 .product(name: "Queue Primitives Test Support", package: "swift-queue-primitives"),
                 .product(name: "Tagged Primitives Test Support", package: "swift-tagged-primitives"),
-                .product(name: "Kernel Primitives Test Support", package: "swift-kernel-primitives"),
             ],
             path: "Tests/Support"
         ),
