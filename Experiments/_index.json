@@ -7,18 +7,6 @@
   "scope": "swift-async-primitives (swift-primitives)",
   "experiments": [
     {
-      "directory": "inout-noncopyable-optional-closure-capture",
-      "displayName": "inout-noncopyable-optional-closure-capture",
-      "purpose": "Verify inout Optional<~Copyable> through Mutex.withLock for Slot-free channel send fast path",
-      "date": "2026-03-27",
-      "toolchain": "Swift 6.3",
-      "status": "CONFIRMED",
-      "statusDetail": "(9/9 variants; compiler bug found: `o!` crashes IRGen, `.take()!` workaround)",
-      "statusRaw": "CONFIRMED (9/9 variants; compiler bug found: `o!` crashes IRGen, `.take()!` workaround)",
-      "supersededBy": null,
-      "crossRefs": []
-    },
-    {
       "directory": "barrier-handle-ownership",
       "displayName": "barrier-handle-ownership",
       "purpose": "Validate Shape B (~Copyable Party-handle) for Async.Barrier — does deinit-deregistration fire reliably across direct scope, Task, throw, cancellation, and withTaskGroup paths?",
@@ -31,6 +19,29 @@
       "crossRefs": [
         "swift-async-primitives/Research/barrier-api-investigation-2026-04-25.md"
       ]
+    },
+    {
+      "directory": "bridge-push-ownership-conventions",
+      "purpose": "Determine which ownership conventions for ~Copyable parameters",
+      "date": "2026-03-31",
+      "toolchain": "Apple Swift version 6.3 (swiftlang-6.3.0.123.5 clang-2100.0.",
+      "status": "SUPERSEDED",
+      "statusDetail": "API/package drift; experiment premise no longer expressible against current toolchain or peer-package API",
+      "statusRaw": "SUPERSEDED (Phase 7a 2026-04-30)",
+      "supersededBy": null,
+      "crossRefs": []
+    },
+    {
+      "directory": "inout-noncopyable-optional-closure-capture",
+      "displayName": "inout-noncopyable-optional-closure-capture",
+      "purpose": "Verify inout Optional<~Copyable> through Mutex.withLock for Slot-free channel send fast path",
+      "date": "2026-03-27",
+      "toolchain": "Swift 6.3",
+      "status": "CONFIRMED",
+      "statusDetail": "(9/9 variants; compiler bug found: `o!` crashes IRGen, `.take()!` workaround)",
+      "statusRaw": "CONFIRMED (9/9 variants; compiler bug found: `o!` crashes IRGen, `.take()!` workaround)",
+      "supersededBy": null,
+      "crossRefs": []
     }
   ]
 }
