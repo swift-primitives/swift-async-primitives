@@ -2,4 +2,3 @@
 @_exported public import Buffer_Primitives_Test_Support
 @_exported public import Queue_Primitives_Test_Support
 @_exported public import Tagged_Primitives_Test_Support
-@_exported public import Kernel_Primitives_Test_Support
