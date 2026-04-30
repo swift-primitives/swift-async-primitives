@@ -19,6 +19,7 @@
 // Platform: macOS .v26
 //
 // Result: CONFIRMED — all six variants match the hypothesis. The
+// Revalidated: Swift 6.3.1 (2026-04-30) — PASSES
 // `~Copyable Party` deinit fires reliably on every drop path and is
 // suppressed by `consuming func arrive()` setting the `didArrive` flag.
 //

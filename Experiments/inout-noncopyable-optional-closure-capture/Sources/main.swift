@@ -362,6 +362,7 @@ func testV8() {
 // Hypothesis: The pattern generalizes — withLockAndElement can be generic
 //             over the element type, not hardcoded to Resource.
 // Result: CONFIRMED
+// Revalidated: Swift 6.3.1 (2026-04-30) — PASSES
 // ============================================================================
 
 final class GenericStorage<Element: ~Copyable & Sendable>: @unchecked Sendable {
