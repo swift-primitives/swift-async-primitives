@@ -9,6 +9,8 @@
 //   is mandatory (sending alone is not an ownership specifier).
 //
 // Toolchain: Apple Swift version 6.3 (swiftlang-6.3.0.123.5 clang-2100.0.123.102)
+// Status: SUPERSEDED 2026-04-30 — Closure-capture ownership rule for ~Copyable elements tightened in Swift 6.3 — missing reinitialization after consume now diagnosed; experiment patterns require re-targeting
+// Revalidated: Swift 6.3.1 (2026-04-30) — STILL PRESENT (deep API drift; SUPERSEDED per [META-007])
 // Platform: macOS 26.0 (arm64)
 //
 // Result: REFUTED — `consuming` is mandatory for ~Copyable. The reinitialization
