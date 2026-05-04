@@ -14,9 +14,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Build + test matrix — see swift-institute/.github/.github/workflows/swift-ci.yml
+  # Build + test matrix — see swift-primitives/.github/.github/workflows/swift-ci.yml (layer wrapper, mandates embedded build)
   ci:
-    uses: swift-institute/.github/.github/workflows/swift-ci.yml@main
+    uses: swift-primitives/.github/.github/workflows/swift-ci.yml@main
     with:
       cache-key-prefix: swift63-spm-v1
       enable-private-repos: true
