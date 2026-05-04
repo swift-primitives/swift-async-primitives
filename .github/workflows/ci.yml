@@ -17,8 +17,6 @@ jobs:
   # Build + test matrix — see swift-primitives/.github/.github/workflows/swift-ci.yml (layer wrapper, mandates embedded build)
   ci:
     uses: swift-primitives/.github/.github/workflows/swift-ci.yml@main
-    with:
-      enable-private-repos: true
     secrets:
       PRIVATE_REPO_TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
 
@@ -26,7 +24,5 @@ jobs:
   # swift-institute/.github/.github/workflows/swift-docs.yml
   docs:
     uses: swift-institute/.github/.github/workflows/swift-docs.yml@main
-    with:
-      enable-private-repos: true
     secrets:
       PRIVATE_REPO_TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
