@@ -139,4 +139,3 @@ extension Async.Waiter.Flag {
         }
     }
 }
-

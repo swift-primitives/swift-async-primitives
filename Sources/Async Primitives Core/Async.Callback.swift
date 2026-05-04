@@ -75,7 +75,8 @@ extension Async.Callback {
     /// operation is synchronous, this completes without suspension.
     @inlinable
     nonisolated(nonsending)
-    public func callAsFunction() async -> Value {
+        public func callAsFunction() async -> Value
+    {
         await operation()
     }
 
@@ -108,27 +109,28 @@ extension Async.Callback {
 // MARK: - Legacy CPS Bridge
 
 #if !hasFeature(Embedded)
-extension Async.Callback where Value: Sendable {
-    /// Creates a callback by wrapping a CPS-style completion handler.
-    ///
-    /// Use when bridging OS callbacks, network completions, or other code
-    /// that fires a completion handler on an arbitrary thread.
-    ///
-    /// - Parameter cps: A function that takes a completion callback and
-    ///   invokes it exactly once with the computed value when ready.
-    @inlinable
-    public init(
-        wrapping cps: @escaping @Sendable (
-            @escaping @Sendable (sending Value) -> Void
-        ) -> Void
-    ) {
-        self.init {
-            await withCheckedContinuation { continuation in
-                cps { value in
-                    continuation.resume(returning: value)
+    extension Async.Callback where Value: Sendable {
+        /// Creates a callback by wrapping a CPS-style completion handler.
+        ///
+        /// Use when bridging OS callbacks, network completions, or other code
+        /// that fires a completion handler on an arbitrary thread.
+        ///
+        /// - Parameter cps: A function that takes a completion callback and
+        ///   invokes it exactly once with the computed value when ready.
+        @inlinable
+        public init(
+            wrapping cps:
+                @escaping @Sendable (
+                    @escaping @Sendable (sending Value) -> Void
+                ) -> Void
+        ) {
+            self.init {
+                await withCheckedContinuation { continuation in
+                    cps { value in
+                        continuation.resume(returning: value)
+                    }
                 }
             }
         }
     }
-}
 #endif

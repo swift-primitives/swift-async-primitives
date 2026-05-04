@@ -11,18 +11,18 @@
 
 #if !hasFeature(Embedded)
 
-extension Async.Completion {
-    /// Error type wrapping timeout, cancellation, and domain failures.
-    public enum Error: Swift.Error, Sendable {
-        /// Operation timed out.
-        case timeout
+    extension Async.Completion {
+        /// Error type wrapping timeout, cancellation, and domain failures.
+        public enum Error: Swift.Error, Sendable {
+            /// Operation timed out.
+            case timeout
 
-        /// Operation was cancelled.
-        case cancelled
+            /// Operation was cancelled.
+            case cancelled
 
-        /// Operation failed with domain error.
-        case failure(Failure)
+            /// Operation failed with domain error.
+            case failure(Failure)
+        }
     }
-}
 
 #endif  // !hasFeature(Embedded)

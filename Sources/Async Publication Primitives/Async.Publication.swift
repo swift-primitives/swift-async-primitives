@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 #if !hasFeature(Embedded)
-import Synchronization
+    import Synchronization
 #endif
 
 extension Async {

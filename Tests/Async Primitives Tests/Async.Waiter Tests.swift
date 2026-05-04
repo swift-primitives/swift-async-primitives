@@ -181,10 +181,12 @@ extension Waiter.Test.Queue {
         var queue = Async.Waiter.Queue.Unbounded<Bool, Void>()
 
         let flag = Async.Waiter.Flag()
-        queue.enqueue(Async.Waiter.Entry(
-            continuation: Async.Continuation<Bool> { _ in },
-            flag: flag
-        ))
+        queue.enqueue(
+            Async.Waiter.Entry(
+                continuation: Async.Continuation<Bool> { _ in },
+                flag: flag
+            )
+        )
 
         var flagged = Async.Waiter.Queue.Drain<Async.Waiter.Queue.Flagged<Bool, Void>>()
         if let eligible = queue.popEligible(flaggedInto: &flagged) {
@@ -203,15 +205,21 @@ extension Waiter.Test.Queue {
         // Cancelled entry
         let flag1 = Async.Waiter.Flag()
         flag1.cancel()
-        queue.enqueue(Async.Waiter.Entry(
-            continuation: Async.Continuation<Bool> { _ in }, flag: flag1
-        ))
+        queue.enqueue(
+            Async.Waiter.Entry(
+                continuation: Async.Continuation<Bool> { _ in },
+                flag: flag1
+            )
+        )
 
         // Unflagged entry
         let flag2 = Async.Waiter.Flag()
-        queue.enqueue(Async.Waiter.Entry(
-            continuation: Async.Continuation<Bool> { _ in }, flag: flag2
-        ))
+        queue.enqueue(
+            Async.Waiter.Entry(
+                continuation: Async.Continuation<Bool> { _ in },
+                flag: flag2
+            )
+        )
 
         var flagged = Async.Waiter.Queue.Drain<Async.Waiter.Queue.Flagged<Bool, Void>>()
         if let eligible = queue.popEligible(flaggedInto: &flagged) {
@@ -238,15 +246,21 @@ extension Waiter.Test.Queue {
         // Timed out entry
         let flag1 = Async.Waiter.Flag()
         flag1.timeout()
-        queue.enqueue(Async.Waiter.Entry(
-            continuation: Async.Continuation<Bool> { _ in }, flag: flag1
-        ))
+        queue.enqueue(
+            Async.Waiter.Entry(
+                continuation: Async.Continuation<Bool> { _ in },
+                flag: flag1
+            )
+        )
 
         // Unflagged entry
         let flag2 = Async.Waiter.Flag()
-        queue.enqueue(Async.Waiter.Entry(
-            continuation: Async.Continuation<Bool> { _ in }, flag: flag2
-        ))
+        queue.enqueue(
+            Async.Waiter.Entry(
+                continuation: Async.Continuation<Bool> { _ in },
+                flag: flag2
+            )
+        )
 
         var flagged = Async.Waiter.Queue.Drain<Async.Waiter.Queue.Flagged<Bool, Void>>()
         if let eligible = queue.popEligible(flaggedInto: &flagged) {
@@ -272,21 +286,30 @@ extension Waiter.Test.Queue {
         // Two flagged entries
         let flag1 = Async.Waiter.Flag()
         flag1.cancel()
-        queue.enqueue(Async.Waiter.Entry(
-            continuation: Async.Continuation<Bool> { _ in }, flag: flag1
-        ))
+        queue.enqueue(
+            Async.Waiter.Entry(
+                continuation: Async.Continuation<Bool> { _ in },
+                flag: flag1
+            )
+        )
 
         let flag2 = Async.Waiter.Flag()
         flag2.timeout()
-        queue.enqueue(Async.Waiter.Entry(
-            continuation: Async.Continuation<Bool> { _ in }, flag: flag2
-        ))
+        queue.enqueue(
+            Async.Waiter.Entry(
+                continuation: Async.Continuation<Bool> { _ in },
+                flag: flag2
+            )
+        )
 
         // One unflagged entry
         let flag3 = Async.Waiter.Flag()
-        queue.enqueue(Async.Waiter.Entry(
-            continuation: Async.Continuation<Bool> { _ in }, flag: flag3
-        ))
+        queue.enqueue(
+            Async.Waiter.Entry(
+                continuation: Async.Continuation<Bool> { _ in },
+                flag: flag3
+            )
+        )
 
         var flagged = Async.Waiter.Queue.Drain<Async.Waiter.Queue.Flagged<Bool, Void>>()
         if let eligible = queue.popEligible(flaggedInto: &flagged) {
@@ -311,15 +334,21 @@ extension Waiter.Test.Queue {
 
         let flag1 = Async.Waiter.Flag()
         flag1.cancel()
-        queue.enqueue(Async.Waiter.Entry(
-            continuation: Async.Continuation<Bool> { _ in }, flag: flag1
-        ))
+        queue.enqueue(
+            Async.Waiter.Entry(
+                continuation: Async.Continuation<Bool> { _ in },
+                flag: flag1
+            )
+        )
 
         let flag2 = Async.Waiter.Flag()
         flag2.timeout()
-        queue.enqueue(Async.Waiter.Entry(
-            continuation: Async.Continuation<Bool> { _ in }, flag: flag2
-        ))
+        queue.enqueue(
+            Async.Waiter.Entry(
+                continuation: Async.Continuation<Bool> { _ in },
+                flag: flag2
+            )
+        )
 
         var flagged = Async.Waiter.Queue.Drain<Async.Waiter.Queue.Flagged<Bool, Void>>()
         if let eligible = queue.popEligible(flaggedInto: &flagged) {
@@ -351,32 +380,40 @@ extension Waiter.Test.Queue {
         var queue = Async.Waiter.Queue.Unbounded<Bool, Void>()
 
         // Unflagged
-        queue.enqueue(Async.Waiter.Entry(
-            continuation: Async.Continuation<Bool> { _ in },
-            flag: Async.Waiter.Flag()
-        ))
+        queue.enqueue(
+            Async.Waiter.Entry(
+                continuation: Async.Continuation<Bool> { _ in },
+                flag: Async.Waiter.Flag()
+            )
+        )
 
         // Cancelled
         let flagCancel = Async.Waiter.Flag()
         flagCancel.cancel()
-        queue.enqueue(Async.Waiter.Entry(
-            continuation: Async.Continuation<Bool> { _ in },
-            flag: flagCancel
-        ))
+        queue.enqueue(
+            Async.Waiter.Entry(
+                continuation: Async.Continuation<Bool> { _ in },
+                flag: flagCancel
+            )
+        )
 
         // Unflagged
-        queue.enqueue(Async.Waiter.Entry(
-            continuation: Async.Continuation<Bool> { _ in },
-            flag: Async.Waiter.Flag()
-        ))
+        queue.enqueue(
+            Async.Waiter.Entry(
+                continuation: Async.Continuation<Bool> { _ in },
+                flag: Async.Waiter.Flag()
+            )
+        )
 
         // Timed out
         let flagTimeout = Async.Waiter.Flag()
         flagTimeout.timeout()
-        queue.enqueue(Async.Waiter.Entry(
-            continuation: Async.Continuation<Bool> { _ in },
-            flag: flagTimeout
-        ))
+        queue.enqueue(
+            Async.Waiter.Entry(
+                continuation: Async.Continuation<Bool> { _ in },
+                flag: flagTimeout
+            )
+        )
 
         var flagged = Async.Waiter.Queue.Drain<Async.Waiter.Queue.Flagged<Bool, Void>>()
         queue.reapFlagged(into: &flagged)
@@ -411,14 +448,18 @@ extension Waiter.Test.Queue {
     func `reapFlagged with no flagged entries preserves all`() {
         var queue = Async.Waiter.Queue.Unbounded<Bool, Void>()
 
-        queue.enqueue(Async.Waiter.Entry(
-            continuation: Async.Continuation<Bool> { _ in },
-            flag: Async.Waiter.Flag()
-        ))
-        queue.enqueue(Async.Waiter.Entry(
-            continuation: Async.Continuation<Bool> { _ in },
-            flag: Async.Waiter.Flag()
-        ))
+        queue.enqueue(
+            Async.Waiter.Entry(
+                continuation: Async.Continuation<Bool> { _ in },
+                flag: Async.Waiter.Flag()
+            )
+        )
+        queue.enqueue(
+            Async.Waiter.Entry(
+                continuation: Async.Continuation<Bool> { _ in },
+                flag: Async.Waiter.Flag()
+            )
+        )
 
         var flagged = Async.Waiter.Queue.Drain<Async.Waiter.Queue.Flagged<Bool, Void>>()
         queue.reapFlagged(into: &flagged)
@@ -440,10 +481,12 @@ extension Waiter.Test.Queue {
 
         let flag = Async.Waiter.Flag()
         flag.cancel()
-        queue.enqueue(Async.Waiter.Entry(
-            continuation: Async.Continuation<Bool> { _ in },
-            flag: flag
-        ))
+        queue.enqueue(
+            Async.Waiter.Entry(
+                continuation: Async.Continuation<Bool> { _ in },
+                flag: flag
+            )
+        )
 
         var flagged = Async.Waiter.Queue.Drain<Async.Waiter.Queue.Flagged<Bool, Void>>()
         _ = queue.popEligible(flaggedInto: &flagged)
@@ -463,10 +506,12 @@ extension Waiter.Test.Queue {
 
         let flag = Async.Waiter.Flag()
         flag.timeout()
-        queue.enqueue(Async.Waiter.Entry(
-            continuation: Async.Continuation<Bool> { _ in },
-            flag: flag
-        ))
+        queue.enqueue(
+            Async.Waiter.Entry(
+                continuation: Async.Continuation<Bool> { _ in },
+                flag: flag
+            )
+        )
 
         var flagged = Async.Waiter.Queue.Drain<Async.Waiter.Queue.Flagged<Bool, Void>>()
         _ = queue.popEligible(flaggedInto: &flagged)

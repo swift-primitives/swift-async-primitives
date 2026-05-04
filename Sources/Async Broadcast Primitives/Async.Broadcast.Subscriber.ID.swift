@@ -12,11 +12,11 @@
 // Async broadcast requires task suspension which is not available on embedded Swift.
 #if !hasFeature(Embedded)
 
-extension Async.Broadcast.Subscriber {
-    /// Subscriber ID allocation seed.
-    struct ID {
-        var seed: UInt64 = 0
+    extension Async.Broadcast.Subscriber {
+        /// Subscriber ID allocation seed.
+        struct ID {
+            var seed: UInt64 = 0
+        }
     }
-}
 
 #endif  // !hasFeature(Embedded)

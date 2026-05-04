@@ -12,14 +12,14 @@
 // Async channels require task suspension which is not available on embedded Swift.
 #if !hasFeature(Embedded)
 
-extension Async {
-    /// Namespace for channel primitives.
-    ///
-    /// Channels provide structured communication between concurrent tasks.
-    /// Available channel types:
-    /// - `Unbounded`: Unlimited buffer, sync send, async receive
-    /// - `Bounded`: Capacity-limited buffer with backpressure
-    public struct Channel<Element: ~Copyable> {}
-}
+    extension Async {
+        /// Namespace for channel primitives.
+        ///
+        /// Channels provide structured communication between concurrent tasks.
+        /// Available channel types:
+        /// - `Unbounded`: Unlimited buffer, sync send, async receive
+        /// - `Bounded`: Capacity-limited buffer with backpressure
+        public struct Channel<Element: ~Copyable> {}
+    }
 
 #endif  // !hasFeature(Embedded)

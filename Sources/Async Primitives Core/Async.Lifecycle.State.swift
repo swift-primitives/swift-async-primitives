@@ -65,4 +65,3 @@ extension Async.Lifecycle.State {
         self == .open
     }
 }
-

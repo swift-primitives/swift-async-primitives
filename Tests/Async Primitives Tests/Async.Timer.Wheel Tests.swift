@@ -52,7 +52,10 @@ extension Timer.Wheel.Test.Unit {
     @Test
     func `slot mask is slots minus one`() {
         let config = Async.Timer.Wheel<ContinuousClock>.Config(
-            tick: .milliseconds(1), slots: 16, levels: 2, capacity: 100
+            tick: .milliseconds(1),
+            slots: 16,
+            levels: 2,
+            capacity: 100
         )
         #expect(config.slot.mask == 15)
     }
@@ -60,12 +63,18 @@ extension Timer.Wheel.Test.Unit {
     @Test
     func `slot shift is log2 of slots`() {
         let config8 = Async.Timer.Wheel<ContinuousClock>.Config(
-            tick: .milliseconds(1), slots: 8, levels: 2, capacity: 100
+            tick: .milliseconds(1),
+            slots: 8,
+            levels: 2,
+            capacity: 100
         )
         #expect(config8.slot.shift == 3)
 
         let config64 = Async.Timer.Wheel<ContinuousClock>.Config(
-            tick: .milliseconds(1), slots: 64, levels: 2, capacity: 100
+            tick: .milliseconds(1),
+            slots: 64,
+            levels: 2,
+            capacity: 100
         )
         #expect(config64.slot.shift == 6)
     }
@@ -73,7 +82,10 @@ extension Timer.Wheel.Test.Unit {
     @Test
     func `range ticks is slots to the power of levels`() {
         let config = Async.Timer.Wheel<ContinuousClock>.Config(
-            tick: .milliseconds(1), slots: 8, levels: 3, capacity: 100
+            tick: .milliseconds(1),
+            slots: 8,
+            levels: 3,
+            capacity: 100
         )
         // 8^3 = 512; computed as 1 << (3 * 3) = 1 << 9 = 512
         #expect(config.range.ticks == 512)
@@ -82,7 +94,10 @@ extension Timer.Wheel.Test.Unit {
     @Test
     func `level range returns cumulative range per level`() {
         let config = Async.Timer.Wheel<ContinuousClock>.Config(
-            tick: .milliseconds(1), slots: 8, levels: 3, capacity: 100
+            tick: .milliseconds(1),
+            slots: 8,
+            levels: 3,
+            capacity: 100
         )
         // Level 0: 1 << (1*3) = 8
         #expect(config.level.range(0) == 8)
@@ -95,7 +110,10 @@ extension Timer.Wheel.Test.Unit {
     @Test
     func `ticks per slot returns ticks per slot at each level`() {
         let config = Async.Timer.Wheel<ContinuousClock>.Config(
-            tick: .milliseconds(1), slots: 8, levels: 3, capacity: 100
+            tick: .milliseconds(1),
+            slots: 8,
+            levels: 3,
+            capacity: 100
         )
         // Level 0: 1 tick per slot
         #expect(config.ticks.perSlot(0) == 1)
@@ -108,7 +126,10 @@ extension Timer.Wheel.Test.Unit {
     @Test
     func `duration computes maximum schedulable duration`() {
         let config = Async.Timer.Wheel<ContinuousClock>.Config(
-            tick: .milliseconds(10), slots: 8, levels: 3, capacity: 100
+            tick: .milliseconds(10),
+            slots: 8,
+            levels: 3,
+            capacity: 100
         )
         // 512 ticks × 10ms per tick = 5.12 seconds
         let duration = config.duration
@@ -138,7 +159,10 @@ extension Timer.Wheel.Test.Unit {
     @Test
     func `wheel stores provided config`() {
         let config = Async.Timer.Wheel<ContinuousClock>.Config(
-            tick: .milliseconds(5), slots: 16, levels: 4, capacity: 256
+            tick: .milliseconds(5),
+            slots: 16,
+            levels: 4,
+            capacity: 256
         )
         let wheel = Async.Timer.Wheel(clock: ContinuousClock(), config: config)
         let wheelConfig = wheel.config
@@ -155,13 +179,22 @@ extension Timer.Wheel.Test.Unit {
     @Test
     func `config is Equatable and Hashable`() {
         let a = Async.Timer.Wheel<ContinuousClock>.Config(
-            tick: .milliseconds(1), slots: 8, levels: 3, capacity: 100
+            tick: .milliseconds(1),
+            slots: 8,
+            levels: 3,
+            capacity: 100
         )
         let b = Async.Timer.Wheel<ContinuousClock>.Config(
-            tick: .milliseconds(1), slots: 8, levels: 3, capacity: 100
+            tick: .milliseconds(1),
+            slots: 8,
+            levels: 3,
+            capacity: 100
         )
         let c = Async.Timer.Wheel<ContinuousClock>.Config(
-            tick: .milliseconds(2), slots: 8, levels: 3, capacity: 100
+            tick: .milliseconds(2),
+            slots: 8,
+            levels: 3,
+            capacity: 100
         )
         #expect(a == b)
         #expect(a != c)
@@ -175,7 +208,10 @@ extension Timer.Wheel.Test.EdgeCase {
     @Test
     func `config with minimum parameters`() {
         let config = Async.Timer.Wheel<ContinuousClock>.Config(
-            tick: .nanoseconds(1), slots: 2, levels: 1, capacity: 1
+            tick: .nanoseconds(1),
+            slots: 2,
+            levels: 1,
+            capacity: 1
         )
         #expect(config.slot.mask == 1)
         #expect(config.slot.shift == 1)
@@ -187,7 +223,10 @@ extension Timer.Wheel.Test.EdgeCase {
     @Test
     func `config with maximum levels`() {
         let config = Async.Timer.Wheel<ContinuousClock>.Config(
-            tick: .milliseconds(1), slots: 4, levels: 8, capacity: 100
+            tick: .milliseconds(1),
+            slots: 4,
+            levels: 8,
+            capacity: 100
         )
         // 4^8 = 2^16 = 65536
         #expect(config.range.ticks == 65536)
@@ -196,7 +235,10 @@ extension Timer.Wheel.Test.EdgeCase {
     @Test
     func `config with large slot count`() {
         let config = Async.Timer.Wheel<ContinuousClock>.Config(
-            tick: .milliseconds(1), slots: 256, levels: 2, capacity: 100
+            tick: .milliseconds(1),
+            slots: 256,
+            levels: 2,
+            capacity: 100
         )
         #expect(config.slot.mask == 255)
         #expect(config.slot.shift == 8)
@@ -207,7 +249,10 @@ extension Timer.Wheel.Test.EdgeCase {
     @Test
     func `ticks per slot increases geometrically across levels`() {
         let config = Async.Timer.Wheel<ContinuousClock>.Config(
-            tick: .milliseconds(1), slots: 8, levels: 4, capacity: 100
+            tick: .milliseconds(1),
+            slots: 8,
+            levels: 4,
+            capacity: 100
         )
         for level in 1..<config.levels {
             #expect(
@@ -219,7 +264,10 @@ extension Timer.Wheel.Test.EdgeCase {
     @Test
     func `level range increases geometrically across levels`() {
         let config = Async.Timer.Wheel<ContinuousClock>.Config(
-            tick: .milliseconds(1), slots: 16, levels: 4, capacity: 100
+            tick: .milliseconds(1),
+            slots: 16,
+            levels: 4,
+            capacity: 100
         )
         for level in 1..<config.levels {
             #expect(
@@ -231,7 +279,10 @@ extension Timer.Wheel.Test.EdgeCase {
     @Test
     func `highest level range equals range ticks`() {
         let config = Async.Timer.Wheel<ContinuousClock>.Config(
-            tick: .milliseconds(1), slots: 8, levels: 3, capacity: 100
+            tick: .milliseconds(1),
+            slots: 8,
+            levels: 3,
+            capacity: 100
         )
         #expect(config.level.range(config.levels - 1) == config.range.ticks)
     }
@@ -241,7 +292,10 @@ extension Timer.Wheel.Test.EdgeCase {
         for shift in 1...8 {
             let slots = 1 << shift
             let config = Async.Timer.Wheel<ContinuousClock>.Config(
-                tick: .milliseconds(1), slots: slots, levels: 2, capacity: 100
+                tick: .milliseconds(1),
+                slots: slots,
+                levels: 2,
+                capacity: 100
             )
             #expect(config.slot.shift == shift)
             #expect(config.slot.mask == slots - 1)
@@ -274,7 +328,10 @@ extension Timer.Wheel.Test.Unit {
     @Test
     func `wheel state remains consistent across repeated cross-module reads (finding #12 regression guard)`() {
         let config = Async.Timer.Wheel<ContinuousClock>.Config(
-            tick: .milliseconds(1), slots: 16, levels: 2, capacity: 64
+            tick: .milliseconds(1),
+            slots: 16,
+            levels: 2,
+            capacity: 64
         )
         let wheel = Async.Timer.Wheel(clock: ContinuousClock(), config: config)
 

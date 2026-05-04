@@ -13,7 +13,7 @@ import Async_Primitives_Test_Support
 import Testing
 
 #if canImport(Darwin)
-import Darwin
+    import Darwin
 #endif
 
 // MARK: - Helpers
@@ -21,9 +21,9 @@ import Darwin
 /// Checks if the current thread is the main thread.
 /// Uses Darwin `pthread_main_np()` — no Foundation dependency.
 #if canImport(Darwin)
-private func isMainThread() -> Bool {
-    pthread_main_np() != 0
-}
+    private func isMainThread() -> Bool {
+        pthread_main_np() != 0
+    }
 #endif
 
 /// A non-Sendable reference type for testing `Value: ~Sendable` support.
@@ -84,7 +84,7 @@ extension Callback.Test.Unit {
             .map { $0 + 5 }
             .map { "v=\($0)" }
             .map { $0.count }
-        #expect(await callback() == 4) // "v=15".count
+        #expect(await callback() == 4)  // "v=15".count
     }
 
     @Test
@@ -99,7 +99,7 @@ extension Callback.Test.Unit {
         let callback = Async.Callback(value: 1)
             .flatMap { v in Async.Callback(value: v + 10) }
             .flatMap { v in Async.Callback(value: v * 2) }
-        #expect(await callback() == 22) // (1+10)*2
+        #expect(await callback() == 22)  // (1+10)*2
     }
 
     @Test
@@ -117,13 +117,13 @@ extension Callback.Test.Unit {
     }
 
     #if !hasFeature(Embedded)
-    @Test
-    func `init wrapping bridges CPS completion handler`() async {
-        let callback = Async.Callback<Int>(wrapping: { completion in
-            completion(42)
-        })
-        #expect(await callback() == 42)
-    }
+        @Test
+        func `init wrapping bridges CPS completion handler`() async {
+            let callback = Async.Callback<Int>(wrapping: { completion in
+                completion(42)
+            })
+            #expect(await callback() == 42)
+        }
     #endif
 }
 
@@ -186,70 +186,70 @@ extension Callback.Test.EdgeCase {
     }
 
     #if !hasFeature(Embedded)
-    @Test
-    func `CPS bridge with asynchronous completion`() async {
-        let callback = Async.Callback<String>(wrapping: { completion in
-            Task.detached {
-                completion("delayed")
-            }
-        })
-        #expect(await callback() == "delayed")
-    }
+        @Test
+        func `CPS bridge with asynchronous completion`() async {
+            let callback = Async.Callback<String>(wrapping: { completion in
+                Task.detached {
+                    completion("delayed")
+                }
+            })
+            #expect(await callback() == "delayed")
+        }
     #endif
 }
 
 // MARK: - Integration (Isolation)
 
 #if canImport(Darwin)
-extension Callback.Test.Integration {
-    @Test @MainActor
-    func `init closure preserves MainActor isolation`() async {
-        let callback = Async.Callback<Bool> { isMainThread() }
-        #expect(await callback())
-    }
+    extension Callback.Test.Integration {
+        @Test @MainActor
+        func `init closure preserves MainActor isolation`() async {
+            let callback = Async.Callback<Bool> { isMainThread() }
+            #expect(await callback())
+        }
 
-    @Test @MainActor
-    func `map transform preserves MainActor isolation`() async {
-        let callback = Async.Callback(value: 21)
-            .map { _ -> Bool in isMainThread() }
-        #expect(await callback())
-    }
+        @Test @MainActor
+        func `map transform preserves MainActor isolation`() async {
+            let callback = Async.Callback(value: 21)
+                .map { _ -> Bool in isMainThread() }
+            #expect(await callback())
+        }
 
-    @Test @MainActor
-    func `chained maps preserve isolation at each level`() async {
-        let callback = Async.Callback(value: 0)
-            .map { _ -> Bool in isMainThread() }
-            .map { level1 -> (Bool, Bool) in (level1, isMainThread()) }
-        let (level1, level2) = await callback()
-        #expect(level1)
-        #expect(level2)
-    }
+        @Test @MainActor
+        func `chained maps preserve isolation at each level`() async {
+            let callback = Async.Callback(value: 0)
+                .map { _ -> Bool in isMainThread() }
+                .map { level1 -> (Bool, Bool) in (level1, isMainThread()) }
+            let (level1, level2) = await callback()
+            #expect(level1)
+            #expect(level2)
+        }
 
-    @Test @MainActor
-    func `flatMap preserves isolation`() async {
-        let callback = Async.Callback(value: 0)
-            .flatMap { _ in Async.Callback(value: isMainThread()) }
-        #expect(await callback())
-    }
+        @Test @MainActor
+        func `flatMap preserves isolation`() async {
+            let callback = Async.Callback(value: 0)
+                .flatMap { _ in Async.Callback(value: isMainThread()) }
+            #expect(await callback())
+        }
 
-    @Test @MainActor
-    func `caller remains on MainActor after awaiting callback`() async {
-        let callback = Async.Callback(value: 42)
-        let result = await callback()
-        #expect(result == 42)
-        #expect(isMainThread())
-    }
+        @Test @MainActor
+        func `caller remains on MainActor after awaiting callback`() async {
+            let callback = Async.Callback(value: 42)
+            let result = await callback()
+            #expect(result == 42)
+            #expect(isMainThread())
+        }
 
-    #if !hasFeature(Embedded)
-    @Test @MainActor
-    func `CPS bridge returns to caller isolation`() async {
-        let callback = Async.Callback<Int>(wrapping: { completion in
-            completion(42)
-        })
-        let result = await callback()
-        #expect(result == 42)
-        #expect(isMainThread())
+        #if !hasFeature(Embedded)
+            @Test @MainActor
+            func `CPS bridge returns to caller isolation`() async {
+                let callback = Async.Callback<Int>(wrapping: { completion in
+                    completion(42)
+                })
+                let result = await callback()
+                #expect(result == 42)
+                #expect(isMainThread())
+            }
+        #endif
     }
-    #endif
-}
 #endif

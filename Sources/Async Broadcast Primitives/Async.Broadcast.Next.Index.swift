@@ -12,11 +12,11 @@
 // Async broadcast requires task suspension which is not available on embedded Swift.
 #if !hasFeature(Embedded)
 
-extension Async.Broadcast.Next {
-    /// Monotonic counter for the next element index to assign.
-    struct Index {
-        var index: UInt64 = 0
+    extension Async.Broadcast.Next {
+        /// Monotonic counter for the next element index to assign.
+        struct Index {
+            var index: UInt64 = 0
+        }
     }
-}
 
 #endif  // !hasFeature(Embedded)

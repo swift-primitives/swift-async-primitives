@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 #if !hasFeature(Embedded)
-import Synchronization
+    import Synchronization
 #endif
 
 extension Async {
@@ -82,8 +82,8 @@ extension Async {
     }
 }
 
-private extension Async.Promise {
-    struct State: Sendable {
+extension Async.Promise {
+    fileprivate struct State: Sendable {
         var waiters: [Async.Continuation<Value>] = []
         var fulfilled: Value? = nil
     }
@@ -154,35 +154,36 @@ extension Async.Promise {
 // MARK: - Async Value Getter (Non-Embedded Only)
 
 #if !hasFeature(Embedded)
-extension Async.Promise {
-    /// The promised value, suspending until fulfilled.
-    ///
-    /// If the promise is already fulfilled, returns the value immediately.
-    /// Otherwise, suspends until another task calls `fulfill(_:)`.
-    ///
-    /// Multiple tasks can await concurrently - all will receive the same value.
-    ///
-    /// - Note: This method does NOT observe Task cancellation — the
-    ///   non-throwing signature precludes it. A cancelled awaiter still
-    ///   resumes with the fulfilled value when `fulfill(_:)` is invoked.
-    ///   See the type-level "Cancellation" docs for composition patterns.
-    ///
-    /// - Note: This property is only available on non-embedded platforms.
-    ///   On embedded, use `wait(_:)` instead.
-    nonisolated(nonsending)
-    public func value() async -> Value {
-        await withCheckedContinuation { continuation in
-            let immediateValue: Value? = _state.withLock { state in
-                if let value = state.fulfilled {
-                    return value
+    extension Async.Promise {
+        /// The promised value, suspending until fulfilled.
+        ///
+        /// If the promise is already fulfilled, returns the value immediately.
+        /// Otherwise, suspends until another task calls `fulfill(_:)`.
+        ///
+        /// Multiple tasks can await concurrently - all will receive the same value.
+        ///
+        /// - Note: This method does NOT observe Task cancellation — the
+        ///   non-throwing signature precludes it. A cancelled awaiter still
+        ///   resumes with the fulfilled value when `fulfill(_:)` is invoked.
+        ///   See the type-level "Cancellation" docs for composition patterns.
+        ///
+        /// - Note: This property is only available on non-embedded platforms.
+        ///   On embedded, use `wait(_:)` instead.
+        nonisolated(nonsending)
+            public func value() async -> Value
+        {
+            await withCheckedContinuation { continuation in
+                let immediateValue: Value? = _state.withLock { state in
+                    if let value = state.fulfilled {
+                        return value
+                    }
+                    state.waiters.append(Async.Continuation(continuation))
+                    return nil
                 }
-                state.waiters.append(Async.Continuation(continuation))
-                return nil
-            }
-            if let value = immediateValue {
-                continuation.resume(returning: value)
+                if let value = immediateValue {
+                    continuation.resume(returning: value)
+                }
             }
         }
     }
-}
 #endif

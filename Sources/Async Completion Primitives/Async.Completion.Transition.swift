@@ -11,9 +11,9 @@
 
 #if !hasFeature(Embedded)
 
-extension Async.Completion {
-    /// State transition namespace.
-    public enum Transition {}
-}
+    extension Async.Completion {
+        /// State transition namespace.
+        public enum Transition {}
+    }
 
 #endif  // !hasFeature(Embedded)

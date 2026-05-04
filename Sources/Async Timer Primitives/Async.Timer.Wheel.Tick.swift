@@ -20,4 +20,3 @@ extension Async.Timer.Wheel {
     @usableFromInline
     typealias Tick = UInt64
 }
-

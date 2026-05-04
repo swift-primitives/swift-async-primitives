@@ -12,14 +12,14 @@
 // Async broadcast requires task suspension which is not available on embedded Swift.
 #if !hasFeature(Embedded)
 
-extension Async.Broadcast {
-    /// Errors that can occur in broadcast operations.
-    public enum Error: Swift.Error, Sendable, Equatable {
-        /// The operation was cancelled.
-        ///
-        /// Thrown by `next()` when the task is cancelled while waiting.
-        case cancelled
+    extension Async.Broadcast {
+        /// Errors that can occur in broadcast operations.
+        public enum Error: Swift.Error, Sendable, Equatable {
+            /// The operation was cancelled.
+            ///
+            /// Thrown by `next()` when the task is cancelled while waiting.
+            case cancelled
+        }
     }
-}
 
 #endif  // !hasFeature(Embedded)

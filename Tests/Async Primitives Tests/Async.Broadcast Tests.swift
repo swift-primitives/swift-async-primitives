@@ -283,10 +283,14 @@ struct BroadcastStressTests {
                 let received = try await task.value
 
                 // Each subscriber must receive all elements in exact order
-                #expect(received.count == elementCount,
-                    "Round \(round), subscriber \(index): count \(received.count) != \(elementCount)")
-                #expect(received == Array(0..<elementCount),
-                    "Round \(round), subscriber \(index): elements mismatch")
+                #expect(
+                    received.count == elementCount,
+                    "Round \(round), subscriber \(index): count \(received.count) != \(elementCount)"
+                )
+                #expect(
+                    received == Array(0..<elementCount),
+                    "Round \(round), subscriber \(index): elements mismatch"
+                )
             }
         }
     }
@@ -314,18 +318,20 @@ struct BroadcastStressTests {
                             if let value = try await iterator.next() {
                                 received.append(value)
                             } else {
-                                break // Finished
+                                break  // Finished
                             }
                         } catch let error as Async.Broadcast<Int>.Error {
-                            #expect(error == .cancelled,
-                                "Round \(round), subscriber \(index): Expected .cancelled, got \(error)")
-                            return (index, received, true) // cancelled
+                            #expect(
+                                error == .cancelled,
+                                "Round \(round), subscriber \(index): Expected .cancelled, got \(error)"
+                            )
+                            return (index, received, true)  // cancelled
                         } catch {
                             #expect(Bool(false), "Round \(round), subscriber \(index): Unexpected error: \(error)")
                             break
                         }
                     }
-                    return (index, received, false) // not cancelled
+                    return (index, received, false)  // not cancelled
                 }
             }
 
@@ -354,12 +360,16 @@ struct BroadcastStressTests {
                 if wasCancelled {
                     cancelledCount += 1
                     // Cancelled subscribers should have received element 0 before cancellation
-                    #expect(received.first == 0 || received.isEmpty,
-                        "Round \(round), cancelled subscriber \(index): Unexpected first element")
+                    #expect(
+                        received.first == 0 || received.isEmpty,
+                        "Round \(round), cancelled subscriber \(index): Unexpected first element"
+                    )
                 } else {
                     // Non-cancelled subscribers must have all elements in exact order
-                    #expect(received == Array(0..<elementCount),
-                        "Round \(round), subscriber \(index): Expected all elements")
+                    #expect(
+                        received == Array(0..<elementCount),
+                        "Round \(round), subscriber \(index): Expected all elements"
+                    )
                 }
             }
 
@@ -408,8 +418,10 @@ struct BroadcastStressTests {
             for (index, task) in consumerTasks.enumerated() {
                 let received = try await task.value
                 // Subscriptions created after send() see nothing
-                #expect(received.isEmpty,
-                    "Round \(round), subscriber \(index): Expected empty, got \(received.count) elements")
+                #expect(
+                    received.isEmpty,
+                    "Round \(round), subscriber \(index): Expected empty, got \(received.count) elements"
+                )
             }
         }
     }
@@ -451,12 +463,14 @@ struct BroadcastStressTests {
                             received.append(value)
                             await Task.yield()
                         } else {
-                            break loop // Normal finish
+                            break loop  // Normal finish
                         }
                     } catch let error as Async.Broadcast<Int>.Error {
                         // Explicit check: only .cancelled is expected from broadcast
-                        #expect(error == .cancelled,
-                            "Subscriber \(id): Unexpected broadcast error: \(error)")
+                        #expect(
+                            error == .cancelled,
+                            "Subscriber \(id): Unexpected broadcast error: \(error)"
+                        )
                         terminatedViaCancellation = true
                         break loop
                     } catch {
@@ -466,8 +480,7 @@ struct BroadcastStressTests {
                     }
                 }
 
-                do { try sender.send((id: id, elements: received, terminatedViaCancellation: terminatedViaCancellation)) }
-                catch { #expect(Bool(false), "results channel unexpectedly closed") }
+                do { try sender.send((id: id, elements: received, terminatedViaCancellation: terminatedViaCancellation)) } catch { #expect(Bool(false), "results channel unexpectedly closed") }
             }
             subscriberTasks.append((id: id, task: task))
         }
@@ -510,24 +523,32 @@ struct BroadcastStressTests {
 
             // INVARIANT: Strict monotonic ordering
             for i in 1..<result.elements.count {
-                #expect(result.elements[i] > result.elements[i-1],
-                    "Subscriber \(result.id): Out of order at index \(i): \(result.elements[i-1]) -> \(result.elements[i])")
+                #expect(
+                    result.elements[i] > result.elements[i - 1],
+                    "Subscriber \(result.id): Out of order at index \(i): \(result.elements[i-1]) -> \(result.elements[i])"
+                )
             }
 
             // INVARIANT: No duplicates
-            #expect(Set(result.elements).count == result.elements.count,
-                "Subscriber \(result.id): Duplicate elements detected")
+            #expect(
+                Set(result.elements).count == result.elements.count,
+                "Subscriber \(result.id): Duplicate elements detected"
+            )
 
             // INVARIANT: All values in range
             for value in result.elements {
-                #expect((0..<elementCount).contains(value),
-                    "Subscriber \(result.id): Value \(value) out of range [0, \(elementCount))")
+                #expect(
+                    (0..<elementCount).contains(value),
+                    "Subscriber \(result.id): Value \(value) out of range [0, \(elementCount))"
+                )
             }
         }
 
         // INVARIANT: All subscribers terminated
-        #expect(completedSubscribers == subscriberCount,
-            "Expected \(subscriberCount) subscribers to terminate, got \(completedSubscribers)")
+        #expect(
+            completedSubscribers == subscriberCount,
+            "Expected \(subscriberCount) subscribers to terminate, got \(completedSubscribers)"
+        )
     }
 
     @Test
@@ -578,23 +599,31 @@ struct BroadcastStressTests {
         let slowReceived = try await slowTask.value
 
         // Fast subscriber should get all elements in exact order
-        #expect(fastReceived == Array(0..<elementCount),
-            "Fast subscriber should receive all elements in order")
+        #expect(
+            fastReceived == Array(0..<elementCount),
+            "Fast subscriber should receive all elements in order"
+        )
 
         // Slow subscriber: strictly increasing (no out-of-order)
         for i in 1..<slowReceived.count {
-            #expect(slowReceived[i] > slowReceived[i-1],
-                "Slow subscriber elements out of order at index \(i)")
+            #expect(
+                slowReceived[i] > slowReceived[i - 1],
+                "Slow subscriber elements out of order at index \(i)"
+            )
         }
 
         // No duplicates
-        #expect(Set(slowReceived).count == slowReceived.count,
-            "Slow subscriber has duplicates")
+        #expect(
+            Set(slowReceived).count == slowReceived.count,
+            "Slow subscriber has duplicates"
+        )
 
         // All received elements must be in valid range
         for value in slowReceived {
-            #expect((0..<elementCount).contains(value),
-                "Slow subscriber received out-of-range value: \(value)")
+            #expect(
+                (0..<elementCount).contains(value),
+                "Slow subscriber received out-of-range value: \(value)"
+            )
         }
     }
 

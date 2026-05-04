@@ -9,10 +9,10 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import Async_Primitives_Core
 internal import Async_Mutex_Primitives
-internal import Async_Waiter_Primitives
+public import Async_Primitives_Core
 internal import Async_Promise_Primitives
+internal import Async_Waiter_Primitives
 
 // MARK: - Shutdown
 

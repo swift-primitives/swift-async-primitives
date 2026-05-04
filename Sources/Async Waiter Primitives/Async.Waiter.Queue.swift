@@ -67,15 +67,13 @@ extension Async.Waiter.Queue {
     ///
     /// Backed by `Queue<Entry>.Fixed` from queue-primitives. Flag-aware operations
     /// (`popEligible`, `reapFlagged`) are provided as extensions.
-    public typealias Bounded<Outcome: Sendable, Metadata: ~Copyable & Sendable>
-        = Queue_Primitives_Core.Queue<Async.Waiter.Entry<Outcome, Metadata>>.Fixed
+    public typealias Bounded<Outcome: Sendable, Metadata: ~Copyable & Sendable> = Queue_Primitives_Core.Queue<Async.Waiter.Entry<Outcome, Metadata>>.Fixed
 
     /// An unbounded waiter queue with automatic growth.
     ///
     /// Backed by `Queue<Entry>` from queue-primitives. Flag-aware operations
     /// (`popEligible`, `reapFlagged`) are provided as extensions.
-    public typealias Unbounded<Outcome: Sendable, Metadata: ~Copyable & Sendable>
-        = Queue_Primitives_Core.Queue<Async.Waiter.Entry<Outcome, Metadata>>
+    public typealias Unbounded<Outcome: Sendable, Metadata: ~Copyable & Sendable> = Queue_Primitives_Core.Queue<Async.Waiter.Entry<Outcome, Metadata>>
 
     /// A drainable collection of ~Copyable elements.
     ///
@@ -83,4 +81,3 @@ extension Async.Waiter.Queue {
     /// Elements are consumed via `drain { }` or `dequeue()`.
     public typealias Drain<Element: ~Copyable> = Queue_Primitives_Core.Queue<Element>
 }
-

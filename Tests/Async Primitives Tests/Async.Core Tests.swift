@@ -21,7 +21,7 @@ enum Core {
         @Suite struct Promise {}
         @Suite struct Barrier {}
         #if !hasFeature(Embedded)
-        @Suite struct Completion {}
+            @Suite struct Completion {}
         #endif
     }
 }
@@ -203,7 +203,10 @@ extension Core.Test.Precedence {
             shutdown: true,
             cancelled: false,
             timedOut: false,
-            success: { evaluated = true; return "success" }(),
+            success: {
+                evaluated = true
+                return "success"
+            }(),
             onShutdown: "shutdown",
             onCancelled: "cancelled",
             onTimeout: "timeout"
@@ -339,21 +342,21 @@ extension Core.Test.Promise {
     }
 
     #if !hasFeature(Embedded)
-    @Test
-    func `async value returns fulfilled value`() async {
-        let promise = Async.Promise<Int>()
-        promise.fulfill(42)
-        let value = await promise.value()
-        #expect(value == 42)
-    }
+        @Test
+        func `async value returns fulfilled value`() async {
+            let promise = Async.Promise<Int>()
+            promise.fulfill(42)
+            let value = await promise.value()
+            #expect(value == 42)
+        }
 
-    @Test
-    func `async gate wait returns after open`() async {
-        let gate = Async.Gate()
-        gate.open()
-        await gate.wait()
-        // If we reach here, wait returned correctly
-    }
+        @Test
+        func `async gate wait returns after open`() async {
+            let gate = Async.Gate()
+            gate.open()
+            await gate.wait()
+            // If we reach here, wait returned correctly
+        }
     #endif
 }
 
@@ -453,7 +456,7 @@ extension Core.Test.Barrier {
     @Test
     func `arrive after release invokes callback immediately`() {
         let barrier = Async.Barrier(parties: 1)
-        barrier.arrive { }
+        barrier.arrive {}
 
         let publication = Async.Publication<Bool>()
         barrier.arrive { publication.publish(true) }
@@ -461,217 +464,217 @@ extension Core.Test.Barrier {
     }
 
     #if !hasFeature(Embedded)
-    @Test
-    func `async arrive releases when all parties arrive`() async {
-        let barrier = Async.Barrier(parties: 3)
+        @Test
+        func `async arrive releases when all parties arrive`() async {
+            let barrier = Async.Barrier(parties: 3)
 
-        await withTaskGroup(of: Void.self) { group in
-            for _ in 0..<3 {
-                group.addTask {
-                    try? await barrier.arrive()
+            await withTaskGroup(of: Void.self) { group in
+                for _ in 0..<3 {
+                    group.addTask {
+                        try? await barrier.arrive()
+                    }
                 }
             }
-        }
 
-        #expect(barrier.isReleased)
-        #expect(barrier.arrived == 3)
-    }
+            #expect(barrier.isReleased)
+            #expect(barrier.arrived == 3)
+        }
     #endif
 }
 
 // MARK: - Completion Tests
 
 #if !hasFeature(Embedded)
-extension Core.Test.Completion {
-    @Test
-    func `init creates pending state`() {
-        let completion = Async.Completion<Int, Never>()
-        #expect(completion.state == .pending)
-        #expect(!completion.isTerminal)
-    }
+    extension Core.Test.Completion {
+        @Test
+        func `init creates pending state`() {
+            let completion = Async.Completion<Int, Never>()
+            #expect(completion.state == .pending)
+            #expect(!completion.isTerminal)
+        }
 
-    @Test
-    func `start transitions to running`() throws {
-        let completion = Async.Completion<Int, Never>()
-        try completion.start()
-        #expect(completion.state == .running)
-        #expect(!completion.isTerminal)
-    }
-
-    @Test
-    func `complete transitions to completed`() throws {
-        let completion = Async.Completion<Int, Never>()
-        try completion.start()
-        try completion.complete(42)
-        #expect(completion.state == .completed)
-        #expect(completion.isTerminal)
-    }
-
-    @Test
-    func `timeout transitions to timedOut`() throws {
-        let completion = Async.Completion<Int, Never>()
-        try completion.start()
-        try completion.timeout()
-        #expect(completion.state == .timedOut)
-        #expect(completion.isTerminal)
-    }
-
-    @Test
-    func `cancel from pending transitions to cancelled`() throws {
-        let completion = Async.Completion<Int, Never>()
-        try completion.cancel()
-        #expect(completion.state == .cancelled)
-        #expect(completion.isTerminal)
-    }
-
-    @Test
-    func `cancel from running transitions to cancelled`() throws {
-        let completion = Async.Completion<Int, Never>()
-        try completion.start()
-        try completion.cancel()
-        #expect(completion.state == .cancelled)
-        #expect(completion.isTerminal)
-    }
-
-    @Test
-    func `double start throws`() throws {
-        let completion = Async.Completion<Int, Never>()
-        try completion.start()
-        do {
+        @Test
+        func `start transitions to running`() throws {
+            let completion = Async.Completion<Int, Never>()
             try completion.start()
-            Issue.record("Expected alreadyDone error")
-        } catch {
-            // Transition.Error.alreadyDone — expected
+            #expect(completion.state == .running)
+            #expect(!completion.isTerminal)
         }
-    }
 
-    @Test
-    func `complete without start throws`() {
-        let completion = Async.Completion<Int, Never>()
-        do {
+        @Test
+        func `complete transitions to completed`() throws {
+            let completion = Async.Completion<Int, Never>()
+            try completion.start()
             try completion.complete(42)
-            Issue.record("Expected alreadyDone error")
-        } catch {
-            // Expected — complete requires running state
-        }
-    }
-
-    @Test
-    func `timeout without start throws`() {
-        let completion = Async.Completion<Int, Never>()
-        do {
-            try completion.timeout()
-            Issue.record("Expected alreadyDone error")
-        } catch {
-            // Expected — timeout requires running state
-        }
-    }
-
-    @Test
-    func `cancel from completed throws`() throws {
-        let completion = Async.Completion<Int, Never>()
-        try completion.start()
-        try completion.complete(42)
-        do {
-            try completion.cancel()
-            Issue.record("Expected alreadyDone error")
-        } catch {
-            // Expected — already in terminal state
-        }
-    }
-
-    @Test
-    func `complete after timeout throws`() throws {
-        let completion = Async.Completion<Int, Never>()
-        try completion.start()
-        try completion.timeout()
-        do {
-            try completion.complete(99)
-            Issue.record("Expected alreadyDone error")
-        } catch {
-            // Expected — already timed out
-        }
-    }
-
-    @Test
-    func `fail from pending transitions to failed`() {
-        let completion = Async.Completion<Int, TestError>()
-        do {
-            try completion.fail(.testFailure)
-            #expect(completion.state == .failed)
+            #expect(completion.state == .completed)
             #expect(completion.isTerminal)
-        } catch {
-            Issue.record("Unexpected error")
+        }
+
+        @Test
+        func `timeout transitions to timedOut`() throws {
+            let completion = Async.Completion<Int, Never>()
+            try completion.start()
+            try completion.timeout()
+            #expect(completion.state == .timedOut)
+            #expect(completion.isTerminal)
+        }
+
+        @Test
+        func `cancel from pending transitions to cancelled`() throws {
+            let completion = Async.Completion<Int, Never>()
+            try completion.cancel()
+            #expect(completion.state == .cancelled)
+            #expect(completion.isTerminal)
+        }
+
+        @Test
+        func `cancel from running transitions to cancelled`() throws {
+            let completion = Async.Completion<Int, Never>()
+            try completion.start()
+            try completion.cancel()
+            #expect(completion.state == .cancelled)
+            #expect(completion.isTerminal)
+        }
+
+        @Test
+        func `double start throws`() throws {
+            let completion = Async.Completion<Int, Never>()
+            try completion.start()
+            do {
+                try completion.start()
+                Issue.record("Expected alreadyDone error")
+            } catch {
+                // Transition.Error.alreadyDone — expected
+            }
+        }
+
+        @Test
+        func `complete without start throws`() {
+            let completion = Async.Completion<Int, Never>()
+            do {
+                try completion.complete(42)
+                Issue.record("Expected alreadyDone error")
+            } catch {
+                // Expected — complete requires running state
+            }
+        }
+
+        @Test
+        func `timeout without start throws`() {
+            let completion = Async.Completion<Int, Never>()
+            do {
+                try completion.timeout()
+                Issue.record("Expected alreadyDone error")
+            } catch {
+                // Expected — timeout requires running state
+            }
+        }
+
+        @Test
+        func `cancel from completed throws`() throws {
+            let completion = Async.Completion<Int, Never>()
+            try completion.start()
+            try completion.complete(42)
+            do {
+                try completion.cancel()
+                Issue.record("Expected alreadyDone error")
+            } catch {
+                // Expected — already in terminal state
+            }
+        }
+
+        @Test
+        func `complete after timeout throws`() throws {
+            let completion = Async.Completion<Int, Never>()
+            try completion.start()
+            try completion.timeout()
+            do {
+                try completion.complete(99)
+                Issue.record("Expected alreadyDone error")
+            } catch {
+                // Expected — already timed out
+            }
+        }
+
+        @Test
+        func `fail from pending transitions to failed`() {
+            let completion = Async.Completion<Int, TestError>()
+            do {
+                try completion.fail(.testFailure)
+                #expect(completion.state == .failed)
+                #expect(completion.isTerminal)
+            } catch {
+                Issue.record("Unexpected error")
+            }
+        }
+
+        @Test
+        func `fail from running throws`() throws {
+            let completion = Async.Completion<Int, TestError>()
+            try completion.start()
+            do {
+                try completion.fail(.testFailure)
+                Issue.record("Expected alreadyDone error")
+            } catch {
+                // Expected — fail only works from pending
+            }
+        }
+
+        @Test
+        func `full lifecycle with continuation`() async {
+            let completion = Async.Completion<Int, Never>()
+
+            let result = await withCheckedContinuation { continuation in
+                completion.set(continuation: continuation)
+                try! completion.start()
+                try! completion.complete(42)
+            }
+
+            if case .success(let value) = result {
+                #expect(value == 42)
+            } else {
+                Issue.record("Expected success result")
+            }
+        }
+
+        @Test
+        func `cancellation delivers cancellation error`() async {
+            let completion = Async.Completion<Int, Never>()
+
+            let result = await withCheckedContinuation { continuation in
+                completion.set(continuation: continuation)
+                try! completion.start()
+                try! completion.cancel()
+            }
+
+            if case .failure(.cancelled) = result {
+                // Expected
+            } else {
+                Issue.record("Expected cancelled error, got \(result)")
+            }
+        }
+
+        @Test
+        func `timeout delivers timeout error`() async {
+            let completion = Async.Completion<Int, Never>()
+
+            let result = await withCheckedContinuation { continuation in
+                completion.set(continuation: continuation)
+                try! completion.start()
+                try! completion.timeout()
+            }
+
+            if case .failure(.timeout) = result {
+                // Expected
+            } else {
+                Issue.record("Expected timeout error, got \(result)")
+            }
         }
     }
 
-    @Test
-    func `fail from running throws`() throws {
-        let completion = Async.Completion<Int, TestError>()
-        try completion.start()
-        do {
-            try completion.fail(.testFailure)
-            Issue.record("Expected alreadyDone error")
-        } catch {
-            // Expected — fail only works from pending
-        }
+    // MARK: - Test Helpers
+
+    private enum TestError: Error, Sendable {
+        case testFailure
     }
-
-    @Test
-    func `full lifecycle with continuation`() async {
-        let completion = Async.Completion<Int, Never>()
-
-        let result = await withCheckedContinuation { continuation in
-            completion.set(continuation: continuation)
-            try! completion.start()
-            try! completion.complete(42)
-        }
-
-        if case .success(let value) = result {
-            #expect(value == 42)
-        } else {
-            Issue.record("Expected success result")
-        }
-    }
-
-    @Test
-    func `cancellation delivers cancellation error`() async {
-        let completion = Async.Completion<Int, Never>()
-
-        let result = await withCheckedContinuation { continuation in
-            completion.set(continuation: continuation)
-            try! completion.start()
-            try! completion.cancel()
-        }
-
-        if case .failure(.cancelled) = result {
-            // Expected
-        } else {
-            Issue.record("Expected cancelled error, got \(result)")
-        }
-    }
-
-    @Test
-    func `timeout delivers timeout error`() async {
-        let completion = Async.Completion<Int, Never>()
-
-        let result = await withCheckedContinuation { continuation in
-            completion.set(continuation: continuation)
-            try! completion.start()
-            try! completion.timeout()
-        }
-
-        if case .failure(.timeout) = result {
-            // Expected
-        } else {
-            Issue.record("Expected timeout error, got \(result)")
-        }
-    }
-}
-
-// MARK: - Test Helpers
-
-private enum TestError: Error, Sendable {
-    case testFailure
-}
 #endif

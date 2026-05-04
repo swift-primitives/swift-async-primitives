@@ -12,130 +12,130 @@
 // Async channels require task suspension which is not available on embedded Swift.
 #if !hasFeature(Embedded)
 
-extension Async.Channel where Element: ~Copyable {
-    /// Bounded channel with backpressure.
-    ///
-    /// Provides a capacity-limited channel where sends suspend when
-    /// the buffer is full (backpressure) and receives suspend when empty.
-    ///
-    /// ## Usage
-    /// ```swift
-    /// var channel = Async.Channel<Int>.Bounded(capacity: 10)
-    ///
-    /// // Producer task (Sender is Copyable, Sendable)
-    /// Task {
-    ///     try await channel.sender.send(1)
-    ///     try await channel.sender.send(2)
-    ///     channel.close()
-    /// }
-    ///
-    /// // Consumer (single task, Receiver enforces single-consumer)
-    /// for try await value in channel.receiver.elements {
-    ///     print(value)
-    /// }
-    /// ```
-    ///
-    /// ## Design
-    /// - `Bounded` is `~Copyable` - channel identity cannot be duplicated
-    /// - `sender` is `Copyable` - can be shared across tasks
-    /// - `receiver` is `~Copyable` - exactly one receiver per channel
-    /// - Auto-close: Channel closes when last Sender drops
-    ///
-    /// ## Ordering and Fairness
-    /// All channel state is protected by an internal mutex; concurrent
-    /// `send(_:)` calls from distinct `Sender` handles serialize on lock
-    /// acquisition. Two consequences follow:
-    ///
-    /// - **Multi-sender ordering**: when N concurrent `send(_:)` calls
-    ///   complete successfully (buffer not full at the time each acquires
-    ///   the lock), elements appear in the buffer (and at the receiver)
-    ///   in **mutex-acquisition order** — i.e., the order the lock was
-    ///   acquired by each sender. Per-sender FIFO is guaranteed; across
-    ///   senders, the order is arrival order at the lock.
-    ///
-    /// - **Sender-wakeup fairness under contention**: when the buffer is
-    ///   full, suspended senders are queued in a `Deque` in
-    ///   mutex-acquisition order. When the receiver consumes an element
-    ///   and a slot frees, the **front sender of the deque is resumed
-    ///   first** — strict FIFO. Suspended senders drain in arrival order;
-    ///   no priority inversion or starvation under bounded contention.
-    ///
-    /// As with broadcast wakeup ordering, the resume-call order is
-    /// distinct from observable Task-completion order (the latter is
-    /// scheduler-determined). The contract is on the wakeup signal, not
-    /// on the order in which `send(_:)` returns to the calling Task.
-    ///
-    /// ## Error Handling
-    /// Operations use typed throws for exhaustive error handling:
-    /// ```swift
-    /// do {
-    ///     try await channel.sender.send(value)
-    /// } catch .closed {
-    ///     // Channel was closed
-    /// } catch .cancelled {
-    ///     // Task was cancelled
-    /// }
-    /// ```
-    public struct Bounded: ~Copyable, Sendable {
-        @usableFromInline
-        let storage: Storage
-
-        /// View for sending elements to this channel.
+    extension Async.Channel where Element: ~Copyable {
+        /// Bounded channel with backpressure.
         ///
-        /// `Sender` is `Copyable` - multiple sender views can exist,
-        /// and they all share the same underlying channel.
-        /// Channel auto-closes when the last Sender reference drops.
-        public let sender: Sender
-
-        /// View for receiving elements from this channel.
+        /// Provides a capacity-limited channel where sends suspend when
+        /// the buffer is full (backpressure) and receives suspend when empty.
         ///
-        /// `Receiver` is `~Copyable` - exactly one receiver exists per channel.
-        /// This enforces single-receiver semantics at the type level.
-        public var receiver: Receiver
-
-        /// Creates a new bounded channel with the specified capacity.
+        /// ## Usage
+        /// ```swift
+        /// var channel = Async.Channel<Int>.Bounded(capacity: 10)
         ///
-        /// - Parameter capacity: The maximum number of elements that can be buffered.
-        ///   Must be greater than zero.
-        public init(capacity: Index<Element>.Count) {
-            precondition(capacity > .zero, "Bounded channel capacity must be greater than zero")
-            let storage = Storage(capacity: capacity)
-            self.storage = storage
-            self.sender = Sender(storage: storage)
-            self.receiver = Receiver(storage: storage)
+        /// // Producer task (Sender is Copyable, Sendable)
+        /// Task {
+        ///     try await channel.sender.send(1)
+        ///     try await channel.sender.send(2)
+        ///     channel.close()
+        /// }
+        ///
+        /// // Consumer (single task, Receiver enforces single-consumer)
+        /// for try await value in channel.receiver.elements {
+        ///     print(value)
+        /// }
+        /// ```
+        ///
+        /// ## Design
+        /// - `Bounded` is `~Copyable` - channel identity cannot be duplicated
+        /// - `sender` is `Copyable` - can be shared across tasks
+        /// - `receiver` is `~Copyable` - exactly one receiver per channel
+        /// - Auto-close: Channel closes when last Sender drops
+        ///
+        /// ## Ordering and Fairness
+        /// All channel state is protected by an internal mutex; concurrent
+        /// `send(_:)` calls from distinct `Sender` handles serialize on lock
+        /// acquisition. Two consequences follow:
+        ///
+        /// - **Multi-sender ordering**: when N concurrent `send(_:)` calls
+        ///   complete successfully (buffer not full at the time each acquires
+        ///   the lock), elements appear in the buffer (and at the receiver)
+        ///   in **mutex-acquisition order** — i.e., the order the lock was
+        ///   acquired by each sender. Per-sender FIFO is guaranteed; across
+        ///   senders, the order is arrival order at the lock.
+        ///
+        /// - **Sender-wakeup fairness under contention**: when the buffer is
+        ///   full, suspended senders are queued in a `Deque` in
+        ///   mutex-acquisition order. When the receiver consumes an element
+        ///   and a slot frees, the **front sender of the deque is resumed
+        ///   first** — strict FIFO. Suspended senders drain in arrival order;
+        ///   no priority inversion or starvation under bounded contention.
+        ///
+        /// As with broadcast wakeup ordering, the resume-call order is
+        /// distinct from observable Task-completion order (the latter is
+        /// scheduler-determined). The contract is on the wakeup signal, not
+        /// on the order in which `send(_:)` returns to the calling Task.
+        ///
+        /// ## Error Handling
+        /// Operations use typed throws for exhaustive error handling:
+        /// ```swift
+        /// do {
+        ///     try await channel.sender.send(value)
+        /// } catch .closed {
+        ///     // Channel was closed
+        /// } catch .cancelled {
+        ///     // Task was cancelled
+        /// }
+        /// ```
+        public struct Bounded: ~Copyable, Sendable {
+            @usableFromInline
+            let storage: Storage
+
+            /// View for sending elements to this channel.
+            ///
+            /// `Sender` is `Copyable` - multiple sender views can exist,
+            /// and they all share the same underlying channel.
+            /// Channel auto-closes when the last Sender reference drops.
+            public let sender: Sender
+
+            /// View for receiving elements from this channel.
+            ///
+            /// `Receiver` is `~Copyable` - exactly one receiver exists per channel.
+            /// This enforces single-receiver semantics at the type level.
+            public var receiver: Receiver
+
+            /// Creates a new bounded channel with the specified capacity.
+            ///
+            /// - Parameter capacity: The maximum number of elements that can be buffered.
+            ///   Must be greater than zero.
+            public init(capacity: Index<Element>.Count) {
+                precondition(capacity > .zero, "Bounded channel capacity must be greater than zero")
+                let storage = Storage(capacity: capacity)
+                self.storage = storage
+                self.sender = Sender(storage: storage)
+                self.receiver = Receiver(storage: storage)
+            }
         }
     }
-}
 
-extension Async.Channel.Bounded where Element: ~Copyable {
-    /// Consume the channel and return a `Take` for endpoint extraction.
-    ///
-    /// Use after extracting the sender (Copyable) to consume the channel
-    /// and obtain both endpoints as a bundle:
-    /// ```swift
-    /// var channel = Async.Channel<Int>.Bounded(capacity: 8)
-    /// let sender = channel.sender
-    /// let ends = (consume channel).take().ends()
-    /// ```
-    public consuming func take() -> Take {
-        Take(channel: consume self)
-    }
-}
-
-extension Async.Channel.Bounded where Element: ~Copyable {
-    /// Close the channel, signaling no more elements will be sent.
-    ///
-    /// After close:
-    /// - `send()` throws `.closed`
-    /// - `receive()` drains buffer then returns `nil`
-    public func close() {
-        sender.close()
+    extension Async.Channel.Bounded where Element: ~Copyable {
+        /// Consume the channel and return a `Take` for endpoint extraction.
+        ///
+        /// Use after extracting the sender (Copyable) to consume the channel
+        /// and obtain both endpoints as a bundle:
+        /// ```swift
+        /// var channel = Async.Channel<Int>.Bounded(capacity: 8)
+        /// let sender = channel.sender
+        /// let ends = (consume channel).take().ends()
+        /// ```
+        public consuming func take() -> Take {
+            Take(channel: consume self)
+        }
     }
 
-    /// Whether the channel has been closed.
-    public var isClosed: Bool {
-        storage.withLock { $0.isClosed }
+    extension Async.Channel.Bounded where Element: ~Copyable {
+        /// Close the channel, signaling no more elements will be sent.
+        ///
+        /// After close:
+        /// - `send()` throws `.closed`
+        /// - `receive()` drains buffer then returns `nil`
+        public func close() {
+            sender.close()
+        }
+
+        /// Whether the channel has been closed.
+        public var isClosed: Bool {
+            storage.withLock { $0.isClosed }
+        }
     }
-}
 
 #endif  // !hasFeature(Embedded)

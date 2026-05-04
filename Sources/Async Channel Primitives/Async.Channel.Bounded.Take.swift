@@ -12,24 +12,24 @@
 // Async channels require task suspension which is not available on embedded Swift.
 #if !hasFeature(Embedded)
 
-extension Async.Channel.Bounded where Element: ~Copyable {
-    /// Consuming accessor namespace.
-    public struct Take: ~Copyable, Sendable {
-        @usableFromInline
-        var channel: Async.Channel<Element>.Bounded
+    extension Async.Channel.Bounded where Element: ~Copyable {
+        /// Consuming accessor namespace.
+        public struct Take: ~Copyable, Sendable {
+            @usableFromInline
+            var channel: Async.Channel<Element>.Bounded
 
-        @usableFromInline
-        init(channel: consuming Async.Channel<Element>.Bounded) {
-            self.channel = channel
-        }
+            @usableFromInline
+            init(channel: consuming Async.Channel<Element>.Bounded) {
+                self.channel = channel
+            }
 
-        /// Consume the channel and return both endpoints as a bundle.
-        public consuming func ends() -> Ends {
-            let storage = channel.storage
-            let receiver = consume channel.receiver
-            return Ends(storage: storage, receiver: receiver)
+            /// Consume the channel and return both endpoints as a bundle.
+            public consuming func ends() -> Ends {
+                let storage = channel.storage
+                let receiver = consume channel.receiver
+                return Ends(storage: storage, receiver: receiver)
+            }
         }
     }
-}
 
 #endif  // !hasFeature(Embedded)

@@ -12,13 +12,13 @@
 // Async broadcast requires task suspension which is not available on embedded Swift.
 #if !hasFeature(Embedded)
 
-extension Async.Broadcast {
-    /// Lifecycle state (§2.2 compliant).
-    @usableFromInline
-    enum Is: Sendable {
-        case active
-        case finished
+    extension Async.Broadcast {
+        /// Lifecycle state (§2.2 compliant).
+        @usableFromInline
+        enum Is: Sendable {
+            case active
+            case finished
+        }
     }
-}
 
 #endif  // !hasFeature(Embedded)

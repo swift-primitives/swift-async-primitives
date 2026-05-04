@@ -12,9 +12,9 @@
 // Async broadcast requires task suspension which is not available on embedded Swift.
 #if !hasFeature(Embedded)
 
-extension Async.Broadcast {
-    /// Namespace for next operation types.
-    public enum Next {}
-}
+    extension Async.Broadcast {
+        /// Namespace for next operation types.
+        public enum Next {}
+    }
 
 #endif  // !hasFeature(Embedded)

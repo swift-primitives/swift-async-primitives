@@ -10,8 +10,8 @@
 // ===----------------------------------------------------------------------===//
 
 import Async_Primitives_Test_Support
-import Testing
 import Synchronization
+import Testing
 
 // MARK: - Test Suites
 
@@ -210,7 +210,7 @@ extension Async.Semaphore.Test.`Edge Case` {
     func `shutdown is idempotent`() {
         let semaphore = Async.Semaphore(capacity: 1)
         semaphore.shutdown()
-        semaphore.shutdown() // Should not crash
+        semaphore.shutdown()  // Should not crash
         #expect(semaphore.isShutdown)
     }
 

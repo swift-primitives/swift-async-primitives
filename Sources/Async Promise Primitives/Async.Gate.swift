@@ -67,16 +67,17 @@ extension Async.Promise where Value == Void {
 // MARK: - Async Gate Wait (Non-Embedded Only)
 
 #if !hasFeature(Embedded)
-extension Async.Promise where Value == Void {
-    /// Waits until the gate is opened (async).
-    ///
-    /// Equivalent to `await value()`.
-    ///
-    /// - Note: This method is only available on non-embedded platforms.
-    ///   On embedded, use `wait(_:)` instead.
-    nonisolated(nonsending)
-    public func wait() async {
-        _ = await value()
+    extension Async.Promise where Value == Void {
+        /// Waits until the gate is opened (async).
+        ///
+        /// Equivalent to `await value()`.
+        ///
+        /// - Note: This method is only available on non-embedded platforms.
+        ///   On embedded, use `wait(_:)` instead.
+        nonisolated(nonsending)
+            public func wait() async
+        {
+            _ = await value()
+        }
     }
-}
 #endif

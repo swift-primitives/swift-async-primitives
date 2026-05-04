@@ -9,11 +9,12 @@
 //
 // ===----------------------------------------------------------------------===//
 
-#if !hasFeature(Embedded)
-public import Synchronization
-#endif
-public import Queue_Primitives
 internal import Buffer_Primitives
+public import Queue_Primitives
+
+#if !hasFeature(Embedded)
+    public import Synchronization
+#endif
 
 // MARK: - Async.Mutex<Deque<Element>> Queue Operations
 

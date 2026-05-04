@@ -11,39 +11,39 @@
 
 #if !hasFeature(Embedded)
 
-public import Synchronization
+    public import Synchronization
 
-extension Async.Completion {
-    /// Atomic state for CAS discipline.
-    ///
-    /// ## State Machine
-    /// ```
-    /// pending → running → completed
-    ///                   → timedOut
-    ///                   → cancelled
-    ///                   → failed
-    /// pending → cancelled
-    /// pending → failed
-    /// ```
-    public enum State: UInt8, AtomicRepresentable, Sendable {
-        /// Initial state - not yet started.
-        case pending = 0
+    extension Async.Completion {
+        /// Atomic state for CAS discipline.
+        ///
+        /// ## State Machine
+        /// ```
+        /// pending → running → completed
+        ///                   → timedOut
+        ///                   → cancelled
+        ///                   → failed
+        /// pending → cancelled
+        /// pending → failed
+        /// ```
+        public enum State: UInt8, AtomicRepresentable, Sendable {
+            /// Initial state - not yet started.
+            case pending = 0
 
-        /// Operation is running.
-        case running = 1
+            /// Operation is running.
+            case running = 1
 
-        /// Operation completed successfully.
-        case completed = 2
+            /// Operation completed successfully.
+            case completed = 2
 
-        /// Operation timed out.
-        case timedOut = 3
+            /// Operation timed out.
+            case timedOut = 3
 
-        /// Operation was cancelled.
-        case cancelled = 4
+            /// Operation was cancelled.
+            case cancelled = 4
 
-        /// Operation failed with error.
-        case failed = 5
+            /// Operation failed with error.
+            case failed = 5
+        }
     }
-}
 
 #endif  // !hasFeature(Embedded)

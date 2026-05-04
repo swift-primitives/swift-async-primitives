@@ -9,8 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import Async_Primitives_Core
 internal import Async_Mutex_Primitives
+public import Async_Primitives_Core
 public import Async_Waiter_Primitives
 
 // MARK: - Signal

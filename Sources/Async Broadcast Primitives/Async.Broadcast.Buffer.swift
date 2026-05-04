@@ -12,11 +12,11 @@
 // Async broadcast requires task suspension which is not available on embedded Swift.
 #if !hasFeature(Embedded)
 
-extension Async.Broadcast {
-    /// Buffer configuration namespace.
-    struct Buffer {
-        let limit: Int
+    extension Async.Broadcast {
+        /// Buffer configuration namespace.
+        struct Buffer {
+            let limit: Int
+        }
     }
-}
 
 #endif  // !hasFeature(Embedded)

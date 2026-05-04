@@ -12,15 +12,15 @@
 // Async broadcast requires task suspension which is not available on embedded Swift.
 #if !hasFeature(Embedded)
 
-extension Async.Broadcast {
-    /// Wait token namespace for subscriber cancellation matching.
-    struct Wait {
-        /// Monotonically increasing token per subscriber.
-        ///
-        /// Incremented each time the subscriber suspends.
-        /// Used to match cancellation requests to active waits.
-        var token: UInt64 = 0
+    extension Async.Broadcast {
+        /// Wait token namespace for subscriber cancellation matching.
+        struct Wait {
+            /// Monotonically increasing token per subscriber.
+            ///
+            /// Incremented each time the subscriber suspends.
+            /// Used to match cancellation requests to active waits.
+            var token: UInt64 = 0
+        }
     }
-}
 
 #endif  // !hasFeature(Embedded)
