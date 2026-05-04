@@ -18,7 +18,6 @@ jobs:
   ci:
     uses: swift-primitives/.github/.github/workflows/swift-ci.yml@main
     with:
-      cache-key-prefix: swift63-spm-v1
       enable-private-repos: true
     secrets:
       PRIVATE_REPO_TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
