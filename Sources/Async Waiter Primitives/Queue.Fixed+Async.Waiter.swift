@@ -40,8 +40,8 @@ extension Queue_Primitives_Core.Queue.Fixed where Element: ~Copyable {
     /// - Parameter flagged: Queue to collect flagged entries into.
     /// - Returns: The first eligible entry, or `nil` if none found.
     // WORKAROUND: popEligible is a compound identifier [API-NAME-002]
-    // WHY: Property.View cannot express method-level `where Element ==` constraints
-    // WHEN TO REMOVE: When Swift supports constrained Property.View extensions with same-type requirements
+    // WHY: Property.Inout cannot express method-level `where Element ==` constraints
+    // WHEN TO REMOVE: When Swift supports constrained Property.Inout extensions with same-type requirements
     // TRACKING: Async.Waiter.Queue unification
     @inlinable
     public mutating func popEligible<Outcome: Sendable, Metadata: ~Copyable & Sendable>(
@@ -69,8 +69,8 @@ extension Queue_Primitives_Core.Queue.Fixed where Element: ~Copyable {
     ///
     /// - Parameter flagged: Queue to collect flagged entries into.
     // WORKAROUND: reapFlagged is a compound identifier [API-NAME-002]
-    // WHY: Property.View cannot express method-level `where Element ==` constraints
-    // WHEN TO REMOVE: When Swift supports constrained Property.View extensions with same-type requirements
+    // WHY: Property.Inout cannot express method-level `where Element ==` constraints
+    // WHEN TO REMOVE: When Swift supports constrained Property.Inout extensions with same-type requirements
     // TRACKING: Async.Waiter.Queue unification
     @inlinable
     public mutating func reapFlagged<Outcome: Sendable, Metadata: ~Copyable & Sendable>(
