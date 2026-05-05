@@ -50,6 +50,6 @@
     "UseSynthesizedInitializer": false,
     "UseTripleSlashForDocumentationComments": true,
     "UseWhereClausesInForLoops": false,
-    "ValidateDocumentationComments": false
+    "ValidateDocumentationComments": true
   }
 }
