@@ -37,10 +37,9 @@ operators.
 
 This package depends only on Swift Institute primitives:
 `swift-buffer-primitives`, `swift-dictionary-primitives`,
-`swift-queue-primitives`, `swift-handle-primitives`,
-`swift-tagged-primitives`, `swift-kernel-primitives`,
-`swift-ownership-primitives`, `swift-algebra-primitives`. No Foundation,
-no external runtimes.
+`swift-queue-primitives`, `swift-tagged-primitives`,
+`swift-kernel-primitives`, `swift-ownership-primitives`,
+`swift-algebra-primitives`. No Foundation, no external runtimes.
 
 ## Importing
 
