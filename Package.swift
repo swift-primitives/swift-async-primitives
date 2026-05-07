@@ -78,7 +78,6 @@ let package = Package(
         .package(path: "../swift-buffer-primitives"),
         .package(path: "../swift-dictionary-primitives"),
         .package(path: "../swift-queue-primitives"),
-        .package(path: "../swift-handle-primitives"),
         .package(path: "../swift-tagged-primitives"),
         .package(path: "../swift-ownership-primitives"),
         .package(path: "../swift-algebra-primitives"),
@@ -162,7 +161,6 @@ let package = Package(
             name: "Async Timer Primitives",
             dependencies: [
                 "Async Primitives Core",
-                .product(name: "Handle Primitives", package: "swift-handle-primitives"),
             ]
         ),
         .target(

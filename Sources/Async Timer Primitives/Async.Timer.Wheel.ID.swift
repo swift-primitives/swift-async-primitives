@@ -9,15 +9,9 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import Handle_Primitives
+import Buffer_Primitives
 
 extension Async.Timer.Wheel {
-    /// Phantom type tag for timer wheel handles.
-    ///
-    /// This type exists solely to distinguish `Async.Timer.Wheel.ID` handles
-    /// from other handle types at compile time.
-    public enum _Entry {}
-
     /// Unique identifier for a scheduled timer.
     ///
     /// IDs are used to cancel timers before they fire. Each ID contains:
@@ -31,12 +25,6 @@ extension Async.Timer.Wheel {
     /// generation token increments. Attempts to cancel with an old ID
     /// (stale token) will fail safely.
     ///
-    /// ## Implementation Note
-    ///
-    /// `ID` is implemented as `Handle<_Entry>` to unify handle
-    /// types across the Swift Institute primitives. Internally, the wheel
-    /// bridges between `Handle` and `Buffer.Arena.Position`.
-    ///
     /// ## Usage
     ///
     /// ```swift
@@ -44,7 +32,20 @@ extension Async.Timer.Wheel {
     /// // ...later...
     /// let wasCancelled = wheel.cancel(id)
     /// ```
-    public typealias ID = Handle<_Entry>
+    public struct ID: Hashable, Sendable {
+        /// The slot index in the wheel's storage arena.
+        public let index: Int
+
+        /// The generation counter for ABA prevention.
+        public let generation: UInt32
+
+        /// Creates an ID with the given index and generation.
+        @inlinable
+        public init(index: Int, generation: UInt32) {
+            self.index = index
+            self.generation = generation
+        }
+    }
 }
 
 // MARK: - Construction Helpers
@@ -53,7 +54,7 @@ extension Async.Timer.Wheel {
     /// Creates an ID from an arena position.
     ///
     /// This is the boundary where the arena's `Position` is widened
-    /// to `Handle<_Entry>` for external use.
+    /// to `ID` for external use.
     ///
     /// - Parameter position: The arena position handle.
     /// - Returns: A handle suitable for external use.
@@ -66,7 +67,7 @@ extension Async.Timer.Wheel {
 
     /// Extracts the typed storage index from an ID.
     ///
-    /// This is the boundary where the `Handle`'s `Int` index is narrowed
+    /// This is the boundary where the ID's `Int` index is narrowed
     /// back to the typed `Index<Node>` for arena access.
     ///
     /// - Parameter id: The timer ID.
