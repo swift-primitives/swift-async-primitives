@@ -11,7 +11,7 @@
 
 #if !hasFeature(Embedded)
 
-    public import Algebra_Primitives_Core
+    public import Either_Primitives
 
     // MARK: - Scoped Permit
 
