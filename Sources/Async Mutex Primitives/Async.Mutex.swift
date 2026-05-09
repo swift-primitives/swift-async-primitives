@@ -114,7 +114,7 @@
         /// - Parameter body: A closure receiving exclusive access to the value.
         /// - Returns: The result of the body closure.
         @inlinable
-        public borrowing func withLock<T: ~Copyable, E: Error>(
+        public borrowing func withLock<T: ~Copyable, E: Swift.Error>(
             _ body: (inout sending Value) throws(E) -> sending T
         ) throws(E) -> sending T {
             _lock()
@@ -127,7 +127,7 @@
         /// - Parameter body: A closure receiving exclusive access to the value.
         /// - Returns: The result of the body closure, or `nil` if the lock is held.
         @inlinable
-        public borrowing func withLockIfAvailable<T: ~Copyable, E: Error>(
+        public borrowing func withLockIfAvailable<T: ~Copyable, E: Swift.Error>(
             _ body: (inout sending Value) throws(E) -> sending T
         ) throws(E) -> sending T? {
             guard unsafe os_unfair_lock_trylock(_lockPointer()) else { return nil }
@@ -177,14 +177,14 @@
 
     extension Async.Mutex where Value: ~Copyable {
         @inlinable
-        public func withLock<T: ~Copyable, E: Error>(
+        public func withLock<T: ~Copyable, E: Swift.Error>(
             _ body: (inout sending Value) throws(E) -> sending T
         ) throws(E) -> sending T {
             try body(&_value)
         }
 
         @inlinable
-        public func withLockIfAvailable<T: ~Copyable, E: Error>(
+        public func withLockIfAvailable<T: ~Copyable, E: Swift.Error>(
             _ body: (inout sending Value) throws(E) -> sending T
         ) throws(E) -> sending T? {
             try body(&_value)

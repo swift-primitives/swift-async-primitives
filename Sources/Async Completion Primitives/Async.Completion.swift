@@ -55,9 +55,9 @@
         /// - Atomic state machine for CAS transitions
         /// - Mutex for continuation storage
         /// All stored properties are `let` and `Sendable`.
-        public final class Completion<Success: Sendable, Failure: Error & Sendable>: Sendable {
+        public final class Completion<Success: Sendable, Failure: Swift.Error & Sendable>: Sendable {
             /// Result type for continuation resume.
-            public typealias Result = Swift.Result<Success, Error>
+            public typealias Result = Swift.Result<Success, Swift.Error>
 
             private let _state: Atomic<State>
             private let _continuation: Async.Mutex<CheckedContinuation<Result, Never>?>
@@ -204,7 +204,7 @@
         ///
         /// - Parameter error: The error (must be timeout or cancelled).
         /// - Throws: `Transition.Error.alreadyDone` if transition fails.
-        public func fail(_ error: Error) throws(Transition.Error) {
+        public func fail(_ error: Swift.Error) throws(Transition.Error) {
             switch error {
             case .timeout:
                 try timeout()

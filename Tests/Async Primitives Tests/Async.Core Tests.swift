@@ -674,7 +674,7 @@ extension Core.Test.Barrier {
 
     // MARK: - Test Helpers
 
-    private enum TestError: Error, Sendable {
+    private enum TestError: Swift.Error, Sendable {
         case testFailure
     }
 #endif
