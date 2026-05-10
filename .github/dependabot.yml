@@ -1,13 +1,17 @@
-# Canonical dependabot config — synced by Scripts/sync-dependabot.sh.
+# Canonical dependabot config (swift ecosystem only) — synced by
+# Scripts/sync-dependabot.sh per [GH-REPO-077].
 #
-# Edits to this file are propagated to every sub-repo's .github/dependabot.yml
-# in the three target orgs. Per-repo modifications MUST be made here; the sync
-# script replaces the whole file.
+# This template is written to every per-package repo (one with
+# Package.swift at root). Per-package repos following [GH-REPO-074]
+# are thin callers — their workflow files reference centralized
+# reusables via `uses: <org>/.github/.../@main`, which is a branch
+# ref Dependabot does NOT scan. There is therefore no github-actions
+# ecosystem entry here: the only bumpable deps these repos own are
+# their Package.swift dependencies.
 #
-# The github-actions ecosystem entry is retained even for repos whose CI
-# delegates entirely to reusable workflows (the `uses: ...@main` refs produce
-# no bumpable pins). Keeping the entry uniform costs nothing and survives the
-# future where a repo adds an inline step with real action pins.
+# If a per-package repo grows inline action refs, that is a
+# [GH-REPO-074] violation — migrate the workflow to a thin caller,
+# do NOT add a github-actions ecosystem entry to this file.
 version: 2
 updates:
   - package-ecosystem: "swift"
@@ -24,21 +28,5 @@ updates:
     labels:
       - "dependencies"
       - "swift"
-    commit-message:
-      prefix: "chore(deps)"
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "monthly"
-      day: "monday"
-      time: "09:00"
-      timezone: "UTC"
-    open-pull-requests-limit: 10
-    groups:
-      actions:
-        patterns: ["*"]
-    labels:
-      - "dependencies"
-      - "github-actions"
     commit-message:
       prefix: "chore(deps)"
