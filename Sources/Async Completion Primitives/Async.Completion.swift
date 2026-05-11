@@ -57,7 +57,7 @@
         /// All stored properties are `let` and `Sendable`.
         public final class Completion<Success: Sendable, Failure: Swift.Error & Sendable>: Sendable {
             /// Result type for continuation resume.
-            public typealias Result = Swift.Result<Success, Swift.Error>
+            public typealias Result = Swift.Result<Success, Async.Completion<Success, Failure>.Error>
 
             private let _state: Atomic<State>
             private let _continuation: Async.Mutex<CheckedContinuation<Result, Never>?>
@@ -204,7 +204,7 @@
         ///
         /// - Parameter error: The error (must be timeout or cancelled).
         /// - Throws: `Transition.Error.alreadyDone` if transition fails.
-        public func fail(_ error: Swift.Error) throws(Transition.Error) {
+        public func fail(_ error: Async.Completion<Success, Never>.Error) throws(Transition.Error) {
             switch error {
             case .timeout:
                 try timeout()
