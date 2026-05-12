@@ -40,6 +40,8 @@
         public struct Mutex<Value: ~Copyable>: ~Copyable {
             // MARK: - Raw Storage
 
+            // SAFETY: Encapsulates unsafe internals behind a safe API; see
+            // SAFETY: [MEM-SAFE-024] for the absorber-pattern taxonomy.
             @safe
             @_rawLayout(like: Value, movesAsLike)
             @usableFromInline
@@ -47,6 +49,8 @@
                 @inlinable init() {}
             }
 
+            // SAFETY: Encapsulates unsafe internals behind a safe API; see
+            // SAFETY: [MEM-SAFE-024] for the absorber-pattern taxonomy.
             @safe
             @_rawLayout(like: os_unfair_lock_s)
             @usableFromInline

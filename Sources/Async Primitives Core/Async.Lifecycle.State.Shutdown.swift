@@ -12,6 +12,8 @@
 // MARK: - Shutdown Type
 
 extension Async.Lifecycle.State {
+    // SAFETY: Encapsulates unsafe internals behind a safe API; see
+    // SAFETY: [MEM-SAFE-024] for the absorber-pattern taxonomy.
     @safe
     public struct Shutdown: ~Copyable, ~Escapable {
         @usableFromInline

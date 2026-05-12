@@ -29,6 +29,8 @@
         /// passing, pattern-matching — emits a warning. This wrapper concentrates
         /// the unsafety into two sites (init + resume) instead of propagating it
         /// to every consumer.
+        // SAFETY: Encapsulates unsafe internals behind a safe API; see
+        // SAFETY: [MEM-SAFE-024] for the absorber-pattern taxonomy.
         @safe
         public struct Unsafe: Sendable {
             @usableFromInline
