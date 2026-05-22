@@ -55,7 +55,7 @@
         /// - Atomic state machine for CAS transitions
         /// - Mutex for continuation storage
         /// All stored properties are `let` and `Sendable`.
-        public final class Completion<Success: Sendable, Failure: Swift.Error & Sendable>: Sendable {
+        public final class Completion<Success: Sendable, Failure: Swift.Error>: Sendable {
             /// Result type for continuation resume.
             public typealias Result = Swift.Result<Success, Async.Completion<Success, Failure>.Error>
 
