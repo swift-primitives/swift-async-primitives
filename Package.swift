@@ -81,6 +81,7 @@ let package = Package(
         .package(path: "../swift-tagged-primitives"),
         .package(path: "../swift-ownership-primitives"),
         .package(path: "../swift-either-primitives"),
+        .package(path: "../swift-link-primitives"),
     ],
     targets: [
         // MARK: - Core
@@ -161,6 +162,7 @@ let package = Package(
             name: "Async Timer Primitives",
             dependencies: [
                 "Async Primitives Core",
+                .product(name: "Link Primitives", package: "swift-link-primitives"),
             ]
         ),
         .target(

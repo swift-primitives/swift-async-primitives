@@ -10,6 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 import Buffer_Primitives
+import Link_Primitives
 
 extension Async.Timer.Wheel {
     /// A single level in the hierarchical timer wheel.

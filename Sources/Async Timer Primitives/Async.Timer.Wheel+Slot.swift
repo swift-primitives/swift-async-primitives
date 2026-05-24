@@ -10,6 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 import Buffer_Primitives
+import Link_Primitives
 
 // MARK: - Link Topology Operations (delegated to Link)
 
