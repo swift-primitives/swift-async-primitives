@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 import Buffer_Primitives
-import Link_Primitives
+public import Link_Primitives
 
 extension Async.Timer.Wheel {
     /// Payload stored in each timer node.

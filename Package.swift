@@ -82,6 +82,7 @@ let package = Package(
         .package(path: "../swift-ownership-primitives"),
         .package(path: "../swift-either-primitives"),
         .package(path: "../swift-link-primitives"),
+        .package(path: "../swift-buffer-arena-primitives"),
     ],
     targets: [
         // MARK: - Core
@@ -163,6 +164,8 @@ let package = Package(
             dependencies: [
                 "Async Primitives Core",
                 .product(name: "Link Primitives", package: "swift-link-primitives"),
+                .product(name: "Buffer Arena Primitive", package: "swift-buffer-arena-primitives"),
+                .product(name: "Buffer Arena Bounded Primitive", package: "swift-buffer-arena-primitives"),
             ]
         ),
         .target(

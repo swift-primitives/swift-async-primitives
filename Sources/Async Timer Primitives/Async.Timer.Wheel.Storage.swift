@@ -10,6 +10,8 @@
 // ===----------------------------------------------------------------------===//
 
 import Buffer_Primitives
+public import Buffer_Arena_Primitive
+public import Buffer_Arena_Bounded_Primitive
 
 extension Async.Timer.Wheel {
     /// Arena-backed storage for timer nodes.

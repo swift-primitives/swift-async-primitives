@@ -10,6 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 import Buffer_Primitives
+public import Buffer_Arena_Primitive
 
 extension Async.Timer.Wheel {
     /// Unique identifier for a scheduled timer.
