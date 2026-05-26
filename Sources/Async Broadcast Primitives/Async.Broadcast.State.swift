@@ -13,7 +13,9 @@
 #if !hasFeature(Embedded)
 
     import Dictionary_Primitives
+    import Dictionary_Ordered_Primitives
     import Queue_Primitives
+    import Queue_DoubleEnded_Primitives
 
     extension Async.Broadcast {
         /// Internal state machine for the broadcast channel.

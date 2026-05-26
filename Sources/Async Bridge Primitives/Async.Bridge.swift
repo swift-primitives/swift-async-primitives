@@ -14,6 +14,7 @@
 #if !hasFeature(Embedded)
 
     import Queue_Primitives
+    import Queue_DoubleEnded_Primitives
     import Synchronization
 
     extension Async {

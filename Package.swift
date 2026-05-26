@@ -77,7 +77,9 @@ let package = Package(
     dependencies: [
         .package(path: "../swift-buffer-primitives"),
         .package(path: "../swift-dictionary-primitives"),
+        .package(path: "../swift-dictionary-ordered-primitives"),
         .package(path: "../swift-queue-primitives"),
+        .package(path: "../swift-deque-primitives"),
         .package(path: "../swift-tagged-primitives"),
         .package(path: "../swift-ownership-primitives"),
         .package(path: "../swift-either-primitives"),
@@ -91,6 +93,7 @@ let package = Package(
             dependencies: [
                 .product(name: "Buffer Primitives", package: "swift-buffer-primitives"),
                 .product(name: "Queue Primitives", package: "swift-queue-primitives"),
+                .product(name: "Queue DoubleEnded Primitives", package: "swift-deque-primitives"),
                 .product(name: "Tagged Primitives", package: "swift-tagged-primitives"),
             ]
         ),
@@ -100,6 +103,7 @@ let package = Package(
             name: "Async Mutex Primitives",
             dependencies: [
                 "Async Primitives Core",
+                .product(name: "Queue DoubleEnded Primitives", package: "swift-deque-primitives"),
             ]
         ),
 
@@ -109,6 +113,7 @@ let package = Package(
             dependencies: [
                 "Async Primitives Core",
                 "Async Mutex Primitives",
+                .product(name: "Queue DoubleEnded Primitives", package: "swift-deque-primitives"),
             ]
         ),
         .target(
@@ -148,6 +153,7 @@ let package = Package(
                 "Async Mutex Primitives",
                 "Async Waiter Primitives",
                 .product(name: "Ownership Primitives", package: "swift-ownership-primitives"),
+                .product(name: "Queue DoubleEnded Primitives", package: "swift-deque-primitives"),
             ]
         ),
         .target(
@@ -157,6 +163,8 @@ let package = Package(
                 "Async Mutex Primitives",
                 "Async Publication Primitives",
                 .product(name: "Dictionary Primitives", package: "swift-dictionary-primitives"),
+                .product(name: "Dictionary Ordered Primitives", package: "swift-dictionary-ordered-primitives"),
+                .product(name: "Queue DoubleEnded Primitives", package: "swift-deque-primitives"),
             ]
         ),
         .target(
