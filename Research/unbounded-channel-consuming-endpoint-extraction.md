@@ -2,9 +2,10 @@
 
 <!--
 ---
-version: 1.0.0
-last_updated: 2026-04-13
-status: IN_PROGRESS
+version: 1.1.0
+last_updated: 2026-05-31
+status: DECISION
+statusDetail: "Frontmatter reconciled to the doc's own Decision section (Option A -- restore consuming func take() -> Take). Triaged 2026-05-31 per [META-002]; was IN_PROGRESS."
 tier: 1
 related:
   - swift-async-primitives/Research/audit.md
