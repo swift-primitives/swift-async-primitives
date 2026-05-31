@@ -29,17 +29,6 @@
       "scope": null
     },
     {
-      "file": "audit.md",
-      "displayName": "audit.md",
-      "topic": "Systematic code audit against skill requirements",
-      "date": "2026-04-01",
-      "status": "ACTIVE",
-      "statusDetail": null,
-      "statusRaw": "ACTIVE",
-      "tier": null,
-      "scope": null
-    },
-    {
       "file": "zero-copy-noncopyable-element-feasibility.md",
       "displayName": "zero-copy-noncopyable-element-feasibility.md",
       "topic": "~Copyable element feasibility \u2014 1 genuine blocker (stdlib continuation), not 5",
