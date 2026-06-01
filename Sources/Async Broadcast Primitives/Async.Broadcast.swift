@@ -13,6 +13,7 @@
 #if !hasFeature(Embedded)
 
     import Dictionary_Primitives
+    import Dictionary_Ordered_Primitives
     import Queue_Primitives
     import Synchronization
 
@@ -133,7 +134,7 @@
 
                 // Trim buffer if needed (keep elements that some subscriber hasn't seen yet)
                 let minCursor = state.cursor ?? index
-                while state.buffer.count > bufferLimit {
+                while Int(bitPattern: state.buffer.count) > bufferLimit {
                     if let front = state.buffer.peek.front, front.index < minCursor {
                         _ = state.buffer.front.take
                     } else {

@@ -9,11 +9,11 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import Queue_Primitives_Core
+public import Queue_Primitives
 
 // MARK: - Pop Eligible
 
-extension Queue_Primitives_Core.Queue where Element: ~Copyable {
+extension Queue_Primitives.Queue where Element: ~Copyable {
     /// Pops the first eligible (non-flagged) entry.
     ///
     /// Pops entries from the front until a non-flagged entry is found.
@@ -27,7 +27,7 @@ extension Queue_Primitives_Core.Queue where Element: ~Copyable {
     // TRACKING: Async.Waiter.Queue unification
     @inlinable
     public mutating func popEligible<Outcome: Sendable, Metadata: ~Copyable & Sendable>(
-        flaggedInto flagged: inout Queue_Primitives_Core.Queue<Async.Waiter.Queue.Flagged<Outcome, Metadata>>
+        flaggedInto flagged: inout Queue_Primitives.Queue<Async.Waiter.Queue.Flagged<Outcome, Metadata>>
     ) -> Element? where Element == Async.Waiter.Entry<Outcome, Metadata> {
         while !isEmpty {
             let entry = dequeue()!
@@ -43,7 +43,7 @@ extension Queue_Primitives_Core.Queue where Element: ~Copyable {
 
 // MARK: - Reap Flagged
 
-extension Queue_Primitives_Core.Queue where Element: ~Copyable {
+extension Queue_Primitives.Queue where Element: ~Copyable {
     /// Reaps all flagged entries via drain+rebuild.
     ///
     /// Drains the queue, collecting flagged entries into `flagged` and
@@ -56,9 +56,9 @@ extension Queue_Primitives_Core.Queue where Element: ~Copyable {
     // TRACKING: Async.Waiter.Queue unification
     @inlinable
     public mutating func reapFlagged<Outcome: Sendable, Metadata: ~Copyable & Sendable>(
-        into flagged: inout Queue_Primitives_Core.Queue<Async.Waiter.Queue.Flagged<Outcome, Metadata>>
+        into flagged: inout Queue_Primitives.Queue<Async.Waiter.Queue.Flagged<Outcome, Metadata>>
     ) where Element == Async.Waiter.Entry<Outcome, Metadata> {
-        var survivors = Queue_Primitives_Core.Queue<Async.Waiter.Entry<Outcome, Metadata>>()
+        var survivors = Queue_Primitives.Queue<Async.Waiter.Entry<Outcome, Metadata>>()
 
         while !isEmpty {
             let entry = dequeue()!

@@ -15,7 +15,7 @@
     import Dictionary_Primitives
     import Dictionary_Ordered_Primitives
     import Queue_Primitives
-    import Queue_DoubleEnded_Primitives
+    import Deque_Primitives
 
     extension Async.Broadcast {
         /// Internal state machine for the broadcast channel.
@@ -45,7 +45,15 @@
         ///
         /// O(n) where n = subscriber count — acceptable for typical usage.
         var cursor: UInt64? {
-            subscribers.values.map(\.cursor).min()
+            var minimum: UInt64? = nil
+            subscribers.forEach { _, subscriber in
+                if let current = minimum {
+                    minimum = Swift.min(current, subscriber.cursor)
+                } else {
+                    minimum = subscriber.cursor
+                }
+            }
+            return minimum
         }
     }
 

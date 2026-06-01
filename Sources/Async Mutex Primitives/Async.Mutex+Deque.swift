@@ -11,7 +11,7 @@
 
 internal import Buffer_Primitives
 public import Queue_Primitives
-public import Queue_DoubleEnded_Primitives
+public import Deque_Primitives
 
 #if !hasFeature(Embedded)
     public import Synchronization

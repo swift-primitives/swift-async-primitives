@@ -13,6 +13,7 @@
 #if !hasFeature(Embedded)
 
     import Dictionary_Primitives
+    import Dictionary_Ordered_Primitives
 
     extension Async.Broadcast {
         /// A subscription to a broadcast channel.

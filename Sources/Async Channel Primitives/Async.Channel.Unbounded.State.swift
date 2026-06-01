@@ -13,7 +13,7 @@
 #if !hasFeature(Embedded)
 
     public import Queue_Primitives
-    public import Queue_DoubleEnded_Primitives
+    public import Deque_Primitives
 
     extension Async.Channel.Unbounded where Element: ~Copyable {
         /// Pure state machine for unbounded channel operations.
