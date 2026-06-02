@@ -10,6 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 import Buffer_Primitives
+import Buffer_Arena_Bounded_Primitive
 public import Link_Primitives
 
 // MARK: - Link Topology Operations (delegated to Link)
@@ -33,9 +34,12 @@ extension Async.Timer.Wheel {
     /// - Complexity: O(1)
     @usableFromInline
     mutating func append(_ index: Index<Node>, to header: inout Link<2>.Header<Node>) {
-        unsafe Link<2>.append(index, header: &header) { idx in
-            unsafe Link<2>.linksPointer(in: self.storage.pointer(at: idx))
-        }
+        Link<2>.append(
+            index,
+            header: &header,
+            getLink: { i, slot in self.storage.arena[i].links[slot] },
+            setLink: { i, slot, value in self.storage.arena[i].links[slot] = value }
+        )
     }
 
     /// Removes a node from a slot's list.
@@ -44,9 +48,12 @@ extension Async.Timer.Wheel {
     /// - Precondition: The node must be in this slot's list.
     @usableFromInline
     mutating func remove(_ index: Index<Node>, from header: inout Link<2>.Header<Node>) {
-        unsafe Link<2>.unlink(index, header: &header) { idx in
-            unsafe Link<2>.linksPointer(in: self.storage.pointer(at: idx))
-        }
+        Link<2>.unlink(
+            index,
+            header: &header,
+            getLink: { i, slot in self.storage.arena[i].links[slot] },
+            setLink: { i, slot, value in self.storage.arena[i].links[slot] = value }
+        )
     }
 
     /// Removes and returns the first node's index from a slot.
@@ -55,8 +62,10 @@ extension Async.Timer.Wheel {
     /// - Complexity: O(1)
     @usableFromInline
     mutating func popFirst(from header: inout Link<2>.Header<Node>) -> Index<Node>? {
-        unsafe Link<2>.unlinkFirst(header: &header) { idx in
-            unsafe Link<2>.linksPointer(in: self.storage.pointer(at: idx))
-        }
+        Link<2>.unlinkFirst(
+            header: &header,
+            getLink: { i, slot in self.storage.arena[i].links[slot] },
+            setLink: { i, slot, value in self.storage.arena[i].links[slot] = value }
+        )
     }
 }

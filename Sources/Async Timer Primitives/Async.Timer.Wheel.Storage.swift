@@ -89,21 +89,6 @@ extension Async.Timer.Wheel.Storage {
 
 extension Async.Timer.Wheel.Storage {
 
-    /// Returns an unsafe mutable pointer to the node at the given slot.
-    ///
-    /// Use this to read or mutate node fields in-place.
-    /// The pointer is valid until the arena is deallocated.
-    ///
-    /// - Parameter index: The typed slot index.
-    /// - Precondition: The slot must be occupied.
-    @unsafe
-    @usableFromInline
-    func pointer(
-        at index: Index<Async.Timer.Wheel<C>.Node>
-    ) -> UnsafeMutablePointer<Async.Timer.Wheel<C>.Node> {
-        unsafe arena.pointer(at: index)
-    }
-
     /// Returns whether the given position handle is still valid.
     ///
     /// A position is valid when its token matches the slot's current
