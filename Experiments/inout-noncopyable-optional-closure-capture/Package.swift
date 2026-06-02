@@ -5,7 +5,7 @@ let package = Package(
     name: "inout-noncopyable-optional-closure-capture",
     platforms: [.macOS(.v26)],
     dependencies: [
-        .package(path: "../../../swift-ownership-primitives"),
+        .package(url: "https://github.com/swift-primitives/swift-ownership-primitives.git", branch: "main"),
     ],
     targets: [
         .executableTarget(
