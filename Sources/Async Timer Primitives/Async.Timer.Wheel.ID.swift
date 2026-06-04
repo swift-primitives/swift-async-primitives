@@ -11,6 +11,7 @@
 
 import Buffer_Primitives
 public import Buffer_Arena_Primitive
+public import Storage_Primitive
 
 extension Async.Timer.Wheel {
     /// Unique identifier for a scheduled timer.
@@ -61,7 +62,7 @@ extension Async.Timer.Wheel {
     /// - Returns: A handle suitable for external use.
     @usableFromInline
     static func _makeID(
-        position: Buffer<Storage<Async.Timer.Wheel<C>.Node>.Arena>.Arena.Position
+        position: Buffer<Storage_Primitive.Storage<Async.Timer.Wheel<C>.Node>.Arena>.Arena.Position
     ) -> ID {
         ID(index: Int(position.index), generation: position.token)
     }
@@ -87,7 +88,7 @@ extension Async.Timer.Wheel {
     @usableFromInline
     static func _position(
         _ id: ID
-    ) -> Buffer<Storage<Async.Timer.Wheel<C>.Node>.Arena>.Arena.Position {
+    ) -> Buffer<Storage_Primitive.Storage<Async.Timer.Wheel<C>.Node>.Arena>.Arena.Position {
         .init(index: UInt32(id.index), token: id.generation)
     }
 }

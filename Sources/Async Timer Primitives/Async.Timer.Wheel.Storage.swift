@@ -12,6 +12,7 @@
 import Buffer_Primitives
 public import Buffer_Arena_Primitive
 public import Buffer_Arena_Bounded_Primitive
+public import Storage_Primitive
 
 extension Async.Timer.Wheel {
     /// Arena-backed storage for timer nodes.
@@ -38,7 +39,7 @@ extension Async.Timer.Wheel {
     struct Storage: ~Copyable, @unchecked Sendable {
         /// Arena buffer managing node allocation and lifecycle.
         @usableFromInline
-        var arena: Buffer<Storage<Node>.Arena>.Arena.Bounded
+        var arena: Buffer<Storage_Primitive.Storage<Node>.Arena>.Arena.Bounded
 
         /// Sentinel value for linked list headers (derived from arena capacity).
         @usableFromInline
@@ -69,7 +70,7 @@ extension Async.Timer.Wheel.Storage {
     @usableFromInline
     mutating func insert(
         _ node: consuming Async.Timer.Wheel<C>.Node
-    ) -> Buffer<Storage<Async.Timer.Wheel<C>.Node>.Arena>.Arena.Position? {
+    ) -> Buffer<Storage_Primitive.Storage<Async.Timer.Wheel<C>.Node>.Arena>.Arena.Position? {
         try? arena.insert(node)
     }
 
@@ -95,7 +96,7 @@ extension Async.Timer.Wheel.Storage {
     /// generation token and the slot is occupied.
     @usableFromInline
     func isValid(
-        _ position: Buffer<Storage<Async.Timer.Wheel<C>.Node>.Arena>.Arena.Position
+        _ position: Buffer<Storage_Primitive.Storage<Async.Timer.Wheel<C>.Node>.Arena>.Arena.Position
     ) -> Bool {
         arena.isValid(position)
     }

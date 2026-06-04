@@ -75,6 +75,7 @@ let package = Package(
         ),
     ],
     dependencies: [
+        .package(url: "https://github.com/swift-primitives/swift-storage-primitives.git", branch: "main"),
         .package(url: "https://github.com/swift-primitives/swift-buffer-primitives.git", branch: "main"),
         .package(url: "https://github.com/swift-primitives/swift-dictionary-primitives.git", branch: "main"),
         .package(url: "https://github.com/swift-primitives/swift-dictionary-ordered-primitives.git", branch: "main"),
@@ -170,6 +171,7 @@ let package = Package(
         .target(
             name: "Async Timer Primitives",
             dependencies: [
+                .product(name: "Storage Primitive", package: "swift-storage-primitives"),
                 "Async Primitives Core",
                 .product(name: "Link Primitives", package: "swift-link-primitives"),
                 .product(name: "Buffer Arena Primitive", package: "swift-buffer-arena-primitives"),
