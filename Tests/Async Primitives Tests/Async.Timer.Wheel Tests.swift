@@ -313,7 +313,7 @@ extension Timer.Wheel.Test.EdgeCase {
 // V10/V11 (commit cee7a7a).
 //
 // Scope caveat: Async.Timer.Wheel's internal storage goes through
-// Buffer<Node>.Arena.Bounded, which uses heap-allocated raw memory
+// Buffer<Storage<Node>.Arena>.Arena.Bounded, which uses heap-allocated raw memory
 // (stable pointer by construction) — NOT Memory.Inline's `@_rawLayout`
 // field-of-self shape. The V11 failure mode is structurally impossible
 // on this code path. This test exists for 3/3 parity across the audit's

@@ -92,7 +92,7 @@ the absence of threading, not from synchronization.
 ```swift
 @usableFromInline
 struct Storage: ~Copyable, @unchecked Sendable {
-    @usableFromInline var arena: Buffer<Node>.Arena.Bounded
+    @usableFromInline var arena: Buffer<Storage<Node>.Arena>.Arena.Bounded
     @usableFromInline let sentinel: Index<Node>
     ...
 }
@@ -103,7 +103,7 @@ struct Storage: ~Copyable, @unchecked Sendable {
 Safety is guaranteed by the wheel's design: the wheel is `~Copyable` and
 intended for single-actor use. All mutations are serialized by the owning
 actor."* The single-actor ownership model is the serialization mechanism;
-`@unchecked` is a consequence of `Buffer<Node>.Arena.Bounded` not being
+`@unchecked` is a consequence of `Buffer<Storage<Node>.Arena>.Arena.Bounded` not being
 auto-Sendable (it holds mutable arena state).
 
 ## Classification
@@ -114,7 +114,7 @@ auto-Sendable (it holds mutable arena state).
 | #2 `Async.Mutex` (Darwin) | Internal lock serialization | No — wraps `@_rawLayout` storage |
 | #3 `_Value` (Darwin) | Mutex's lock-held access discipline | No — `@_rawLayout` boundary |
 | #4 `Async.Mutex` (embedded) | No threading in target environment | No — only `@unchecked` composes with `~Copyable` + no-op semantics |
-| #5 `Timer.Wheel.Storage` | Single-actor ownership | Possible if `Buffer<Node>.Arena.Bounded` becomes Sendable-verifiable |
+| #5 `Timer.Wheel.Storage` | Single-actor ownership | Possible if `Buffer<Storage<Node>.Arena>.Arena.Bounded` becomes Sendable-verifiable |
 
 None of the five `@unchecked` sites are currently upgradable to checked
 `Sendable` without a substantial refactor. All five have clear safety

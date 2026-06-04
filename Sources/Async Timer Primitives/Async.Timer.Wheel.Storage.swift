@@ -38,7 +38,7 @@ extension Async.Timer.Wheel {
     struct Storage: ~Copyable, @unchecked Sendable {
         /// Arena buffer managing node allocation and lifecycle.
         @usableFromInline
-        var arena: Buffer<Node>.Arena.Bounded
+        var arena: Buffer<Storage<Node>.Arena>.Arena.Bounded
 
         /// Sentinel value for linked list headers (derived from arena capacity).
         @usableFromInline
@@ -69,7 +69,7 @@ extension Async.Timer.Wheel.Storage {
     @usableFromInline
     mutating func insert(
         _ node: consuming Async.Timer.Wheel<C>.Node
-    ) -> Buffer<Async.Timer.Wheel<C>.Node>.Arena.Position? {
+    ) -> Buffer<Storage<Async.Timer.Wheel<C>.Node>.Arena>.Arena.Position? {
         try? arena.insert(node)
     }
 
@@ -95,7 +95,7 @@ extension Async.Timer.Wheel.Storage {
     /// generation token and the slot is occupied.
     @usableFromInline
     func isValid(
-        _ position: Buffer<Async.Timer.Wheel<C>.Node>.Arena.Position
+        _ position: Buffer<Storage<Async.Timer.Wheel<C>.Node>.Arena>.Arena.Position
     ) -> Bool {
         arena.isValid(position)
     }
