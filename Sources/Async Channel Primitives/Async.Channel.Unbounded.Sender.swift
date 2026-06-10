@@ -13,6 +13,12 @@
 #if !hasFeature(Embedded)
 
     public import Ownership_Primitives
+    import Column_Primitives
+    public import Buffer_Ring_Primitive
+    public import Storage_Contiguous_Primitives
+    import Memory_Heap_Primitives
+    import Memory_Allocator_Primitive
+    import Buffer_Primitive
 
     extension Async.Channel.Unbounded where Element: ~Copyable {
         /// A sender view for an unbounded channel.
@@ -112,7 +118,7 @@
                         _ = deliverySlot.store(element)
                         receiverCont = cont
                     case .wait, .none, .cancelled:
-                        state.buffer.back.push(element)
+                        state.buffer.push(element, to: .back)
                     }
                 }
                 return (receiverCont, false)

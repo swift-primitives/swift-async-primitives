@@ -1,3 +1,6 @@
+// W5-3 QUARANTINE (2026-06-11): rides the parked Async_Timer_Primitives target — see Package.swift.
+// The canImport gate self-restores when the target returns with its round.
+#if canImport(Async_Timer_Primitives)
 // ===----------------------------------------------------------------------===//
 //
 // This source file is part of the swift-async open source project
@@ -350,3 +353,5 @@ extension Timer.Wheel.Test.Unit {
         #expect(cfg1 == config)
     }
 }
+
+#endif

@@ -13,6 +13,12 @@
 #if !hasFeature(Embedded)
 
     public import Ownership_Primitives
+    import Column_Primitives
+    public import Buffer_Ring_Primitive
+    public import Storage_Contiguous_Primitives
+    import Memory_Heap_Primitives
+    import Memory_Allocator_Primitive
+    import Buffer_Primitive
 
     extension Async.Channel.Bounded.Elements {
         /// Iterator for the AsyncSequence view.

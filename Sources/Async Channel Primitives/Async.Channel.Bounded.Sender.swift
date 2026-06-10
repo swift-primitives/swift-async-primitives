@@ -16,6 +16,12 @@
     public import Ownership_Primitives
     internal import Queue_Primitives
     internal import Deque_Primitives
+    public import Column_Primitives
+    public import Buffer_Ring_Primitive
+    public import Storage_Contiguous_Primitives
+    import Memory_Heap_Primitives
+    import Memory_Allocator_Primitive
+    import Buffer_Primitive
 
     extension Async.Channel.Bounded where Element: ~Copyable {
         /// A sender handle for a bounded channel.
@@ -170,7 +176,7 @@
                 }
             } onCancel: {
                 if flag.cancel() {
-                    var cancelled = Deque<Async.Channel<Element>.Bounded.State.Send.Continuation>()
+                    var cancelled = Deque<Column.Ring<Async.Channel<Element>.Bounded.State.Send.Continuation>>()
                     handle.storage.withLock { state in
                         cancelled = state.reap()
                     }

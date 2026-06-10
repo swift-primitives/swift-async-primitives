@@ -21,7 +21,7 @@ extension Async.Lifecycle.State {
 
         @inlinable @_lifetime(borrow pointer)
         init(_ pointer: UnsafeMutablePointer<Async.Lifecycle.State>) {
-            self.pointer = pointer
+            unsafe self.pointer = pointer
         }
     }
 

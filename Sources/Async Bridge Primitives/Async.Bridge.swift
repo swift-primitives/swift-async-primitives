@@ -16,6 +16,12 @@
     import Queue_Primitives
     import Deque_Primitives
     import Synchronization
+    import Column_Primitives
+    import Buffer_Ring_Primitive
+    import Storage_Contiguous_Primitives
+    import Memory_Heap_Primitives
+    import Memory_Allocator_Primitive
+    import Buffer_Primitive
 
     extension Async {
         /// A thread-safe bridge for sync-to-async element handoff.
@@ -74,7 +80,7 @@
             }
 
             struct State: ~Copyable {
-                var buffer: Deque<Element> = .init()
+                var buffer: Deque<Column.Ring<Element>> = .init()
                 var continuation: CheckedContinuation<Void, Never>?
                 var isFinished: Bool = false
                 #if DEBUG

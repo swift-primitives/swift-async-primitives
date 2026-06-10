@@ -16,6 +16,12 @@
     public import Ownership_Primitives
     internal import Queue_Primitives
     internal import Deque_Primitives
+    public import Column_Primitives
+    public import Buffer_Ring_Primitive
+    public import Storage_Contiguous_Primitives
+    import Memory_Heap_Primitives
+    import Memory_Allocator_Primitive
+    import Buffer_Primitive
 
     extension Async.Channel.Bounded where Element: ~Copyable {
         /// Pure state machine for bounded channel operations.
@@ -31,9 +37,9 @@
             @usableFromInline
             var status: Status
             @usableFromInline
-            var buffer: Deque<Element>
+            var buffer: Deque<Column.Ring<Element>>
             @usableFromInline
-            var senders: Deque<Sender>
+            var senders: Deque<Column.Ring<Sender>>
             @usableFromInline
             var receiver: Receiver?
             @usableFromInline
@@ -113,14 +119,18 @@
     extension Async.Channel.Bounded.State where Element: ~Copyable {
         /// Pops the next non-cancelled sender from the queue.
         ///
-        /// Flagged senders are skipped and their continuations resumed via the closure.
+        /// Flagged senders are skipped and their continuations collected into
+        /// `cancelled` (lazily allocated on the first hit). The collection rides an
+        /// `inout` optional rather than a closure: the move-only deque cannot be
+        /// consumed after a closure captures it ([MEM-OWN-017] — the F-3 wall).
         @usableFromInline
         mutating func next(
-            resumeCancelled: (Send.Continuation) -> Void
+            collectingCancelledInto cancelled: inout Deque<Column.Ring<Send.Continuation>>?
         ) -> Sender? {
             while let sender = senders.take(from: .front) {
                 if sender.flag.isFlagged {
-                    resumeCancelled(sender.continuation)
+                    if cancelled == nil { cancelled = Deque<Column.Ring<Send.Continuation>>() }
+                    cancelled!.push(sender.continuation, to: .back)
                     continue
                 }
                 return sender
@@ -259,9 +269,9 @@
         /// re-enqueuing non-flagged entries. Follows the Waiter `reapFlagged()` pattern.
         /// Flagged senders' slots are dropped — `Slot.deinit` cleans up the element.
         @usableFromInline
-        mutating func reap() -> Deque<Send.Continuation> {
-            var cancelled = Deque<Send.Continuation>()
-            var survivors = Deque<Sender>()
+        mutating func reap() -> Deque<Column.Ring<Send.Continuation>> {
+            var cancelled = Deque<Column.Ring<Send.Continuation>>()
+            var survivors = Deque<Column.Ring<Sender>>()
             while let sender = senders.take(from: .front) {
                 if sender.flag.isFlagged {
                     cancelled.push(sender.continuation, to: .back)
@@ -306,7 +316,7 @@
                 case returnElement(
                     Element,
                     resumeSender: Send.Continuation?,
-                    cancelled: Deque<Send.Continuation>?
+                    cancelled: Deque<Column.Ring<Send.Continuation>>?
                 )
 
                 /// Receiver must suspend and wait.
@@ -333,17 +343,14 @@
             case .open:
                 precondition(receiver == nil, "Single-consumer invariant violated")
 
-                // Lazy-init: only allocate when a cancelled sender is actually found
-                var cancelled: Deque<Send.Continuation>? = nil
-                let collectCancelled: (Send.Continuation) -> Void = {
-                    if cancelled == nil { cancelled = Deque() }
-                    cancelled!.push($0, to: .back)
-                }
+                // Lazy: allocated only when a cancelled sender is actually found
+                // (inside `next` — the inout-collection shape, [MEM-OWN-017]).
+                var cancelled: Deque<Column.Ring<Send.Continuation>>? = nil
 
                 // If buffer has elements
                 if let element = buffer.take(from: .front) {
                     // Wake up a waiting sender if any (skipping cancelled)
-                    if let sender = next(resumeCancelled: collectCancelled) {
+                    if let sender = next(collectingCancelledInto: &cancelled) {
                         buffer.push(sender.slot.take(__unchecked: ()), to: .back)
                         return .returnElement(element, resumeSender: sender.continuation, cancelled: cancelled)
                     }
@@ -351,7 +358,7 @@
                 }
 
                 // If there are waiting senders, take directly from them (skipping cancelled)
-                if let sender = next(resumeCancelled: collectCancelled) {
+                if let sender = next(collectingCancelledInto: &cancelled) {
                     return .returnElement(sender.slot.take(__unchecked: ()), resumeSender: sender.continuation, cancelled: cancelled)
                 }
 
@@ -388,23 +395,20 @@
             case .open:
                 precondition(receiver == nil, "Single-consumer invariant violated")
 
-                // Lazy-init: only allocate when a cancelled sender is actually found
-                var cancelled: Deque<Send.Continuation>? = nil
-                let collectCancelled: (Send.Continuation) -> Void = {
-                    if cancelled == nil { cancelled = Deque() }
-                    cancelled!.push($0, to: .back)
-                }
+                // Lazy: allocated only when a cancelled sender is actually found
+                // (inside `next` — the inout-collection shape, [MEM-OWN-017]).
+                var cancelled: Deque<Column.Ring<Send.Continuation>>? = nil
 
                 // Double-check: element might be available
                 if let element = buffer.take(from: .front) {
-                    if let sender = next(resumeCancelled: collectCancelled) {
+                    if let sender = next(collectingCancelledInto: &cancelled) {
                         buffer.push(sender.slot.take(__unchecked: ()), to: .back)
                         return .returnElement(element, resumeSender: sender.continuation, cancelled: cancelled)
                     }
                     return .returnElement(element, resumeSender: nil, cancelled: cancelled)
                 }
 
-                if let sender = next(resumeCancelled: collectCancelled) {
+                if let sender = next(collectingCancelledInto: &cancelled) {
                     return .returnElement(sender.slot.take(__unchecked: ()), resumeSender: sender.continuation, cancelled: cancelled)
                 }
 
@@ -450,16 +454,16 @@
 
     extension Async.Channel.Bounded.State where Element: ~Copyable {
         @usableFromInline
-        struct Close: Sendable {
+        struct Close: ~Copyable, Sendable {
             @usableFromInline
             let receiverToResume: Receive.Continuation?
             @usableFromInline
-            var sendersToCancel: Deque<Send.Continuation>
+            var sendersToCancel: Deque<Column.Ring<Send.Continuation>>
 
             @usableFromInline
             init(
                 receiverToResume: Receive.Continuation?,
-                sendersToCancel: Deque<Send.Continuation>
+                sendersToCancel: consuming Deque<Column.Ring<Send.Continuation>>
             ) {
                 self.receiverToResume = receiverToResume
                 self.sendersToCancel = sendersToCancel
@@ -471,7 +475,7 @@
             switch status {
             case .open:
                 // Collect senders to cancel (drain the queue)
-                var sendersToCancel = Deque<Send.Continuation>()
+                var sendersToCancel = Deque<Column.Ring<Send.Continuation>>()
                 while let sender = senders.take(from: .front) {
                     sendersToCancel.push(sender.continuation, to: .back)
                 }
@@ -493,7 +497,10 @@
                 return Close(receiverToResume: nil, sendersToCancel: sendersToCancel)
 
             case .closed, .finished:
-                return Close(receiverToResume: nil, sendersToCancel: Deque())
+                return Close(
+                    receiverToResume: nil,
+                    sendersToCancel: Deque<Column.Ring<Send.Continuation>>()
+                )
             }
         }
     }

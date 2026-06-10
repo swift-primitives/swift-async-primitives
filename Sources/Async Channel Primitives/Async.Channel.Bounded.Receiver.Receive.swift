@@ -12,6 +12,13 @@
 // Async channels require task suspension which is not available on embedded Swift.
 #if !hasFeature(Embedded)
 
+    import Column_Primitives
+    public import Buffer_Ring_Primitive
+    public import Storage_Contiguous_Primitives
+    import Memory_Heap_Primitives
+    import Memory_Allocator_Primitive
+    import Buffer_Primitive
+
     extension Async.Channel.Bounded.Receiver where Element: ~Copyable {
         /// Receive operation accessor with variants.
         public struct Receive: Sendable {

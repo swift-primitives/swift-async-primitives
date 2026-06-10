@@ -14,6 +14,12 @@
 
     public import Ownership_Primitives
     internal import Queue_Primitives
+    import Column_Primitives
+    import Buffer_Ring_Primitive
+    import Storage_Contiguous_Primitives
+    import Memory_Heap_Primitives
+    import Memory_Allocator_Primitive
+    import Buffer_Primitive
 
     extension Async.Channel.Unbounded where Element: ~Copyable {
         /// A receiver for an unbounded channel.

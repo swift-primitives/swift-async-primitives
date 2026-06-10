@@ -14,7 +14,7 @@
 // on embedded Swift.
 #if !hasFeature(Embedded)
 
-    public import Synchronization
+    import Synchronization
 
     extension Async {
         /// A CAS-guarded exactly-once async completion.

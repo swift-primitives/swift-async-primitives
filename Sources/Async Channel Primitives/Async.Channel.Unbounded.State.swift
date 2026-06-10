@@ -12,8 +12,14 @@
 // Async channels require task suspension which is not available on embedded Swift.
 #if !hasFeature(Embedded)
 
-    public import Queue_Primitives
+    import Queue_Primitives
     public import Deque_Primitives
+    public import Column_Primitives
+    public import Buffer_Ring_Primitive
+    public import Storage_Contiguous_Primitives
+    import Memory_Heap_Primitives
+    import Memory_Allocator_Primitive
+    import Buffer_Primitive
 
     extension Async.Channel.Unbounded where Element: ~Copyable {
         /// Pure state machine for unbounded channel operations.
@@ -27,7 +33,7 @@
         @usableFromInline
         struct State: ~Copyable {
             @usableFromInline
-            var buffer: Deque<Element>
+            var buffer: Deque<Column.Ring<Element>>
 
             @usableFromInline
             var slot: Slot

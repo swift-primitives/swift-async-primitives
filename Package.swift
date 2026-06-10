@@ -48,14 +48,19 @@ let package = Package(
             name: "Async Channel Primitives",
             targets: ["Async Channel Primitives"]
         ),
-        .library(
-            name: "Async Broadcast Primitives",
-            targets: ["Async Broadcast Primitives"]
-        ),
-        .library(
-            name: "Async Timer Primitives",
-            targets: ["Async Timer Primitives"]
-        ),
+        // ⚠️ W5-3 QUARANTINE (2026-06-11): the Broadcast + Timer targets/products are
+        // PARKED out of the build graph — Broadcast rides un-reshaped
+        // swift-dictionary-ordered-primitives (the leg-8 ownership gap), Timer.Wheel
+        // rides swift-buffer-arena-primitives (W5-5 disposition) + the linked round
+        // (ruling D). Restore both with their rounds; sources untouched.
+        // .library(
+        //     name: "Async Broadcast Primitives",
+        //     targets: ["Async Broadcast Primitives"]
+        // ),
+        // .library(
+        //     name: "Async Timer Primitives",
+        //     targets: ["Async Timer Primitives"]
+        // ),
         .library(
             name: "Async Waiter Primitives",
             targets: ["Async Waiter Primitives"]
@@ -75,23 +80,25 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/swift-primitives/swift-storage-primitives.git", branch: "main"),
+        // .package(url: "https://github.com/swift-primitives/swift-storage-primitives.git", branch: "main"),  // W5-3 quarantine (Timer)
         .package(url: "https://github.com/swift-primitives/swift-buffer-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-dictionary-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-dictionary-ordered-primitives.git", branch: "main"),
+        // .package(url: "https://github.com/swift-primitives/swift-dictionary-primitives.git", branch: "main"),  // W5-3 quarantine (Broadcast)
+        // .package(url: "https://github.com/swift-primitives/swift-dictionary-ordered-primitives.git", branch: "main"),  // W5-3 quarantine (Broadcast)
         .package(url: "https://github.com/swift-primitives/swift-queue-primitives.git", branch: "main"),
+        .package(url: "https://github.com/swift-primitives/swift-column-primitives.git", branch: "main"),
         .package(url: "https://github.com/swift-primitives/swift-deque-primitives.git", branch: "main"),
         .package(url: "https://github.com/swift-primitives/swift-tagged-primitives.git", branch: "main"),
         .package(url: "https://github.com/swift-primitives/swift-ownership-primitives.git", branch: "main"),
         .package(url: "https://github.com/swift-primitives/swift-either-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-link-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-buffer-arena-primitives.git", branch: "main"),
+        // .package(url: "https://github.com/swift-primitives/swift-link-primitives.git", branch: "main"),  // W5-3 quarantine (Timer)
+        // .package(url: "https://github.com/swift-primitives/swift-buffer-arena-primitives.git", branch: "main"),  // W5-3 quarantine (Timer)
     ],
     targets: [
         // MARK: - Core
         .target(
             name: "Async Primitives Core",
             dependencies: [
+                .product(name: "Column Primitives", package: "swift-column-primitives"),
                 .product(name: "Buffer Primitives", package: "swift-buffer-primitives"),
                 .product(name: "Queue Primitives", package: "swift-queue-primitives"),
                 .product(name: "Deque Primitives", package: "swift-deque-primitives"),
@@ -103,6 +110,7 @@ let package = Package(
         .target(
             name: "Async Mutex Primitives",
             dependencies: [
+                .product(name: "Column Primitives", package: "swift-column-primitives"),
                 "Async Primitives Core",
                 .product(name: "Deque Primitives", package: "swift-deque-primitives"),
             ]
@@ -112,6 +120,7 @@ let package = Package(
         .target(
             name: "Async Bridge Primitives",
             dependencies: [
+                .product(name: "Column Primitives", package: "swift-column-primitives"),
                 "Async Primitives Core",
                 "Async Mutex Primitives",
                 .product(name: "Deque Primitives", package: "swift-deque-primitives"),
@@ -150,6 +159,7 @@ let package = Package(
         .target(
             name: "Async Channel Primitives",
             dependencies: [
+                .product(name: "Column Primitives", package: "swift-column-primitives"),
                 "Async Primitives Core",
                 "Async Mutex Primitives",
                 "Async Waiter Primitives",
@@ -157,30 +167,31 @@ let package = Package(
                 .product(name: "Deque Primitives", package: "swift-deque-primitives"),
             ]
         ),
-        .target(
-            name: "Async Broadcast Primitives",
-            dependencies: [
-                "Async Primitives Core",
-                "Async Mutex Primitives",
-                "Async Publication Primitives",
-                .product(name: "Dictionary Primitives", package: "swift-dictionary-primitives"),
-                .product(name: "Dictionary Ordered Primitives", package: "swift-dictionary-ordered-primitives"),
-                .product(name: "Deque Primitives", package: "swift-deque-primitives"),
-            ]
-        ),
-        .target(
-            name: "Async Timer Primitives",
-            dependencies: [
-                .product(name: "Storage Primitive", package: "swift-storage-primitives"),
-                "Async Primitives Core",
-                .product(name: "Link Primitives", package: "swift-link-primitives"),
-                .product(name: "Buffer Arena Primitive", package: "swift-buffer-arena-primitives"),
-                .product(name: "Buffer Arena Bounded Primitive", package: "swift-buffer-arena-primitives"),
-            ]
-        ),
+        //     .target(
+        //         name: "Async Broadcast Primitives",
+        //         dependencies: [
+        //             "Async Primitives Core",
+        //             "Async Mutex Primitives",
+        //             "Async Publication Primitives",
+        //             .product(name: "Dictionary Primitives", package: "swift-dictionary-primitives"),
+        //             .product(name: "Dictionary Ordered Primitives", package: "swift-dictionary-ordered-primitives"),
+        //             .product(name: "Deque Primitives", package: "swift-deque-primitives"),
+        //         ]
+        //     ),
+        //     .target(
+        //         name: "Async Timer Primitives",
+        //         dependencies: [
+        //             .product(name: "Storage Primitive", package: "swift-storage-primitives"),
+        //             "Async Primitives Core",
+        //             .product(name: "Link Primitives", package: "swift-link-primitives"),
+        //             .product(name: "Buffer Arena Primitive", package: "swift-buffer-arena-primitives"),
+        //             .product(name: "Buffer Arena Bounded Primitive", package: "swift-buffer-arena-primitives"),
+        //         ]
+        //     ),
         .target(
             name: "Async Waiter Primitives",
             dependencies: [
+                .product(name: "Column Primitives", package: "swift-column-primitives"),
                 "Async Primitives Core",
             ]
         ),
@@ -209,8 +220,8 @@ let package = Package(
                 "Async Barrier Primitives",
                 "Async Completion Primitives",
                 "Async Channel Primitives",
-                "Async Broadcast Primitives",
-                "Async Timer Primitives",
+                // "Async Broadcast Primitives",  // W5-3 quarantine
+                // "Async Timer Primitives",  // W5-3 quarantine
                 "Async Waiter Primitives",
                 "Async Semaphore Primitives",
             ]

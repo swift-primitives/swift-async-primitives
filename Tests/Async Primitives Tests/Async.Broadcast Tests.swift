@@ -1,3 +1,6 @@
+// W5-3 QUARANTINE (2026-06-11): rides the parked Async_Broadcast_Primitives target — see Package.swift.
+// The canImport gate self-restores when the target returns with its round.
+#if canImport(Async_Broadcast_Primitives)
 // ===----------------------------------------------------------------------===//
 //
 // This source file is part of the swift-async open source project
@@ -649,3 +652,5 @@ struct BroadcastStressTests {
         #expect(received == Array(0..<10))
     }
 }
+
+#endif

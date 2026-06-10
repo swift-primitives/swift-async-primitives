@@ -8,12 +8,23 @@
 // See LICENSE for license information
 //
 // ===----------------------------------------------------------------------===//
+//
+// The BOUNDED-column flag-aware ops (the former `Queue.Fixed` extensions — that
+// nest dissolved into the bounded ring column at the leg-5 reshape; these pins
+// re-target `S == Column.Ring<Entry>.Bounded`).
 
 public import Queue_Primitives
+public import Column_Primitives
+public import Buffer_Ring_Primitive
+public import Buffer_Ring_Bounded_Primitive
+public import Storage_Contiguous_Primitives
+public import Memory_Heap_Primitives
+public import Memory_Allocator_Primitive
+public import Buffer_Primitive
 
 // MARK: - Push (Unchecked)
 
-extension Queue_Primitives.Queue.Fixed where Element: ~Copyable {
+extension Queue_Primitives.Queue where S: ~Copyable {
     /// Pushes an entry to the back, trapping if full.
     ///
     /// Use when overflow indicates a logic error (invariant-protected paths).
@@ -22,16 +33,20 @@ extension Queue_Primitives.Queue.Fixed where Element: ~Copyable {
     /// - Precondition: Queue must not be full.
     @inlinable
     public mutating func push<Outcome: Sendable, Metadata: ~Copyable & Sendable>(
-        unchecked entry: consuming Element
-    ) where Element == Async.Waiter.Entry<Outcome, Metadata> {
-        precondition(!isFull, "Queue overflow: push(unchecked:) called on full queue")
-        _ = push(entry)
+        unchecked entry: consuming S.Element
+    ) where S == Column.Ring<Async.Waiter.Entry<Outcome, Metadata>>.Bounded {
+        // WHY: overflow on an invariant-protected path is a logic error — trap.
+        // `.full` is the bounded enqueue's only throw (the former Queue.Fixed
+        // push(unchecked:) contract).
+        // swift-format-ignore: NeverUseForceTry
+        // swiftlint:disable:next force_try
+        try! enqueue(entry)
     }
 }
 
 // MARK: - Pop Eligible
 
-extension Queue_Primitives.Queue.Fixed where Element: ~Copyable {
+extension Queue_Primitives.Queue where S: ~Copyable {
     /// Pops the first eligible (non-flagged) entry.
     ///
     /// Pops entries from the front until a non-flagged entry is found.
@@ -40,13 +55,13 @@ extension Queue_Primitives.Queue.Fixed where Element: ~Copyable {
     /// - Parameter flagged: Queue to collect flagged entries into.
     /// - Returns: The first eligible entry, or `nil` if none found.
     // WORKAROUND: popEligible is a compound identifier [API-NAME-002]
-    // WHY: Property.Inout cannot express method-level `where Element ==` constraints
+    // WHY: Property.Inout cannot express method-level `where ==` constraints
     // WHEN TO REMOVE: When Swift supports constrained Property.Inout extensions with same-type requirements
     // TRACKING: Async.Waiter.Queue unification
     @inlinable
     public mutating func popEligible<Outcome: Sendable, Metadata: ~Copyable & Sendable>(
-        flaggedInto flagged: inout Queue_Primitives.Queue<Async.Waiter.Queue.Flagged<Outcome, Metadata>>
-    ) -> Element? where Element == Async.Waiter.Entry<Outcome, Metadata> {
+        flaggedInto flagged: inout Queue_Primitives.Queue<Column.Ring<Async.Waiter.Queue.Flagged<Outcome, Metadata>>>
+    ) -> S.Element? where S == Column.Ring<Async.Waiter.Entry<Outcome, Metadata>>.Bounded {
         while !isEmpty {
             let entry = dequeue()!
             if let reason = entry.flag.reason {
@@ -61,7 +76,7 @@ extension Queue_Primitives.Queue.Fixed where Element: ~Copyable {
 
 // MARK: - Reap Flagged
 
-extension Queue_Primitives.Queue.Fixed where Element: ~Copyable {
+extension Queue_Primitives.Queue where S: ~Copyable {
     /// Reaps all flagged entries via drain+rebuild.
     ///
     /// Drains the queue, collecting flagged entries into `flagged` and
@@ -69,14 +84,14 @@ extension Queue_Primitives.Queue.Fixed where Element: ~Copyable {
     ///
     /// - Parameter flagged: Queue to collect flagged entries into.
     // WORKAROUND: reapFlagged is a compound identifier [API-NAME-002]
-    // WHY: Property.Inout cannot express method-level `where Element ==` constraints
+    // WHY: Property.Inout cannot express method-level `where ==` constraints
     // WHEN TO REMOVE: When Swift supports constrained Property.Inout extensions with same-type requirements
     // TRACKING: Async.Waiter.Queue unification
     @inlinable
     public mutating func reapFlagged<Outcome: Sendable, Metadata: ~Copyable & Sendable>(
-        into flagged: inout Queue_Primitives.Queue<Async.Waiter.Queue.Flagged<Outcome, Metadata>>
-    ) where Element == Async.Waiter.Entry<Outcome, Metadata> {
-        var survivors = Queue_Primitives.Queue<Async.Waiter.Entry<Outcome, Metadata>>()
+        into flagged: inout Queue_Primitives.Queue<Column.Ring<Async.Waiter.Queue.Flagged<Outcome, Metadata>>>
+    ) where S == Column.Ring<Async.Waiter.Entry<Outcome, Metadata>>.Bounded {
+        var survivors = Queue_Primitives.Queue<Column.Ring<Async.Waiter.Entry<Outcome, Metadata>>>()
 
         while !isEmpty {
             let entry = dequeue()!
@@ -87,9 +102,13 @@ extension Queue_Primitives.Queue.Fixed where Element: ~Copyable {
             }
         }
 
-        // Re-push survivors (queue was just drained, so capacity is available)
+        // Re-push survivors (queue was just drained, so capacity is available).
         survivors.drain { entry in
-            _ = self.push(entry)
+            // WHY: the queue was just drained — capacity is available; trap on
+            // the impossible overflow rather than swallow it.
+            // swift-format-ignore: NeverUseForceTry
+            // swiftlint:disable:next force_try
+            try! self.enqueue(entry)
         }
     }
 }
