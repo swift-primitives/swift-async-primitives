@@ -145,6 +145,7 @@ let package = Package(
             dependencies: [
                 "Async Primitives Core",
                 "Async Mutex Primitives",
+                "Async Waiter Primitives",
             ]
         ),
         .target(
