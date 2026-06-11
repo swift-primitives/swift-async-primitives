@@ -14,7 +14,18 @@
 
     import Dictionary_Primitives
     import Dictionary_Ordered_Primitives
+    import Hash_Indexed_Primitive
+    import Hash_Primitives
     import Queue_Primitives
+    import Deque_Primitives
+    import Column_Primitives
+    import Buffer_Ring_Primitive
+    import Buffer_Linear_Primitive
+    import Storage_Contiguous_Primitives
+    import Memory_Heap_Primitives
+    import Memory_Allocator_Primitive
+    import Buffer_Primitive
+    import Index_Primitives
     import Synchronization
 
     extension Async {
@@ -40,10 +51,10 @@
         /// On `send(_:)`, subscribers waiting in `next()` are resumed in
         /// **subscription order** — i.e., the order in which `subscribe()` was
         /// called for each subscription. Internally `state.subscribers` is a
-        /// `Dictionary<UInt64, Subscriber>.Ordered`; iteration preserves
-        /// insertion order, so the continuation-collection step runs through
-        /// subscribers oldest-first, and `.resume(returning:)` is called on
-        /// each in that order.
+        /// `Dictionary<Hash.Indexed<Column.Heap<Hash.Entry<UInt64, Subscriber>>>>.Ordered`;
+        /// iteration preserves insertion order, so the continuation-collection
+        /// step runs through subscribers oldest-first, and `.resume(returning:)`
+        /// is called on each in that order.
         ///
         /// Note that *resume call order* is not the same as *task completion
         /// order*: once a continuation is resumed, the runtime scheduler
@@ -103,7 +114,7 @@
             ///   Elements are discarded when the buffer is full and all subscribers have consumed them.
             public init(bufferCapacity: Int = 64) {
                 precondition(bufferCapacity > 0, "Broadcast buffer capacity must be greater than zero")
-                self.buffer = Buffer(limit: bufferCapacity)
+                self.buffer = Buffer(limit: .init(Cardinal(UInt(bufferCapacity))))
                 self._state = Async.Mutex(State())
             }
 
@@ -130,13 +141,13 @@
                 state.next.index += 1
 
                 // Add to buffer
-                state.buffer.back.push((index, element))
+                state.buffer.push((index, element), to: .back)
 
                 // Trim buffer if needed (keep elements that some subscriber hasn't seen yet)
                 let minCursor = state.cursor ?? index
-                while Int(bitPattern: state.buffer.count) > bufferLimit {
-                    if let front = state.buffer.peek.front, front.index < minCursor {
-                        _ = state.buffer.front.take
+                while state.buffer.count > bufferLimit {
+                    if let front = state.buffer.peek(at: .front), front.index < minCursor {
+                        _ = state.buffer.take(from: .front)
                     } else {
                         break
                     }
@@ -153,11 +164,10 @@
 
                 // Update woken subscriber state (O(1) lookup per subscriber)
                 for id in wakeIds {
-                    if var subscriber = state.subscribers[id] {
+                    _ = state.subscribers.withMutableValue(forKey: id) { subscriber in
                         if let cont = subscriber.continuation {
                             subscriber.cursor = index + 1
                             subscriber.continuation = nil
-                            state.subscribers[id] = subscriber
                             toResume.append((cont, element))
                         }
                     }
@@ -184,7 +194,11 @@
                 var finishIds: [UInt64] = []
                 state.subscribers.forEach { id, subscriber in
                     if subscriber.continuation != nil {
-                        let hasBufferedElement = state.buffer.contains { $0.index >= subscriber.cursor }
+                        let cursor = subscriber.cursor
+                        var hasBufferedElement = false
+                        state.buffer.forEach { entry in
+                            if entry.index >= cursor { hasBufferedElement = true }
+                        }
                         if !hasBufferedElement {
                             finishIds.append(id)
                         }
@@ -193,10 +207,9 @@
 
                 // Collect continuations and clear state
                 for id in finishIds {
-                    if var subscriber = state.subscribers[id] {
+                    _ = state.subscribers.withMutableValue(forKey: id) { subscriber in
                         if let cont = subscriber.continuation {
                             subscriber.continuation = nil
-                            state.subscribers[id] = subscriber
                             toResume.append(cont)
                         }
                     }
@@ -228,7 +241,7 @@
                 state.subscriber.seed += 1
                 let id = state.subscriber.seed
                 let cursor = state.next.index
-                state.subscribers[id] = Subscriber(cursor: cursor, continuation: nil)
+                state.subscribers.insert(key: id, value: Subscriber(cursor: cursor, continuation: nil))
                 return id
             }
             return Subscription(broadcast: self, id: id)

@@ -48,15 +48,15 @@ let package = Package(
             name: "Async Channel Primitives",
             targets: ["Async Channel Primitives"]
         ),
-        // ⚠️ W5-3 QUARANTINE (2026-06-11): the Broadcast + Timer targets/products are
-        // PARKED out of the build graph — Broadcast rides un-reshaped
-        // swift-dictionary-ordered-primitives (the leg-8 ownership gap), Timer.Wheel
-        // rides swift-buffer-arena-primitives (W5-5 disposition) + the linked round
-        // (ruling D). Restore both with their rounds; sources untouched.
-        // .library(
-        //     name: "Async Broadcast Primitives",
-        //     targets: ["Async Broadcast Primitives"]
-        // ),
+        .library(
+            name: "Async Broadcast Primitives",
+            targets: ["Async Broadcast Primitives"]
+        ),
+        // ⚠️ W5-3 QUARANTINE (2026-06-11): the Timer target/product is PARKED out of
+        // the build graph — Timer.Wheel rides swift-buffer-arena-primitives (W5-5
+        // disposition) + the linked round (ruling D). Restore with its round; sources
+        // untouched. (Broadcast restored 2026-06-11 with the W5 ordered round —
+        // Dictionary<S>.Ordered over the Hash.Indexed entry column.)
         // .library(
         //     name: "Async Timer Primitives",
         //     targets: ["Async Timer Primitives"]
@@ -82,8 +82,8 @@ let package = Package(
     dependencies: [
         // .package(url: "https://github.com/swift-primitives/swift-storage-primitives.git", branch: "main"),  // W5-3 quarantine (Timer)
         .package(url: "https://github.com/swift-primitives/swift-buffer-primitives.git", branch: "main"),
-        // .package(url: "https://github.com/swift-primitives/swift-dictionary-primitives.git", branch: "main"),  // W5-3 quarantine (Broadcast)
-        // .package(url: "https://github.com/swift-primitives/swift-dictionary-ordered-primitives.git", branch: "main"),  // W5-3 quarantine (Broadcast)
+        .package(url: "https://github.com/swift-primitives/swift-dictionary-primitives.git", branch: "main"),
+        .package(url: "https://github.com/swift-primitives/swift-dictionary-ordered-primitives.git", branch: "main"),
         .package(url: "https://github.com/swift-primitives/swift-queue-primitives.git", branch: "main"),
         .package(url: "https://github.com/swift-primitives/swift-column-primitives.git", branch: "main"),
         .package(url: "https://github.com/swift-primitives/swift-deque-primitives.git", branch: "main"),
@@ -167,17 +167,18 @@ let package = Package(
                 .product(name: "Deque Primitives", package: "swift-deque-primitives"),
             ]
         ),
-        //     .target(
-        //         name: "Async Broadcast Primitives",
-        //         dependencies: [
-        //             "Async Primitives Core",
-        //             "Async Mutex Primitives",
-        //             "Async Publication Primitives",
-        //             .product(name: "Dictionary Primitives", package: "swift-dictionary-primitives"),
-        //             .product(name: "Dictionary Ordered Primitives", package: "swift-dictionary-ordered-primitives"),
-        //             .product(name: "Deque Primitives", package: "swift-deque-primitives"),
-        //         ]
-        //     ),
+        .target(
+            name: "Async Broadcast Primitives",
+            dependencies: [
+                .product(name: "Column Primitives", package: "swift-column-primitives"),
+                "Async Primitives Core",
+                "Async Mutex Primitives",
+                "Async Publication Primitives",
+                .product(name: "Dictionary Primitives", package: "swift-dictionary-primitives"),
+                .product(name: "Dictionary Ordered Primitives", package: "swift-dictionary-ordered-primitives"),
+                .product(name: "Deque Primitives", package: "swift-deque-primitives"),
+            ]
+        ),
         //     .target(
         //         name: "Async Timer Primitives",
         //         dependencies: [
@@ -220,7 +221,7 @@ let package = Package(
                 "Async Barrier Primitives",
                 "Async Completion Primitives",
                 "Async Channel Primitives",
-                // "Async Broadcast Primitives",  // W5-3 quarantine
+                "Async Broadcast Primitives",
                 // "Async Timer Primitives",  // W5-3 quarantine
                 "Async Waiter Primitives",
                 "Async Semaphore Primitives",

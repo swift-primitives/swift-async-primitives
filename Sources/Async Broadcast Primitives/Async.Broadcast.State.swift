@@ -14,20 +14,29 @@
 
     import Dictionary_Primitives
     import Dictionary_Ordered_Primitives
+    import Hash_Indexed_Primitive
+    import Hash_Primitives
     import Queue_Primitives
     import Deque_Primitives
+    import Column_Primitives
+    import Buffer_Ring_Primitive
+    import Buffer_Linear_Primitive
+    import Storage_Contiguous_Primitives
+    import Memory_Heap_Primitives
+    import Memory_Allocator_Primitive
+    import Buffer_Primitive
 
     extension Async.Broadcast {
         /// Internal state machine for the broadcast channel.
-        struct State {
+        struct State: ~Copyable {
             /// Buffer of (index, element) pairs for replay.
-            var buffer: Deque<(index: UInt64, element: Element)> = .init()
+            var buffer: Deque<Column.Ring<(index: UInt64, element: Element)>> = .init()
 
             /// Next element index to assign.
             var next: Next.Index = .init()
 
-            /// Active subscribers keyed by ID.
-            var subscribers: Dictionary<UInt64, Subscriber>.Ordered = .init()
+            /// Active subscribers keyed by ID, in subscription order.
+            var subscribers: Dictionary<Hash.Indexed<Column.Heap<Hash.Entry<UInt64, Subscriber>>>>.Ordered = .init()
 
             /// Subscriber ID allocation.
             var subscriber: Subscriber.ID = .init()
@@ -79,17 +88,17 @@
             subscriber subscriberID: UInt64,
             token: UInt64
         ) -> CheckedContinuation<Async.Broadcast<Element>.Next.Outcome, Never>? {
-            guard var subscriber = subscribers[subscriberID] else { return nil }
+            let cleared = subscribers.withMutableValue(forKey: subscriberID) { subscriber -> CheckedContinuation<Async.Broadcast<Element>.Next.Outcome, Never>? in
+                // Token matching: only clear if our token matches
+                guard subscriber.wait.token == token,
+                    let cont = subscriber.continuation
+                else { return nil }
 
-            // Token matching: only clear if our token matches
-            guard subscriber.wait.token == token,
-                let cont = subscriber.continuation
-            else { return nil }
-
-            subscriber.continuation = nil
-            // Do NOT advance cursor - element not delivered
-            subscribers[subscriberID] = subscriber
-            return cont
+                subscriber.continuation = nil
+                // Do NOT advance cursor - element not delivered
+                return cont
+            }
+            return cleared ?? nil
         }
     }
 

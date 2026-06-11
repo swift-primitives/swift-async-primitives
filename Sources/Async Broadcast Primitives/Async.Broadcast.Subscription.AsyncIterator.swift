@@ -14,6 +14,16 @@
 
     import Dictionary_Primitives
     import Dictionary_Ordered_Primitives
+    import Hash_Indexed_Primitive
+    import Hash_Primitives
+    import Deque_Primitives
+    import Column_Primitives
+    import Buffer_Ring_Primitive
+    import Buffer_Linear_Primitive
+    import Storage_Contiguous_Primitives
+    import Memory_Heap_Primitives
+    import Memory_Allocator_Primitive
+    import Buffer_Primitive
 
     extension Async.Broadcast.Subscription {
         /// Async iterator for broadcast subscriptions.
@@ -42,33 +52,39 @@
                 await withCheckedContinuation { continuation in
                     // Single lock acquisition: returns immediate result OR installed wait token
                     let (immediateResult, installedWait): (Async.Broadcast<Element>.Next.Outcome?, Async.Broadcast<Element>.Wait?) = broadcast._state.withLock { state in
-                        guard var subscriber = state.subscribers[id] else {
-                            return (.finished, nil)
+                        let resolved = state.subscribers.withMutableValue(forKey: id) { subscriber -> (Async.Broadcast<Element>.Next.Outcome?, Async.Broadcast<Element>.Wait?) in
+                            // Check for buffered element
+                            let cursor = subscriber.cursor
+                            var buffered: Element? = nil
+                            state.buffer.forEach { entry in
+                                if buffered == nil, entry.index == cursor {
+                                    buffered = entry.element
+                                }
+                            }
+                            if let element = buffered {
+                                subscriber.cursor += 1
+                                return (.element(element), nil)
+                            }
+
+                            // Check if finished
+                            if state.is == .finished {
+                                return (.finished, nil)
+                            }
+
+                            // Must suspend - allocate token
+                            // Precondition: no concurrent next() on same subscription
+                            precondition(
+                                subscriber.continuation == nil,
+                                "Broadcast: concurrent next() calls on same subscription"
+                            )
+                            subscriber.wait.token &+= 1
+                            let token = subscriber.wait.token
+                            subscriber.continuation = continuation
+                            return (nil, Async.Broadcast<Element>.Wait(token: token))
                         }
 
-                        // Check for buffered element
-                        if let entry = state.buffer.first(where: { $0.index == subscriber.cursor }) {
-                            subscriber.cursor += 1
-                            state.subscribers[id] = subscriber
-                            return (.element(entry.element), nil)
-                        }
-
-                        // Check if finished
-                        if state.is == .finished {
-                            return (.finished, nil)
-                        }
-
-                        // Must suspend - allocate token
-                        // Precondition: no concurrent next() on same subscription
-                        precondition(
-                            subscriber.continuation == nil,
-                            "Broadcast: concurrent next() calls on same subscription"
-                        )
-                        subscriber.wait.token &+= 1
-                        let token = subscriber.wait.token
-                        subscriber.continuation = continuation
-                        state.subscribers[id] = subscriber
-                        return (nil, Async.Broadcast<Element>.Wait(token: token))
+                        // Absent key: the subscription was cancelled.
+                        return resolved ?? (.finished, nil)
                     }
 
                     if let result = immediateResult {

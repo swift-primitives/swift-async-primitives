@@ -3,7 +3,7 @@
 
 @_exported public import Async_Barrier_Primitives
 @_exported public import Async_Bridge_Primitives
-// @_exported public import Async_Broadcast_Primitives  // W5-3 quarantine
+@_exported public import Async_Broadcast_Primitives
 @_exported public import Async_Channel_Primitives
 @_exported public import Async_Completion_Primitives
 @_exported public import Async_Mutex_Primitives
