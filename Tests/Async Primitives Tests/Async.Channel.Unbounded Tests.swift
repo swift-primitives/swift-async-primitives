@@ -337,4 +337,39 @@ struct UnboundedChannelTests {
         let value = try await receiveTask.value
         #expect(value == 42)
     }
+
+    @Test
+    func `Non-Sendable element exits receive() across an isolation boundary (sending result)`() async throws {
+        // The receiver-side half of [MEM-SEND-010]: send() takes `consuming sending`,
+        // and receive()'s `sending` result lets a non-Sendable element leave the
+        // channel into another isolation domain. Proven additively in
+        // swift-memory-foreign-primitives/Experiments/foreign-recycle-channel (V4);
+        // this pins the canonical upstream annotation.
+        final class Payload {
+            var value: Int
+            init(value: Int) { self.value = value }
+        }
+        struct Parcel: ~Copyable {
+            let payload: Payload
+        }
+        actor Sink {
+            func consume(_ parcel: consuming sending Parcel) -> Int {
+                parcel.payload.value
+            }
+        }
+
+        let ends = Async.Channel<Parcel>.Unbounded().take().ends()
+        try ends.sender.send(Parcel(payload: Payload(value: 99)))
+        ends.sender.close()
+        guard let parcel = try await ends.receiver.receive() else {
+            Issue.record("expected an element before close drained")
+            return
+        }
+        // Forwarding the received value into actor isolation is what the `sending`
+        // result newly permits — without it, the result merges with the receiver's
+        // region and this send is rejected.
+        let sink = Sink()
+        let received = await sink.consume(parcel)
+        #expect(received == 99)
+    }
 }

@@ -70,12 +70,16 @@
         /// or the channel is closed and drained.
         ///
         /// - Returns: The next element, or `nil` if the channel is closed and drained.
+        ///   The result is `sending`: it leaves in a disconnected region, so non-Sendable
+        ///   elements that entered via the sender's `consuming sending` can exit across an
+        ///   isolation boundary — the receiver-side half of [MEM-SEND-010]
+        ///   (proven additively in swift-memory-foreign-primitives/Experiments/foreign-recycle-channel).
         /// - Throws: `Async.Channel<Element>.Error.cancelled` if the task is cancelled.
         // WORKAROUND: @_optimize(none) — see Unbounded.Storage.handleReceive workaround comment.
         @_optimize(none)
         @inlinable
         nonisolated(nonsending)
-            public func receive() async throws(Async.Channel<Element>.Error) -> Element?
+            public func receive() async throws(Async.Channel<Element>.Error) -> sending Element?
         {
             // Fast path: try immediate receive
             let fastAction = storage.withLock { state in
@@ -136,8 +140,9 @@
         /// - Returns `nil` if buffer is empty, regardless of closed state
         /// - Never throws; cancellation is irrelevant because it never suspends
         /// - `nil` means "nothing available now," not "closed"
+        /// - The result is `sending` (disconnected region), matching `receive()`
         @inlinable
-        public func poll() -> Element? {
+        public func poll() -> sending Element? {
             storage.withLock { state in
                 state.poll()
             }

@@ -75,7 +75,7 @@
         @_optimize(none)
         @inlinable
         nonisolated(nonsending)
-            public func receive() async throws(Async.Channel<Element>.Error) -> Element?
+            public func receive() async throws(Async.Channel<Element>.Error) -> sending Element?
         {
             // Fast path: try immediate receive
             let fastAction = storage.withLock { state in
