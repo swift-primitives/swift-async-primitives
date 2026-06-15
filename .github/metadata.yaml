@@ -1,6 +1,6 @@
 # .github/metadata.yaml
 # Triaged by AI-assisted bulk pass (2026-04-29).
-description: "Async types for Swift."
+description: "Raw async coordination primitives (Channel/Broadcast/Semaphore/Mutex/Barrier/Promise/Bridge) a layer below AsyncSequence, with ~Copyable element support and typed-throws cancellation."
 topics:
   - primitives
   - async

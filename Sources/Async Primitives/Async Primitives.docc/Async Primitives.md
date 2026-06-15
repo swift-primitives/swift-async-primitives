@@ -5,8 +5,9 @@
     @TitleHeading("Swift Primitives")
 }
 
-Coordination primitives for Swift concurrency — channels, broadcast, barrier,
-semaphore, mutex, and peers. Swift-Embedded-compatible.
+Raw async coordination primitives a layer below `AsyncSequence` — channels, broadcast,
+barrier, semaphore, mutex, promise, bridge, and peers — with `~Copyable` element support,
+typed throws, and observable cancellation.
 
 ## Topics
 
