@@ -123,8 +123,7 @@ let package = Package(
         // [MOD-017]: `Async Primitive` (SINGULAR) owns the root `enum Async {}` plus
         // the package's foundational, stdlib-only declarations. Zero external-package
         // dependencies — the load-bearing invariant. [MOD-031]: each sub-namespace
-        // `Async.{X}` is its own target. (The dead `Async.Array` placeholder namespace
-        // is folded into the root rather than minting an empty target per [MOD-DOMAIN].)
+        // `Async.{X}` is its own target.
 
         .target(
             name: "Async Primitive",
