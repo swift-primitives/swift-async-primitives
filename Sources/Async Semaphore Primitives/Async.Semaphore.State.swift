@@ -9,8 +9,10 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import Async_Primitives_Core
+public import Async_Primitive
+public import Async_Lifecycle_Primitives
 public import Async_Waiter_Primitives
+public import Queue_Primitive
 
 extension Async.Semaphore {
     /// Internal synchronized state for the semaphore.

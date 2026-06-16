@@ -19,6 +19,7 @@
     import Memory_Heap_Primitives
     import Memory_Allocator_Primitive
     import Buffer_Primitive
+    public import Deque_Primitives
 
     extension Async.Channel.Bounded.Elements {
         /// Iterator for the AsyncSequence view.

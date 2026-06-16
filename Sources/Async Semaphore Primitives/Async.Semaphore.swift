@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 internal import Async_Mutex_Primitives
-public import Async_Primitives_Core
+public import Async_Primitive
 public import Async_Promise_Primitives
 
 extension Async {

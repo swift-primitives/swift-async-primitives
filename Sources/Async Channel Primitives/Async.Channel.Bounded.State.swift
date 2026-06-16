@@ -15,7 +15,7 @@
     public import Async_Waiter_Primitives
     public import Ownership_Primitives
     internal import Queue_Primitives
-    internal import Deque_Primitives
+    public import Deque_Primitives
     public import Column_Primitives
     public import Buffer_Ring_Primitive
     public import Storage_Contiguous_Primitives

@@ -11,6 +11,10 @@ typed throws, and observable cancellation.
 
 ## Topics
 
+### Essentials
+
+- <doc:Async-Primitives-Scope>
+
 ### Semantics
 
 - <doc:Semantics>

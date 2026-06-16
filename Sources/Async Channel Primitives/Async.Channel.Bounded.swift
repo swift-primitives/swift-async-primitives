@@ -11,6 +11,7 @@
 
 // Async channels require task suspension which is not available on embedded Swift.
 #if !hasFeature(Embedded)
+    public import Index_Primitives
 
     extension Async.Channel where Element: ~Copyable {
         /// Bounded channel with backpressure.

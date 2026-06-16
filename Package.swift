@@ -12,10 +12,26 @@ let package = Package(
         .visionOS(.v26),
     ],
     products: [
-        // MARK: - Core
+        // MARK: - Namespace + foundational ([MOD-017] singular root + [MOD-031] sub-namespaces)
         .library(
-            name: "Async Primitives Core",
-            targets: ["Async Primitives Core"]
+            name: "Async Primitive",
+            targets: ["Async Primitive"]
+        ),
+        .library(
+            name: "Async Callback Primitives",
+            targets: ["Async Callback Primitives"]
+        ),
+        .library(
+            name: "Async Continuation Primitives",
+            targets: ["Async Continuation Primitives"]
+        ),
+        .library(
+            name: "Async Lifecycle Primitives",
+            targets: ["Async Lifecycle Primitives"]
+        ),
+        .library(
+            name: "Async Precedence Primitives",
+            targets: ["Async Precedence Primitives"]
         ),
         // MARK: - Mutex
         .library(
@@ -80,10 +96,18 @@ let package = Package(
         ),
     ],
     dependencies: [
-        // .package(url: "https://github.com/swift-primitives/swift-storage-primitives.git", branch: "main"),  // W5-3 quarantine (Timer)
+        // .package(url: "https://github.com/swift-primitives/swift-storage-primitives.git", branch: "main"),  // W5-3 quarantine (Timer — Storage Primitive)
         .package(url: "https://github.com/swift-primitives/swift-buffer-primitives.git", branch: "main"),
+        .package(url: "https://github.com/swift-primitives/swift-buffer-ring-primitives.git", branch: "main"),
+        .package(url: "https://github.com/swift-primitives/swift-buffer-linear-primitives.git", branch: "main"),
+        .package(url: "https://github.com/swift-primitives/swift-storage-primitives.git", branch: "main"),
+        .package(url: "https://github.com/swift-primitives/swift-memory-allocation-primitives.git", branch: "main"),
+        .package(url: "https://github.com/swift-primitives/swift-memory-heap-primitives.git", branch: "main"),
         .package(url: "https://github.com/swift-primitives/swift-dictionary-primitives.git", branch: "main"),
         .package(url: "https://github.com/swift-primitives/swift-dictionary-ordered-primitives.git", branch: "main"),
+        .package(url: "https://github.com/swift-primitives/swift-hash-primitives.git", branch: "main"),
+        .package(url: "https://github.com/swift-primitives/swift-hash-table-primitives.git", branch: "main"),
+        .package(url: "https://github.com/swift-primitives/swift-index-primitives.git", branch: "main"),
         .package(url: "https://github.com/swift-primitives/swift-queue-primitives.git", branch: "main"),
         .package(url: "https://github.com/swift-primitives/swift-column-primitives.git", branch: "main"),
         .package(url: "https://github.com/swift-primitives/swift-deque-primitives.git", branch: "main"),
@@ -94,25 +118,40 @@ let package = Package(
         // .package(url: "https://github.com/swift-primitives/swift-buffer-arena-primitives.git", branch: "main"),  // W5-3 quarantine (Timer)
     ],
     targets: [
-        // MARK: - Core
+        // MARK: - Namespace + foundational
+        //
+        // [MOD-017]: `Async Primitive` (SINGULAR) owns the root `enum Async {}` plus
+        // the package's foundational, stdlib-only declarations. Zero external-package
+        // dependencies — the load-bearing invariant. [MOD-031]: each sub-namespace
+        // `Async.{X}` is its own target. (The dead `Async.Array` placeholder namespace
+        // is folded into the root rather than minting an empty target per [MOD-DOMAIN].)
+
         .target(
-            name: "Async Primitives Core",
-            dependencies: [
-                .product(name: "Column Primitives", package: "swift-column-primitives"),
-                .product(name: "Buffer Primitives", package: "swift-buffer-primitives"),
-                .product(name: "Queue Primitives", package: "swift-queue-primitives"),
-                .product(name: "Deque Primitives", package: "swift-deque-primitives"),
-                .product(name: "Tagged Primitives", package: "swift-tagged-primitives"),
-            ]
+            name: "Async Primitive",
+            dependencies: []
+        ),
+        .target(
+            name: "Async Callback Primitives",
+            dependencies: ["Async Primitive"]
+        ),
+        .target(
+            name: "Async Continuation Primitives",
+            dependencies: ["Async Primitive"]
+        ),
+        .target(
+            name: "Async Lifecycle Primitives",
+            dependencies: ["Async Primitive"]
+        ),
+        .target(
+            name: "Async Precedence Primitives",
+            dependencies: ["Async Primitive"]
         ),
 
         // MARK: - Mutex
         .target(
             name: "Async Mutex Primitives",
             dependencies: [
-                .product(name: "Column Primitives", package: "swift-column-primitives"),
-                "Async Primitives Core",
-                .product(name: "Deque Primitives", package: "swift-deque-primitives"),
+                "Async Primitive"
             ]
         ),
 
@@ -120,30 +159,38 @@ let package = Package(
         .target(
             name: "Async Bridge Primitives",
             dependencies: [
-                .product(name: "Column Primitives", package: "swift-column-primitives"),
-                "Async Primitives Core",
+                "Async Primitive",
                 "Async Mutex Primitives",
+                .product(name: "Buffer Primitive", package: "swift-buffer-primitives"),
+                .product(name: "Buffer Ring Primitive", package: "swift-buffer-ring-primitives"),
+                .product(name: "Column Primitives", package: "swift-column-primitives"),
                 .product(name: "Deque Primitives", package: "swift-deque-primitives"),
+                .product(name: "Memory Allocator Primitive", package: "swift-memory-allocation-primitives"),
+                .product(name: "Memory Heap Primitives", package: "swift-memory-heap-primitives"),
+                .product(name: "Queue Primitives", package: "swift-queue-primitives"),
+                .product(name: "Storage Contiguous Primitives", package: "swift-storage-primitives"),
             ]
         ),
         .target(
             name: "Async Promise Primitives",
             dependencies: [
-                "Async Primitives Core",
+                "Async Primitive",
+                "Async Continuation Primitives",
                 "Async Mutex Primitives",
             ]
         ),
         .target(
             name: "Async Publication Primitives",
             dependencies: [
-                "Async Primitives Core",
+                "Async Primitive",
                 "Async Mutex Primitives",
             ]
         ),
         .target(
             name: "Async Barrier Primitives",
             dependencies: [
-                "Async Primitives Core",
+                "Async Primitive",
+                "Async Lifecycle Primitives",
                 "Async Mutex Primitives",
                 "Async Waiter Primitives",
             ]
@@ -151,7 +198,7 @@ let package = Package(
         .target(
             name: "Async Completion Primitives",
             dependencies: [
-                "Async Primitives Core",
+                "Async Primitive",
                 "Async Mutex Primitives",
             ]
         ),
@@ -160,31 +207,50 @@ let package = Package(
         .target(
             name: "Async Channel Primitives",
             dependencies: [
-                .product(name: "Column Primitives", package: "swift-column-primitives"),
-                "Async Primitives Core",
+                "Async Primitive",
+                "Async Continuation Primitives",
                 "Async Mutex Primitives",
                 "Async Waiter Primitives",
-                .product(name: "Ownership Primitives", package: "swift-ownership-primitives"),
+                .product(name: "Buffer Primitive", package: "swift-buffer-primitives"),
+                .product(name: "Buffer Ring Primitive", package: "swift-buffer-ring-primitives"),
+                .product(name: "Column Primitives", package: "swift-column-primitives"),
                 .product(name: "Deque Primitives", package: "swift-deque-primitives"),
+                .product(name: "Memory Allocator Primitive", package: "swift-memory-allocation-primitives"),
+                .product(name: "Memory Heap Primitives", package: "swift-memory-heap-primitives"),
+                .product(name: "Ownership Primitives", package: "swift-ownership-primitives"),
+                .product(name: "Queue Primitives", package: "swift-queue-primitives"),
+                .product(name: "Index Primitives", package: "swift-index-primitives"),
+                .product(name: "Storage Contiguous Primitives", package: "swift-storage-primitives"),
             ]
         ),
         .target(
             name: "Async Broadcast Primitives",
             dependencies: [
-                .product(name: "Column Primitives", package: "swift-column-primitives"),
-                "Async Primitives Core",
+                "Async Primitive",
                 "Async Mutex Primitives",
                 "Async Publication Primitives",
-                .product(name: "Dictionary Primitives", package: "swift-dictionary-primitives"),
-                .product(name: "Dictionary Ordered Primitives", package: "swift-dictionary-ordered-primitives"),
+                .product(name: "Buffer Linear Primitive", package: "swift-buffer-linear-primitives"),
+                .product(name: "Buffer Primitive", package: "swift-buffer-primitives"),
+                .product(name: "Buffer Ring Primitive", package: "swift-buffer-ring-primitives"),
+                .product(name: "Column Primitives", package: "swift-column-primitives"),
                 .product(name: "Deque Primitives", package: "swift-deque-primitives"),
+                .product(name: "Dictionary Ordered Primitives", package: "swift-dictionary-ordered-primitives"),
+                .product(name: "Dictionary Primitives", package: "swift-dictionary-primitives"),
+                .product(name: "Hash Indexed Primitive", package: "swift-hash-table-primitives"),
+                .product(name: "Hash Primitives", package: "swift-hash-primitives"),
+                .product(name: "Index Primitives", package: "swift-index-primitives"),
+                .product(name: "Memory Allocator Primitive", package: "swift-memory-allocation-primitives"),
+                .product(name: "Memory Heap Primitives", package: "swift-memory-heap-primitives"),
+                .product(name: "Queue Primitives", package: "swift-queue-primitives"),
+                .product(name: "Storage Contiguous Primitives", package: "swift-storage-primitives"),
             ]
         ),
+        // ⚠️ W5-3 QUARANTINE (2026-06-11): Timer target PARKED — see products note above.
         //     .target(
         //         name: "Async Timer Primitives",
         //         dependencies: [
         //             .product(name: "Storage Primitive", package: "swift-storage-primitives"),
-        //             "Async Primitives Core",
+        //             "Async Primitive",
         //             .product(name: "Link Primitives", package: "swift-link-primitives"),
         //             .product(name: "Buffer Arena Primitive", package: "swift-buffer-arena-primitives"),
         //             .product(name: "Buffer Arena Bounded Primitive", package: "swift-buffer-arena-primitives"),
@@ -193,8 +259,17 @@ let package = Package(
         .target(
             name: "Async Waiter Primitives",
             dependencies: [
+                "Async Primitive",
+                "Async Continuation Primitives",
+                .product(name: "Buffer Primitive", package: "swift-buffer-primitives"),
+                .product(name: "Buffer Ring Bounded Primitive", package: "swift-buffer-ring-primitives"),
+                .product(name: "Buffer Ring Primitive", package: "swift-buffer-ring-primitives"),
                 .product(name: "Column Primitives", package: "swift-column-primitives"),
-                "Async Primitives Core",
+                .product(name: "Memory Allocator Primitive", package: "swift-memory-allocation-primitives"),
+                .product(name: "Memory Heap Primitives", package: "swift-memory-heap-primitives"),
+                .product(name: "Queue Primitives", package: "swift-queue-primitives"),
+                .product(name: "Storage Contiguous Primitives", package: "swift-storage-primitives"),
+                .product(name: "Tagged Primitives", package: "swift-tagged-primitives"),
             ]
         ),
 
@@ -202,19 +277,30 @@ let package = Package(
         .target(
             name: "Async Semaphore Primitives",
             dependencies: [
-                "Async Primitives Core",
+                "Async Primitive",
+                "Async Continuation Primitives",
+                "Async Lifecycle Primitives",
+                "Async Precedence Primitives",
                 "Async Mutex Primitives",
-                "Async Waiter Primitives",
                 "Async Promise Primitives",
+                "Async Waiter Primitives",
                 .product(name: "Either Primitives", package: "swift-either-primitives"),
+                .product(name: "Queue Primitive", package: "swift-queue-primitives"),
+                .product(name: "Queue Primitives", package: "swift-queue-primitives"),
             ]
         ),
 
         // MARK: - Umbrella
+        //
+        // [MOD-005]: re-exports ALL sub-targets (root + sub-namespaces + variants).
         .target(
             name: "Async Primitives",
             dependencies: [
-                "Async Primitives Core",
+                "Async Primitive",
+                "Async Callback Primitives",
+                "Async Continuation Primitives",
+                "Async Lifecycle Primitives",
+                "Async Precedence Primitives",
                 "Async Mutex Primitives",
                 "Async Bridge Primitives",
                 "Async Promise Primitives",

@@ -20,6 +20,7 @@
     import Memory_Heap_Primitives
     import Memory_Allocator_Primitive
     import Buffer_Primitive
+    internal import Deque_Primitives
 
     extension Async.Channel.Bounded where Element: ~Copyable {
         /// Thread-safe storage wrapping the state machine.

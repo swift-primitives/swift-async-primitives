@@ -17,7 +17,8 @@
 // Tracked as a follow-up to the 2026-04-25 Barrier API redesign.
 #if !hasFeature(Embedded)
 
-    public import Async_Primitives_Core
+    public import Async_Primitive
+    public import Async_Lifecycle_Primitives
     internal import Async_Waiter_Primitives
     import Synchronization
 

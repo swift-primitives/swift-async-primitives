@@ -18,6 +18,7 @@
     import Memory_Heap_Primitives
     import Memory_Allocator_Primitive
     import Buffer_Primitive
+    public import Deque_Primitives
 
     extension Async.Channel.Bounded.Receiver where Element: ~Copyable {
         /// Receive operation accessor with variants.
