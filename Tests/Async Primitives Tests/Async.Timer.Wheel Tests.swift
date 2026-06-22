@@ -13,6 +13,7 @@
 // ===----------------------------------------------------------------------===//
 
 import Async_Primitives_Test_Support
+import Async_Timer_Primitives
 import Testing
 
 // MARK: - Test Suites

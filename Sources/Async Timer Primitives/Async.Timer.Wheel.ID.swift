@@ -62,7 +62,7 @@ extension Async.Timer.Wheel {
     /// - Returns: A handle suitable for external use.
     @usableFromInline
     static func _makeID(
-        position: Buffer<Storage_Primitive.Storage<Async.Timer.Wheel<C>.Node>.Arena>.Arena.Position
+        position: Buffer<Storage_Primitive.Storage<Memory.Allocator<Memory.Heap>.Pool>.Generational<Async.Timer.Wheel<C>.Node>>.Arena.Position
     ) -> ID {
         ID(index: Int(position.index), generation: position.token)
     }
@@ -88,7 +88,7 @@ extension Async.Timer.Wheel {
     @usableFromInline
     static func _position(
         _ id: ID
-    ) -> Buffer<Storage_Primitive.Storage<Async.Timer.Wheel<C>.Node>.Arena>.Arena.Position {
+    ) -> Buffer<Storage_Primitive.Storage<Memory.Allocator<Memory.Heap>.Pool>.Generational<Async.Timer.Wheel<C>.Node>>.Arena.Position {
         .init(index: UInt32(id.index), token: id.generation)
     }
 }

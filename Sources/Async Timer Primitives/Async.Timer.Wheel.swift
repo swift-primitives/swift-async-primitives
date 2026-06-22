@@ -9,6 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
+public import Index_Primitives
+
 extension Async.Timer {
     /// Hierarchical timer wheel with O(1) amortized operations.
     ///
