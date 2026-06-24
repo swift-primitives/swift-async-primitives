@@ -68,13 +68,6 @@ let package = Package(
             name: "Async Broadcast Primitives",
             targets: ["Async Broadcast Primitives"]
         ),
-        // Timer restored 2026-06-22 with the allocation-arc buffer-arena pool-repair
-        // (the W5-5 disposition round): Timer.Wheel rides the re-expressed
-        // Buffer.Arena over Storage.Generational.
-        .library(
-            name: "Async Timer Primitives",
-            targets: ["Async Timer Primitives"]
-        ),
         .library(
             name: "Async Waiter Primitives",
             targets: ["Async Waiter Primitives"]
@@ -94,7 +87,6 @@ let package = Package(
         ),
     ],
     dependencies: [
-        // .package(url: "https://github.com/swift-primitives/swift-storage-primitives.git", branch: "main"),  // W5-3 quarantine (Timer — Storage Primitive)
         .package(url: "https://github.com/swift-primitives/swift-buffer-primitives.git", branch: "main"),
         .package(url: "https://github.com/swift-primitives/swift-buffer-ring-primitives.git", branch: "main"),
         .package(url: "https://github.com/swift-primitives/swift-buffer-linear-primitives.git", branch: "main"),
@@ -112,8 +104,6 @@ let package = Package(
         .package(url: "https://github.com/swift-primitives/swift-tagged-primitives.git", branch: "main"),
         .package(url: "https://github.com/swift-primitives/swift-ownership-primitives.git", branch: "main"),
         .package(url: "https://github.com/swift-primitives/swift-either-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-link-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-buffer-arena-primitives.git", branch: "main"),
     ],
     targets: [
         // MARK: - Namespace + foundational
@@ -243,18 +233,6 @@ let package = Package(
             ]
         ),
         .target(
-            name: "Async Timer Primitives",
-            dependencies: [
-                .product(name: "Storage Primitive", package: "swift-storage-primitives"),
-                "Async Primitive",
-                .product(name: "Buffer Primitives", package: "swift-buffer-primitives"),
-                .product(name: "Index Primitives", package: "swift-index-primitives"),
-                .product(name: "Link Primitives", package: "swift-link-primitives"),
-                .product(name: "Buffer Arena Primitive", package: "swift-buffer-arena-primitives"),
-                .product(name: "Buffer Arena Bounded Primitive", package: "swift-buffer-arena-primitives"),
-            ]
-        ),
-        .target(
             name: "Async Waiter Primitives",
             dependencies: [
                 "Async Primitive",
@@ -307,7 +285,6 @@ let package = Package(
                 "Async Completion Primitives",
                 "Async Channel Primitives",
                 "Async Broadcast Primitives",
-                "Async Timer Primitives",
                 "Async Waiter Primitives",
                 "Async Semaphore Primitives",
             ]
@@ -318,7 +295,6 @@ let package = Package(
             name: "Async Primitives Tests",
             dependencies: [
                 "Async Primitives",
-                "Async Timer Primitives",
                 "Async Primitives Test Support",
             ]
         ),

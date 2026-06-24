@@ -44,9 +44,9 @@ be documented before v1.0.
 | ``Async/Publication`` | N/A — designed for cancellation-handler racing (`take()` is atomic winner-takes-all; losers receive `nil`, no trap). The primitive IS part of the cancellation-observation mechanism in consuming APIs | Latest-write-wins on `publish(_:)` (overwrite-on-publish). `take()` is atomic take-and-clear | N/A (overwrite-on-publish; not a queue) | Winner-takes-all: exactly one racing caller wins `take()`, others see `nil` |
 | ``Async/Semaphore`` | `wait()` throws ``Async/Semaphore/Error/cancelled``; `wait(timeout:)` adds `.timeout`; `shutdown()` wakes all waiters with `.shutdown`. `withPermit(_:)` returns `Either<Async.Semaphore.Error, E>` — `.left` is an acquisition failure, `.right` is a body failure | FIFO (waiters acquire in arrival order) | Capacity-bounded (acts as concurrency limit); `wait()` suspends when capacity saturated | **FIFO** |
 
-Building-block namespaces are deliberately excluded from the table: ``Async/Timer``
-and ``Async/Waiter`` are namespaces holding data-structure primitives
-(``Async/Timer/Wheel``, ``Async/Waiter/Queue``, ``Async/Waiter/Flag``, etc.) used
+Building-block namespaces are deliberately excluded from the table:
+``Async/Waiter`` is a namespace holding data-structure primitives
+(``Async/Waiter/Queue``, ``Async/Waiter/Flag``, etc.) used
 to compose coordination, not coordination primitives themselves.
 
 ## Gap inventory

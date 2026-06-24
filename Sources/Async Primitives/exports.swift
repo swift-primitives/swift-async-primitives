@@ -15,5 +15,4 @@
 @_exported public import Async_Promise_Primitives
 @_exported public import Async_Publication_Primitives
 @_exported public import Async_Semaphore_Primitives
-// @_exported public import Async_Timer_Primitives  // W5-3 quarantine
 @_exported public import Async_Waiter_Primitives

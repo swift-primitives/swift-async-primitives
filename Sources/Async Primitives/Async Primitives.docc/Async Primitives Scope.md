@@ -41,9 +41,9 @@ Per [MOD-017]/[MOD-031], the root namespace + foundational declarations live in 
 
 These compose with the package but lie OUTSIDE its identity surface:
 
-- **Time wheels / timer scheduling** (`Async.Timer.Wheel`): currently PARKED under the W5-3
-  quarantine (rides `swift-buffer-arena-primitives`); restored with its own round, not part of
-  the current identity surface.
+- **Time wheels / timer scheduling**: removed 2026-06-24 — the prior `Async.Timer.Wheel` rode the
+  archived `swift-buffer-arena-primitives`, had no consumers, and its scheduler was never
+  implemented. Recoverable from git history; a future time-wheel would ride `Storage.Generational`.
 - **Task/job scheduling and executors**: → `swift-executor-primitives`.
 - **OS threads and kernel-level mutex** (`Kernel.Thread.Mutex`): → `swift-thread-primitives`
   (reached only through the `canImport` portability fallback in `Async.Mutex`).
