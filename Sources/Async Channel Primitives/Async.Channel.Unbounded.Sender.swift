@@ -20,6 +20,7 @@
     import Memory_Allocator_Primitive
     import Buffer_Primitive
     public import Deque_Primitives
+    public import Pair_Primitives
 
     extension Async.Channel.Unbounded where Element: ~Copyable {
         /// A sender view for an unbounded channel.
@@ -108,27 +109,30 @@
         public func send<S: Swift.Sequence>(contentsOf elements: sending S) throws(Async.Channel<Element>.Error) where S.Element == Element {
             let elementSlot = Ownership.Slot(Array(elements))
             let deliverySlot = storage.deliverySlot
-            let action: (cont: Async.Channel<Element>.Unbounded.State.Receive.Continuation?, closed: Bool) = storage.withLock { state in
-                guard let batch = elementSlot.take() else { return (nil, false) }
+            // A tuple cannot hold the now-`~Copyable` continuation, so `Pair`
+            // (which is `~Copyable` when a component is) stands in for
+            // `(cont:closed:)`: `.first` = continuation, `.second` = closed.
+            var outcome = storage.withLock { state -> Pair<Async.Channel<Element>.Unbounded.State.Receive.Continuation?, Bool> in
+                guard let batch = elementSlot.take() else { return Pair(nil, false) }
                 var receiverCont: Async.Channel<Element>.Unbounded.State.Receive.Continuation? = nil
+                var delivered = false
                 for element in batch {
-                    guard !state.isClosed else { return (receiverCont, true) }
-                    switch state.slot {
-                    case .wait(let cont) where receiverCont == nil:
-                        state.slot = .none
+                    guard !state.isClosed else { return Pair(receiverCont, true) }
+                    if !delivered, let cont = state.slot.takeWaiter() {
                         _ = deliverySlot.store(element)
-                        receiverCont = cont
-                    case .wait, .none, .cancelled:
+                        receiverCont = consume cont
+                        delivered = true
+                    } else {
                         state.buffer.push(element, to: .back)
                     }
                 }
-                return (receiverCont, false)
+                return Pair(receiverCont, false)
             }
 
-            if let cont = action.cont {
+            if let cont = outcome.first.take() {
                 cont.resume(returning: Async.Channel<Element>.Unbounded.State.Receive.Signal.delivered)
             }
-            if action.closed { throw .closed }
+            if outcome.second { throw .closed }
         }
     }
 
@@ -146,7 +150,7 @@
                 state.close()
             }
 
-            switch action {
+            switch consume action {
             case .none:
                 break
             case .end(let cont):

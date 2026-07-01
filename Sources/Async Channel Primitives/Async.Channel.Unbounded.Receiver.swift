@@ -87,7 +87,7 @@
             }
 
             switch consume fastAction {
-            case .val(let element):
+            case .val(let element, _):
                 return element
             case .end:
                 return nil
@@ -106,12 +106,14 @@
             // Element delivery uses Ownership.Slot — continuation carries Signal only.
             let signal: Async.Channel<Element>.Unbounded.State.Receive.Signal = await withTaskCancellationHandler {
                 await unsafe withUnsafeContinuation { (raw: UnsafeContinuation<Async.Channel<Element>.Unbounded.State.Receive.Signal, Never>) in
-                    let continuation = unsafe Async.Continuation.Unsafe(raw)
+                    // Single continuation threaded through the step: `state.wait`
+                    // either stores it (wait path) or hands it back inside the
+                    // returned step, and `handleReceive` resumes it from there.
                     let action = storage.withLock { state in
-                        state.wait(continuation)
+                        state.wait(unsafe Async.Continuation.Unsafe(raw))
                     }
 
-                    Async.Channel<Element>.Unbounded.Storage.handleReceive(consume action, storage: storage, continuation: continuation)
+                    Async.Channel<Element>.Unbounded.Storage.handleReceive(consume action, storage: storage)
                 }
             } onCancel: {
                 // Extract continuation under lock, resume outside
@@ -119,8 +121,11 @@
                     state.stop()
                 }
 
-                if case .stop(let cont) = stopAction {
+                switch consume stopAction {
+                case .stop(let cont):
                     cont.resume(returning: .cancelled)
+                case .none:
+                    break
                 }
             }
 

@@ -63,23 +63,24 @@
         @usableFromInline
         static func handleReceive(
             _ action: consuming Async.Channel<Element>.Bounded.State.Receive.Action,
-            storage: Async.Channel<Element>.Bounded.Storage,
-            continuation: Async.Channel<Element>.Bounded.State.Receive.Continuation
+            storage: Async.Channel<Element>.Bounded.Storage
         ) {
+            // The receiver continuation rides inside the action (nil on the
+            // fast path, present on the slow path); it is resumed from here.
             switch consume action {
-            case .returnElement(let element, let resumeSender, let cancelled):
+            case .returnElement(let element, let resumeSender, let cancelled, let receiver):
                 if var cancelled {
                     while let c = cancelled.take(from: .front) {
                         c.resume(returning: .cancelled)
                     }
                 }
-                resumeSender?.resume(returning: nil)
+                if let resumeSender { resumeSender.resume(returning: nil) }
                 _ = storage.deliverySlot.store(element)
-                continuation.resume(returning: .delivered)
-            case .returnNil:
-                continuation.resume(returning: .closed)
-            case .rejectCancelled:
-                continuation.resume(returning: .cancelled)
+                if let receiver { receiver.resume(returning: .delivered) }
+            case .returnNil(let receiver):
+                if let receiver { receiver.resume(returning: .closed) }
+            case .rejectCancelled(let receiver):
+                if let receiver { receiver.resume(returning: .cancelled) }
             case .suspend:
                 break
             }
@@ -90,20 +91,21 @@
         @usableFromInline
         static func handleSend(
             _ action: consuming Async.Channel<Element>.Bounded.State.Send.Action,
-            storage: Async.Channel<Element>.Bounded.Storage,
-            continuation: Async.Channel<Element>.Bounded.State.Send.Continuation
+            storage: Async.Channel<Element>.Bounded.Storage
         ) {
+            // The sender continuation rides inside the action (except on the
+            // `.suspended` path, where it was stored in the sender queue).
             switch consume action {
-            case .deliverToReceiver(let receiverCont, let element):
+            case .deliverToReceiver(let receiverCont, let element, let sender):
                 _ = storage.deliverySlot.store(element)
                 receiverCont.resume(returning: Async.Channel<Element>.Bounded.State.Receive.Signal.delivered)
-                continuation.resume(returning: nil)
-            case .buffered:
-                continuation.resume(returning: nil)
-            case .rejectClosed:
-                continuation.resume(returning: .closed)
-            case .rejectCancelled:
-                continuation.resume(returning: .cancelled)
+                sender.resume(returning: nil)
+            case .buffered(let sender):
+                sender.resume(returning: nil)
+            case .rejectClosed(let sender):
+                sender.resume(returning: .closed)
+            case .rejectCancelled(let sender):
+                sender.resume(returning: .cancelled)
             case .suspended:
                 break
             }

@@ -47,13 +47,13 @@
                 }
 
                 switch consume fastAction {
-                case .returnElement(let element, let resumeSender, let cancelled):
+                case .returnElement(let element, let resumeSender, let cancelled, _):
                     if var cancelled {
                         while let c = cancelled.take(from: .front) {
                             c.resume(returning: .cancelled)
                         }
                     }
-                    resumeSender?.resume(returning: nil)
+                    if let resumeSender { resumeSender.resume(returning: nil) }
                     return element
                 case .returnNil:
                     return nil
@@ -66,17 +66,19 @@
                 // Slow path: need to suspend
                 let signal: Async.Channel<Element>.Bounded.State.Receive.Signal = await withTaskCancellationHandler {
                     await unsafe withUnsafeContinuation { (raw: UnsafeContinuation<Async.Channel<Element>.Bounded.State.Receive.Signal, Never>) in
-                        let continuation = unsafe Async.Continuation.Unsafe(raw)
+                        // Single continuation threaded through the action (see the
+                        // Receiver.receive() note): stored on the suspend path,
+                        // handed back and resumed by handleReceive otherwise.
                         let action = storage.withLock { state in
-                            state.suspend(continuation: continuation)
+                            state.suspend(continuation: unsafe Async.Continuation.Unsafe(raw))
                         }
-                        Async.Channel<Element>.Bounded.Storage.handleReceive(consume action, storage: storage, continuation: continuation)
+                        Async.Channel<Element>.Bounded.Storage.handleReceive(consume action, storage: storage)
                     }
                 } onCancel: {
                     let action = storage.withLock { state in
                         state.cancel()
                     }
-                    switch action {
+                    switch consume action {
                     case .resumeWithCancellation(let continuation):
                         continuation.resume(returning: .cancelled)
                     case .none:

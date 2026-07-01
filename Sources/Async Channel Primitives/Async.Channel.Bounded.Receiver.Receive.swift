@@ -44,7 +44,7 @@
                 }
 
                 switch consume action {
-                case .returnElement(let element, let resumeSender, var cancelled):
+                case .returnElement(let element, let resumeSender, var cancelled, _):
                     // Resume cancelled senders first (minimizes stuck time)
                     while let c = cancelled?.take(from: .front) {
                         c.resume(returning: .cancelled)

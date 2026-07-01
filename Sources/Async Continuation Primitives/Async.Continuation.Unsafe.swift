@@ -31,8 +31,17 @@
         /// to every consumer.
         // SAFETY: Encapsulates unsafe internals behind a safe API; see
         // SAFETY: [MEM-SAFE-024] for the absorber-pattern taxonomy.
+        //
+        // `~Copyable` mirrors Swift 6.4's `Continuation` (SE-0528, "Noncopyable
+        // continuation"): a continuation is a single-use resource, so the type
+        // prevents accidental copies and `resume` consumes it. On the current 6.3.3
+        // build toolchain the stdlib `Continuation` is unavailable (`@available(6.4)`
+        // + `$BuiltinContinuationNonCopyableSuccess`), so this wraps the still-Copyable
+        // `UnsafeContinuation` internally while presenting the 6.4-aligned surface.
+        // Unlike the checked `Continuation`, the `Unsafe` variant carries no deinit
+        // trap — the caller guarantees exactly-once resumption.
         @safe
-        public struct Unsafe: Sendable {
+        public struct Unsafe: ~Copyable, @unchecked Sendable {
             @usableFromInline
             let _base: UnsafeContinuation<T, Never>
 
@@ -45,7 +54,7 @@
 
     extension Async.Continuation.Unsafe {
         @inlinable
-        public func resume(returning value: consuming T) {
+        public consuming func resume(returning value: consuming sending T) {
             unsafe _base.resume(returning: value)
         }
     }

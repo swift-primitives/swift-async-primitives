@@ -77,8 +77,10 @@
     // MARK: - Sender
 
     extension Async.Channel.Bounded.State where Element: ~Copyable {
+        // `~Copyable`: stores a `Send.Continuation` (now `~Copyable`), so the
+        // container that owns it must be single-use too.
         @usableFromInline
-        struct Sender: Sendable {
+        struct Sender: ~Copyable, Sendable {
             @usableFromInline
             let slot: Ownership.Slot<Element>
             @usableFromInline
@@ -89,7 +91,7 @@
             @usableFromInline
             init(
                 slot: Ownership.Slot<Element>,
-                continuation: Send.Continuation,
+                continuation: consuming Send.Continuation,
                 flag: Async.Waiter.Flag
             ) {
                 self.slot = slot
@@ -102,13 +104,14 @@
     // MARK: - Receiver
 
     extension Async.Channel.Bounded.State where Element: ~Copyable {
+        // `~Copyable`: stores a `Receive.Continuation` (now `~Copyable`).
         @usableFromInline
-        struct Receiver: Sendable {
+        struct Receiver: ~Copyable, Sendable {
             @usableFromInline
             let continuation: Receive.Continuation
 
             @usableFromInline
-            init(continuation: Receive.Continuation) {
+            init(continuation: consuming Receive.Continuation) {
                 self.continuation = continuation
             }
         }
@@ -130,7 +133,7 @@
             while let sender = senders.take(from: .front) {
                 if sender.flag.isFlagged {
                     if cancelled == nil { cancelled = Deque<Column.Ring<Send.Continuation>>() }
-                    cancelled!.push(sender.continuation, to: .back)
+                    cancelled?.push(sender.continuation, to: .back)
                     continue
                 }
                 return sender
@@ -177,19 +180,21 @@
             @usableFromInline
             enum Action: ~Copyable {
                 /// Deliver the element directly to a waiting receiver.
-                case deliverToReceiver(Receive.Continuation, Element)
+                /// `sender`: the suspending sender's continuation, handed back to
+                /// be resumed outside the lock.
+                case deliverToReceiver(Receive.Continuation, Element, sender: Send.Continuation)
 
                 /// Element was buffered successfully.
-                case buffered
+                case buffered(sender: Send.Continuation)
 
                 /// Continuation stored, sender is now suspended.
                 case suspended
 
                 /// Channel is closed, reject the send.
-                case rejectClosed
+                case rejectClosed(sender: Send.Continuation)
 
                 /// Sender was already cancelled before suspension.
-                case rejectCancelled
+                case rejectCancelled(sender: Send.Continuation)
             }
 
         }
@@ -203,9 +208,10 @@
         mutating func send(_ element: inout Element?) -> Send.Decision {
             switch status {
             case .open:
-                // If a receiver is waiting, deliver directly
-                if let receiver = receiver {
-                    self.receiver = nil
+                // If a receiver is waiting, deliver directly.
+                // Move the receiver out of storage before consuming its
+                // continuation (the continuation is now `~Copyable`).
+                if let receiver = self.receiver.take() {
                     return .deliverToReceiver(receiver.continuation, element.take()!)
                 }
 
@@ -232,34 +238,36 @@
         mutating func suspend(
             flag: Async.Waiter.Flag,
             slot: Ownership.Slot<Element>,
-            continuation: Send.Continuation
+            continuation: consuming Send.Continuation
         ) -> Send.Action {
             // Pre-registration check: cancellation arrived before suspension
             if flag.cancelled {
-                return .rejectCancelled
+                return .rejectCancelled(sender: continuation)
             }
 
             switch status {
             case .open:
                 // Double-check: receiver might have arrived
-                if let receiver = receiver {
-                    self.receiver = nil
+                if let receiver = self.receiver.take() {
                     let element = slot.take(__unchecked: ())
-                    return .deliverToReceiver(receiver.continuation, element)
+                    return .deliverToReceiver(receiver.continuation, element, sender: continuation)
                 }
 
                 // Double-check: space might be available
                 if buffer.count < capacity {
                     buffer.push(slot.take(__unchecked: ()), to: .back)
-                    return .buffered
+                    return .buffered(sender: continuation)
                 }
 
-                // Enqueue waiter — flag shared with onCancel handler
+                // Enqueue waiter — flag shared with onCancel handler.
+                // The continuation is moved into the queued Sender here; the other
+                // paths hand it back inside the returned action for the caller to
+                // resume outside the lock.
                 senders.push(Sender(slot: slot, continuation: continuation, flag: flag), to: .back)
                 return .suspended
 
             case .closed, .finished:
-                return .rejectClosed
+                return .rejectClosed(sender: continuation)
             }
         }
 
@@ -313,24 +321,29 @@
                 /// `cancelled`: continuations of cancelled senders skipped during pop.
                 /// Nil when no cancellations occurred (the common case), avoiding
                 /// a per-receive Deque heap allocation.
+                /// `receiver`: the suspending receiver's continuation on the slow
+                /// path (nil on the fast path, which has no continuation), handed
+                /// back to be resumed outside the lock.
                 case returnElement(
                     Element,
                     resumeSender: Send.Continuation?,
-                    cancelled: Deque<Column.Ring<Send.Continuation>>?
+                    cancelled: Deque<Column.Ring<Send.Continuation>>?,
+                    receiver: Receive.Continuation?
                 )
 
                 /// Receiver must suspend and wait.
                 case suspend
 
                 /// Channel is closed and drained.
-                case returnNil
+                case returnNil(receiver: Receive.Continuation?)
 
                 /// Receiver was already cancelled before suspension.
-                case rejectCancelled
+                case rejectCancelled(receiver: Receive.Continuation?)
             }
 
+            // `~Copyable`: `.resumeWithCancellation` carries a `Receive.Continuation`.
             @usableFromInline
-            enum Cancel: Sendable {
+            enum Cancel: ~Copyable, Sendable {
                 case resumeWithCancellation(Receive.Continuation)
                 case none
             }
@@ -352,14 +365,14 @@
                     // Wake up a waiting sender if any (skipping cancelled)
                     if let sender = next(collectingCancelledInto: &cancelled) {
                         buffer.push(sender.slot.take(__unchecked: ()), to: .back)
-                        return .returnElement(element, resumeSender: sender.continuation, cancelled: cancelled)
+                        return .returnElement(element, resumeSender: sender.continuation, cancelled: cancelled, receiver: nil)
                     }
-                    return .returnElement(element, resumeSender: nil, cancelled: cancelled)
+                    return .returnElement(element, resumeSender: nil, cancelled: cancelled, receiver: nil)
                 }
 
                 // If there are waiting senders, take directly from them (skipping cancelled)
                 if let sender = next(collectingCancelledInto: &cancelled) {
-                    return .returnElement(sender.slot.take(__unchecked: ()), resumeSender: sender.continuation, cancelled: cancelled)
+                    return .returnElement(sender.slot.take(__unchecked: ()), resumeSender: sender.continuation, cancelled: cancelled, receiver: nil)
                 }
 
                 // Nothing available, would need to suspend
@@ -370,25 +383,25 @@
                     if buffer.isEmpty {
                         status = .finished
                     }
-                    return .returnElement(element, resumeSender: nil, cancelled: nil)
+                    return .returnElement(element, resumeSender: nil, cancelled: nil, receiver: nil)
                 }
                 status = .finished
-                return .returnNil
+                return .returnNil(receiver: nil)
 
             case .finished:
-                return .returnNil
+                return .returnNil(receiver: nil)
             }
         }
 
         /// Register a receiver that will suspend.
         @usableFromInline
         mutating func suspend(
-            continuation: Receive.Continuation
+            continuation: consuming Receive.Continuation
         ) -> Receive.Action {
             // Check if already cancelled
             if cancelledReceiver {
                 cancelledReceiver = false
-                return .rejectCancelled
+                return .rejectCancelled(receiver: continuation)
             }
 
             switch status {
@@ -399,17 +412,20 @@
                 // (inside `next` — the inout-collection shape, [MEM-OWN-017]).
                 var cancelled: Deque<Column.Ring<Send.Continuation>>? = nil
 
-                // Double-check: element might be available
+                // Double-check: element might be available.
+                // The race paths hand the continuation back inside the action so
+                // the caller resumes it outside the lock; the store path below
+                // moves it into the stored Receiver instead.
                 if let element = buffer.take(from: .front) {
                     if let sender = next(collectingCancelledInto: &cancelled) {
                         buffer.push(sender.slot.take(__unchecked: ()), to: .back)
-                        return .returnElement(element, resumeSender: sender.continuation, cancelled: cancelled)
+                        return .returnElement(element, resumeSender: sender.continuation, cancelled: cancelled, receiver: continuation)
                     }
-                    return .returnElement(element, resumeSender: nil, cancelled: cancelled)
+                    return .returnElement(element, resumeSender: nil, cancelled: cancelled, receiver: continuation)
                 }
 
                 if let sender = next(collectingCancelledInto: &cancelled) {
-                    return .returnElement(sender.slot.take(__unchecked: ()), resumeSender: sender.continuation, cancelled: cancelled)
+                    return .returnElement(sender.slot.take(__unchecked: ()), resumeSender: sender.continuation, cancelled: cancelled, receiver: continuation)
                 }
 
                 // Store receiver
@@ -421,13 +437,13 @@
                     if buffer.isEmpty {
                         status = .finished
                     }
-                    return .returnElement(element, resumeSender: nil, cancelled: nil)
+                    return .returnElement(element, resumeSender: nil, cancelled: nil, receiver: continuation)
                 }
                 status = .finished
-                return .returnNil
+                return .returnNil(receiver: continuation)
 
             case .finished:
-                return .returnNil
+                return .returnNil(receiver: continuation)
             }
         }
 
@@ -436,8 +452,7 @@
         mutating func cancel() -> Receive.Cancel {
             switch status {
             case .open:
-                if let receiver = receiver {
-                    self.receiver = nil
+                if let receiver = self.receiver.take() {
                     return .resumeWithCancellation(receiver.continuation)
                 }
                 // Receiver not suspended yet - mark as cancelled
@@ -455,14 +470,16 @@
     extension Async.Channel.Bounded.State where Element: ~Copyable {
         @usableFromInline
         struct Close: ~Copyable, Sendable {
+            // `var` (not `let`) so the caller can `take()` the continuation out
+            // to resume it — a `~Copyable` value cannot be resumed in place.
             @usableFromInline
-            let receiverToResume: Receive.Continuation?
+            var receiverToResume: Receive.Continuation?
             @usableFromInline
             var sendersToCancel: Deque<Column.Ring<Send.Continuation>>
 
             @usableFromInline
             init(
-                receiverToResume: Receive.Continuation?,
+                receiverToResume: consuming Receive.Continuation?,
                 sendersToCancel: consuming Deque<Column.Ring<Send.Continuation>>
             ) {
                 self.receiverToResume = receiverToResume
@@ -482,8 +499,7 @@
 
                 // If buffer is empty and receiver is waiting, resume with nil
                 if buffer.isEmpty {
-                    if let receiver = receiver {
-                        self.receiver = nil
+                    if let receiver = self.receiver.take() {
                         status = .finished
                         return Close(
                             receiverToResume: receiver.continuation,

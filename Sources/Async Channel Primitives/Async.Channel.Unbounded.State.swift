@@ -69,11 +69,45 @@
     // MARK: - Slot
 
     extension Async.Channel.Unbounded.State where Element: ~Copyable {
+        // `~Copyable`: `.wait` carries a `Receive.Continuation` (now `~Copyable`).
         @usableFromInline
-        enum Slot: Sendable {
+        enum Slot: ~Copyable, Sendable {
             case none
             case wait(Receive.Continuation)
             case cancelled
+        }
+    }
+
+    extension Async.Channel.Unbounded.State.Slot where Element: ~Copyable {
+        /// Whether the slot is `.cancelled`. Borrows (does not consume) `self` —
+        /// `if case .cancelled = slot` would consume the `~Copyable` enum.
+        @usableFromInline
+        var isCancelled: Bool { switch self { case .cancelled: true; default: false } }
+
+        /// Whether the slot is `.none`. Borrowing discriminator check.
+        @usableFromInline
+        var isNone: Bool { switch self { case .none: true; default: false } }
+
+        /// Moves the suspended continuation out of a `.wait` slot, resetting the
+        /// slot to `.none`; `.none` and `.cancelled` are left unchanged.
+        ///
+        /// The `swap` is load-bearing: a `~Copyable` enum stored in a property of
+        /// `self` cannot be extracted via `switch consume self.slot` because Swift
+        /// forbids partially reinitializing `self` after a consume. Swapping the
+        /// slot out into a local first sidesteps that restriction.
+        @usableFromInline
+        mutating func takeWaiter() -> Async.Channel<Element>.Unbounded.State.Receive.Continuation? {
+            var taken = Self.none
+            swap(&self, &taken)
+            switch consume taken {
+            case .wait(let cont):
+                return cont
+            case .none:
+                return nil
+            case .cancelled:
+                self = .cancelled
+                return nil
+            }
         }
     }
 
@@ -113,14 +147,11 @@
         mutating func send(_ element: inout Element?) -> Send.Action {
             switch status {
             case .open:
-                switch self.slot {
-                case .wait(let cont):
-                    self.slot = .none
+                if let cont = slot.takeWaiter() {
                     return .give(cont, element.take()!)
-                case .none, .cancelled:
-                    buffer.push(element.take()!, to: .back)
-                    return .keep
                 }
+                buffer.push(element.take()!, to: .back)
+                return .keep
             case .closed, .finished:
                 return .shut
             }
@@ -149,16 +180,21 @@
             @usableFromInline
             typealias Continuation = Async.Continuation<Signal>.Unsafe
 
+            // `Step` is shared by the fast path `receive()` (no continuation) and
+            // the slow path `wait(_:)` (has one), so the handed-back receiver
+            // continuation is optional. It is resumed from `handleReceive`; the
+            // `.wait` case stores the continuation in the slot instead.
             @usableFromInline
             enum Step: ~Copyable {
-                case val(Element)
-                case end
+                case val(Element, receiver: Receive.Continuation?)
+                case end(receiver: Receive.Continuation?)
                 case wait
-                case cancelled
+                case cancelled(receiver: Receive.Continuation?)
             }
 
+            // `~Copyable`: `.stop` carries a `Continuation` (now `~Copyable`).
             @usableFromInline
-            enum Stop: Sendable {
+            enum Stop: ~Copyable, Sendable {
                 case none
                 case stop(Continuation)
             }
@@ -174,35 +210,32 @@
         @usableFromInline
         mutating func receive() -> Receive.Step {
             if let element = buffer.take(from: .front) {
-                return .val(element)
+                return .val(element, receiver: nil)
             }
             if isClosed {
-                return .end
+                return .end(receiver: nil)
             }
             return .wait
         }
 
         /// Register a receiver that will suspend.
         @usableFromInline
-        mutating func wait(_ cont: Receive.Continuation) -> Receive.Step {
-            if case .cancelled = slot {
+        mutating func wait(_ cont: consuming Receive.Continuation) -> Receive.Step {
+            if slot.isCancelled {
                 slot = .none
-                return .cancelled
+                return .cancelled(receiver: cont)
             }
 
             precondition(
-                {
-                    if case .none = slot { return true }
-                    return false
-                }(),
+                slot.isNone,
                 "Single-suspended-receiver invariant violated"
             )
 
             if let element = buffer.take(from: .front) {
-                return .val(element)
+                return .val(element, receiver: cont)
             }
             if isClosed {
-                return .end
+                return .end(receiver: cont)
             }
 
             slot = .wait(cont)
@@ -212,24 +245,22 @@
         /// Handle receiver cancellation.
         @usableFromInline
         mutating func stop() -> Receive.Stop {
-            switch slot {
-            case .wait(let cont):
-                slot = .none
+            if let cont = slot.takeWaiter() {
                 return .stop(cont)
-            case .none:
-                slot = .cancelled
-                return .none
-            case .cancelled:
-                return .none
             }
+            // Slot was `.none` or `.cancelled` (takeWaiter left it unchanged);
+            // either way it becomes `.cancelled` to reject a later `wait`.
+            slot = .cancelled
+            return .none
         }
     }
 
     // MARK: - Close
 
     extension Async.Channel.Unbounded.State where Element: ~Copyable {
+        // `~Copyable`: `.end` carries a `Receive.Continuation` (now `~Copyable`).
         @usableFromInline
-        enum Close: Sendable {
+        enum Close: ~Copyable, Sendable {
             case none
             case end(Receive.Continuation)
         }
@@ -242,13 +273,10 @@
 
             guard buffer.isEmpty else { return .none }
 
-            switch slot {
-            case .wait(let cont):
-                slot = .none
+            if let cont = slot.takeWaiter() {
                 return .end(cont)
-            case .none, .cancelled:
-                return .none
             }
+            return .none
         }
     }
 

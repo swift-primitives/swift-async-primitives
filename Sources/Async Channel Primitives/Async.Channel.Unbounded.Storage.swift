@@ -44,7 +44,7 @@
                     state.close()
                 }
 
-                switch action {
+                switch consume action {
                 case .none:
                     break
                 case .end(let cont):
@@ -71,19 +71,21 @@
         @usableFromInline
         static func handleReceive(
             _ action: consuming Async.Channel<Element>.Unbounded.State.Receive.Step,
-            storage: Async.Channel<Element>.Unbounded.Storage,
-            continuation: Async.Channel<Element>.Unbounded.State.Receive.Continuation
+            storage: Async.Channel<Element>.Unbounded.Storage
         ) {
+            // The receiver continuation rides inside the step (nil on the fast
+            // path, present on the slow path); it is resumed from here. The
+            // `.wait` case stored it in the slot, so nothing to resume.
             switch consume action {
-            case .val(let element):
+            case .val(let element, let receiver):
                 _ = storage.deliverySlot.store(element)
-                continuation.resume(returning: .delivered)
-            case .end:
-                continuation.resume(returning: .closed)
+                if let receiver { receiver.resume(returning: .delivered) }
+            case .end(let receiver):
+                if let receiver { receiver.resume(returning: .closed) }
             case .wait:
                 break
-            case .cancelled:
-                continuation.resume(returning: .cancelled)
+            case .cancelled(let receiver):
+                if let receiver { receiver.resume(returning: .cancelled) }
             }
         }
     }

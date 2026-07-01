@@ -107,8 +107,11 @@
                     state.close()
                 }
 
-                // Resume receiver with nil (channel closed) - outside lock
-                closeAction.receiverToResume?.resume(returning: .closed)
+                // Resume receiver with nil (channel closed) - outside lock.
+                // Move the continuation out before resuming (it is `~Copyable`).
+                if let receiver = closeAction.receiverToResume.take() {
+                    receiver.resume(returning: .closed)
+                }
 
                 // Cancel all waiting senders - outside lock
                 while let continuation = closeAction.sendersToCancel.take(from: .front) {
@@ -167,12 +170,14 @@
 
             let error: Async.Channel<Element>.Error? = await withTaskCancellationHandler {
                 await unsafe withUnsafeContinuation { (raw: UnsafeContinuation<Async.Channel<Element>.Error?, Never>) in
-                    let continuation = unsafe Async.Continuation.Unsafe(raw)
+                    // Single continuation threaded through the action: `state.suspend`
+                    // either enqueues it (suspended case) or hands it back inside
+                    // the returned action, and `handleSend` resumes it from there.
                     let action = handle.storage.withLock { state in
-                        state.suspend(flag: flag, slot: slot, continuation: continuation)
+                        state.suspend(flag: flag, slot: slot, continuation: unsafe Async.Continuation.Unsafe(raw))
                     }
 
-                    Async.Channel<Element>.Bounded.Storage.handleSend(consume action, storage: handle.storage, continuation: continuation)
+                    Async.Channel<Element>.Bounded.Storage.handleSend(consume action, storage: handle.storage)
                 }
             } onCancel: {
                 if flag.cancel() {
@@ -230,8 +235,11 @@
                 state.close()
             }
 
-            // Resume receiver with nil (channel closed) - outside lock
-            closeAction.receiverToResume?.resume(returning: .closed)
+            // Resume receiver with nil (channel closed) - outside lock.
+            // Move the continuation out before resuming (it is `~Copyable`).
+            if let receiver = closeAction.receiverToResume.take() {
+                receiver.resume(returning: .closed)
+            }
 
             // Cancel all waiting senders - outside lock
             while let continuation = closeAction.sendersToCancel.take(from: .front) {
