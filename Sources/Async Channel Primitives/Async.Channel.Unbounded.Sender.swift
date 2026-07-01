@@ -118,7 +118,7 @@
                 var delivered = false
                 for element in batch {
                     guard !state.isClosed else { return Pair(receiverCont, true) }
-                    if !delivered, let cont = state.slot.takeWaiter() {
+                    if !delivered, let cont = state.waiter.take() {
                         _ = deliverySlot.store(element)
                         receiverCont = consume cont
                         delivered = true

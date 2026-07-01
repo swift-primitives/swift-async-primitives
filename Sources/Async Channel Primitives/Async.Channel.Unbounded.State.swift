@@ -17,6 +17,7 @@
     public import Column_Primitives
     public import Buffer_Ring_Primitive
     public import Storage_Contiguous_Primitives
+    public import Ownership_Primitives
     import Memory_Heap_Primitives
     import Memory_Allocator_Primitive
     import Buffer_Primitive
@@ -35,8 +36,16 @@
             @usableFromInline
             var buffer: Deque<Column.Ring<Element>>
 
+            /// The suspended receiver's continuation, or `nil` when none is
+            /// waiting. Mirrors the bounded channel's flat representation so
+            /// extraction is the stdlib `waiter.take()` — no slot enum, no helper.
             @usableFromInline
-            var slot: Slot
+            var waiter: Receive.Continuation?
+
+            /// Set when the receiver cancelled before a value arrived; rejects a
+            /// later `wait`. Mutually exclusive with a non-nil `waiter`.
+            @usableFromInline
+            var cancelledReceiver: Bool
 
             @usableFromInline
             var status: Status
@@ -44,7 +53,8 @@
             @usableFromInline
             init() {
                 self.buffer = Deque()
-                self.slot = .none
+                self.waiter = nil
+                self.cancelledReceiver = false
                 self.status = .open
             }
         }
@@ -63,51 +73,6 @@
 
             /// Channel is finished - no more elements, fully drained.
             case finished
-        }
-    }
-
-    // MARK: - Slot
-
-    extension Async.Channel.Unbounded.State where Element: ~Copyable {
-        // `~Copyable`: `.wait` carries a `Receive.Continuation` (now `~Copyable`).
-        @usableFromInline
-        enum Slot: ~Copyable, Sendable {
-            case none
-            case wait(Receive.Continuation)
-            case cancelled
-        }
-    }
-
-    extension Async.Channel.Unbounded.State.Slot where Element: ~Copyable {
-        /// Whether the slot is `.cancelled`. Borrows (does not consume) `self` —
-        /// `if case .cancelled = slot` would consume the `~Copyable` enum.
-        @usableFromInline
-        var isCancelled: Bool { switch self { case .cancelled: true; default: false } }
-
-        /// Whether the slot is `.none`. Borrowing discriminator check.
-        @usableFromInline
-        var isNone: Bool { switch self { case .none: true; default: false } }
-
-        /// Moves the suspended continuation out of a `.wait` slot, resetting the
-        /// slot to `.none`; `.none` and `.cancelled` are left unchanged.
-        ///
-        /// The `swap` is load-bearing: a `~Copyable` enum stored in a property of
-        /// `self` cannot be extracted via `switch consume self.slot` because Swift
-        /// forbids partially reinitializing `self` after a consume. Swapping the
-        /// slot out into a local first sidesteps that restriction.
-        @usableFromInline
-        mutating func takeWaiter() -> Async.Channel<Element>.Unbounded.State.Receive.Continuation? {
-            var taken = Self.none
-            swap(&self, &taken)
-            switch consume taken {
-            case .wait(let cont):
-                return cont
-            case .none:
-                return nil
-            case .cancelled:
-                self = .cancelled
-                return nil
-            }
         }
     }
 
@@ -147,7 +112,7 @@
         mutating func send(_ element: inout Element?) -> Send.Action {
             switch status {
             case .open:
-                if let cont = slot.takeWaiter() {
+                if let cont = waiter.take() {
                     return .give(cont, element.take()!)
                 }
                 buffer.push(element.take()!, to: .back)
@@ -221,13 +186,13 @@
         /// Register a receiver that will suspend.
         @usableFromInline
         mutating func wait(_ cont: consuming Receive.Continuation) -> Receive.Step {
-            if slot.isCancelled {
-                slot = .none
+            if cancelledReceiver {
+                cancelledReceiver = false
                 return .cancelled(receiver: cont)
             }
 
             precondition(
-                slot.isNone,
+                waiter == nil,
                 "Single-suspended-receiver invariant violated"
             )
 
@@ -238,19 +203,18 @@
                 return .end(receiver: cont)
             }
 
-            slot = .wait(cont)
+            waiter = consume cont
             return .wait
         }
 
         /// Handle receiver cancellation.
         @usableFromInline
         mutating func stop() -> Receive.Stop {
-            if let cont = slot.takeWaiter() {
+            if let cont = waiter.take() {
                 return .stop(cont)
             }
-            // Slot was `.none` or `.cancelled` (takeWaiter left it unchanged);
-            // either way it becomes `.cancelled` to reject a later `wait`.
-            slot = .cancelled
+            // No waiter — mark cancelled so a later `wait` is rejected.
+            cancelledReceiver = true
             return .none
         }
     }
@@ -273,7 +237,7 @@
 
             guard buffer.isEmpty else { return .none }
 
-            if let cont = slot.takeWaiter() {
+            if let cont = waiter.take() {
                 return .end(cont)
             }
             return .none
