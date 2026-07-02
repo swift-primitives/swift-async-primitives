@@ -18,8 +18,15 @@ extension Async.Semaphore {
     /// Internal synchronized state for the semaphore.
     ///
     /// ~Copyable because it contains the waiter queue which is ~Copyable.
+    ///
+    /// `package` (not internal): the Windows 6.3.3+Asserts toolchain's
+    /// MoveOnlyAddressChecker asserts
+    /// `nominal->getFormalAccessScope(...).isPublicOrPackage()` when the
+    /// closure in `pumpWaiters` partially mutates this noncopyable nominal
+    /// under -enable-testing (MoveOnlyAddressCheckerUtils.cpp:1829).
+    /// Package visibility satisfies the checker; behavior is unchanged.
     @usableFromInline
-    struct State: ~Copyable {
+    package struct State: ~Copyable {
         /// Maximum number of concurrent permits.
         @usableFromInline
         let capacity: Int
