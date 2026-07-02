@@ -246,7 +246,12 @@
 
                 var reapedCount = 0
                 var resumptions = Async.Waiter.Queue.Drain<Async.Waiter.Resumption>()
-                flagged.drain { flaggedEntry in
+                // A while-let dequeue rather than drain { }: the Windows
+                // 6.3.3+Asserts toolchain's MoveOnlyAddressChecker asserts
+                // (MoveOnlyAddressCheckerUtils.cpp:1829) checking this body
+                // as a nested closure under -enable-testing; the loop form
+                // avoids the closure function entirely. Semantics identical.
+                while let flaggedEntry = flagged.dequeue() {
                     reapedCount += 1
                     let split = flaggedEntry.split()
 
