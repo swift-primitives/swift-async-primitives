@@ -253,30 +253,35 @@
                 // avoids the closure function entirely. Semantics identical.
                 while let flaggedEntry = flagged.dequeue() {
                     reapedCount += 1
-                    let split = flaggedEntry.split()
-
-                    // Apply precedence: shutdown > cancelled > timeout
-                    let outcome: Outcome = Async.Precedence.resolve(
-                        shutdown: currentLifecycle != .open,
-                        cancelled: split.reason == .cancelled,
-                        timedOut: split.reason == .timedOut,
-                        success: .success(()),
-                        onShutdown: .failure(.shutdown),
-                        onCancelled: .failure(.cancelled),
-                        onTimeout: .failure(.timeout)
-                    )
-
-                    // Track metrics for flagged waiters
-                    switch outcome {
-                    case .failure(.cancelled):
-                        state.metrics.cancellations += 1
-                    case .failure(.timeout):
-                        state.metrics.timeouts += 1
-                    default:
-                        break
+                    // resumption(resolving:) consumes the flagged entry in
+                    // its defining module — see the Flagged extension for the
+                    // Windows MoveOnlyChecker rationale.
+                    let resumption = flaggedEntry.resumption { reason in
+                        // Apply precedence: shutdown > cancelled > timeout
+                        let outcome: Outcome = Async.Precedence.resolve(
+                            shutdown: currentLifecycle != .open,
+                            cancelled: reason == .cancelled,
+                            timedOut: reason == .timedOut,
+                            success: .success(()),
+                            onShutdown: .failure(.shutdown),
+                            onCancelled: .failure(.cancelled),
+                            onTimeout: .failure(.timeout)
+                        )
+                        // Track metrics for flagged waiters (inside the
+                        // resolve closure: Resumption is noncopyable, so the
+                        // helper cannot also return the outcome)
+                        switch outcome {
+                        case .failure(.cancelled):
+                            state.metrics.cancellations += 1
+                        case .failure(.timeout):
+                            state.metrics.timeouts += 1
+                        default:
+                            break
+                        }
+                        return outcome
                     }
 
-                    resumptions.enqueue(split.entry.resumption(with: outcome))
+                    resumptions.enqueue(resumption)
                 }
 
                 state.metrics.currentWaiters -= reapedCount

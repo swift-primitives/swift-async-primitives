@@ -60,28 +60,34 @@ extension Async.Semaphore {
             var skipped = Async.Waiter.Queue.Drain<Async.Waiter.Resumption>()
             flagged.drain { flaggedEntry in
                 flaggedCount += 1
-                let split = flaggedEntry.split()
-
-                let outcome: Outcome = Async.Precedence.resolve(
-                    shutdown: currentLifecycle != .open,
-                    cancelled: split.reason == .cancelled,
-                    timedOut: split.reason == .timedOut,
-                    success: .success(()),
-                    onShutdown: .failure(.shutdown),
-                    onCancelled: .failure(.cancelled),
-                    onTimeout: .failure(.timeout)
-                )
-
-                switch outcome {
-                case .failure(.cancelled):
-                    state.metrics.cancellations += 1
-                case .failure(.timeout):
-                    state.metrics.timeouts += 1
-                default:
-                    break
+                // resumption(resolving:) consumes the flagged entry in its
+                // defining module — see the Flagged extension for the
+                // Windows MoveOnlyChecker rationale.
+                let resumption = flaggedEntry.resumption { reason in
+                    let outcome: Outcome = Async.Precedence.resolve(
+                        shutdown: currentLifecycle != .open,
+                        cancelled: reason == .cancelled,
+                        timedOut: reason == .timedOut,
+                        success: .success(()),
+                        onShutdown: .failure(.shutdown),
+                        onCancelled: .failure(.cancelled),
+                        onTimeout: .failure(.timeout)
+                    )
+                    // Track metrics (inside the resolve closure: Resumption
+                    // is noncopyable, so the helper cannot also return the
+                    // outcome)
+                    switch outcome {
+                    case .failure(.cancelled):
+                        state.metrics.cancellations += 1
+                    case .failure(.timeout):
+                        state.metrics.timeouts += 1
+                    default:
+                        break
+                    }
+                    return outcome
                 }
 
-                skipped.enqueue(split.entry.resumption(with: outcome))
+                skipped.enqueue(resumption)
             }
             state.metrics.currentWaiters -= flaggedCount
 

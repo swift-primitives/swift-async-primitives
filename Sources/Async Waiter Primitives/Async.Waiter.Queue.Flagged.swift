@@ -58,3 +58,27 @@ extension Async.Waiter.Queue.Flagged {
         Split(reason: reason, entry: entry)
     }
 }
+
+extension Async.Waiter.Queue.Flagged {
+    /// Resolves the outcome from the flag reason and builds the resumption,
+    /// consuming self in one step.
+    ///
+    /// Deliberately NOT `@inlinable`, and deliberately here rather than at
+    /// the call site: the Windows 6.3.3+Asserts toolchain's
+    /// MoveOnlyAddressChecker asserts (MoveOnlyAddressCheckerUtils.cpp:1829)
+    /// when a CLIENT module partially consumes `Split`
+    /// (`split.entry.resumption(with:)`); performing the partial consume in
+    /// the defining module takes the checker's same-module path.
+    ///
+    /// - Parameter makeOutcome: Maps the flag reason to the waiter outcome.
+    ///   Metrics attribution belongs inside this closure (a tuple return is
+    ///   unavailable: `Resumption` is noncopyable and tuples cannot carry
+    ///   noncopyable elements).
+    /// - Returns: The resumption carrying the resolved outcome.
+    public consuming func resumption(
+        resolving makeOutcome: (Async.Waiter.Flag.Reason) -> Outcome
+    ) -> Async.Waiter.Resumption {
+        let split = self.split()
+        return split.entry.resumption(with: makeOutcome(split.reason))
+    }
+}
