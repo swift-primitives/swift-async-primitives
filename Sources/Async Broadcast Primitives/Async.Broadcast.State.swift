@@ -36,7 +36,7 @@
             var next: Next.Index = .init()
 
             /// Active subscribers keyed by ID, in subscription order.
-            var subscribers: Dictionary<Hash.Indexed<Column.Heap<Hash.Entry<UInt64, Subscriber>>>>.Ordered = .init()
+            var subscribers: Dictionary<UInt64, Subscriber>.Ordered = .init()
 
             /// Subscriber ID allocation.
             var subscriber: Subscriber.ID = .init()

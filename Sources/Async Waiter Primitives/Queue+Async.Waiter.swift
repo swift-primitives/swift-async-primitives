@@ -34,7 +34,7 @@ extension Queue_Primitives.Queue where S: ~Copyable {
     // TRACKING: Async.Waiter.Queue unification
     @inlinable
     public mutating func popEligible<Outcome: Sendable, Metadata: ~Copyable & Sendable>(
-        flaggedInto flagged: inout Queue_Primitives.Queue<Column.Ring<Async.Waiter.Queue.Flagged<Outcome, Metadata>>>
+        flaggedInto flagged: inout Queue_Primitives.Queue<Async.Waiter.Queue.Flagged<Outcome, Metadata>>
     ) -> S.Element? where S == Column.Ring<Async.Waiter.Entry<Outcome, Metadata>> {
         while !isEmpty {
             let entry = dequeue()!
@@ -63,9 +63,9 @@ extension Queue_Primitives.Queue where S: ~Copyable {
     // TRACKING: Async.Waiter.Queue unification
     @inlinable
     public mutating func reapFlagged<Outcome: Sendable, Metadata: ~Copyable & Sendable>(
-        into flagged: inout Queue_Primitives.Queue<Column.Ring<Async.Waiter.Queue.Flagged<Outcome, Metadata>>>
+        into flagged: inout Queue_Primitives.Queue<Async.Waiter.Queue.Flagged<Outcome, Metadata>>
     ) where S == Column.Ring<Async.Waiter.Entry<Outcome, Metadata>> {
-        var survivors = Queue_Primitives.Queue<Column.Ring<Async.Waiter.Entry<Outcome, Metadata>>>()
+        var survivors = Queue_Primitives.Queue<Async.Waiter.Entry<Outcome, Metadata>>()
 
         while !isEmpty {
             let entry = dequeue()!
@@ -128,7 +128,7 @@ extension Queue_Primitives.Queue where S: ~Copyable {
     // TRACKING: Async.Waiter.Queue unification
     @inlinable
     public mutating func popEligible<Outcome: Sendable, Metadata: ~Copyable & Sendable>(
-        flaggedInto flagged: inout Queue_Primitives.Queue<Column.Ring<Async.Waiter.Queue.Flagged<Outcome, Metadata>>>
+        flaggedInto flagged: inout Queue_Primitives.Queue<Async.Waiter.Queue.Flagged<Outcome, Metadata>>
     ) -> S.Element? where S == Column.Ring<Async.Waiter.Entry<Outcome, Metadata>>.Bounded {
         while !isEmpty {
             let entry = dequeue()!
@@ -157,9 +157,9 @@ extension Queue_Primitives.Queue where S: ~Copyable {
     // TRACKING: Async.Waiter.Queue unification
     @inlinable
     public mutating func reapFlagged<Outcome: Sendable, Metadata: ~Copyable & Sendable>(
-        into flagged: inout Queue_Primitives.Queue<Column.Ring<Async.Waiter.Queue.Flagged<Outcome, Metadata>>>
+        into flagged: inout Queue_Primitives.Queue<Async.Waiter.Queue.Flagged<Outcome, Metadata>>
     ) where S == Column.Ring<Async.Waiter.Entry<Outcome, Metadata>>.Bounded {
-        var survivors = Queue_Primitives.Queue<Column.Ring<Async.Waiter.Entry<Outcome, Metadata>>>()
+        var survivors = Queue_Primitives.Queue<Async.Waiter.Entry<Outcome, Metadata>>()
 
         while !isEmpty {
             let entry = dequeue()!

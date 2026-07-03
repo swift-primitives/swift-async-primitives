@@ -51,7 +51,7 @@
         /// On `send(_:)`, subscribers waiting in `next()` are resumed in
         /// **subscription order** — i.e., the order in which `subscribe()` was
         /// called for each subscription. Internally `state.subscribers` is a
-        /// `Dictionary<Hash.Indexed<Column.Heap<Hash.Entry<UInt64, Subscriber>>>>.Ordered`;
+        /// `Dictionary<UInt64, Subscriber>.Ordered`;
         /// iteration preserves insertion order, so the continuation-collection
         /// step runs through subscribers oldest-first, and `.resume(returning:)`
         /// is called on each in that order.

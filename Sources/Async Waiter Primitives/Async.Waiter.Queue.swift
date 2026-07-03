@@ -76,7 +76,7 @@ extension Async.Waiter.Queue {
     /// `Queue<Entry>.Fixed` dissolved into the column per the leg-5 ledger).
     /// Flag-aware operations (`popEligible`, `reapFlagged`) are provided as extensions.
     public typealias Bounded<Outcome: Sendable, Metadata: ~Copyable & Sendable> =
-        Queue_Primitives.Queue<Column.Ring<Async.Waiter.Entry<Outcome, Metadata>>.Bounded>
+        Queue_Primitives.Queue<Async.Waiter.Entry<Outcome, Metadata>>.Bounded
 
     /// An unbounded waiter queue with automatic growth.
     ///
@@ -84,11 +84,11 @@ extension Async.Waiter.Queue {
     /// withdrawn element-keyed `Queue<Entry>`). Flag-aware operations
     /// (`popEligible`, `reapFlagged`) are provided as extensions.
     public typealias Unbounded<Outcome: Sendable, Metadata: ~Copyable & Sendable> =
-        Queue_Primitives.Queue<Column.Ring<Async.Waiter.Entry<Outcome, Metadata>>>
+        Queue_Primitives.Queue<Async.Waiter.Entry<Outcome, Metadata>>
 
     /// A drainable collection of ~Copyable elements.
     ///
     /// Used to collect flagged entries from queue operations.
     /// Elements are consumed via `drain { }` or `dequeue()`.
-    public typealias Drain<Element: ~Copyable> = Queue_Primitives.Queue<Column.Ring<Element>>
+    public typealias Drain<Element: ~Copyable> = Queue_Primitives.Queue<Element>
 }
