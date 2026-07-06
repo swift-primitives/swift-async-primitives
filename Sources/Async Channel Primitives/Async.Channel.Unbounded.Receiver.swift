@@ -64,6 +64,10 @@
     // MARK: - Receive Operations
 
     extension Async.Channel.Unbounded.Receiver where Element: ~Copyable {
+        // swiftlint:disable:next workaround_marker_present
+        // WORKAROUND: @_optimize(none) — see Unbounded.Storage.handleReceive workaround comment.
+        // swift-linter:disable:next optimize suppression attribute
+        // REASON: deliberate crash-workaround per compiler-bug catalog §A19 ([ISSUE-008] disposition-1); remove when the SIL-optimizer fix ships.
         /// Receive the next element from the channel.
         ///
         /// Suspends if the buffer is empty until an element becomes available
@@ -75,9 +79,6 @@
         ///   isolation boundary — the receiver-side half of [MEM-SEND-010]
         ///   (proven additively in swift-memory-foreign-primitives/Experiments/foreign-recycle-channel).
         /// - Throws: `Async.Channel<Element>.Error.cancelled` if the task is cancelled.
-        // WORKAROUND: @_optimize(none) — see Unbounded.Storage.handleReceive workaround comment.
-        // swift-linter:disable:next optimize suppression attribute
-        // REASON: deliberate crash-workaround per compiler-bug catalog §A19 ([ISSUE-008] disposition-1); remove when the SIL-optimizer fix ships.
         @_optimize(none)
         @inlinable
         nonisolated(nonsending)
@@ -91,10 +92,13 @@
             switch consume fastAction {
             case .val(let element, _):
                 return element
+
             case .end:
                 return nil
+
             case .wait:
                 break  // Fall through to slow path
+
             case .cancelled:
                 throw .cancelled
             }
@@ -126,6 +130,7 @@
                 switch consume stopAction {
                 case .stop(let cont):
                     cont.resume(returning: .cancelled)
+
                 case .none:
                     break
                 }

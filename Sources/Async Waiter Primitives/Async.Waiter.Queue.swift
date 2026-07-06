@@ -9,14 +9,14 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import Queue_Primitives
-public import Column_Primitives
-public import Buffer_Ring_Primitive
-public import Buffer_Ring_Bounded_Primitive
-public import Storage_Contiguous_Primitives
-import Memory_Heap_Primitives
-import Memory_Allocator_Primitive
 import Buffer_Primitive
+public import Buffer_Ring_Bounded_Primitive
+public import Buffer_Ring_Primitive
+public import Column_Primitives
+import Memory_Allocator_Primitive
+import Memory_Heap_Primitives
+public import Queue_Primitives
+public import Storage_Contiguous_Primitives
 
 extension Async.Waiter {
     /// Namespace for waiter queue types.

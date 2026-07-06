@@ -141,23 +141,34 @@
 
         struct State: Sendable {
             /// Count of parties that have called `arrive()` and not yet been
-            /// cancelled or released. Decremented on cancellation; effectively
+            /// cancelled or released.
+            ///
+            /// Decremented on cancellation; effectively
             /// frozen once `released` is `true`.
             var arrived: Int = 0
             /// Count of parties that arrived and were then cancelled mid-await.
+            ///
             /// Reduces the effective party count: release condition is
             /// `arrived == parties - cancelled`.
             var cancelled: Int = 0
-            /// Async-form pending waiters keyed by per-arrival ID. Keyed (rather
+            /// Async-form pending waiters keyed by per-arrival ID.
+            ///
+            /// Keyed (rather
             /// than appended to a list) so cancellation can locate and remove
             /// the cancelled party's entry in O(1).
             var asyncWaiters: [UInt64: WaiterEntry] = [:]
-            /// Callback-form pending waiters. Callbacks have no Task to cancel,
+            /// Callback-form pending waiters.
+            ///
+            /// Callbacks have no Task to cancel,
             /// so a flat array (FIFO) is sufficient.
             var callbackWaiters: [@Sendable () -> Void] = []
-            /// Per-arrival ID counter for the async path. Monotonic; never reused.
+            /// Per-arrival ID counter for the async path.
+            ///
+            /// Monotonic; never reused.
             var nextID: UInt64 = 0
-            /// Whether the rendezvous has already released. Once `true`, subsequent
+            /// Whether the rendezvous has already released.
+            ///
+            /// Once `true`, subsequent
             /// `arrive()` calls return immediately.
             var released: Bool = false
         }
@@ -189,7 +200,9 @@
         }
 
         /// Count of parties that arrived and were subsequently cancelled
-        /// mid-await. Effective party count for the release condition is
+        /// mid-await.
+        ///
+        /// Effective party count for the release condition is
         /// `parties - cancelled`.
         ///
         /// This accessor is part of the public Shape A contract — consumers
@@ -248,19 +261,7 @@
 
                         state.arrived += 1
                         let needed = self.parties - state.cancelled
-                        if state.arrived >= needed {
-                            // We are the last; release everyone and ourselves.
-                            state.released = true
-                            let asyncWaiters = state.asyncWaiters
-                            let callbacks = state.callbackWaiters
-                            state.asyncWaiters = [:]
-                            state.callbackWaiters = []
-                            return .release(
-                                others: Array(asyncWaiters.values),
-                                callbacks: callbacks,
-                                mineOutcome: .success(())
-                            )
-                        } else {
+                        guard state.arrived >= needed else {
                             // Suspend: register self under a fresh ID.
                             let id = state.nextID
                             state.nextID += 1
@@ -270,12 +271,24 @@
                             )
                             return .suspended(id: id)
                         }
+                        // We are the last; release everyone and ourselves.
+                        state.released = true
+                        let asyncWaiters = state.asyncWaiters
+                        let callbacks = state.callbackWaiters
+                        state.asyncWaiters = [:]
+                        state.callbackWaiters = []
+                        return .release(
+                            others: Array(asyncWaiters.values),
+                            callbacks: callbacks,
+                            mineOutcome: .success(())
+                        )
                     }
 
                     // Side effects OUTSIDE lock.
                     switch action {
                     case .resumeImmediately(let outcome):
                         continuation.resume(returning: outcome)
+
                     case .release(let others, let callbacks, let mineOutcome):
                         for entry in others {
                             entry.continuation.resume(returning: .success(()))
@@ -284,6 +297,7 @@
                             cb()
                         }
                         continuation.resume(returning: mineOutcome)
+
                     case .suspended:
                         // Continuation stays suspended; cancellation handler or
                         // a peer's release will resume.
@@ -316,6 +330,7 @@
             switch outcome {
             case .success:
                 return
+
             case .failure(let error):
                 throw error
             }
@@ -343,8 +358,10 @@
                 case .releaseAndRun(let callbacks):
                     for cb in callbacks { cb() }
                     immediateCallback()
+
                 case .runImmediate:
                     immediateCallback()
+
                 case .suspended:
                     break
                 }
@@ -374,21 +391,20 @@
 
             state.arrived += 1
             let needed = parties - state.cancelled
-            if state.arrived >= needed {
-                // We are the last; release everyone (async + callback peers).
-                state.released = true
-                let asyncWaiters = state.asyncWaiters
-                let callbacks = state.callbackWaiters
-                state.asyncWaiters = [:]
-                state.callbackWaiters = []
-                for entry in asyncWaiters.values {
-                    entry.continuation.resume(returning: .success(()))
-                }
-                return .releaseAndRun(callbacks: callbacks)
-            } else {
+            guard state.arrived >= needed else {
                 state.callbackWaiters.append(callback)
                 return .suspended
             }
+            // We are the last; release everyone (async + callback peers).
+            state.released = true
+            let asyncWaiters = state.asyncWaiters
+            let callbacks = state.callbackWaiters
+            state.asyncWaiters = [:]
+            state.callbackWaiters = []
+            for entry in asyncWaiters.values {
+                entry.continuation.resume(returning: .success(()))
+            }
+            return .releaseAndRun(callbacks: callbacks)
         }
     }
 

@@ -208,8 +208,10 @@
             switch error {
             case .timeout:
                 try timeout()
+
             case .cancelled:
                 try cancel()
+
             case .failure:
                 // Never type - can't construct this case
                 fatalError("Cannot fail with Never error type")
@@ -230,6 +232,7 @@
             switch state {
             case .pending, .running:
                 return false
+
             case .completed, .timedOut, .cancelled, .failed:
                 return true
             }

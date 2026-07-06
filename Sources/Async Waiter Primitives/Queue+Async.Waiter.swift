@@ -9,18 +9,23 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import Queue_Primitives
-public import Column_Primitives
-public import Buffer_Ring_Primitive
-public import Buffer_Ring_Bounded_Primitive
-public import Storage_Contiguous_Primitives
-public import Memory_Heap_Primitives
-public import Memory_Allocator_Primitive
 public import Buffer_Primitive
+public import Buffer_Ring_Bounded_Primitive
+public import Buffer_Ring_Primitive
+public import Column_Primitives
+public import Memory_Allocator_Primitive
+public import Memory_Heap_Primitives
+public import Queue_Primitives
+public import Storage_Contiguous_Primitives
 
 // MARK: - Pop Eligible
 
 extension Queue_Primitives.Queue where S: ~Copyable {
+    // swiftlint:disable:next workaround_marker_present
+    // WORKAROUND: popEligible is a compound identifier [API-NAME-002]
+    // WHY: Property.Inout cannot express method-level `where ==` constraints
+    // WHEN TO REMOVE: When Swift supports constrained Property.Inout extensions with same-type requirements
+    // TRACKING: Async.Waiter.Queue unification
     /// Pops the first eligible (non-flagged) entry.
     ///
     /// Pops entries from the front until a non-flagged entry is found.
@@ -28,21 +33,16 @@ extension Queue_Primitives.Queue where S: ~Copyable {
     ///
     /// - Parameter flagged: Queue to collect flagged entries into.
     /// - Returns: The first eligible entry, or `nil` if none found.
-    // WORKAROUND: popEligible is a compound identifier [API-NAME-002]
-    // WHY: Property.Inout cannot express method-level `where ==` constraints
-    // WHEN TO REMOVE: When Swift supports constrained Property.Inout extensions with same-type requirements
-    // TRACKING: Async.Waiter.Queue unification
     @inlinable
     public mutating func popEligible<Outcome: Sendable, Metadata: ~Copyable & Sendable>(
         flaggedInto flagged: inout Queue_Primitives.Queue<Async.Waiter.Queue.Flagged<Outcome, Metadata>>
     ) -> S.Element? where S == Column.Ring<Async.Waiter.Entry<Outcome, Metadata>> {
         while !isEmpty {
-            let entry = dequeue()!
-            if let reason = entry.flag.reason {
-                flagged.enqueue(Async.Waiter.Queue.Flagged(reason: reason, entry: entry))
-            } else {
+            guard let entry = dequeue() else { break }
+            guard let reason = entry.flag.reason else {
                 return entry
             }
+            flagged.enqueue(Async.Waiter.Queue.Flagged(reason: reason, entry: entry))
         }
         return nil
     }
@@ -51,16 +51,17 @@ extension Queue_Primitives.Queue where S: ~Copyable {
 // MARK: - Reap Flagged
 
 extension Queue_Primitives.Queue where S: ~Copyable {
+    // swiftlint:disable:next workaround_marker_present
+    // WORKAROUND: reapFlagged is a compound identifier [API-NAME-002]
+    // WHY: Property.Inout cannot express method-level `where ==` constraints
+    // WHEN TO REMOVE: When Swift supports constrained Property.Inout extensions with same-type requirements
+    // TRACKING: Async.Waiter.Queue unification
     /// Reaps all flagged entries via drain+rebuild.
     ///
     /// Drains the queue, collecting flagged entries into `flagged` and
     /// re-enqueuing non-flagged entries back to the queue.
     ///
     /// - Parameter flagged: Queue to collect flagged entries into.
-    // WORKAROUND: reapFlagged is a compound identifier [API-NAME-002]
-    // WHY: Property.Inout cannot express method-level `where ==` constraints
-    // WHEN TO REMOVE: When Swift supports constrained Property.Inout extensions with same-type requirements
-    // TRACKING: Async.Waiter.Queue unification
     @inlinable
     public mutating func reapFlagged<Outcome: Sendable, Metadata: ~Copyable & Sendable>(
         into flagged: inout Queue_Primitives.Queue<Async.Waiter.Queue.Flagged<Outcome, Metadata>>
@@ -68,7 +69,7 @@ extension Queue_Primitives.Queue where S: ~Copyable {
         var survivors = Queue_Primitives.Queue<Async.Waiter.Entry<Outcome, Metadata>>()
 
         while !isEmpty {
-            let entry = dequeue()!
+            guard let entry = dequeue() else { break }
             if let reason = entry.flag.reason {
                 flagged.enqueue(Async.Waiter.Queue.Flagged(reason: reason, entry: entry))
             } else {
@@ -115,6 +116,11 @@ extension Queue_Primitives.Queue where S: ~Copyable {
 // MARK: - Pop Eligible
 
 extension Queue_Primitives.Queue where S: ~Copyable {
+    // swiftlint:disable:next workaround_marker_present
+    // WORKAROUND: popEligible is a compound identifier [API-NAME-002]
+    // WHY: Property.Inout cannot express method-level `where ==` constraints
+    // WHEN TO REMOVE: When Swift supports constrained Property.Inout extensions with same-type requirements
+    // TRACKING: Async.Waiter.Queue unification
     /// Pops the first eligible (non-flagged) entry.
     ///
     /// Pops entries from the front until a non-flagged entry is found.
@@ -122,21 +128,16 @@ extension Queue_Primitives.Queue where S: ~Copyable {
     ///
     /// - Parameter flagged: Queue to collect flagged entries into.
     /// - Returns: The first eligible entry, or `nil` if none found.
-    // WORKAROUND: popEligible is a compound identifier [API-NAME-002]
-    // WHY: Property.Inout cannot express method-level `where ==` constraints
-    // WHEN TO REMOVE: When Swift supports constrained Property.Inout extensions with same-type requirements
-    // TRACKING: Async.Waiter.Queue unification
     @inlinable
     public mutating func popEligible<Outcome: Sendable, Metadata: ~Copyable & Sendable>(
         flaggedInto flagged: inout Queue_Primitives.Queue<Async.Waiter.Queue.Flagged<Outcome, Metadata>>
     ) -> S.Element? where S == Column.Ring<Async.Waiter.Entry<Outcome, Metadata>>.Bounded {
         while !isEmpty {
-            let entry = dequeue()!
-            if let reason = entry.flag.reason {
-                flagged.enqueue(Async.Waiter.Queue.Flagged(reason: reason, entry: entry))
-            } else {
+            guard let entry = dequeue() else { break }
+            guard let reason = entry.flag.reason else {
                 return entry
             }
+            flagged.enqueue(Async.Waiter.Queue.Flagged(reason: reason, entry: entry))
         }
         return nil
     }
@@ -145,16 +146,17 @@ extension Queue_Primitives.Queue where S: ~Copyable {
 // MARK: - Reap Flagged
 
 extension Queue_Primitives.Queue where S: ~Copyable {
+    // swiftlint:disable:next workaround_marker_present
+    // WORKAROUND: reapFlagged is a compound identifier [API-NAME-002]
+    // WHY: Property.Inout cannot express method-level `where ==` constraints
+    // WHEN TO REMOVE: When Swift supports constrained Property.Inout extensions with same-type requirements
+    // TRACKING: Async.Waiter.Queue unification
     /// Reaps all flagged entries via drain+rebuild.
     ///
     /// Drains the queue, collecting flagged entries into `flagged` and
     /// re-pushing non-flagged entries back to the queue.
     ///
     /// - Parameter flagged: Queue to collect flagged entries into.
-    // WORKAROUND: reapFlagged is a compound identifier [API-NAME-002]
-    // WHY: Property.Inout cannot express method-level `where ==` constraints
-    // WHEN TO REMOVE: When Swift supports constrained Property.Inout extensions with same-type requirements
-    // TRACKING: Async.Waiter.Queue unification
     @inlinable
     public mutating func reapFlagged<Outcome: Sendable, Metadata: ~Copyable & Sendable>(
         into flagged: inout Queue_Primitives.Queue<Async.Waiter.Queue.Flagged<Outcome, Metadata>>
@@ -162,7 +164,7 @@ extension Queue_Primitives.Queue where S: ~Copyable {
         var survivors = Queue_Primitives.Queue<Async.Waiter.Entry<Outcome, Metadata>>()
 
         while !isEmpty {
-            let entry = dequeue()!
+            guard let entry = dequeue() else { break }
             if let reason = entry.flag.reason {
                 flagged.enqueue(Async.Waiter.Queue.Flagged(reason: reason, entry: entry))
             } else {

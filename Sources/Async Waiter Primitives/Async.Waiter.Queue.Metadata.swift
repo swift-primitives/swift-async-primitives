@@ -12,13 +12,13 @@
 public import Tagged_Primitives
 
 extension Async.Waiter.Queue {
-    /// Phantom tag for waiter metadata.
-    public enum MetadataTag {}
-
     /// Caller-defined opaque metadata for waiter entries.
     ///
     /// Interpretation is entirely up to the caller. Common uses include
     /// slot indices, sequence numbers, or deadline timestamps. The Tagged
     /// wrapper prevents accidental mixing with other UInt64 values.
-    public typealias Metadata = Tagged<MetadataTag, UInt64>
+    ///
+    /// `Async.Waiter.Queue` (the surrounding namespace) plays the phantom-tag
+    /// role directly per [API-NAME-010a] — no separate `*Tag` marker type.
+    public typealias Metadata = Tagged<Async.Waiter.Queue, UInt64>
 }

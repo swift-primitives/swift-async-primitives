@@ -31,6 +31,7 @@
         /// - Throws: `Async.Semaphore.Error.shutdown` if shut down.
         /// - Throws: `Async.Semaphore.Error.cancelled` if the task is cancelled.
         nonisolated(nonsending)
+            // swiftlint:disable:next prefer_self_in_static_references - reason: `Self.Error` does not compile in a throws() clause on this toolchain ('Error' is not a member type of type 'Self', verified via swiftc) — verified 2026-07-06.
             public func wait() async throws(Async.Semaphore.Error)
         {
             // Phase 1: Try immediate acquisition under lock
@@ -62,8 +63,10 @@
             switch action {
             case .acquired:
                 return
+
             case .shutdown:
                 throw .shutdown
+
             case .suspend:
                 try await suspendForPermit()
             }
@@ -76,6 +79,7 @@
         /// - Throws: `Async.Semaphore.Error.shutdown` if shut down.
         /// - Throws: `Async.Semaphore.Error.cancelled` if the task is cancelled.
         nonisolated(nonsending)
+            // swiftlint:disable:next prefer_self_in_static_references - reason: `Self.Error` does not compile in a throws() clause on this toolchain ('Error' is not a member type of type 'Self', verified via swiftc) — verified 2026-07-06.
             public func wait(timeout: Duration) async throws(Async.Semaphore.Error)
         {
             enum Action {
@@ -106,8 +110,10 @@
             switch action {
             case .acquired:
                 return
+
             case .shutdown:
                 throw .shutdown
+
             case .suspend:
                 try await suspendForPermit(timeout: timeout)
             }
@@ -122,6 +128,7 @@
         /// Uses `withTaskCancellationHandler` + flag-based cancellation,
         /// following the same pattern as Pool.Bounded.
         @usableFromInline
+        // swiftlint:disable:next prefer_self_in_static_references - reason: `Self.Error` does not compile in a throws() clause on this toolchain ('Error' is not a member type of type 'Self', verified via swiftc) — verified 2026-07-06.
         func suspendForPermit() async throws(Async.Semaphore.Error) {
             let flag = Async.Waiter.Flag()
 
@@ -163,6 +170,7 @@
             switch outcome {
             case .success:
                 return
+
             case .failure(let error):
                 throw error
             }
@@ -170,12 +178,20 @@
 
         /// Suspends with a timeout deadline.
         @usableFromInline
+        // swiftlint:disable:next prefer_self_in_static_references - reason: `Self.Error` does not compile in a throws() clause on this toolchain ('Error' is not a member type of type 'Self', verified via swiftc) — verified 2026-07-06.
         func suspendForPermit(timeout: Duration) async throws(Async.Semaphore.Error) {
             let flag = Async.Waiter.Flag()
 
             // Start the timeout task before suspending
             let timeoutTask = Task {
-                try? await Task.sleep(for: timeout)
+                do {
+                    try await Task.sleep(for: timeout)
+                } catch {
+                    // Cancellation (or any other Task.sleep failure) — the
+                    // timeout task was cancelled (e.g. the wait completed
+                    // first), so there is nothing to do.
+                    return
+                }
                 if flag.timeout() {
                     self.pumpWaiters()
                 }
@@ -219,6 +235,7 @@
             switch outcome {
             case .success:
                 return
+
             case .failure(let error):
                 throw error
             }
@@ -273,8 +290,10 @@
                         switch outcome {
                         case .failure(.cancelled):
                             state.metrics.cancellations += 1
+
                         case .failure(.timeout):
                             state.metrics.timeouts += 1
+
                         default:
                             break
                         }

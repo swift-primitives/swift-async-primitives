@@ -63,6 +63,10 @@
     // MARK: - Send Operations
 
     extension Async.Channel.Unbounded.Sender where Element: ~Copyable {
+        // swiftlint:disable:next workaround_marker_present
+        // WORKAROUND: @_optimize(none) — see Unbounded.Storage.handleReceive workaround comment.
+        // swift-linter:disable:next optimize suppression attribute
+        // REASON: deliberate crash-workaround per compiler-bug catalog §A19 ([ISSUE-008] disposition-1); remove when the SIL-optimizer fix ships.
         /// Send an element to the channel.
         ///
         /// If a receiver is waiting, delivers the element directly.
@@ -72,9 +76,6 @@
         ///
         /// - Parameter element: The element to send.
         /// - Throws: `Async.Channel<Element>.Error.closed` if the channel is closed.
-        // WORKAROUND: @_optimize(none) — see Unbounded.Storage.handleReceive workaround comment.
-        // swift-linter:disable:next optimize suppression attribute
-        // REASON: deliberate crash-workaround per compiler-bug catalog §A19 ([ISSUE-008] disposition-1); remove when the SIL-optimizer fix ships.
         @_optimize(none)
         @inlinable
         public func send(_ element: consuming sending Element) throws(Async.Channel<Element>.Error) {
@@ -92,8 +93,10 @@
             case .give(let cont, let element):
                 _ = storage.deliverySlot.store(element)
                 cont.resume(returning: Async.Channel<Element>.Unbounded.State.Receive.Signal.delivered)
+
             case .keep:
                 break
+
             case .shut:
                 throw .closed
             }
@@ -155,6 +158,7 @@
             switch consume action {
             case .none:
                 break
+
             case .end(let cont):
                 cont.resume(returning: .closed)
             }

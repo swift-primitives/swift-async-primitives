@@ -37,6 +37,7 @@ extension Async.Lifecycle {
 // MARK: - Conformances
 
 extension Async.Lifecycle.Error: CustomStringConvertible {
+    /// A textual representation of the lifecycle-error case (`"shutdown"`, `"cancelled"`, or `"timeout"`).
     public var description: Swift.String {
         switch self {
         case .shutdown: "shutdown"

@@ -29,6 +29,7 @@
             let mutex: Async.Mutex<State>
 
             /// Slot for transferring ~Copyable elements outside the continuation.
+            ///
             /// The continuation carries a lightweight Signal; the element travels here.
             @usableFromInline
             let deliverySlot: Ownership.Slot<Element>
@@ -47,6 +48,7 @@
                 switch consume action {
                 case .none:
                     break
+
                 case .end(let cont):
                     cont.resume(returning: .closed)
                 }
@@ -60,6 +62,7 @@
             try mutex.withLock(body)
         }
 
+        // swiftlint:disable:next workaround_marker_present
         // WORKAROUND: @_optimize(none) prevents CopyPropagation ownership
         // verification crash on ~Copyable enum consume in nested async closures.
         // WHY: CopyPropagation fails initializeConsumingUse when optimizing
@@ -82,10 +85,13 @@
             case .val(let element, let receiver):
                 _ = storage.deliverySlot.store(element)
                 if let receiver { receiver.resume(returning: .delivered) }
+
             case .end(let receiver):
                 if let receiver { receiver.resume(returning: .closed) }
+
             case .wait:
                 break
+
             case .cancelled(let receiver):
                 if let receiver { receiver.resume(returning: .cancelled) }
             }

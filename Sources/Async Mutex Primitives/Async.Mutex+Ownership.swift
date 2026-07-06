@@ -61,6 +61,7 @@
         ///   - body: A closure receiving the mutex state and the value.
         ///           Must consume the value on every path.
         /// - Returns: The result of the body closure.
+        /// - Throws: Whatever `body` throws.
         @inlinable
         public func withLock<V: ~Copyable & Sendable, T: ~Copyable, E: Swift.Error>(
             consuming value: consuming sending V,
@@ -68,7 +69,10 @@
         ) throws(E) -> sending T {
             var slot: V? = value
             return try withLock { (state: inout sending Value) throws(E) -> T in
-                try body(&state, slot.take()!)
+                guard let value = slot.take() else {
+                    preconditionFailure("Async.Mutex.withLock(consuming:body:): value slot was empty")
+                }
+                return try body(&state, value)
             }
         }
     }
@@ -97,6 +101,7 @@
         ///   - body: A closure receiving the mutex state and an inout Optional
         ///           containing the value. Use `.take()!` to consume.
         /// - Returns: The result of the body closure.
+        /// - Throws: Whatever `body` throws.
         @inlinable
         public func withLock<V: ~Copyable & Sendable, T: ~Copyable, E: Swift.Error>(
             deposit value: consuming sending V,

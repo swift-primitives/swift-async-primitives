@@ -86,6 +86,7 @@ extension Async {
             switch storage {
             case .checkedContinuation(let continuation):
                 continuation.resume(returning: value)
+
             case .callback(let callback):
                 callback(value)
             }

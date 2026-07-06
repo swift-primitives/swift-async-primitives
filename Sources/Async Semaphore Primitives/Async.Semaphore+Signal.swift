@@ -79,8 +79,10 @@ extension Async.Semaphore {
                     switch outcome {
                     case .failure(.cancelled):
                         state.metrics.cancellations += 1
+
                     case .failure(.timeout):
                         state.metrics.timeouts += 1
+
                     default:
                         break
                     }
@@ -91,18 +93,7 @@ extension Async.Semaphore {
             }
             state.metrics.currentWaiters -= flaggedCount
 
-            if let entry = eligible {
-                // Hand off permit to waiter
-                state.metrics.currentWaiters -= 1
-                state.metrics.acquisitions += 1
-                state.metrics.currentOutstanding += 1
-                state.metrics.peakOutstanding = max(
-                    state.metrics.peakOutstanding,
-                    state.metrics.currentOutstanding
-                )
-                let resumption = entry.resumption(with: .success(()))
-                return .resume(resumption, skipped: skipped)
-            } else {
+            guard let entry = eligible else {
                 // No waiter, return permit to pool
                 state.available += 1
                 if skipped.isEmpty {
@@ -110,15 +101,27 @@ extension Async.Semaphore {
                 }
                 return .skippedOnly(skipped)
             }
+            // Hand off permit to waiter
+            state.metrics.currentWaiters -= 1
+            state.metrics.acquisitions += 1
+            state.metrics.currentOutstanding += 1
+            state.metrics.peakOutstanding = max(
+                state.metrics.peakOutstanding,
+                state.metrics.currentOutstanding
+            )
+            let resumption = entry.resumption(with: .success(()))
+            return .resume(resumption, skipped: skipped)
         }
 
         // Execute effect OUTSIDE lock
         switch consume effect {
         case .none:
             return
+
         case .resume(let resumption, var skipped):
             skipped.drain { $0.resume() }
             resumption.resume()
+
         case .skippedOnly(var skipped):
             skipped.drain { $0.resume() }
         }

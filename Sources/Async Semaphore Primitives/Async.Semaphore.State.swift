@@ -9,8 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import Async_Primitive
 public import Async_Lifecycle_Primitives
+public import Async_Primitive
 public import Async_Waiter_Primitives
 public import Queue_Primitive
 
@@ -31,7 +31,9 @@ extension Async.Semaphore {
         @usableFromInline
         let capacity: Int
 
-        /// Current available permits (N). Starts at capacity.
+        /// Current available permits (N).
+        ///
+        /// Starts at capacity.
         @usableFromInline
         var available: Int
 

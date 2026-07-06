@@ -14,6 +14,7 @@
 extension Async.Lifecycle.State {
     // SAFETY: Encapsulates unsafe internals behind a safe API; see
     // SAFETY: [MEM-SAFE-024] for the absorber-pattern taxonomy.
+    /// A borrowed view over lifecycle state exposing shutdown transition operations.
     @safe
     public struct Shutdown: ~Copyable, ~Escapable {
         @usableFromInline

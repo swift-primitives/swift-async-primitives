@@ -146,11 +146,10 @@
                 // Trim buffer if needed (keep elements that some subscriber hasn't seen yet)
                 let minCursor = state.cursor ?? index
                 while state.buffer.count > bufferLimit {
-                    if let front = state.buffer.peek(at: .front), front.index < minCursor {
-                        _ = state.buffer.take(from: .front)
-                    } else {
+                    guard let front = state.buffer.peek(at: .front), front.index < minCursor else {
                         break
                     }
+                    _ = state.buffer.take(from: .front)
                 }
 
                 // Find waiting subscribers (forEach avoids key snapshot heap allocation)

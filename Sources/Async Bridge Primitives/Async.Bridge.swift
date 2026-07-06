@@ -160,8 +160,10 @@
             switch consume fast {
             case .element(let element):
                 return element
+
             case .finished:
                 return nil
+
             case .suspend:
                 break
             }

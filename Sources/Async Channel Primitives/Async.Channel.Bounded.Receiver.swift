@@ -62,6 +62,13 @@
     // MARK: - Receive Operations
 
     extension Async.Channel.Bounded.Receiver where Element: ~Copyable {
+        // swiftlint:disable:next workaround_marker_present
+        // WORKAROUND: @_optimize(none) prevents CopyPropagation ownership
+        // verification crash on `switch consume` of ~Copyable enum in async context.
+        // TRACKING: Not yet filed upstream.
+        // WHEN TO REMOVE: When the CopyPropagation crash is fixed upstream.
+        // swift-linter:disable:next optimize suppression attribute
+        // REASON: deliberate crash-workaround per compiler-bug catalog §A19 ([ISSUE-008] disposition-1); remove when the SIL-optimizer fix ships.
         /// Receive the next element from the channel.
         ///
         /// Suspends if the buffer is empty until an element becomes available
@@ -69,12 +76,6 @@
         ///
         /// - Returns: The next element, or `nil` if the channel is closed and drained.
         /// - Throws: `Async.Channel<Element>.Error.cancelled` if the task is cancelled.
-        // WORKAROUND: @_optimize(none) prevents CopyPropagation ownership
-        // verification crash on `switch consume` of ~Copyable enum in async context.
-        // TRACKING: Not yet filed upstream.
-        // WHEN TO REMOVE: When the CopyPropagation crash is fixed upstream.
-        // swift-linter:disable:next optimize suppression attribute
-        // REASON: deliberate crash-workaround per compiler-bug catalog §A19 ([ISSUE-008] disposition-1); remove when the SIL-optimizer fix ships.
         @_optimize(none)
         @inlinable
         nonisolated(nonsending)
@@ -95,10 +96,13 @@
                 }
                 if let resumeSender { resumeSender.resume(returning: nil) }
                 return element
+
             case .returnNil:
                 return nil
+
             case .rejectCancelled:
                 throw .cancelled
+
             case .suspend:
                 break  // Fall through to slow path
             }
@@ -123,6 +127,7 @@
                 switch consume action {
                 case .resumeWithCancellation(let continuation):
                     continuation.resume(returning: .cancelled)
+
                 case .none:
                     break
                 }

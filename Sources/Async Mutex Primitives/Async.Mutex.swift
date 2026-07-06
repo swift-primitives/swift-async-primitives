@@ -64,6 +64,7 @@
             @usableFromInline
             let _valueRaw: _Value
 
+            /// Creates a mutex initialized with the given value.
             @inlinable
             public init(_ value: consuming sending Value) {
                 _lockRaw = _Lock()
@@ -117,6 +118,7 @@
         ///
         /// - Parameter body: A closure receiving exclusive access to the value.
         /// - Returns: The result of the body closure.
+        /// - Throws: Whatever `body` throws.
         @inlinable
         public borrowing func withLock<T: ~Copyable, E: Swift.Error>(
             _ body: (inout sending Value) throws(E) -> sending T
@@ -130,6 +132,7 @@
         ///
         /// - Parameter body: A closure receiving exclusive access to the value.
         /// - Returns: The result of the body closure, or `nil` if the lock is held.
+        /// - Throws: Whatever `body` throws.
         @inlinable
         public borrowing func withLockIfAvailable<T: ~Copyable, E: Swift.Error>(
             _ body: (inout sending Value) throws(E) -> sending T
@@ -172,6 +175,7 @@
             @usableFromInline
             var _value: Value
 
+            /// Creates a mutex initialized with the given value.
             @inlinable
             public init(_ value: consuming sending Value) {
                 self._value = value
@@ -180,6 +184,13 @@
     }
 
     extension Async.Mutex where Value: ~Copyable {
+        /// Invokes `body` with the protected value.
+        ///
+        /// No-op locking on embedded platforms.
+        ///
+        /// - Parameter body: A closure receiving exclusive access to the value.
+        /// - Returns: The result of the body closure.
+        /// - Throws: Whatever `body` throws.
         @inlinable
         public func withLock<T: ~Copyable, E: Swift.Error>(
             _ body: (inout sending Value) throws(E) -> sending T
@@ -187,6 +198,13 @@
             try body(&_value)
         }
 
+        /// Invokes `body` with the protected value.
+        ///
+        /// No-op locking on embedded platforms, so this never returns `nil`.
+        ///
+        /// - Parameter body: A closure receiving exclusive access to the value.
+        /// - Returns: The result of the body closure.
+        /// - Throws: Whatever `body` throws.
         @inlinable
         public func withLockIfAvailable<T: ~Copyable, E: Swift.Error>(
             _ body: (inout sending Value) throws(E) -> sending T

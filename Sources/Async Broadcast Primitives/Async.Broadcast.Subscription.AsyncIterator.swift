@@ -37,6 +37,10 @@
     // MARK: - AsyncIteratorProtocol
 
     extension Async.Broadcast.Subscription.AsyncIterator: AsyncIteratorProtocol {
+        /// Suspends until the next broadcast element arrives.
+        ///
+        /// - Returns: The next element, or `nil` once the broadcast has finished.
+        /// - Throws: ``Async/Broadcast/Error/cancelled`` if the task is cancelled.
         nonisolated(nonsending)
             public mutating func next() async throws(Async.Broadcast<Element>.Error) -> Element?
         {

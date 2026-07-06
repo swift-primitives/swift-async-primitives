@@ -98,6 +98,7 @@
                 // Do NOT advance cursor - element not delivered
                 return cont
             }
+            // swiftlint:disable:next redundant_nil_coalescing - reason: NOT redundant — `withMutableValue(forKey:)` returns `R?` where R is inferred as `CheckedContinuation<...>?`, so `cleared` is doubly-optional; `?? nil` flattens it to the single-optional return type (verified via swiftc).
             return cleared ?? nil
         }
     }

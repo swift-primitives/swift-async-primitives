@@ -38,6 +38,7 @@
                 _ body: sending @escaping () async throws(E) -> sending T
             ) async throws(Either<Async.Semaphore.Error, E>) -> sending T
         {
+            // swiftlint:disable:next prefer_self_in_static_references - reason: `Self.Error` does not compile in a throws() clause on this toolchain ('Error' is not a member type of type 'Self', verified via swiftc) — verified 2026-07-06.
             do throws(Async.Semaphore.Error) {
                 try await wait()
             } catch {

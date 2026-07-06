@@ -42,6 +42,7 @@
     // MARK: - AsyncSequence
 
     extension Async.Broadcast.Subscription: AsyncSequence {
+        /// Creates the async iterator used to drive `for await` loops over this subscription.
         public func makeAsyncIterator() -> AsyncIterator {
             AsyncIterator(broadcast: broadcast, id: id, publication: Async.Publication<Async.Broadcast<Element>.Wait>())
         }

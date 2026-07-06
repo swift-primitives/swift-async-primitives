@@ -148,11 +148,13 @@
         @usableFromInline
         enum Send {
             /// Continuation type for send operations.
+            ///
             /// Returns nil on success, Error on failure.
             @usableFromInline
             typealias Continuation = Async.Continuation<Async.Channel<Element>.Error?>.Unsafe
 
             /// Result of `send` — fast-path decision.
+            ///
             /// Element is handled via the caller's `inout Element?`: taken on
             /// deliver/buffer paths, left in Optional on suspend/reject.
             @usableFromInline
@@ -175,6 +177,7 @@
             }
 
             /// Result of `suspend(flag:slot:continuation:)` — slow-path action.
+            ///
             /// Element is handled via Ownership.Slot (taken on deliver/buffer,
             /// stored in queue on suspend, cleaned up by Slot deinit on reject).
             @usableFromInline
@@ -212,12 +215,18 @@
                 // Move the receiver out of storage before consuming its
                 // continuation (the continuation is now `~Copyable`).
                 if let receiver = self.receiver.take() {
-                    return .deliverToReceiver(receiver.continuation, element.take()!)
+                    guard let taken = element.take() else {
+                        preconditionFailure("Async.Channel.Bounded.State.send(_:): element slot was empty")
+                    }
+                    return .deliverToReceiver(receiver.continuation, taken)
                 }
 
                 // If buffer has space, add to buffer
                 if buffer.count < capacity {
-                    buffer.push(element.take()!, to: .back)
+                    guard let taken = element.take() else {
+                        preconditionFailure("Async.Channel.Bounded.State.send(_:): element slot was empty")
+                    }
+                    buffer.push(taken, to: .back)
                     return .buffered
                 }
 
@@ -298,6 +307,7 @@
         @usableFromInline
         enum Receive {
             /// Lightweight signal carried through the continuation.
+            ///
             /// Element delivery happens via Ownership.Slot, not through the continuation.
             @usableFromInline
             enum Signal: Sendable {
@@ -310,6 +320,7 @@
             }
 
             /// Continuation type for receive operations.
+            ///
             /// Carries Signal (Copyable) — element travels via Ownership.Slot.
             @usableFromInline
             typealias Continuation = Async.Continuation<Signal>.Unsafe
@@ -529,6 +540,7 @@
             switch status {
             case .open:
                 return false
+
             case .closed, .finished:
                 return true
             }

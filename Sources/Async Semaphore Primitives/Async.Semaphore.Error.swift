@@ -9,8 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import Async_Primitive
 public import Async_Lifecycle_Primitives
+public import Async_Primitive
 
 extension Async.Semaphore {
     /// Errors thrown by semaphore operations.

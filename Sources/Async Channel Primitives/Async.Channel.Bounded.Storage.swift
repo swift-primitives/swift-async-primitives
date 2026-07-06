@@ -34,6 +34,7 @@
             let _storage: Ownership.Mutable<Async.Mutex<State>>.Unchecked
 
             /// Slot for transferring ~Copyable elements outside the continuation.
+            ///
             /// The continuation carries a lightweight Signal; the element travels here.
             @usableFromInline
             let deliverySlot: Ownership.Slot<Element>
@@ -52,6 +53,7 @@
             try _storage.mutable.value.withLock(body)
         }
 
+        // swiftlint:disable:next workaround_marker_present
         // WORKAROUND: @_optimize(none) prevents CopyPropagation ownership
         // verification crash on ~Copyable enum consume in nested async closures.
         // WHY: CopyPropagation fails initializeConsumingUse when optimizing
@@ -79,15 +81,19 @@
                 if let resumeSender { resumeSender.resume(returning: nil) }
                 _ = storage.deliverySlot.store(element)
                 if let receiver { receiver.resume(returning: .delivered) }
+
             case .returnNil(let receiver):
                 if let receiver { receiver.resume(returning: .closed) }
+
             case .rejectCancelled(let receiver):
                 if let receiver { receiver.resume(returning: .cancelled) }
+
             case .suspend:
                 break
             }
         }
 
+        // swiftlint:disable:next workaround_marker_present
         // WORKAROUND: Same CopyPropagation crash — see handleReceive comment.
         // swift-linter:disable:next optimize suppression attribute
         // REASON: deliberate crash-workaround per compiler-bug catalog §A19 ([ISSUE-008] disposition-1); remove when the SIL-optimizer fix ships.
@@ -104,12 +110,16 @@
                 _ = storage.deliverySlot.store(element)
                 receiverCont.resume(returning: Async.Channel<Element>.Bounded.State.Receive.Signal.delivered)
                 sender.resume(returning: nil)
+
             case .buffered(let sender):
                 sender.resume(returning: nil)
+
             case .rejectClosed(let sender):
                 sender.resume(returning: .closed)
+
             case .rejectCancelled(let sender):
                 sender.resume(returning: .cancelled)
+
             case .suspended:
                 break
             }

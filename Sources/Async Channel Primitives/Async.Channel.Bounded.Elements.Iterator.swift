@@ -32,9 +32,14 @@
                 self.storage = storage
             }
 
+            // swiftlint:disable:next workaround_marker_present
             // WORKAROUND: @_optimize(none) — see Storage.handle workaround comment.
             // swift-linter:disable:next optimize suppression attribute
             // REASON: deliberate crash-workaround per compiler-bug catalog §A19 ([ISSUE-008] disposition-1); remove when the SIL-optimizer fix ships.
+            /// Advances to the next element, suspending if the buffer is empty.
+            ///
+            /// - Returns: The next element, or `nil` if the channel is closed and drained.
+            /// - Throws: `Async.Channel<Element>.Error.cancelled` if the task is cancelled.
             @_optimize(none)
             @inlinable
             nonisolated(nonsending)
@@ -57,10 +62,13 @@
                     }
                     if let resumeSender { resumeSender.resume(returning: nil) }
                     return element
+
                 case .returnNil:
                     return nil
+
                 case .rejectCancelled:
                     throw .cancelled
+
                 case .suspend:
                     break
                 }
@@ -83,6 +91,7 @@
                     switch consume action {
                     case .resumeWithCancellation(let continuation):
                         continuation.resume(returning: .cancelled)
+
                     case .none:
                         break
                     }

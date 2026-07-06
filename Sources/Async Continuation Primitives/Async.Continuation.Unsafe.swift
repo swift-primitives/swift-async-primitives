@@ -12,6 +12,17 @@
 #if !hasFeature(Embedded)
 
     extension Async.Continuation {
+        // SAFETY: Encapsulates unsafe internals behind a safe API; see
+        // SAFETY: [MEM-SAFE-024] for the absorber-pattern taxonomy.
+        //
+        // `~Copyable` mirrors Swift 6.4's `Continuation` (SE-0528, "Noncopyable
+        // continuation"): a continuation is a single-use resource, so the type
+        // prevents accidental copies and `resume` consumes it. On the current 6.3.3
+        // build toolchain the stdlib `Continuation` is unavailable (`@available(6.4)`
+        // + `$BuiltinContinuationNonCopyableSuccess`), so this wraps the still-Copyable
+        // `UnsafeContinuation` internally while presenting the 6.4-aligned surface.
+        // Unlike the checked `Continuation`, the `Unsafe` variant carries no deinit
+        // trap — the caller guarantees exactly-once resumption.
         /// Safe wrapper around `UnsafeContinuation` for performance-critical paths.
         ///
         /// Where ``Async/Continuation`` wraps `CheckedContinuation` (with runtime
@@ -29,22 +40,12 @@
         /// passing, pattern-matching — emits a warning. This wrapper concentrates
         /// the unsafety into two sites (init + resume) instead of propagating it
         /// to every consumer.
-        // SAFETY: Encapsulates unsafe internals behind a safe API; see
-        // SAFETY: [MEM-SAFE-024] for the absorber-pattern taxonomy.
-        //
-        // `~Copyable` mirrors Swift 6.4's `Continuation` (SE-0528, "Noncopyable
-        // continuation"): a continuation is a single-use resource, so the type
-        // prevents accidental copies and `resume` consumes it. On the current 6.3.3
-        // build toolchain the stdlib `Continuation` is unavailable (`@available(6.4)`
-        // + `$BuiltinContinuationNonCopyableSuccess`), so this wraps the still-Copyable
-        // `UnsafeContinuation` internally while presenting the 6.4-aligned surface.
-        // Unlike the checked `Continuation`, the `Unsafe` variant carries no deinit
-        // trap — the caller guarantees exactly-once resumption.
         @safe
         public struct Unsafe: ~Copyable, @unchecked Sendable {
             @usableFromInline
             let _base: UnsafeContinuation<T, Never>
 
+            /// Wraps a raw `UnsafeContinuation`, concentrating its unsafety at this single init site.
             @inlinable
             public init(_ base: UnsafeContinuation<T, Never>) {
                 unsafe (self._base = base)
@@ -53,6 +54,9 @@
     }
 
     extension Async.Continuation.Unsafe {
+        /// Resumes the wrapped continuation exactly once, consuming this wrapper.
+        ///
+        /// - Parameter value: The value to resume the continuation with.
         @inlinable
         public consuming func resume(returning value: consuming sending T) {
             unsafe _base.resume(returning: value)

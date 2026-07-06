@@ -37,13 +37,17 @@
             var buffer: Deque<Column.Ring<Element>>
 
             /// The suspended receiver's continuation, or `nil` when none is
-            /// waiting. Mirrors the bounded channel's flat representation so
+            /// waiting.
+            ///
+            /// Mirrors the bounded channel's flat representation so
             /// extraction is the stdlib `waiter.take()` — no slot enum, no helper.
             @usableFromInline
             var waiter: Receive.Continuation?
 
             /// Set when the receiver cancelled before a value arrived; rejects a
-            /// later `wait`. Mutually exclusive with a non-nil `waiter`.
+            /// later `wait`.
+            ///
+            /// Mutually exclusive with a non-nil `waiter`.
             @usableFromInline
             var cancelledReceiver: Bool
 
@@ -84,6 +88,7 @@
             switch status {
             case .open:
                 return false
+
             case .closed, .finished:
                 return true
             }
@@ -113,10 +118,17 @@
             switch status {
             case .open:
                 if let cont = waiter.take() {
-                    return .give(cont, element.take()!)
+                    guard let taken = element.take() else {
+                        preconditionFailure("Async.Channel.Unbounded.State.send(_:): element slot was empty")
+                    }
+                    return .give(cont, taken)
                 }
-                buffer.push(element.take()!, to: .back)
+                guard let taken = element.take() else {
+                    preconditionFailure("Async.Channel.Unbounded.State.send(_:): element slot was empty")
+                }
+                buffer.push(taken, to: .back)
                 return .keep
+
             case .closed, .finished:
                 return .shut
             }
@@ -129,6 +141,7 @@
         @usableFromInline
         enum Receive {
             /// Lightweight signal carried through the continuation.
+            ///
             /// Element delivery happens via Ownership.Slot, not through the continuation.
             @usableFromInline
             enum Signal: Sendable {
@@ -141,6 +154,7 @@
             }
 
             /// Continuation type for receive operations.
+            ///
             /// Carries Signal (Copyable) — element travels via Ownership.Slot.
             @usableFromInline
             typealias Continuation = Async.Continuation<Signal>.Unsafe

@@ -17,4 +17,8 @@
 /// These primitives are policy-free building blocks. Lifecycle semantics
 /// (shutdown, cancellation, etc.) are composed at higher layers.
 public enum Async {}
+
+/// Underscore-prefixed alias for ``Async``, for call sites that need an
+/// escape hatch from the bare `Async` spelling (e.g. disambiguating against
+/// a local shadowing declaration).
 public typealias _Async = Async

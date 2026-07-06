@@ -26,6 +26,7 @@
     }
 
     extension Async.Channel.Unbounded.Elements {
+        /// Creates the async iterator used to drive `for await` loops over this view.
         public func makeAsyncIterator() -> Iterator {
             Iterator(storage: storage)
         }
