@@ -18,7 +18,8 @@
 /// (shutdown, cancellation, etc.) are composed at higher layers.
 public enum Async {}
 
-/// Underscore-prefixed alias for ``Async``, for call sites that need an
-/// escape hatch from the bare `Async` spelling (e.g. disambiguating against
-/// a local shadowing declaration).
+/// Underscore-prefixed alias for ``Async``.
+///
+/// An escape hatch for call sites that need to spell the namespace when the
+/// bare `Async` name is shadowed by a local declaration.
 public typealias _Async = Async
