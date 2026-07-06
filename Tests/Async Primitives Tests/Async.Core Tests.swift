@@ -626,8 +626,12 @@ extension Core.Test.Barrier {
 
             let result = await withCheckedContinuation { continuation in
                 completion.set(continuation: continuation)
-                try! completion.start()
-                try! completion.complete(42)
+                do {
+                    try completion.start()
+                    try completion.complete(42)
+                } catch {
+                    Issue.record("Unexpected transition error: \(error)")
+                }
             }
 
             if case .success(let value) = result {
@@ -643,8 +647,12 @@ extension Core.Test.Barrier {
 
             let result = await withCheckedContinuation { continuation in
                 completion.set(continuation: continuation)
-                try! completion.start()
-                try! completion.cancel()
+                do {
+                    try completion.start()
+                    try completion.cancel()
+                } catch {
+                    Issue.record("Unexpected transition error: \(error)")
+                }
             }
 
             if case .failure(.cancelled) = result {
@@ -660,8 +668,12 @@ extension Core.Test.Barrier {
 
             let result = await withCheckedContinuation { continuation in
                 completion.set(continuation: continuation)
-                try! completion.start()
-                try! completion.timeout()
+                do {
+                    try completion.start()
+                    try completion.timeout()
+                } catch {
+                    Issue.record("Unexpected transition error: \(error)")
+                }
             }
 
             if case .failure(.timeout) = result {

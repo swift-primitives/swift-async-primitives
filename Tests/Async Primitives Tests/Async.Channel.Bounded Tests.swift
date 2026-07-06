@@ -43,6 +43,7 @@ struct BoundedChannelTests {
             switch error {
             case .closed:
                 break  // Expected
+
             case .cancelled, .full, .empty:
                 Issue.record("Expected .closed but got \(error)")
             }
@@ -60,6 +61,7 @@ struct BoundedChannelTests {
             switch error {
             case .full:
                 break  // Expected
+
             case .closed, .cancelled, .empty:
                 Issue.record("Expected .full but got \(error)")
             }
@@ -93,6 +95,7 @@ struct BoundedChannelTests {
             switch error {
             case .empty:
                 break  // Expected
+
             case .closed, .cancelled, .full:
                 Issue.record("Expected .empty but got \(error)")
             }
