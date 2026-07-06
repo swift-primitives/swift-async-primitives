@@ -36,6 +36,8 @@
             /// - Returns: The next element if available, `nil` if the channel is closed and drained.
             /// - Throws: `.empty` if the buffer is empty, `.cancelled` if the task was cancelled.
             // WORKAROUND: @_optimize(none) — see Storage.handleReceive workaround comment.
+            // swift-linter:disable:next optimize suppression attribute
+            // REASON: deliberate crash-workaround per compiler-bug catalog §A19 ([ISSUE-008] disposition-1); remove when the SIL-optimizer fix ships.
             @_optimize(none)
             @inlinable
             public func immediate() throws(Async.Channel<Element>.Error) -> Element? {

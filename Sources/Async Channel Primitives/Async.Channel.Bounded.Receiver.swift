@@ -73,6 +73,8 @@
         // verification crash on `switch consume` of ~Copyable enum in async context.
         // TRACKING: Not yet filed upstream.
         // WHEN TO REMOVE: When the CopyPropagation crash is fixed upstream.
+        // swift-linter:disable:next optimize suppression attribute
+        // REASON: deliberate crash-workaround per compiler-bug catalog §A19 ([ISSUE-008] disposition-1); remove when the SIL-optimizer fix ships.
         @_optimize(none)
         @inlinable
         nonisolated(nonsending)

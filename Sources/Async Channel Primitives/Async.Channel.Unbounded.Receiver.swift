@@ -76,6 +76,8 @@
         ///   (proven additively in swift-memory-foreign-primitives/Experiments/foreign-recycle-channel).
         /// - Throws: `Async.Channel<Element>.Error.cancelled` if the task is cancelled.
         // WORKAROUND: @_optimize(none) — see Unbounded.Storage.handleReceive workaround comment.
+        // swift-linter:disable:next optimize suppression attribute
+        // REASON: deliberate crash-workaround per compiler-bug catalog §A19 ([ISSUE-008] disposition-1); remove when the SIL-optimizer fix ships.
         @_optimize(none)
         @inlinable
         nonisolated(nonsending)

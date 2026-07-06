@@ -37,6 +37,8 @@
             /// - Throws: `.full` if the buffer is full, `.closed` if the channel is closed,
             ///           `.cancelled` if the task was cancelled.
             // WORKAROUND: @_optimize(none) — see Storage.handleSend workaround comment.
+            // swift-linter:disable:next optimize suppression attribute
+            // REASON: deliberate crash-workaround per compiler-bug catalog §A19 ([ISSUE-008] disposition-1); remove when the SIL-optimizer fix ships.
             @_optimize(none)
             @inlinable
             public func immediate(_ element: consuming sending Element) throws(Async.Channel<Element>.Error) {

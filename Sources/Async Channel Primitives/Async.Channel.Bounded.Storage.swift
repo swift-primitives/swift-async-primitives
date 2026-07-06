@@ -59,6 +59,8 @@
         //       closure inside withTaskCancellationHandler.
         // TRACKING: Not yet filed upstream.
         // WHEN TO REMOVE: When the CopyPropagation crash is fixed upstream.
+        // swift-linter:disable:next optimize suppression attribute
+        // REASON: deliberate crash-workaround per compiler-bug catalog §A19 ([ISSUE-008] disposition-1); remove when the SIL-optimizer fix ships.
         @_optimize(none)
         @usableFromInline
         static func handleReceive(
@@ -87,6 +89,8 @@
         }
 
         // WORKAROUND: Same CopyPropagation crash — see handleReceive comment.
+        // swift-linter:disable:next optimize suppression attribute
+        // REASON: deliberate crash-workaround per compiler-bug catalog §A19 ([ISSUE-008] disposition-1); remove when the SIL-optimizer fix ships.
         @_optimize(none)
         @usableFromInline
         static func handleSend(

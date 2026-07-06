@@ -134,6 +134,8 @@
         /// - Throws: `Async.Channel<Element>.Error.closed` if the channel is closed.
         ///           `Async.Channel<Element>.Error.cancelled` if the task is cancelled.
         // WORKAROUND: @_optimize(none) — see Storage.handleSend workaround comment.
+        // swift-linter:disable:next optimize suppression attribute
+        // REASON: deliberate crash-workaround per compiler-bug catalog §A19 ([ISSUE-008] disposition-1); remove when the SIL-optimizer fix ships.
         @_optimize(none)
         @inlinable
         nonisolated(nonsending)
