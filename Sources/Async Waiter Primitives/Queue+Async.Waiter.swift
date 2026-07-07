@@ -21,7 +21,6 @@ public import Storage_Contiguous_Primitives
 // MARK: - Pop Eligible
 
 extension Queue_Primitives.Queue where S: ~Copyable {
-    // swiftlint:disable:next workaround_marker_present
     // WORKAROUND: popEligible is a compound identifier [API-NAME-002]
     // WHY: Property.Inout cannot express method-level `where ==` constraints
     // WHEN TO REMOVE: When Swift supports constrained Property.Inout extensions with same-type requirements
@@ -51,7 +50,6 @@ extension Queue_Primitives.Queue where S: ~Copyable {
 // MARK: - Reap Flagged
 
 extension Queue_Primitives.Queue where S: ~Copyable {
-    // swiftlint:disable:next workaround_marker_present
     // WORKAROUND: reapFlagged is a compound identifier [API-NAME-002]
     // WHY: Property.Inout cannot express method-level `where ==` constraints
     // WHEN TO REMOVE: When Swift supports constrained Property.Inout extensions with same-type requirements
@@ -116,7 +114,6 @@ extension Queue_Primitives.Queue where S: ~Copyable {
 // MARK: - Pop Eligible
 
 extension Queue_Primitives.Queue where S: ~Copyable {
-    // swiftlint:disable:next workaround_marker_present
     // WORKAROUND: popEligible is a compound identifier [API-NAME-002]
     // WHY: Property.Inout cannot express method-level `where ==` constraints
     // WHEN TO REMOVE: When Swift supports constrained Property.Inout extensions with same-type requirements
@@ -146,7 +143,6 @@ extension Queue_Primitives.Queue where S: ~Copyable {
 // MARK: - Reap Flagged
 
 extension Queue_Primitives.Queue where S: ~Copyable {
-    // swiftlint:disable:next workaround_marker_present
     // WORKAROUND: reapFlagged is a compound identifier [API-NAME-002]
     // WHY: Property.Inout cannot express method-level `where ==` constraints
     // WHEN TO REMOVE: When Swift supports constrained Property.Inout extensions with same-type requirements
