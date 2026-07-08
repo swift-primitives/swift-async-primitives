@@ -46,7 +46,7 @@
             @_rawLayout(like: Value, movesAsLike)
             @usableFromInline
             struct _Value: ~Copyable {
-                @inlinable init() {}
+                @inlinable package init() {}
             }
 
             // SAFETY: Encapsulates unsafe internals behind a safe API; see
@@ -55,7 +55,7 @@
             @_rawLayout(like: os_unfair_lock_s)
             @usableFromInline
             struct _Lock: ~Copyable, @unchecked Sendable {
-                @inlinable init() {}
+                @inlinable package init() {}
             }
 
             @usableFromInline

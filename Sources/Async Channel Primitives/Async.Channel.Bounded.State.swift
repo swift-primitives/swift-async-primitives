@@ -146,62 +146,65 @@
 
     extension Async.Channel.Bounded.State where Element: ~Copyable {
         @usableFromInline
-        enum Send {
-            /// Continuation type for send operations.
-            ///
-            /// Returns nil on success, Error on failure.
-            @usableFromInline
-            typealias Continuation = Async.Continuation<Async.Channel<Element>.Error?>.Unsafe
+        enum Send {}
+    }
 
-            /// Result of `send` — fast-path decision.
-            ///
-            /// Element is handled via the caller's `inout Element?`: taken on
-            /// deliver/buffer paths, left in Optional on suspend/reject.
-            @usableFromInline
-            enum Decision: ~Copyable {
-                /// Deliver the element directly to a waiting receiver.
-                /// Element was taken from the Optional inside send.
-                case deliverToReceiver(Receive.Continuation, Element)
+    extension Async.Channel.Bounded.State.Send where Element: ~Copyable {
+        /// Continuation type for send operations.
+        ///
+        /// Returns nil on success, Error on failure.
+        @usableFromInline
+        typealias Continuation = Async.Continuation<Async.Channel<Element>.Error?>.Unsafe
 
-                /// Element was buffered successfully (taken from Optional).
-                case buffered
+        /// Result of `send` — fast-path decision.
+        ///
+        /// Element is handled via the caller's `inout Element?`: taken on
+        /// deliver/buffer paths, left in Optional on suspend/reject.
+        @usableFromInline
+        enum Decision: ~Copyable {
+            /// Deliver the element directly to a waiting receiver.
+            /// Element was taken from the Optional inside send.
+            case deliverToReceiver(Async.Channel<Element>.Bounded.State.Receive.Continuation, Element)
 
-                /// Sender must suspend and wait. Element remains in the caller's
-                /// Optional. The flag is pre-created for cancellation signaling
-                /// (shared between queue entry and onCancel handler).
-                case suspend(flag: Async.Waiter.Flag)
+            /// Element was buffered successfully (taken from Optional).
+            case buffered
 
-                /// Channel is closed, reject the send.
-                /// Element remains in the caller's Optional (cleaned up by deinit).
-                case rejectClosed
-            }
+            /// Sender must suspend and wait. Element remains in the caller's
+            /// Optional. The flag is pre-created for cancellation signaling
+            /// (shared between queue entry and onCancel handler).
+            case suspend(flag: Async.Waiter.Flag)
 
-            /// Result of `suspend(flag:slot:continuation:)` — slow-path action.
-            ///
-            /// Element is handled via Ownership.Slot (taken on deliver/buffer,
-            /// stored in queue on suspend, cleaned up by Slot deinit on reject).
-            @usableFromInline
-            enum Action: ~Copyable {
-                /// Deliver the element directly to a waiting receiver.
-                /// `sender`: the suspending sender's continuation, handed back to
-                /// be resumed outside the lock.
-                case deliverToReceiver(Receive.Continuation, Element, sender: Send.Continuation)
-
-                /// Element was buffered successfully.
-                case buffered(sender: Send.Continuation)
-
-                /// Continuation stored, sender is now suspended.
-                case suspended
-
-                /// Channel is closed, reject the send.
-                case rejectClosed(sender: Send.Continuation)
-
-                /// Sender was already cancelled before suspension.
-                case rejectCancelled(sender: Send.Continuation)
-            }
-
+            /// Channel is closed, reject the send.
+            /// Element remains in the caller's Optional (cleaned up by deinit).
+            case rejectClosed
         }
 
+        /// Result of `suspend(flag:slot:continuation:)` — slow-path action.
+        ///
+        /// Element is handled via Ownership.Slot (taken on deliver/buffer,
+        /// stored in queue on suspend, cleaned up by Slot deinit on reject).
+        @usableFromInline
+        enum Action: ~Copyable {
+            /// Deliver the element directly to a waiting receiver.
+            /// `sender`: the suspending sender's continuation, handed back to
+            /// be resumed outside the lock.
+            case deliverToReceiver(Async.Channel<Element>.Bounded.State.Receive.Continuation, Element, sender: Async.Channel<Element>.Bounded.State.Send.Continuation)
+
+            /// Element was buffered successfully.
+            case buffered(sender: Async.Channel<Element>.Bounded.State.Send.Continuation)
+
+            /// Continuation stored, sender is now suspended.
+            case suspended
+
+            /// Channel is closed, reject the send.
+            case rejectClosed(sender: Async.Channel<Element>.Bounded.State.Send.Continuation)
+
+            /// Sender was already cancelled before suspension.
+            case rejectCancelled(sender: Async.Channel<Element>.Bounded.State.Send.Continuation)
+        }
+    }
+
+    extension Async.Channel.Bounded.State where Element: ~Copyable {
         /// Attempt a synchronous send (non-blocking).
         ///
         /// The element is in the caller's `inout Element?`. On deliver/buffer
@@ -305,61 +308,65 @@
 
     extension Async.Channel.Bounded.State where Element: ~Copyable {
         @usableFromInline
-        enum Receive {
-            /// Lightweight signal carried through the continuation.
-            ///
-            /// Element delivery happens via Ownership.Slot, not through the continuation.
-            @usableFromInline
-            enum Signal: Sendable {
-                /// An element was delivered via the delivery slot.
-                case delivered
-                /// The channel is closed and drained.
-                case closed
-                /// The operation was cancelled.
-                case cancelled
-            }
+        enum Receive {}
+    }
 
-            /// Continuation type for receive operations.
-            ///
-            /// Carries Signal (Copyable) — element travels via Ownership.Slot.
-            @usableFromInline
-            typealias Continuation = Async.Continuation<Signal>.Unsafe
-
-            @usableFromInline
-            enum Action: ~Copyable {
-                /// Return the element immediately.
-                /// `resumeSender`: continuation of the sender that provided this element.
-                /// `cancelled`: continuations of cancelled senders skipped during pop.
-                /// Nil when no cancellations occurred (the common case), avoiding
-                /// a per-receive Deque heap allocation.
-                /// `receiver`: the suspending receiver's continuation on the slow
-                /// path (nil on the fast path, which has no continuation), handed
-                /// back to be resumed outside the lock.
-                case returnElement(
-                    Element,
-                    resumeSender: Send.Continuation?,
-                    cancelled: Deque<Column.Ring<Send.Continuation>>?,
-                    receiver: Receive.Continuation?
-                )
-
-                /// Receiver must suspend and wait.
-                case suspend
-
-                /// Channel is closed and drained.
-                case returnNil(receiver: Receive.Continuation?)
-
-                /// Receiver was already cancelled before suspension.
-                case rejectCancelled(receiver: Receive.Continuation?)
-            }
-
-            // `~Copyable`: `.resumeWithCancellation` carries a `Receive.Continuation`.
-            @usableFromInline
-            enum Cancel: ~Copyable, Sendable {
-                case resumeWithCancellation(Receive.Continuation)
-                case none
-            }
+    extension Async.Channel.Bounded.State.Receive where Element: ~Copyable {
+        /// Lightweight signal carried through the continuation.
+        ///
+        /// Element delivery happens via Ownership.Slot, not through the continuation.
+        @usableFromInline
+        enum Signal: Sendable {
+            /// An element was delivered via the delivery slot.
+            case delivered
+            /// The channel is closed and drained.
+            case closed
+            /// The operation was cancelled.
+            case cancelled
         }
 
+        /// Continuation type for receive operations.
+        ///
+        /// Carries Signal (Copyable) — element travels via Ownership.Slot.
+        @usableFromInline
+        typealias Continuation = Async.Continuation<Signal>.Unsafe
+
+        @usableFromInline
+        enum Action: ~Copyable {
+            /// Return the element immediately.
+            /// `resumeSender`: continuation of the sender that provided this element.
+            /// `cancelled`: continuations of cancelled senders skipped during pop.
+            /// Nil when no cancellations occurred (the common case), avoiding
+            /// a per-receive Deque heap allocation.
+            /// `receiver`: the suspending receiver's continuation on the slow
+            /// path (nil on the fast path, which has no continuation), handed
+            /// back to be resumed outside the lock.
+            case returnElement(
+                Element,
+                resumeSender: Async.Channel<Element>.Bounded.State.Send.Continuation?,
+                cancelled: Deque<Column.Ring<Async.Channel<Element>.Bounded.State.Send.Continuation>>?,
+                receiver: Async.Channel<Element>.Bounded.State.Receive.Continuation?
+            )
+
+            /// Receiver must suspend and wait.
+            case suspend
+
+            /// Channel is closed and drained.
+            case returnNil(receiver: Async.Channel<Element>.Bounded.State.Receive.Continuation?)
+
+            /// Receiver was already cancelled before suspension.
+            case rejectCancelled(receiver: Async.Channel<Element>.Bounded.State.Receive.Continuation?)
+        }
+
+        // `~Copyable`: `.resumeWithCancellation` carries a `Receive.Continuation`.
+        @usableFromInline
+        enum Cancel: ~Copyable, Sendable {
+            case resumeWithCancellation(Async.Channel<Element>.Bounded.State.Receive.Continuation)
+            case none
+        }
+    }
+
+    extension Async.Channel.Bounded.State where Element: ~Copyable {
         /// Attempt a synchronous receive (non-blocking).
         @usableFromInline
         mutating func receive() -> Receive.Action {

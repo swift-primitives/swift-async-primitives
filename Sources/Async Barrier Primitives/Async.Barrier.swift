@@ -352,22 +352,26 @@
             case runImmediate
             /// Suspended; nothing to do.
             case suspended
+        }
+    }
 
-            func execute(immediateCallback: @Sendable () -> Void) {
-                switch self {
-                case .releaseAndRun(let callbacks):
-                    for cb in callbacks { cb() }
-                    immediateCallback()
+    extension Async.Barrier.ResolveAction {
+        func execute(immediateCallback: @Sendable () -> Void) {
+            switch self {
+            case .releaseAndRun(let callbacks):
+                for cb in callbacks { cb() }
+                immediateCallback()
 
-                case .runImmediate:
-                    immediateCallback()
+            case .runImmediate:
+                immediateCallback()
 
-                case .suspended:
-                    break
-                }
+            case .suspended:
+                break
             }
         }
+    }
 
+    extension Async.Barrier {
         /// Action returned from an async-form arrival's lock scope.
 
         enum SuspendAction: Sendable {

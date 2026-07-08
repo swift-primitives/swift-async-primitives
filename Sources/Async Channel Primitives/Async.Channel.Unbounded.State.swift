@@ -99,15 +99,19 @@
 
     extension Async.Channel.Unbounded.State where Element: ~Copyable {
         @usableFromInline
-        enum Send {
-            @usableFromInline
-            enum Action: ~Copyable {
-                case give(Receive.Continuation, Element)
-                case keep
-                case shut
-            }
-        }
+        enum Send {}
+    }
 
+    extension Async.Channel.Unbounded.State.Send where Element: ~Copyable {
+        @usableFromInline
+        enum Action: ~Copyable {
+            case give(Async.Channel<Element>.Unbounded.State.Receive.Continuation, Element)
+            case keep
+            case shut
+        }
+    }
+
+    extension Async.Channel.Unbounded.State where Element: ~Copyable {
         /// Send an element to the channel.
         ///
         /// The element is in the caller's `inout Element?`. On deliver, it is
@@ -139,46 +143,50 @@
 
     extension Async.Channel.Unbounded.State where Element: ~Copyable {
         @usableFromInline
-        enum Receive {
-            /// Lightweight signal carried through the continuation.
-            ///
-            /// Element delivery happens via Ownership.Slot, not through the continuation.
-            @usableFromInline
-            enum Signal: Sendable {
-                /// An element was delivered via the delivery slot.
-                case delivered
-                /// The channel is closed and drained.
-                case closed
-                /// The operation was cancelled.
-                case cancelled
-            }
+        enum Receive {}
+    }
 
-            /// Continuation type for receive operations.
-            ///
-            /// Carries Signal (Copyable) — element travels via Ownership.Slot.
-            @usableFromInline
-            typealias Continuation = Async.Continuation<Signal>.Unsafe
-
-            // `Step` is shared by the fast path `receive()` (no continuation) and
-            // the slow path `wait(_:)` (has one), so the handed-back receiver
-            // continuation is optional. It is resumed from `handleReceive`; the
-            // `.wait` case stores the continuation in the slot instead.
-            @usableFromInline
-            enum Step: ~Copyable {
-                case val(Element, receiver: Receive.Continuation?)
-                case end(receiver: Receive.Continuation?)
-                case wait
-                case cancelled(receiver: Receive.Continuation?)
-            }
-
-            // `~Copyable`: `.stop` carries a `Continuation` (now `~Copyable`).
-            @usableFromInline
-            enum Stop: ~Copyable, Sendable {
-                case none
-                case stop(Continuation)
-            }
+    extension Async.Channel.Unbounded.State.Receive where Element: ~Copyable {
+        /// Lightweight signal carried through the continuation.
+        ///
+        /// Element delivery happens via Ownership.Slot, not through the continuation.
+        @usableFromInline
+        enum Signal: Sendable {
+            /// An element was delivered via the delivery slot.
+            case delivered
+            /// The channel is closed and drained.
+            case closed
+            /// The operation was cancelled.
+            case cancelled
         }
 
+        /// Continuation type for receive operations.
+        ///
+        /// Carries Signal (Copyable) — element travels via Ownership.Slot.
+        @usableFromInline
+        typealias Continuation = Async.Continuation<Signal>.Unsafe
+
+        // `Step` is shared by the fast path `receive()` (no continuation) and
+        // the slow path `wait(_:)` (has one), so the handed-back receiver
+        // continuation is optional. It is resumed from `handleReceive`; the
+        // `.wait` case stores the continuation in the slot instead.
+        @usableFromInline
+        enum Step: ~Copyable {
+            case val(Element, receiver: Async.Channel<Element>.Unbounded.State.Receive.Continuation?)
+            case end(receiver: Async.Channel<Element>.Unbounded.State.Receive.Continuation?)
+            case wait
+            case cancelled(receiver: Async.Channel<Element>.Unbounded.State.Receive.Continuation?)
+        }
+
+        // `~Copyable`: `.stop` carries a `Continuation` (now `~Copyable`).
+        @usableFromInline
+        enum Stop: ~Copyable, Sendable {
+            case none
+            case stop(Async.Channel<Element>.Unbounded.State.Receive.Continuation)
+        }
+    }
+
+    extension Async.Channel.Unbounded.State where Element: ~Copyable {
         /// Non-blocking receive: take from buffer if available.
         @usableFromInline
         mutating func poll() -> Element? {

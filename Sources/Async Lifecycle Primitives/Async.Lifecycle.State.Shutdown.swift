@@ -21,7 +21,7 @@ extension Async.Lifecycle.State {
         let pointer: UnsafeMutablePointer<Async.Lifecycle.State>
 
         @inlinable @_lifetime(borrow pointer)
-        init(_ pointer: UnsafeMutablePointer<Async.Lifecycle.State>) {
+        package init(_ pointer: UnsafeMutablePointer<Async.Lifecycle.State>) {
             unsafe self.pointer = pointer
         }
     }
