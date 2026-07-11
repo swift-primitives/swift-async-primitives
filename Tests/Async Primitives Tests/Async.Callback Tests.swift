@@ -14,17 +14,31 @@ import Testing
 
 #if canImport(Darwin)
     import Darwin
+#elseif canImport(Glibc)
+    import Glibc
 #endif
 
 // MARK: - Helpers
 
-/// Checks if the current thread is the main thread.
-/// Uses Darwin `pthread_main_np()` — no Foundation dependency.
-#if canImport(Darwin)
-    private func isMainThread() -> Bool {
-        pthread_main_np() != 0
-    }
-#endif
+/// Identity of the current thread, for caller-actor preservation probes.
+///
+/// `pthread_main_np()` is Darwin-only: it answers "is this the OS main
+/// thread," which is a valid MainActor proxy only on Darwin. On Linux the
+/// MainActor executor does not necessarily run on the thread glibc
+/// considers the process's initial thread — a bare `@MainActor` test body
+/// can report a non-main OS thread while genuinely running isolated on
+/// MainActor. Comparing thread identity against the MainActor thread
+/// captured at the top of each `@MainActor` test body is platform-neutral:
+/// the MainActor executor is a single fixed thread on both platforms, so
+/// the captured identity is stable across suspension points. No Foundation
+/// dependency either way.
+private func currentThreadID() -> UInt {
+    #if canImport(Darwin)
+        UInt(pthread_mach_thread_np(pthread_self()))
+    #else
+        UInt(pthread_self())
+    #endif
+}
 
 /// A non-Sendable reference type for testing `Value: ~Sendable` support.
 private final class Box<T> {
@@ -200,56 +214,60 @@ extension Callback.Test.EdgeCase {
 
 // MARK: - Integration (Isolation)
 
-#if canImport(Darwin)
-    extension Callback.Test.Integration {
-        @Test @MainActor
-        func `init closure preserves MainActor isolation`() async {
-            let callback = Async.Callback<Bool> { isMainThread() }
-            #expect(await callback())
-        }
+extension Callback.Test.Integration {
+    @Test @MainActor
+    func `init closure preserves MainActor isolation`() async {
+        let mainThreadID = currentThreadID()
+        let callback = Async.Callback<Bool> { currentThreadID() == mainThreadID }
+        #expect(await callback())
+    }
 
-        @Test @MainActor
-        func `map transform preserves MainActor isolation`() async {
-            let callback = Async.Callback(value: 21)
-                .map { _ -> Bool in isMainThread() }
-            #expect(await callback())
-        }
+    @Test @MainActor
+    func `map transform preserves MainActor isolation`() async {
+        let mainThreadID = currentThreadID()
+        let callback = Async.Callback(value: 21)
+            .map { _ -> Bool in currentThreadID() == mainThreadID }
+        #expect(await callback())
+    }
 
-        @Test @MainActor
-        func `chained maps preserve isolation at each level`() async {
-            let callback = Async.Callback(value: 0)
-                .map { _ -> Bool in isMainThread() }
-                .map { level1 -> (Bool, Bool) in (level1, isMainThread()) }
-            let (level1, level2) = await callback()
-            #expect(level1)
-            #expect(level2)
-        }
+    @Test @MainActor
+    func `chained maps preserve isolation at each level`() async {
+        let mainThreadID = currentThreadID()
+        let callback = Async.Callback(value: 0)
+            .map { _ -> Bool in currentThreadID() == mainThreadID }
+            .map { level1 -> (Bool, Bool) in (level1, currentThreadID() == mainThreadID) }
+        let (level1, level2) = await callback()
+        #expect(level1)
+        #expect(level2)
+    }
 
-        @Test @MainActor
-        func `flatMap preserves isolation`() async {
-            let callback = Async.Callback(value: 0)
-                .flatMap { _ in Async.Callback(value: isMainThread()) }
-            #expect(await callback())
-        }
+    @Test @MainActor
+    func `flatMap preserves isolation`() async {
+        let mainThreadID = currentThreadID()
+        let callback = Async.Callback(value: 0)
+            .flatMap { _ in Async.Callback(value: currentThreadID() == mainThreadID) }
+        #expect(await callback())
+    }
 
+    @Test @MainActor
+    func `caller remains on MainActor after awaiting callback`() async {
+        let mainThreadID = currentThreadID()
+        let callback = Async.Callback(value: 42)
+        let result = await callback()
+        #expect(result == 42)
+        #expect(currentThreadID() == mainThreadID)
+    }
+
+    #if !hasFeature(Embedded)
         @Test @MainActor
-        func `caller remains on MainActor after awaiting callback`() async {
-            let callback = Async.Callback(value: 42)
+        func `CPS bridge returns to caller isolation`() async {
+            let mainThreadID = currentThreadID()
+            let callback = Async.Callback<Int>(wrapping: { completion in
+                completion(42)
+            })
             let result = await callback()
             #expect(result == 42)
-            #expect(isMainThread())
+            #expect(currentThreadID() == mainThreadID)
         }
-
-        #if !hasFeature(Embedded)
-            @Test @MainActor
-            func `CPS bridge returns to caller isolation`() async {
-                let callback = Async.Callback<Int>(wrapping: { completion in
-                    completion(42)
-                })
-                let result = await callback()
-                #expect(result == 42)
-                #expect(isMainThread())
-            }
-        #endif
-    }
-#endif
+    #endif
+}
