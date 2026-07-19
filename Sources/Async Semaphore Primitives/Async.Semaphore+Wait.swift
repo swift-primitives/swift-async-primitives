@@ -135,6 +135,27 @@
             let outcome: Outcome = await withTaskCancellationHandler {
                 await withCheckedContinuation { continuation in
                     _state.withLock { state in
+                        // Pre-registration check: cancellation (or timeout)
+                        // arrived before suspension was registered. Mirrors
+                        // Channel.Bounded.State.suspend(flag:...)'s guard —
+                        // without it, `onCancel`'s unstructured
+                        // `Task { pumpWaiters() }` can lose the race against
+                        // this very enqueue, orphaning an already-flagged
+                        // waiter that nothing will ever rescan again.
+                        if flag.isFlagged {
+                            let outcome: Outcome = Async.Precedence.resolve(
+                                shutdown: !state.lifecycle.isOpen,
+                                cancelled: flag.cancelled,
+                                timedOut: flag.timedOut,
+                                success: .success(()),
+                                onShutdown: .failure(.shutdown),
+                                onCancelled: .failure(.cancelled),
+                                onTimeout: .failure(.timeout)
+                            )
+                            continuation.resume(returning: outcome)
+                            return
+                        }
+
                         // Re-check under lock: lifecycle may have changed
                         // or a permit may have become available
                         if !state.lifecycle.isOpen {
@@ -200,6 +221,27 @@
             let outcome: Outcome = await withTaskCancellationHandler {
                 await withCheckedContinuation { continuation in
                     _state.withLock { state in
+                        // Pre-registration check: cancellation (or timeout)
+                        // arrived before suspension was registered. Mirrors
+                        // Channel.Bounded.State.suspend(flag:...)'s guard —
+                        // without it, `onCancel`'s unstructured
+                        // `Task { pumpWaiters() }` can lose the race against
+                        // this very enqueue, orphaning an already-flagged
+                        // waiter that nothing will ever rescan again.
+                        if flag.isFlagged {
+                            let outcome: Outcome = Async.Precedence.resolve(
+                                shutdown: !state.lifecycle.isOpen,
+                                cancelled: flag.cancelled,
+                                timedOut: flag.timedOut,
+                                success: .success(()),
+                                onShutdown: .failure(.shutdown),
+                                onCancelled: .failure(.cancelled),
+                                onTimeout: .failure(.timeout)
+                            )
+                            continuation.resume(returning: outcome)
+                            return
+                        }
+
                         if !state.lifecycle.isOpen {
                             continuation.resume(returning: .failure(.shutdown))
                             return
