@@ -124,7 +124,23 @@
                 for element in batch {
                     guard !state.isClosed else { return Pair(receiverCont, true) }
                     if !delivered, let cont = state.waiter.take() {
-                        _ = deliverySlot.store(element)
+                        // `store` is `sending` (ownership-primitives e94d7c9)
+                        // and RegionIsolation cannot split one element's
+                        // region out of `batch` (later iterations still use
+                        // it), so the loop copy cannot be sent directly.
+                        // Stage it through an Optional and extract via
+                        // `take()`, whose `sending` return hands back a
+                        // disconnected value — the same shape `State.send`'s
+                        // `element.take()` path uses one function above. The
+                        // hand-off is sound: this iteration's element goes to
+                        // exactly one receiver via the delivery slot and is
+                        // never buffer-pushed; remaining `batch` uses touch
+                        // only other elements.
+                        var staged: Element? = element
+                        guard let handoff = staged.take() else {
+                            preconditionFailure("Async.Channel.Unbounded.Sender.send(contentsOf:): staged element vanished")
+                        }
+                        _ = deliverySlot.store(handoff)
                         receiverCont = consume cont
                         delivered = true
                     } else {

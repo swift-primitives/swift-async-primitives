@@ -75,7 +75,7 @@
         @_optimize(none)
         @usableFromInline
         static func handleReceive(
-            _ action: consuming Async.Channel<Element>.Unbounded.State.Receive.Step,
+            _ action: consuming sending Async.Channel<Element>.Unbounded.State.Receive.Step,
             storage: Async.Channel<Element>.Unbounded.Storage
         ) {
             // The receiver continuation rides inside the step (nil on the fast

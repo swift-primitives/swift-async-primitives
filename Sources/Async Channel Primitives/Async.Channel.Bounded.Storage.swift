@@ -66,7 +66,7 @@
         @_optimize(none)
         @usableFromInline
         static func handleReceive(
-            _ action: consuming Async.Channel<Element>.Bounded.State.Receive.Action,
+            _ action: consuming sending Async.Channel<Element>.Bounded.State.Receive.Action,
             storage: Async.Channel<Element>.Bounded.Storage
         ) {
             // The receiver continuation rides inside the action (nil on the
@@ -100,7 +100,7 @@
         @_optimize(none)
         @usableFromInline
         static func handleSend(
-            _ action: consuming Async.Channel<Element>.Bounded.State.Send.Action,
+            _ action: consuming sending Async.Channel<Element>.Bounded.State.Send.Action,
             storage: Async.Channel<Element>.Bounded.Storage
         ) {
             // The sender continuation rides inside the action (except on the
