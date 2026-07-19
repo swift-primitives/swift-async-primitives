@@ -23,7 +23,9 @@ extension Async.Lifecycle {
     /// func wait() async throws(Async.Lifecycle.Error) -> Void
     /// ```
     public enum Error: Swift.Error, Sendable, Equatable {
-        /// The resource is shutting down. New operations are rejected.
+        /// The resource is shutting down.
+        ///
+        /// New operations are rejected.
         case shutdown
 
         /// The operation was cancelled.

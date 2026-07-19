@@ -169,9 +169,11 @@
             /// Element was buffered successfully (taken from Optional).
             case buffered
 
-            /// Sender must suspend and wait. Element remains in the caller's
-            /// Optional. The flag is pre-created for cancellation signaling
-            /// (shared between queue entry and onCancel handler).
+            /// Sender must suspend and wait.
+            ///
+            /// Element remains in the caller's Optional. The flag is pre-created
+            /// for cancellation signaling (shared between queue entry and
+            /// onCancel handler).
             case suspend(flag: Async.Waiter.Flag)
 
             /// Channel is closed, reject the send.
