@@ -47,25 +47,6 @@
 
     }
 
-    // MARK: - Buffer Management
-
-    extension Async.Broadcast.State {
-        /// Minimum cursor position across all subscribers.
-        ///
-        /// O(n) where n = subscriber count — acceptable for typical usage.
-        var cursor: UInt64? {
-            var minimum: UInt64? = nil
-            subscribers.forEach { _, subscriber in
-                if let current = minimum {
-                    minimum = Swift.min(current, subscriber.cursor)
-                } else {
-                    minimum = subscriber.cursor
-                }
-            }
-            return minimum
-        }
-    }
-
     // MARK: - Cancellation Funnel (§5.3 Compliant)
 
     extension Async.Broadcast.State {

@@ -72,7 +72,10 @@
         ///
         /// ## Performance Invariants
         /// - `buffer.first(where:)` is O(buffer.count), acceptable with limit=64
-        /// - `cursor` scans subscribers O(n), acceptable for typical subscriber counts
+        /// - Trimming past `buffer.limit` scans subscribers O(n) to advance any
+        ///   lagging cursors past the dropped entries; this scan only runs on a
+        ///   `send(_:)` that actually trims, and is acceptable for typical
+        ///   subscriber counts
         ///
         /// ## Concurrency
         /// - Multiple concurrent `next()` calls on same subscription: precondition failure
@@ -143,13 +146,32 @@
                 // Add to buffer
                 state.buffer.push((index, element), to: .back)
 
-                // Trim buffer if needed (keep elements that some subscriber hasn't seen yet)
-                let minCursor = state.cursor ?? index
+                // Trim to the documented replay window (`buffer.limit`)
+                // unconditionally — a stalled subscriber does not grow the
+                // buffer without bound. Subscribers left behind the new
+                // floor observe loss: their cursor is advanced past
+                // whatever was just dropped (see "Delivery Guarantees" on
+                // `Broadcast` — slow subscribers may miss events once they
+                // fall behind the replay window).
+                var droppedThroughIndex: UInt64? = nil
                 while state.buffer.count > bufferLimit {
-                    guard let front = state.buffer.peek(at: .front), front.index < minCursor else {
-                        break
+                    guard let front = state.buffer.take(from: .front) else { break }
+                    droppedThroughIndex = front.index
+                }
+
+                if let droppedThroughIndex {
+                    let floor = droppedThroughIndex + 1
+                    var laggingIds: [UInt64] = []
+                    state.subscribers.forEach { id, subscriber in
+                        if subscriber.cursor < floor {
+                            laggingIds.append(id)
+                        }
                     }
-                    _ = state.buffer.take(from: .front)
+                    for id in laggingIds {
+                        _ = state.subscribers.withMutableValue(forKey: id) { subscriber in
+                            subscriber.cursor = floor
+                        }
+                    }
                 }
 
                 // Find waiting subscribers (forEach avoids key snapshot heap allocation)

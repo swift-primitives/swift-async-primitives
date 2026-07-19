@@ -171,7 +171,11 @@
 
         @Test
         func `Elements delivered in order`() async throws {
-            let broadcast = Async.Broadcast<Int>()
+            // Explicit buffer capacity: this test is pinning ordering, not
+            // replay-window/drop behavior — the subscriber is only drained
+            // after all 100 sends, so an explicit capacity >= the element
+            // count keeps it out of the (correctly, per F-002) trimmed path.
+            let broadcast = Async.Broadcast<Int>(bufferCapacity: 100)
             let subscription = broadcast.subscribe()
 
             for i in 1...100 {
@@ -648,6 +652,53 @@
             }
 
             #expect(received == Array(0..<10))
+        }
+    }
+
+    // MARK: - F-002 Regression (generic-namespace [INST-TEST-013] carve-out)
+    //
+    // `Async.Broadcast<Element>` is generic, so a nested `@Suite` extension
+    // of the source type would itself be uninstantiated/undiscoverable —
+    // this uses the documented carve-out instead: a top-level, non-generic
+    // `@Suite("Name") struct Tests`. Kept separate from the pre-existing
+    // `BroadcastTests` / `BroadcastStressTests` suites above (which predate
+    // this convention) rather than folding the new test into their
+    // compound-name style.
+
+    @Suite("Broadcast")
+    struct Tests {
+        @Test
+        func `send trims the replay buffer to bufferLimit behind a stalled subscriber, which observes loss`() async throws {
+            // F-002 (option a): the documented contract is that `buffer.limit`
+            // is the replay window and a subscriber that falls behind it
+            // observes loss (Async.Broadcast's "Delivery Guarantees" doc).
+            // Pre-fix, `send()` only trimmed entries older than the SLOWEST
+            // subscriber's cursor, so a subscriber that never calls next()
+            // pins the buffer at its cursor forever and the buffer grows
+            // without bound instead of ever dropping anything.
+            let bufferLimit = 4
+            let broadcast = Async.Broadcast<Int>(bufferCapacity: bufferLimit)
+
+            // Subscribed before any sends, then never consumed until after
+            // finish() — permanently "stalled" at its initial cursor.
+            let stalled = broadcast.subscribe()
+
+            let elementCount = 50
+            for i in 0..<elementCount {
+                broadcast.send(i)
+            }
+            broadcast.finish()
+
+            var received: [Int] = []
+            for try await value in stalled {
+                received.append(value)
+            }
+
+            // The buffer must have been trimmed to exactly the last
+            // `bufferLimit` elements, with the stalled subscriber's cursor
+            // advanced past everything dropped — not every one of the 50
+            // sent elements.
+            #expect(received == Array((elementCount - bufferLimit)..<elementCount))
         }
     }
 
