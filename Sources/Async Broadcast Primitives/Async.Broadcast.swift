@@ -46,6 +46,8 @@
         /// - `buffer.limit` defines the replay window (default 64)
         /// - Cursor advances when element is delivered (resumed). If subscriber is
         ///   cancelled after resumption, it may not observe that element.
+        /// - This loss is silent by default; register `onLoss` at `init` to observe
+        ///   it as a typed ``Loss`` signal (additive — omitting it changes nothing).
         ///
         /// ## Wakeup Ordering Across Subscribers
         /// On `send(_:)`, subscribers waiting in `next()` are resumed in
@@ -110,15 +112,23 @@
         public final class Broadcast<Element: Sendable>: Sendable {
             let _state: Async.Mutex<State>
             private let buffer: Buffer
+            private let onLoss: (@Sendable (Loss) -> Void)?
 
             /// Creates a new broadcast channel.
             ///
-            /// - Parameter bufferCapacity: Maximum number of elements to buffer for late subscribers.
-            ///   Elements are discarded when the buffer is full and all subscribers have consumed them.
-            public init(bufferCapacity: Int = 64) {
+            /// - Parameters:
+            ///   - bufferCapacity: Maximum number of elements to buffer for late subscribers.
+            ///     Elements are discarded when the buffer is full and all subscribers have consumed them.
+            ///   - onLoss: Optional handler invoked when a lagging subscriber's cursor is
+            ///     advanced past dropped replay-buffer entries. Additive and defaulted to
+            ///     `nil` — omitting it preserves the pre-existing silent-drop behavior
+            ///     exactly. See ``Loss`` for the firing site and threading/isolation
+            ///     contract.
+            public init(bufferCapacity: Int = 64, onLoss: (@Sendable (Loss) -> Void)? = nil) {
                 precondition(bufferCapacity > 0, "Broadcast buffer capacity must be greater than zero")
                 self.buffer = Buffer(limit: .init(Cardinal(UInt(bufferCapacity))))
                 self._state = Async.Mutex(State())
+                self.onLoss = onLoss
             }
 
         }
@@ -137,8 +147,10 @@
         /// - Parameter element: The element to broadcast.
         public func send(_ element: sending Element) {
             let bufferLimit = buffer.limit
-            let continuationsToResume: [(CheckedContinuation<Next.Outcome, Never>, Element)] = _state.withLock { state in
-                guard state.is == .active else { return [] }
+            let (continuationsToResume, lossEvents): (
+                [(CheckedContinuation<Next.Outcome, Never>, Element)], [Loss]
+            ) = _state.withLock { state in
+                guard state.is == .active else { return ([], []) }
 
                 let index = state.next.index
                 state.next.index += 1
@@ -159,6 +171,10 @@
                     droppedThroughIndex = front.index
                 }
 
+                // Fired exactly here, once per affected subscriber: the
+                // point where a lagging cursor is advanced past dropped
+                // entries. See `Loss`'s doc for the full firing contract.
+                var lossEvents: [Loss] = []
                 if let droppedThroughIndex {
                     let floor = droppedThroughIndex + 1
                     var laggingIds: [UInt64] = []
@@ -169,6 +185,15 @@
                     }
                     for id in laggingIds {
                         _ = state.subscribers.withMutableValue(forKey: id) { subscriber in
+                            let droppedCount = Int(floor - subscriber.cursor)
+                            lossEvents.append(
+                                Loss(
+                                    subscriberID: id,
+                                    droppedCount: droppedCount,
+                                    resumingAtIndex: floor,
+                                    reason: .capacityLimit
+                                )
+                            )
                             subscriber.cursor = floor
                         }
                     }
@@ -193,7 +218,16 @@
                         }
                     }
                 }
-                return toResume
+                return (toResume, lossEvents)
+            }
+
+            // Fired outside the lock, same discipline as resuming waiting
+            // continuations below: a handler that calls back into this
+            // `Broadcast` cannot deadlock against the lock it would need.
+            if let onLoss {
+                for event in lossEvents {
+                    onLoss(event)
+                }
             }
 
             for (continuation, element) in continuationsToResume {

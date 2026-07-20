@@ -700,6 +700,214 @@
             // sent elements.
             #expect(received == Array((elementCount - bufferLimit)..<elementCount))
         }
+
+        // MARK: - Broadcast.Loss (Fable-448 observable-loss refinement)
+        //
+        // Same generic-namespace carve-out as the F-002 regression above —
+        // added as more `@Test` funcs on this same top-level `Tests` type
+        // rather than a second top-level `Tests` struct (which would collide
+        // at module scope with this one).
+
+        @Test
+        func `Loss fires with a positive dropped count when a lagging subscriber's cursor is advanced past drops`() async throws {
+            let bufferLimit = 4
+            let recorder = LossRecorder()
+            let broadcast = Async.Broadcast<Int>(bufferCapacity: bufferLimit) { loss in
+                recorder.record(loss)
+            }
+
+            // Never consumed until after finish() — permanently "stalled" at its
+            // initial cursor (0), so every trimming send() leaves it lagging.
+            let stalled = broadcast.subscribe()
+
+            let elementCount = 50
+            for i in 0..<elementCount {
+                broadcast.send(i)
+            }
+            broadcast.finish()
+
+            var received: [Int] = []
+            for try await value in stalled {
+                received.append(value)
+            }
+
+            // Sanity: the stalled subscriber observed the drop-oldest behavior
+            // this signal is describing (unchanged from the F-002 fix).
+            #expect(received == Array((elementCount - bufferLimit)..<elementCount))
+
+            let losses = recorder.events
+
+            // The subscriber never advances on its own (never calls next()
+            // until the end), so it is re-accounted as lagging on every
+            // trimming send() after the buffer first fills — each one a
+            // genuine, independent drop event for that subscriber, not a
+            // single aggregate. Assert the meaningful invariants rather than
+            // an exact call count tied to that incidental per-send
+            // repetition:
+            #expect(!losses.isEmpty, "Expected at least one Loss signal for the stalled subscriber")
+            for loss in losses {
+                #expect(loss.droppedCount > 0, "droppedCount must be positive — this signal only fires on genuine lag")
+                #expect(loss.reason == .capacityLimit)
+            }
+            // The final loss event must be consistent with where the
+            // subscriber's cursor actually landed: resumingAtIndex is the
+            // floor at that time, and the last one must match the index the
+            // subscriber ultimately replayed from.
+            #expect(losses.last?.resumingAtIndex == UInt64(elementCount - bufferLimit))
+            // All events refer to the same (only) subscriber.
+            #expect(Set(losses.map(\.subscriberID)).count == 1)
+            // Total accounted loss across all events for this subscriber must
+            // cover at least what it actually missed (0..<(elementCount - bufferLimit)).
+            #expect(losses.reduce(0) { $0 + $1.droppedCount } >= elementCount - bufferLimit)
+        }
+
+        @Test
+        func `Loss does not fire when no subscriber lags`() async throws {
+            let recorder = LossRecorder()
+            // Buffer capacity comfortably larger than what's sent, so nothing
+            // is ever trimmed — the send/consume-in-step case.
+            let broadcast = Async.Broadcast<Int>(bufferCapacity: 100) { loss in
+                recorder.record(loss)
+            }
+            let subscription = broadcast.subscribe()
+
+            for i in 0..<10 {
+                broadcast.send(i)
+            }
+            broadcast.finish()
+
+            var received: [Int] = []
+            for try await value in subscription {
+                received.append(value)
+            }
+
+            #expect(received == Array(0..<10))
+            #expect(recorder.events.isEmpty, "No subscriber lagged behind the (never-trimmed) buffer; Loss must not fire")
+        }
+
+        @Test
+        func `Loss does not fire for a subscriber that joins late, since replay from the current window is not loss`() async throws {
+            let bufferLimit = 4
+            let recorder = LossRecorder()
+            let broadcast = Async.Broadcast<Int>(bufferCapacity: bufferLimit) { loss in
+                recorder.record(loss)
+            }
+
+            // Drive enough sends to trim the buffer *before* the late
+            // subscriber ever exists, so it cannot have been "lagging" —
+            // there is nothing for its brand-new cursor to have fallen
+            // behind.
+            for i in 0..<20 {
+                broadcast.send(i)
+            }
+
+            // No subscribers exist yet, so nothing should have fired.
+            #expect(recorder.events.isEmpty)
+
+            let lateSubscriber = broadcast.subscribe()
+
+            for i in 20..<24 {
+                broadcast.send(i)
+            }
+            broadcast.finish()
+
+            var received: [Int] = []
+            for try await value in lateSubscriber {
+                received.append(value)
+            }
+
+            #expect(received == Array(20..<24))
+            #expect(
+                recorder.events.isEmpty,
+                "A subscriber that joins after a drop must never be reported as lagging — its cursor starts at the current window"
+            )
+        }
+
+        @Test
+        func `Loss accounts for multiple lagging subscribers individually`() async throws {
+            let bufferLimit = 4
+            let recorder = LossRecorder()
+            let broadcast = Async.Broadcast<Int>(bufferCapacity: bufferLimit) { loss in
+                recorder.record(loss)
+            }
+
+            // Two subscribers, both stalled (never consumed until the end),
+            // so both fall behind identically as the buffer trims.
+            let stalledA = broadcast.subscribe()
+            let stalledB = broadcast.subscribe()
+
+            let elementCount = 30
+            for i in 0..<elementCount {
+                broadcast.send(i)
+            }
+            broadcast.finish()
+
+            var receivedA: [Int] = []
+            for try await value in stalledA { receivedA.append(value) }
+            var receivedB: [Int] = []
+            for try await value in stalledB { receivedB.append(value) }
+
+            #expect(receivedA == Array((elementCount - bufferLimit)..<elementCount))
+            #expect(receivedB == Array((elementCount - bufferLimit)..<elementCount))
+
+            let losses = recorder.events
+            let subscriberIDs = Set(losses.map(\.subscriberID))
+
+            // Both subscribers must be individually represented in the
+            // recorded signals — a broadcast-level aggregate that only
+            // reports one of the two lagging subscribers (or merges them)
+            // would fail this.
+            #expect(subscriberIDs.count == 2, "Expected loss events for exactly 2 distinct lagging subscribers, got \(subscriberIDs)")
+            for id in subscriberIDs {
+                let idLosses = losses.filter { $0.subscriberID == id }
+                #expect(!idLosses.isEmpty)
+                for loss in idLosses {
+                    #expect(loss.droppedCount > 0)
+                    #expect(loss.reason == .capacityLimit)
+                }
+            }
+        }
+
+        @Test
+        func `Broadcast without an onLoss handler behaves exactly as before, and Loss.Reason equality holds`() async throws {
+            // Non-breaking proof at the unit level: omitting `onLoss` entirely
+            // (the pre-existing initializer call shape) must compile and
+            // behave identically to before this change.
+            let bufferLimit = 4
+            let broadcast = Async.Broadcast<Int>(bufferCapacity: bufferLimit)
+            let stalled = broadcast.subscribe()
+
+            let elementCount = 20
+            for i in 0..<elementCount {
+                broadcast.send(i)
+            }
+            broadcast.finish()
+
+            var received: [Int] = []
+            for try await value in stalled { received.append(value) }
+
+            #expect(received == Array((elementCount - bufferLimit)..<elementCount))
+
+            #expect(Async.Broadcast<Int>.Loss.Reason.capacityLimit == .capacityLimit)
+        }
+    }
+
+    // MARK: - Loss test support
+
+    /// Records `Loss` signals delivered synchronously by `send(_:)`.
+    ///
+    /// `onLoss` is invoked inline on the calling thread of `send(_:)` (never
+    /// dispatched to a `Task`), and every test above drives `send(_:)`
+    /// directly from the test's own function body with no concurrent
+    /// producers — so a plain, non-isolated recorder is sufficient;
+    /// `@unchecked Sendable` only to satisfy the `@Sendable` closure-capture
+    /// requirement of `onLoss`'s type.
+    private final class LossRecorder: @unchecked Sendable {
+        private(set) var events: [Async.Broadcast<Int>.Loss] = []
+
+        func record(_ event: Async.Broadcast<Int>.Loss) {
+            events.append(event)
+        }
     }
 
 #endif
