@@ -152,6 +152,21 @@
                                 onCancelled: .failure(.cancelled),
                                 onTimeout: .failure(.timeout)
                             )
+                            // Track metrics for the pre-registration path too:
+                            // a waiter that never enqueues still represents an
+                            // observed cancellation/timeout. Without this, only
+                            // post-enqueue cancellations (via pumpWaiters) were
+                            // counted, under-counting the pre-registration race.
+                            switch outcome {
+                            case .failure(.cancelled):
+                                state.metrics.cancellations += 1
+
+                            case .failure(.timeout):
+                                state.metrics.timeouts += 1
+
+                            default:
+                                break
+                            }
                             continuation.resume(returning: outcome)
                             return
                         }
@@ -238,6 +253,21 @@
                                 onCancelled: .failure(.cancelled),
                                 onTimeout: .failure(.timeout)
                             )
+                            // Track metrics for the pre-registration path too:
+                            // a waiter that never enqueues still represents an
+                            // observed cancellation/timeout. Without this, only
+                            // post-enqueue cancellations (via pumpWaiters) were
+                            // counted, under-counting the pre-registration race.
+                            switch outcome {
+                            case .failure(.cancelled):
+                                state.metrics.cancellations += 1
+
+                            case .failure(.timeout):
+                                state.metrics.timeouts += 1
+
+                            default:
+                                break
+                            }
                             continuation.resume(returning: outcome)
                             return
                         }

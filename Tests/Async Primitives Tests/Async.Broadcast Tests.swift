@@ -561,7 +561,18 @@
             // One slow subscriber, one fast subscriber.
             // Fast subscriber should not be blocked and gets all elements.
             // Slow subscriber may miss elements if it falls too far behind.
-            let bufferCapacity = 10
+            //
+            // Margin note (F-002 pre-review, non-blocking nit #3): under the
+            // F-002 bounded-trim contract, the fast subscriber's exact-order
+            // assertion below only holds while it stays within
+            // `bufferCapacity` elements of the producer — pre-F-002 this held
+            // regardless of scheduling (buffer was unbounded). The producer's
+            // `await Task.yield()` after every send keeps the fast consumer
+            // comfortably inside the window in practice; the capacity is kept
+            // generous relative to the per-send yield to widen that margin
+            // and reduce CI flake risk while still leaving room for the slow
+            // subscriber to observe trimming/loss.
+            let bufferCapacity = 20
             let broadcast = Async.Broadcast<Int>(bufferCapacity: bufferCapacity)
             let elementCount = 100
 
