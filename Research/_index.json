@@ -38,6 +38,17 @@
       "statusRaw": "RECOMMENDATION",
       "tier": null,
       "scope": null
+    },
+    {
+      "file": "broadcast-bounded-replay-semantics.md",
+      "displayName": "Bounded Broadcast/Replay Semantics for Async.Broadcast",
+      "topic": "Bounded replay-window overflow semantics for Async.Broadcast (F-002 trigger); drop-oldest vs lossless vs policy-enum vs sibling types",
+      "date": "2026-07-20",
+      "status": "RECOMMENDATION",
+      "statusDetail": "Tier 2; recommends drop-oldest retained + loss made observable (option e), over runtime policy enum or lossless-slowest",
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": null
     }
   ]
 }
