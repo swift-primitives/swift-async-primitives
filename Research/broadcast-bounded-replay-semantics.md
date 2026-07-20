@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.0.0
+version: 1.1.0
 last_updated: 2026-07-20
-status: RECOMMENDATION
+status: DECISION
 tier: 2
 scope: package
 package: swift-async-primitives
@@ -452,7 +452,10 @@ intermediate states. `SharedFlow.DROP_OLDEST`, the closest analog, drops silentl
 
 ## Outcome
 
-**Status: RECOMMENDATION** (the Principal decides adoption).
+**Status: DECISION** (Principal ruling, 2026-07-20): option (e) — bounded drop-oldest with
+observable loss — is adopted as the type's law. The observable-loss refinement is implemented
+and landed on `main` as `3e27e44..0b71caa`. The original recommendation analysis is preserved
+unchanged below.
 
 **Recommendation.** Keep option (a)'s corner — bounded, drop-**oldest**, synchronous non-blocking
 `send` — as the type's law; it is the only trilemma corner reachable without breaking the
@@ -554,3 +557,10 @@ named above. Verdicts were MATCHES except:
 - Sourcing note: the RxJava 3.x reactivex.io path now serves 4.x-alpha content; the official
   3.1.12 generated javadoc (javadoc.io mirror) was used as the primary source and the substitution
   recorded.
+
+## Changelog ([RES-008])
+
+- **1.1.0 (2026-07-20)** — Promoted RECOMMENDATION → DECISION per Principal ruling
+  (fable-448 residuals session): option (e) adopted; observable-loss refinement landed
+  as `3e27e44..0b71caa`. Analysis content unchanged.
+- **1.0.0 (2026-07-20)** — Initial study; status RECOMMENDATION.
