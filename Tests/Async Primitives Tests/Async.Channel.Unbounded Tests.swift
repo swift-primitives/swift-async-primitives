@@ -262,6 +262,48 @@ struct UnboundedChannelTests {
     }
 
     @Test
+    func `Sender copies compare equal by endpoint identity`() {
+        let ends = Async.Channel<Int>.Unbounded().take().ends()
+        let sender = ends.sender
+        let copy = sender
+
+        #expect(sender == copy)
+    }
+
+    @Test
+    func `Senders from distinct channels compare unequal`() {
+        let first = Async.Channel<Int>.Unbounded().take().ends()
+        let second = Async.Channel<Int>.Unbounded().take().ends()
+
+        #expect(first.sender != second.sender)
+    }
+
+    @Test
+    func `Sender equality remains stable after close`() {
+        let ends = Async.Channel<Int>.Unbounded().take().ends()
+        let sender = ends.sender
+        let copy = sender
+
+        sender.close()
+
+        #expect(sender == copy)
+    }
+
+    @Test
+    func `Sender equality supports noncopyable elements`() {
+        final class Payload {}
+        struct Parcel: ~Copyable {
+            let payload: Payload
+        }
+
+        let ends = Async.Channel<Parcel>.Unbounded().take().ends()
+        let sender = ends.sender
+        let copy = sender
+
+        #expect(sender == copy)
+    }
+
+    @Test
     func `Direct delivery when receiver waiting`() async throws {
         let ends = Async.Channel<Int>.Unbounded().take().ends()
         let started = Async.Barrier(parties: 2)

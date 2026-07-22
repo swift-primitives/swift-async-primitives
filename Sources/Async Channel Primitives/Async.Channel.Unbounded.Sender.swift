@@ -60,6 +60,14 @@
         }
     }
 
+    extension Async.Channel.Unbounded.Sender: Equatable where Element: ~Copyable {
+        /// Returns whether two sender views address the same channel endpoint.
+        @inlinable
+        public static func == (lhs: Self, rhs: Self) -> Bool {
+            lhs.storage === rhs.storage
+        }
+    }
+
     // MARK: - Send Operations
 
     extension Async.Channel.Unbounded.Sender where Element: ~Copyable {
