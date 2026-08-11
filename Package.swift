@@ -97,7 +97,7 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/swift-primitives/swift-buffer-primitives.git", branch: "main"),
         .package(url: "https://github.com/swift-primitives/swift-buffer-ring-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-buffer-linear-primitives.git", branch: "main"),
+        .package(url: "https://github.com/swift-primitives/swift-buffer-linear-primitives.git", revision: "3eead6eb2b440d417338929c60da94cc18fd3386"),
         .package(url: "https://github.com/swift-primitives/swift-storage-primitives.git", branch: "main"),
         .package(url: "https://github.com/swift-primitives/swift-memory-allocation-primitives.git", branch: "main"),
         .package(url: "https://github.com/swift-primitives/swift-memory-heap-primitives.git", branch: "main"),
